@@ -194,7 +194,7 @@ defineRoute(
 ): RouteDefinitionData;
 ```
 
-This method will create a route definition data object to be consumed by `createRouter`. The simplified version of the call is simply an alias for `defineRoute({}, () => path)`. The parameters object passed to `defineRoute` is a map of variable names to the following strings representing the type of parameter being declared:
+This method will create a route definition data object to be consumed by `createRouter`. The simplified version of the call is an alias for `defineRoute({}, () => path)`. The parameters object passed to `defineRoute` is a map of variable names to the following strings representing the type of parameter being declared:
 
 - `"path.param.string"` - A parameter of type string found in the pathname of the url.
 - `"path.param.number"` - A parameter of type number found in the pathname of the url.
@@ -274,7 +274,7 @@ routes.home.link();
 routes.home.match();
 ```
 
-The `routes` property of a `Router` object is a map of route names to a `RouteDefinition` object (not to be confused with the `RouteDefinitionData` object that `defineRoute` creates). The `RouteDefinition` object contains properties and functions for interacting with that specific route in of application.
+The `routes` property of a `Router` object is a map of route names to a `RouteDefinition` object (not to be confused with the `RouteDefinitionData` object that `defineRoute` creates). The `RouteDefinition` object contains properties and functions for interacting with that specific route in your application.
 
 <br/>
 
@@ -312,7 +312,7 @@ routes.home.push(); // returns Promise<boolean>
 routes.post.push({ postId: "abc" }); // returns Promise<boolean>
 ```
 
-The `push` function will push a new entry into history and if using the "browser" `historyType` will update the browser's url. If the route has parameters those will need to be provided to the `push` function. Returns a `Promise` which resolves to a `boolean` indicating whether or not the operation completed successfully.
+The `push` function will push a new entry into history and if using the "browser" `historyType` will update the browser's url. If the route has parameters those will need to be provided to the `push` function. Returns a `Promise` which resolves to a `boolean` indicating whether or not the navigation completed successfully. The only instance where the navigation would not be successful would be if the handler function passed to `listen` returned false.
 
 <br/>
 
@@ -328,7 +328,7 @@ routes.home.replace(); // returns Promise<boolean>
 routes.post.replace({ postId: "abc" }); // returns Promise<boolean>
 ```
 
-The `replace` function will replace the current entry in history and if using the "browser" `historyType` will update the browser's url. If the route has parameters those will need to be provided to the `replace` function. Returns a `Promise` which resolves to a `boolean` indicating whether or not the operation completed successfully.
+The `replace` function will replace the current entry in history and if using the "browser" `historyType` will update the browser's url. If the route has parameters those will need to be provided to the `replace` function. Returns a `Promise` which resolves to a `boolean` indicating whether or not the navigation completed successfully. The only instance where the navigation would not be successful would be if the handler function passed to `listen` returned false.
 
 <br/>
 
@@ -360,7 +360,7 @@ routes.home.link(); // returns { href: "/", onClick: Function }
 routes.post.link({ postId: "abc" }); // returns { href: "/post/abc", onClick: Function }
 ```
 
-The `link` function will construct an object containing both an `href` property and an `onClick` function. When called the `onClick` function calls `preventDefault` on the event object passed to it and triggers that particular route's `push` function with the parameters provided to `link`. In React, for example, the `link` function may be used like this:
+The `link` function will construct an object containing both an `href` property and an `onClick` function. When called, the `onClick` function calls `preventDefault` on the event object passed to it and triggers that particular route's `push` function with the parameters provided to `link`. In React, for example, the `link` function may be used like this:
 
 ```tsx
 <a {...routes.home.link()}>Home</a>
@@ -396,7 +396,7 @@ routes.postList.match({
 }); // returns { page: 1 }
 ```
 
-The `match` function takes an object with a `pathName` field and optionally a `queryString` field. It test if the route matches the given `pathName` and `queryString`. If the test fails `false` is returned. If the test succeeds an object containing the values of any matched parameters is returned (if the route has no parameters an empty object `{ }` will be returned). While this function is exposed publicly most applications should not need to make use of it directly.
+The `match` function takes an object with a `pathName` field and optionally a `queryString` field. It tests if the route matches the given `pathName` and `queryString`. If the test fails `false` is returned. If the test succeeds an object containing the values of any matched parameters is returned (if the route has no parameters an empty object `{ }` will be returned). While this function is exposed publicly, most applications should not need to make use of it directly.
 
 <br/>
 
@@ -426,7 +426,7 @@ listener.remove();
 
 The `listen` function will create a new route listener. Anytime the application route changes this function will be called with the next matching route. If the given url does not match any route in that router an object with a `false` value for the `name` property and empty object for the `params` property will be returned.
 
-Returning `false` (or a `Promise` which resolves to `false`) from this function will abort the url change. If, for instance, there are unsaved changes on the current page or an upload is in progress you may want to make the user confirm the navigation. For example, you may hook into this functionality by doing something like the following:
+Returning `false` (or a `Promise` which resolves to `false`) from this function will abort the url change. If, for instance, there are unsaved changes on the current page or an upload is in progress you may want to make the user confirm the navigation. You may hook into this functionality by doing something like the following:
 
 ```ts
 listen(nextRoute => {
@@ -441,13 +441,13 @@ listen(nextRoute => {
 });
 ```
 
-It is important to note that the `listen` function will trigger the handler you pass to it _only_ when your application's route changes. If your application is somehow unloaded this handler _will not_ be triggered. Examples of when this function will not be triggered in a web browser include:
+It is important to note that the `listen` function will trigger the handler you pass to it _only_ when _your_ application's route changes. If your application is somehow unloaded this handler _will not_ be triggered. Examples of when this function will not be triggered in a web browser include:
 
 - closing the tab your application is running in
 - triggering an action that opens an external page
 - reloading the page your application is running in
 
-Each of the above situations can be intercepted using the following code:
+Each of the above situations can instead be intercepted using the following code:
 
 ```ts
 window.addEventListener("beforeunload", event => {
@@ -464,7 +464,7 @@ window.addEventListener("beforeunload", event => {
 });
 ```
 
-The above code will display a prompt to the user asking them to confirm the navigation. Asynchronous actions cannot be performed in this code block and ultimately you cannot prevent a user from leaving your application. This technique will only force them to confirm that this navigation is indeed what they want to do.
+The above code will display a generic prompt to the user asking them to confirm the navigation. Asynchronous actions cannot be performed in this code block and ultimately you cannot prevent a user from leaving your application. This technique will only force them to confirm that this navigation is indeed what they want to do.
 
 <br/>
 
