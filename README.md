@@ -36,6 +36,7 @@
       - [match](#match)
     - [listen](#listen)
     - [getCurrentRoute](#getCurrentRoute)
+    - [history](#history)
 
 <br/>
 
@@ -505,3 +506,19 @@ function App() {
 ```
 
 The initial route is retrieved via `getCurrentRoute` but all updates to the route object in the application's state are managed in the handler passed to the `listen` function.
+
+<br/>
+
+### history
+
+```ts
+const { history } = createRouter({
+  home: defineRoute("/"),
+  post: defineRoute({ postId: "path.param.string" }, p => `/post/${p.postId}`)
+});
+
+history.goBack();
+history.goForward();
+```
+
+The `history` property of a router provides direct access to the underlying history instance from the [core library](https://github.com/ReactTraining/history) which powers `type-route`. Most use cases won't require using this property. If you do need to access to it, do so with caution as certain uses may cause unexpected behavior.
