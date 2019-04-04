@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "esModuleInterop": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "commonjs",
+    "noUnusedLocals": true,
+    "sourceMap": false,
+    "noUnusedParameters": true,
+    "outDir": "lib",
+    "declaration": true,
+    "jsx": "react"
+  },
+  "include": ["src", "old/types.ts"]
+}
