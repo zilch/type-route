@@ -23,20 +23,20 @@ export function getQueryMatch(
 
     if (kind === "query.param.number") {
       if (value === undefined || !isNumeric(value)) {
-        return null;
+        return false;
       }
 
       match[name] = parseFloat(value);
     } else if (kind === "query.param.string") {
       if (value === undefined) {
-        return null;
+        return false;
       }
 
       match[name] = value;
     } else if (kind === "query.param.number.optional") {
       if (value !== undefined) {
         if (!isNumeric(value)) {
-          return null;
+          return false;
         }
 
         match[name] = parseFloat(value);
@@ -53,7 +53,7 @@ export function getQueryMatch(
   }
 
   if (Object.keys(queryParameterValues).length > 0) {
-    return null;
+    return false;
   }
 
   return match;

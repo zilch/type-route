@@ -14,7 +14,7 @@ export function getRoute<T extends RouteDefinitionCollection>(
       queryString: location.search
     });
 
-    if (match === null) {
+    if (match === false) {
       continue;
     }
 
@@ -26,7 +26,7 @@ export function getRoute<T extends RouteDefinitionCollection>(
   }
 
   return {
-    name: null,
+    name: false,
     params: {},
     action
   };

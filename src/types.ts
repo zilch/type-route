@@ -58,7 +58,7 @@ export type MatchFnParams = {
 
 export type MatchFn<T extends ParameterDefinitionCollection> = (
   params: MatchFnParams
-) => RouteParameters<T> | null;
+) => RouteParameters<T> | false;
 
 export type RouteParameters<T extends ParameterDefinitionCollection> = Record<
   KeysMatching<T, QueryParamString | PathParamString>,
@@ -126,7 +126,7 @@ export type Route<
       }
     }[keyof T]
   | {
-      name: null;
+      name: false;
       action: Action;
       params: {};
     };

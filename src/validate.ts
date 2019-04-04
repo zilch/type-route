@@ -290,7 +290,7 @@ export const validate = {
           "createRouter",
           "historyType",
           args,
-          1,
+          0,
           isHistoryType
         );
         assertArgumentType(
@@ -382,7 +382,7 @@ export const validate = {
     {
       functionName: "match",
       signature:
-        "match(params: { pathName: string; queryString?: string }): RouteParameters | null;"
+        "match(params: { pathName: string; queryString?: string }): RouteParameters | false;"
     },
     (args: any[]) => {
       assertNumArguments("match", args, 1, 1);

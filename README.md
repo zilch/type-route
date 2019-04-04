@@ -104,7 +104,7 @@ routes.post.push({ postId: "abc" });
 `type-route` isn't coupled to any specific UI framework/library. Originally it was intended to be a specialized React routing solution. Designing the API, however, revealed that a framework agnostic approach actually led to _better_ React integration. The resulting API works seamlessly with React but also benefits from the flexibility of not being tied to it.
 
 ```tsx
-import { createRoute, defineRoute, Route } from "type-route";
+import { createRouter, defineRoute, Route } from "type-route";
 
 const { routes, listen, getCurrentRoute } = createRouter({
   home: defineRoute("/"),
@@ -133,35 +133,29 @@ function App() {
     return () => listener.remove();
   }, []);
 
-  return <div>
-    <a {...routes.home.link()}>
-      Home
-    </a>
-    <a { ...routes.postList.link()}>
-      PostList
-    </a>
-    <a { ...routes.postList.link({ page: 1 })}>
-      PostList Page 1
-    </a>
-    <a { ...routes.post.link({ postId: "abc" })}>
-      Post abc
-    </a>
-    <Page route={route}/>
-  <div>
+  return (
+    <div>
+      <a {...routes.home.link()}>Home</a>
+      <a {...routes.postList.link()}>PostList</a>
+      <a {...routes.postList.link({ page: 1 })}>PostList Page 1</a>
+      <a {...routes.post.link({ postId: "abc" })}>Post abc</a>
+      <Page route={route} />
+    </div>
+  );
 }
 
-function Page(props: { route: Route<typeof routes}> }) {
+function Page(props: { route: Route<typeof routes> }) {
   const { route } = props;
 
-  switch(route.name) {
+  switch (route.name) {
     case routes.home.name:
-      return <HomePage/>;
+      return <HomePage />;
     case routes.postList.name:
-      return <PostListPage page={route.params.page}/>;
+      return <PostListPage page={route.params.page} />;
     case routes.post.name:
-      return <PostPage postId={route.params.postId}/>;
+      return <PostPage postId={route.params.postId} />;
     default:
-      return <NotFoundPage/>;
+      return <NotFoundPage />;
   }
 }
 
@@ -385,7 +379,7 @@ routes.home.match({
 }); // returns { }
 routes.home.match({
   pathName: "/abc"
-}); // returns null
+}); // returns false
 routes.post.match({
   pathName: "/post/abc"
 }); // returns { postId: "abc" }
@@ -398,7 +392,7 @@ routes.postList.match({
 }); // returns { page: 1 }
 ```
 
-The `match` function takes an object with a `pathName` field and optionally a `queryString` field. It test if the route matches the given `pathName` and `queryString`. If the test fails `null` is returned. If the test succeeds an object containing the values of any matched parameters is returned (if the route has no parameters an empty object `{ }` will be returned). While this function is exposed publicly most applications should not need to make use of it directly.
+The `match` function takes an object with a `pathName` field and optionally a `queryString` field. It test if the route matches the given `pathName` and `queryString`. If the test fails `false` is returned. If the test succeeds an object containing the values of any matched parameters is returned (if the route has no parameters an empty object `{ }` will be returned). While this function is exposed publicly most applications should not need to make use of it directly.
 
 <br/>
 
@@ -414,7 +408,7 @@ const { listen } = createRouter({
 const listener = listen(nextRoute => {
   console.log(nextRoute);
   // logs:
-  // { name: null, params: {} }
+  // { name: false, params: {} }
   // or
   // { name: "home", params: {} }
   // or
@@ -426,7 +420,7 @@ const listener = listen(nextRoute => {
 listener.remove();
 ```
 
-The `listen` function will create a new route listener. Anytime the application route changes this function will be called with the next matching route. If the given url does not match any route in that router an object with a `null` value for the `name` property and empty object for the `params` property will be returned.
+The `listen` function will create a new route listener. Anytime the application route changes this function will be called with the next matching route. If the given url does not match any route in that router an object with a `false` value for the `name` property and empty object for the `params` property will be returned.
 
 Returning `false` (or a `Promise` which resolves to `false`) from this function will abort the url change. If, for instance, there are unsaved changes on the current page or an upload is in progress you may want to make the user confirm the navigation. For example, you may hook into this functionality by doing something like the following:
 
@@ -480,7 +474,7 @@ const { getCurrentRoute } = createRouter({
 
 console.log(getCurrentRoute());
 // logs:
-// { name: null, params: {} }
+// { name: false, params: {} }
 // or
 // { name: "home", params: {} }
 // or

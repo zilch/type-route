@@ -80,14 +80,14 @@ export function getRouteDefinition(
   function match({
     pathName,
     queryString = ""
-  }: MatchFnParams): RouteParameters<{}> | null {
+  }: MatchFnParams): RouteParameters<{}> | false {
     validate["[route].match"](Array.from(arguments));
 
     const pathMatch = getPathMatch(pathName, parsedPath);
     const queryMatch = getQueryMatch(queryString, queryParameters);
 
-    if (pathMatch === null || queryMatch === null) {
-      return null;
+    if (pathMatch === false || queryMatch === false) {
+      return false;
     }
 
     return { ...pathMatch, ...queryMatch };

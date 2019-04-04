@@ -160,7 +160,7 @@ describe("defineRoute.getMatch", () => {
       pathName: "/something/a123/hello"
     });
 
-    expect(match).toBe(null);
+    expect(match).toBe(false);
   });
 
   it("should not for route with search string if no queries params given", () => {
@@ -174,7 +174,7 @@ describe("defineRoute.getMatch", () => {
       queryString: "hello=hi"
     });
 
-    expect(match).toBe(null);
+    expect(match).toBe(false);
   });
 
   it("should match route with query params", () => {
@@ -231,7 +231,7 @@ describe("defineRoute.getMatch", () => {
       queryString: "b=hi"
     });
 
-    expect(match).toBe(null);
+    expect(match).toBe(false);
   });
 
   it("should not match route with extra query params", () => {
@@ -248,7 +248,7 @@ describe("defineRoute.getMatch", () => {
       queryString: "b=hello&c=what"
     });
 
-    expect(match).toBe(null);
+    expect(match).toBe(false);
   });
 
   it("should allow omission of optional query params", () => {

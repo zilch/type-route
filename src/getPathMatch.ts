@@ -6,12 +6,12 @@ export function getPathMatch(pathName: string, parsedPath: ParsedPath) {
 
   for (const pathPart of parsedPath) {
     if (pathName === "") {
-      return null;
+      return false;
     }
 
     if (typeof pathPart === "string") {
       if (!pathName.startsWith(pathPart)) {
-        return null;
+        return false;
       }
 
       pathName = pathName.split(pathPart)[1];
@@ -22,7 +22,7 @@ export function getPathMatch(pathName: string, parsedPath: ParsedPath) {
         if (isNumeric(first)) {
           match[pathPart.name] = parseFloat(first);
         } else {
-          return null;
+          return false;
         }
       } else {
         match[pathPart.name] = first;
@@ -33,7 +33,7 @@ export function getPathMatch(pathName: string, parsedPath: ParsedPath) {
   }
 
   if (pathName.length > 0) {
-    return null;
+    return false;
   }
 
   return match;
