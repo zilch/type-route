@@ -57,6 +57,10 @@ This project is in its early stages and community feedback is essential to push 
 npm install type-route
 ```
 
+**Sandbox**
+
+See [https://codesandbox.io/s/l4z98vw559](https://codesandbox.io/s/l4z98vw559) to play with an editable example of `type-route`.
+
 **Code Example**
 
 ```js
