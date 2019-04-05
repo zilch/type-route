@@ -521,4 +521,4 @@ history.goBack();
 history.goForward();
 ```
 
-The `history` property of a router provides direct access to the underlying history instance from the [core library](https://github.com/ReactTraining/history) which powers `type-route`. Most use cases won't require using this property. If you do need to access to it, do so with caution as certain uses may cause unexpected behavior.
+The `history` property of a router provides direct access to the underlying history instance from the [core library](https://github.com/ReactTraining/history) which powers `type-route`. Most use cases won't require using this property. If you do need to access it, do so with caution as certain uses may cause unexpected behavior.
