@@ -5,11 +5,11 @@ import {
 } from "./types";
 import { validate } from "./validate";
 
-export function defineRoute(path: string): RouteDefinitionData<{}>;
 export function defineRoute<T extends ParameterDefinitionCollection>(
   params: T,
   path: PathFn<T>
 ): RouteDefinitionData<T>;
+export function defineRoute(path: string): RouteDefinitionData<{}>;
 export function defineRoute(...args: any[]) {
   validate["defineRoute"](Array.from(arguments));
 
