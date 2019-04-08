@@ -1,4 +1,5 @@
 import { MemoryHistory, History } from "history";
+import { defineRoute } from "./defineRoute";
 
 export type QueryParamString = "query.param.string";
 export type QueryParamNumber = "query.param.number";
@@ -78,9 +79,15 @@ type RouteParameterFunction<
   ? (params?: RouteParameters<T>) => R
   : (params: RouteParameters<T>) => R;
 
-export type RouteDefinitionData<T extends ParameterDefinitionCollection> = {
+export type RouteDefinitionBuilder<T extends ParameterDefinitionCollection> = {
   params: T;
   path: PathFn<T>;
+
+  extend<K extends ParameterDefinitionCollection>(
+    params: K,
+    path: PathFn<K>
+  ): RouteDefinitionBuilder<T & K>;
+  extend(path: string): RouteDefinitionBuilder<T>;
 };
 
 export type OnClickHandler = (event?: { preventDefault?: () => void }) => void;
@@ -98,11 +105,11 @@ export type RouteDefinition<K, T extends ParameterDefinitionCollection> = {
 
   match: MatchFn<T>;
 
-  [".data"]: RouteDefinitionData<T>;
+  [".builder"]: RouteDefinitionBuilder<T>;
 };
 
-export type RouteDefinitionDataCollection = {
-  [routeName: string]: RouteDefinitionData<any>;
+export type RouteDefinitionBuilderCollection = {
+  [routeName: string]: RouteDefinitionBuilder<any>;
 };
 
 export type RouteDefinitionCollection = {
@@ -112,15 +119,15 @@ export type RouteDefinitionCollection = {
 export type Action = "push" | "replace" | "pop" | "initial";
 
 export type Route<
-  T extends RouteDefinitionCollection | RouteDefinitionDataCollection
+  T extends RouteDefinitionCollection | RouteDefinitionBuilderCollection
 > =
   | {
       [K in keyof T]: {
         name: K;
         action: Action;
         params: T extends RouteDefinitionCollection
-          ? RouteParameters<T[K][".data"]["params"]>
-          : T extends RouteDefinitionDataCollection
+          ? RouteParameters<T[K][".builder"]["params"]>
+          : T extends RouteDefinitionBuilderCollection
           ? RouteParameters<T[K]["params"]>
           : never;
       }
@@ -131,12 +138,12 @@ export type Route<
       params: {};
     };
 
-export type NavigationHandler<T extends RouteDefinitionDataCollection> = (
+export type NavigationHandler<T extends RouteDefinitionBuilderCollection> = (
   nextRoute: Route<T>
 ) => Promise<false | void> | false | void;
 
 export type Router<
-  T extends RouteDefinitionDataCollection,
+  T extends RouteDefinitionBuilderCollection,
   H extends History | MemoryHistory
 > = {
   routes: { [K in keyof T]: RouteDefinition<K, T[K]["params"]> };

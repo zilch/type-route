@@ -1,5 +1,5 @@
 import {
-  RouteDefinitionDataCollection,
+  RouteDefinitionBuilderCollection,
   Router,
   NavigationHandler,
   Action
@@ -16,14 +16,14 @@ import { getRouteDefinition } from "./getRouteDefinition";
 import { getRoute } from "./getRoute";
 import { error, validate } from "./validate";
 
-export function createRouter<T extends RouteDefinitionDataCollection>(
+export function createRouter<T extends RouteDefinitionBuilderCollection>(
   routeDefinitions: T
 ): Router<T, History>;
-export function createRouter<T extends RouteDefinitionDataCollection>(
+export function createRouter<T extends RouteDefinitionBuilderCollection>(
   historyType: "browser",
   routeDefinitions: T
 ): Router<T, History>;
-export function createRouter<T extends RouteDefinitionDataCollection>(
+export function createRouter<T extends RouteDefinitionBuilderCollection>(
   historyType: "memory",
   routeDefinitions: T
 ): Router<T, MemoryHistory>;
@@ -31,7 +31,7 @@ export function createRouter(...args: any[]) {
   validate["createRouter"](Array.from(arguments));
 
   let historyType: "memory" | "browser";
-  let routeDefinitionData: RouteDefinitionDataCollection;
+  let routeDefinitionData: RouteDefinitionBuilderCollection;
 
   if (args.length === 1) {
     historyType = "browser";

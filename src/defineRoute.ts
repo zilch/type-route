@@ -1,5 +1,5 @@
 import {
-  RouteDefinitionData,
+  RouteDefinitionBuilder,
   ParameterDefinitionCollection,
   PathFn
 } from "./types";
@@ -8,8 +8,8 @@ import { validate } from "./validate";
 export function defineRoute<T extends ParameterDefinitionCollection>(
   params: T,
   path: PathFn<T>
-): RouteDefinitionData<T>;
-export function defineRoute(path: string): RouteDefinitionData<{}>;
+): RouteDefinitionBuilder<T>;
+export function defineRoute(path: string): RouteDefinitionBuilder<{}>;
 export function defineRoute(...args: any[]) {
   validate["defineRoute"](Array.from(arguments));
 
@@ -24,7 +24,7 @@ export function defineRoute(...args: any[]) {
     path = args[1];
   }
 
-  const routeDefinitionData: RouteDefinitionData<{}> = {
+  const routeDefinitionData: RouteDefinitionBuilder<{}> = {
     params,
     path
   };

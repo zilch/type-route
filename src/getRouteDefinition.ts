@@ -1,5 +1,5 @@
 import {
-  RouteDefinitionData,
+  RouteDefinitionBuilder,
   RouteDefinition,
   ParameterDefinitionCollection,
   PathParameterDefinitionCollection,
@@ -15,12 +15,12 @@ import { validate } from "./validate";
 
 export function getRouteDefinition(
   navigate: (href: string, replace?: boolean) => Promise<boolean>,
-  data: RouteDefinitionData<{}>,
+  builder: RouteDefinitionBuilder<{}>,
   name: string
 ) {
-  const pathParameters = getPathParameters(data.params);
-  const queryParameters = getQueryParameters(data.params);
-  const parsedPath = getParsedPath(name, data.path, data.params);
+  const pathParameters = getPathParameters(builder.params);
+  const queryParameters = getQueryParameters(builder.params);
+  const parsedPath = getParsedPath(name, builder.path, builder.params);
 
   const routeDefinition: RouteDefinition<any, any> = {
     link,
@@ -28,20 +28,20 @@ export function getRouteDefinition(
     href,
     match,
     push(params) {
-      validate["[route].push"](Array.from(arguments), data.params);
+      validate["[route].push"](Array.from(arguments), builder.params);
       return navigate(href(params));
     },
     replace(params) {
-      validate["[route].replace"](Array.from(arguments), data.params);
+      validate["[route].replace"](Array.from(arguments), builder.params);
       return navigate(href(params), true);
     },
-    [".data"]: data
+    [".builder"]: builder
   };
 
   return routeDefinition;
 
   function link(params: Record<string, string | number> = {}) {
-    validate["[route].link"](Array.from(arguments), data.params);
+    validate["[route].link"](Array.from(arguments), builder.params);
 
     return {
       href: href(params),
@@ -58,7 +58,7 @@ export function getRouteDefinition(
   }
 
   function href(params: Record<string, string | number> = {}) {
-    validate["[route].href"](Array.from(arguments), data.params);
+    validate["[route].href"](Array.from(arguments), builder.params);
 
     const pathParams: Record<string, string | number> = {};
     const queryParams: Record<string, string | number> = {};
@@ -72,7 +72,7 @@ export function getRouteDefinition(
     });
 
     return (
-      data.path(pathParams) +
+      builder.path(pathParams) +
       qs.stringify(queryParams, Object.keys(queryParams).length > 0)
     );
   }
