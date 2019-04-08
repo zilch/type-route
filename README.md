@@ -297,7 +297,7 @@ if (route.name === routes.post.name) {
 }
 ```
 
-The `name` field is a constant value used for comparing a specific `Route` to a particular `RouteDefinition`. As show in the example above this allows you to determine which route you're dealing with.
+The `name` field is a constant value used for comparing a specific `Route` to a particular `RouteDefinition`. As shown in the example above this allows you to determine which route you're dealing with.
 
 <br/>
 
