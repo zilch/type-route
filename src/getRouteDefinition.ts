@@ -50,9 +50,7 @@ export function getRouteDefinition(
           event.preventDefault();
         }
 
-        navigate(href(params)).then(result => {
-          console.log("navigate result", result);
-        });
+        navigate(href(params));
       }
     };
   }

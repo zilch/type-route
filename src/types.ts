@@ -102,7 +102,7 @@ export type RouteDefinition<K, T extends ParameterDefinitionCollection> = {
 };
 
 export type RouteDefinitionDataCollection = {
-  [routeName: string]: RouteDefinitionData<any>;
+  [routeName: string]: RouteDefinitionData<ParameterDefinitionCollection>;
 };
 
 export type RouteDefinitionCollection = {
