@@ -58,6 +58,8 @@ This project is in its early stages and community feedback is essential to push 
 npm install type-route
 ```
 
+If using TypeScript (at least until https://github.com/type-route/type-route/issues/1 is resolved) set "strictFunctionTypes" to `false` in your `tsconfig.json`.
+
 **Sandbox**
 
 See [https://codesandbox.io/s/l4z98vw559](https://codesandbox.io/s/l4z98vw559) to play with an editable example of `type-route`.
