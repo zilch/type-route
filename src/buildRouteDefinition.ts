@@ -13,7 +13,7 @@ import { getQueryMatch } from "./getQueryMatch";
 import { getParsedPath } from "./getParsedPath";
 import { validate } from "./validate";
 
-export function getRouteDefinition(
+export function buildRouteDefinition(
   navigate: (href: string, replace?: boolean) => Promise<boolean>,
   builder: RouteDefinitionBuilder<{}>,
   name: string

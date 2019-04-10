@@ -190,14 +190,14 @@ function NotFoundPage() {
 ### defineRoute
 
 ```ts
-defineRoute(path: string): RouteDefinitionData;
+defineRoute(path: string): RouteDefinitionBuilder;
 defineRoute(
   params: ParameterCollection,
   path: (pathParams: PathParameterCollection) => string
-): RouteDefinitionData;
+): RouteDefinitionBuilder;
 ```
 
-This method will create a route definition data object to be consumed by `createRouter`. The simplified version of the call is an alias for `defineRoute({}, () => path)`. The parameters object passed to `defineRoute` is a map of variable names to the following strings representing the type of parameter being declared:
+This method will create a route definition builder object to be consumed by `createRouter`. The simplified version of the call is an alias for `defineRoute({}, () => path)`. The parameters object passed to `defineRoute` is a map of variable names to the following strings representing the type of parameter being declared:
 
 - `"path.param.string"` - A parameter of type string found in the pathname of the url.
 - `"path.param.number"` - A parameter of type number found in the pathname of the url.
@@ -232,8 +232,8 @@ Defines a route matching: `"/user/some-id/posts?page=1&search=hello"` or `"/user
 ### createRouter
 
 ```ts
-createRouter(routeDefinitions: RouteDefinitionDataCollection): Router
-createRouter(historyType: "browser" | "memory", routeDefinitions: RouteDefinitionDataCollection): Router
+createRouter(routeDefinitions: RouteDefinitionBuilderCollection): Router
+createRouter(historyType: "browser" | "memory", routeDefinitions: RouteDefinitionBuilderCollection): Router
 ```
 
 Initializes a router. By default it will create a browser history router. You may also explicitly set the history type to `"browser"` or `"memory"`. Using `"memory"` will create an environment agnostic router. This would be useful if, for instance, you're developing a React Native application.
@@ -277,7 +277,7 @@ routes.home.link();
 routes.home.match();
 ```
 
-The `routes` property of a `Router` object is a map of route names to a `RouteDefinition` object (not to be confused with the `RouteDefinitionData` object that `defineRoute` creates). The `RouteDefinition` object contains properties and functions for interacting with that specific route in your application.
+The `routes` property of a `Router` object is a map of route names to a `RouteDefinition` object (not to be confused with the `RouteDefinitionBuilder` object that `defineRoute` creates). The `RouteDefinition` object contains properties and functions for interacting with that specific route in your application.
 
 <br/>
 

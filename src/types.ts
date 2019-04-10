@@ -47,8 +47,13 @@ export type PathParameterDefinitionCollection = {
   [parameterName: string]: PathParamNumber | PathParamString;
 };
 
+export type PathParams<T extends ParameterDefinitionCollection> = Record<
+  KeysMatching<T, PathParamNumber | PathParamString>,
+  string
+>;
+
 export type PathFn<T extends ParameterDefinitionCollection> = (
-  params: Record<KeysMatching<T, PathParamNumber | PathParamString>, string>
+  params: PathParams<T>
 ) => string;
 
 export type MatchFnParams = {

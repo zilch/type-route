@@ -94,11 +94,12 @@ function isHistoryType(arg: any) {
   return `Got \`${arg}\`\nExpected either \`browser\` or \`memory\``;
 }
 
-function isRouteDefinition(key: string, value: any) {
+function isRouteDefinitionBuilder(key: string, value: any) {
   const checks = [
     () => isTypeOf(value, "object"),
     () => isParameterDefinitionCollection(value.params),
-    () => isFunction(value.path)
+    () => isFunction(value.path),
+    () => isFunction(value.extend)
   ];
 
   for (const check of checks) {
@@ -111,7 +112,7 @@ function isRouteDefinition(key: string, value: any) {
   return true;
 }
 
-function isRouteDefinitionDataCollection(arg: any) {
+function isRouteDefinitionBuilderCollection(arg: any) {
   const result = isTypeOf(arg, "object");
 
   if (result !== true) {
@@ -125,7 +126,7 @@ function isRouteDefinitionDataCollection(arg: any) {
 
     const value = arg[key] as ParameterDefinition;
 
-    const result = isRouteDefinition(key, value);
+    const result = isRouteDefinitionBuilder(key, value);
 
     if (result === true) {
       continue;
@@ -239,31 +240,39 @@ function isParameterDefinitionCollection(arg: any) {
   return true;
 }
 
-export const validate = {
-  ["defineRoute"]: assertion(
+function createBuildRouteDefinitionAssertion(functionName: string) {
+  return assertion(
     {
-      functionName: "defineRoute",
+      functionName,
       signature: [
-        "defineRoute(path: string): RouteDefinitionData;",
-        "defineRoute(params: Parameters, path: (params: Parameters) => string): RouteDefinitionData;"
+        `${functionName}(path: string): RouteDefinitionBuilder;`,
+        `${functionName}(params: Parameters, path: (params: Parameters) => string): RouteDefinitionBuilder;`
       ]
     },
     (args: any[]) => {
-      assertNumArguments("defineRoute", args, 1, 2);
+      assertNumArguments(functionName, args, 1, 2);
 
       if (args.length === 1) {
-        assertArgumentType("defineRoute", "path", args, 0, isString);
+        assertArgumentType(functionName, "path", args, 0, isString);
       } else {
         assertArgumentType(
-          "defineRoute",
+          functionName,
           "params",
           args,
           0,
           isParameterDefinitionCollection
         );
-        assertArgumentType("defineRoute", "path", args, 1, isFunction);
+        assertArgumentType(functionName, "path", args, 1, isFunction);
       }
     }
+  );
+}
+
+export const validate = {
+  ["defineRoute"]: createBuildRouteDefinitionAssertion("defineRoute"),
+
+  ["[routeDefinitionBuilder].extend"]: createBuildRouteDefinitionAssertion(
+    "extend"
   ),
 
   ["createRouter"]: assertion(
@@ -283,7 +292,7 @@ export const validate = {
           "routeDefinitions",
           args,
           0,
-          isRouteDefinitionDataCollection
+          isRouteDefinitionBuilderCollection
         );
       } else {
         assertArgumentType(
@@ -298,7 +307,7 @@ export const validate = {
           "routeDefinitions",
           args,
           1,
-          isRouteDefinitionDataCollection
+          isRouteDefinitionBuilderCollection
         );
       }
     }
