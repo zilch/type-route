@@ -24,10 +24,42 @@ export function defineRoute(...args: any[]) {
     path = args[1];
   }
 
+  return internalDefineRoute({
+    params,
+    path,
+    p
+  });
+
   const routeDefinitionData: RouteDefinitionBuilder<{}> = {
     params,
-    path
+    path,
+    extend: (...args: any[]) => {
+      return {} as any;
+    }
   };
 
   return routeDefinitionData;
+}
+
+function internalDefineRoute<T extends ParameterDefinitionCollection>({
+  params,
+  path,
+  parent
+}: {
+  params: T;
+  path: PathFn<T>;
+  parent: {
+    params: T;
+    path: PathFn<T>;
+  };
+}): RouteDefinitionBuilder<T> {
+  const routeDefinitionBuilder: RouteDefinitionBuilder<{}> = {
+    params,
+    path,
+    extend: (...args: any[]) => {
+      return {} as any;
+    }
+  };
+
+  return routeDefinitionBuilder;
 }

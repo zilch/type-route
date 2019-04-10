@@ -1,5 +1,4 @@
 import { MemoryHistory, History } from "history";
-import { defineRoute } from "./defineRoute";
 
 export type QueryParamString = "query.param.string";
 export type QueryParamNumber = "query.param.number";
@@ -109,34 +108,62 @@ export type RouteDefinition<K, T extends ParameterDefinitionCollection> = {
 };
 
 export type RouteDefinitionBuilderCollection = {
-  [routeName: string]: RouteDefinitionBuilder<any>;
+  [routeName: string]: RouteDefinitionBuilder<ParameterDefinitionCollection>;
 };
 
 export type RouteDefinitionCollection = {
   [routeName: string]: RouteDefinition<any, any>;
 };
 
+export type RouteDefinitionGroupCollection = RouteDefinition<
+  string,
+  ParameterDefinitionCollection
+>[];
+
+export type RouteDefinitionGroup<T extends RouteDefinitionGroupCollection> = {
+  has(route: Route<any>): route is Route<T[number]>;
+  [".routeDefinitions"]: T;
+};
+
 export type Action = "push" | "replace" | "pop" | "initial";
 
+export type RouteDefinitionToRoute<
+  T extends RouteDefinition<string, ParameterDefinitionCollection>
+> = {
+  name: T["name"];
+  action: Action;
+  params: RouteParameters<T[".builder"]["params"]>;
+};
+
+export type NotFoundRoute = {
+  name: false;
+  action: Action;
+  params: {};
+};
+
 export type Route<
-  T extends RouteDefinitionCollection | RouteDefinitionBuilderCollection
-> =
-  | {
-      [K in keyof T]: {
-        name: K;
-        action: Action;
-        params: T extends RouteDefinitionCollection
-          ? RouteParameters<T[K][".builder"]["params"]>
-          : T extends RouteDefinitionBuilderCollection
-          ? RouteParameters<T[K]["params"]>
-          : never;
-      }
-    }[keyof T]
-  | {
-      name: false;
-      action: Action;
-      params: {};
-    };
+  T extends
+    | RouteDefinitionCollection
+    | RouteDefinitionGroup<RouteDefinitionGroupCollection>
+    | RouteDefinitionBuilderCollection
+    | RouteDefinition<string, ParameterDefinitionCollection>
+> = T extends RouteDefinition<string, ParameterDefinitionCollection>
+  ? RouteDefinitionToRoute<T>
+  : T extends RouteDefinitionGroup<RouteDefinitionGroupCollection>
+  ? RouteDefinitionToRoute<T[".routeDefinitions"][number]>
+  :
+      | {
+          [K in keyof T]: {
+            name: K;
+            action: Action;
+            params: T extends RouteDefinitionCollection
+              ? RouteParameters<T[K][".builder"]["params"]>
+              : T extends RouteDefinitionBuilderCollection
+              ? RouteParameters<T[K]["params"]>
+              : never;
+          }
+        }[keyof T]
+      | NotFoundRoute;
 
 export type NavigationHandler<T extends RouteDefinitionBuilderCollection> = (
   nextRoute: Route<T>

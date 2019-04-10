@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
-import { createRouter, defineRoute } from "../index";
+import { createRouter, defineRoute, createGroup } from "../index";
 
 const { routes, listen, getCurrentRoute } = createRouter({
   p1: defineRoute("/p1"),
@@ -15,6 +15,8 @@ const { routes, listen, getCurrentRoute } = createRouter({
   p5: defineRoute("/p5"),
   p6: defineRoute("/p6")
 });
+
+const p456 = createGroup([routes.p4, routes.p5, routes.p6]);
 
 function App() {
   const [route, setRoute] = useState(getCurrentRoute());
@@ -34,6 +36,10 @@ function App() {
 
     return () => listener.remove();
   }, [route]);
+
+  if (p456.has(route)) {
+    route.name;
+  }
 
   if (route.name === routes.p2.name) {
     route.params.hello;
