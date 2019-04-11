@@ -2,61 +2,60 @@ import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { createRouter, defineRoute, createGroup, Route } from "../index";
 
-const mips = defineRoute("/mips");
-
-const year = mips.extend(
+const user = defineRoute(
   {
-    year: "path.param.number"
+    username: "path.param.string"
   },
-  p => `/${p.year}`
+  p => `/${p.username}`
 );
 
-const practice = year.extend(
+const repository = user.extend(
   {
-    practiceId: "path.param.string"
+    repositoryName: "path.param.string"
   },
-  p => `/${p.practiceId}`
+  p => `/${p.repositoryName}`
 );
 
-const report = practice.extend(
-  {
-    reportId: "path.param.string"
-  },
-  p => `/${p.reportId}`
-);
+const issues = repository.extend("/issues");
+const pullRequests = repository.extend("/pulls");
 
 const { routes, listen, getCurrentRoute } = createRouter({
-  yearSelector: mips.extend("/"),
-  practiceList: year.extend(
+  home: defineRoute("/"),
+  dashboard: defineRoute("/dashboard"),
+  user,
+  repository,
+  issueList: issues.extend(
     {
-      search: "query.param.string.optional",
-      page: "query.param.number.optional"
+      query: "query.param.string.optional"
     },
     () => "/"
   ),
-
-  practiceSummary: practice.extend("/"),
-  practicePreferences: practice.extend("/preferences"),
-  practiceReports: practice.extend("/reports"),
-
-  report: report.extend("/"),
-  reportQuality: report.extend("/quality"),
-  reportPromotingInteroperability: report.extend("/promoting-interoperability"),
-  reportImprovementActivities: report.extend("/improvement-activities"),
-  reportOverview: report.extend("/overview")
+  issue: issues.extend(
+    {
+      issueNumber: "path.param.number"
+    },
+    p => `/${p.issueNumber}`
+  ),
+  pullRequestList: pullRequests.extend(
+    {
+      query: "query.param.string.optional"
+    },
+    () => "/"
+  ),
+  pullRequest: pullRequests.extend(
+    {
+      pullRequestNumber: "path.param.number"
+    },
+    p => `/${p.pullRequestNumber}`
+  )
 });
 
-const practiceGroup = createGroup([
-  routes.practiceSummary,
-  routes.practicePreferences,
-  routes.practiceReports
-]);
-const reportGroup = createGroup([
-  routes.report,
-  routes.reportQuality,
-  routes.reportPromotingInteroperability,
-  routes.reportImprovementActivities,
-  routes.reportOverview
+const repositoryGroup = createGroup([
+  routes.repository,
+  routes.issueList,
+  routes.issue,
+  routes.pullRequestList,
+  routes.pullRequest
 ]);
 
 function App() {
@@ -68,25 +67,21 @@ function App() {
 
   useEffect(() => {
     const listener = listen(nextRoute => {
-      if (nextRoute.name === routes.report.name) {
-        routes.reportQuality.replace(nextRoute.params);
-        return false;
-      }
-
       setRoute(nextRoute);
     });
 
     return () => listener.remove();
   }, [route]);
 
+  if (repositoryGroup.has(route)) {
+    if (route.name === "pullRequestList") {
+    }
+  }
+
   return (
     <>
-      <a href="https://www.bradenhs.com/">external site</a>
-      <a {...routes.home.link()}>P1</a>
-      <a {...routes.about.link()}>P2</a>
-      <a {...routes.userList.link()}>P3</a>
-      <a {...routes.userSummary.link({ userId: "abc" })}>P4</a>
-      <a {...routes.userSettings.link({ userId: "abc" })}>P4</a>
+      <a {...routes.dashboard.link()}>Dashboard</a>
+      <a {...routes.user.link({ username: "bradenhs" })}>Profile</a>
 
       <div>{route.name}</div>
     </>
@@ -96,8 +91,12 @@ function App() {
 function Page(props: { route: Route<typeof routes> }) {
   const { route } = props;
 
-  if (userGroup.has(route)) {
-    return <UserPage route={route} />;
+  if (route.name === routes.repository.name) {
+    return <CodeSubPage route={route} />;
+  }
+
+  if (repositoryGroup.has(route)) {
+    return <RepositoryPage route={route} />;
   }
 
   route.name;
@@ -105,17 +104,24 @@ function Page(props: { route: Route<typeof routes> }) {
   return "hi";
 }
 
-function UserPage(props: { route: Route<typeof userGroup> }) {
+function RepositoryPage(props: { route: Route<typeof repositoryGroup> }) {
   const { route } = props;
 
-  switch (route.name) {
-    case routes.userSummary.name:
-      return <div>User Summary</div>;
-    case routes.userSettings.name:
-      return <div>User Settings</div>;
-    default:
-      throw new Error("unexpected");
+  let subPage: React.ReactNode;
+
+  if (route.name === routes.repository.name) {
+    subPage = <CodeSubPage route={route} />;
+  } else if (route.name === routes.issue.name) {
+  } else if (route.name === routes.issueList.name) {
+  } else if (route.name === routes.pullRequest.name) {
+  } else if (route.name === routes.pullRequestList.name) {
   }
+
+  return <div>{subPage}</div>;
+}
+
+function CodeSubPage(props: { route: Route<typeof routes.repository> }) {
+  return <div>CodeSubPage {JSON.stringify(props)}</div>;
 }
 
 ReactDOM.render(<App />, document.querySelector("#root"));

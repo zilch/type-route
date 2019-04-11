@@ -140,6 +140,10 @@ export type RouteDefinitionToRoute<
   params: RouteParameters<T[".builder"]["params"]>;
 };
 
+export type RouteDefinitionGroupToRoute<
+  T extends RouteDefinition<string, ParameterDefinitionCollection>[]
+> = { [P in keyof T]: RouteDefinitionToRoute<T[P]> };
+
 export type NotFoundRoute = {
   name: false;
   action: Action;
