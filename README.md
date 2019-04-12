@@ -37,6 +37,9 @@
     - [listen](#listen)
     - [getCurrentRoute](#getCurrentRoute)
     - [history](#history)
+  - [createGroup](#createGroup)
+    - [has](#has)
+    - [getRouteNames](#getRouteNames)
 
 <br/>
 
@@ -52,13 +55,13 @@ This project is in its early stages and community feedback is essential to push 
 
 ## Getting Started
 
+**If using TypeScript (at least until https://github.com/type-route/type-route/issues/1 is resolved) explicitly set "strictFunctionTypes" to `false` in your `tsconfig.json`.**
+
 **Install**
 
 ```
 npm install type-route
 ```
-
-If using TypeScript (at least until https://github.com/type-route/type-route/issues/1 is resolved) set "strictFunctionTypes" to `false` in your `tsconfig.json`.
 
 **Sandbox**
 
@@ -524,3 +527,7 @@ history.goForward();
 ```
 
 The `history` property of a router provides direct access to the underlying history instance from the [core library](https://github.com/ReactTraining/history) which powers `type-route`. Most use cases won't require using this property. If you do need to access it, do so with caution as certain uses may cause unexpected behavior.
+
+<br/>
+
+### createGroup

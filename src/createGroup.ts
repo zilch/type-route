@@ -1,17 +1,37 @@
-import { Route, RouteDefinition, ParameterDefinitionCollection } from "./types";
+import {
+  Route,
+  RouteDefinition,
+  ParameterDefinitionCollection,
+  RouteDefinitionGroup
+} from "./types";
 
 export function createGroup<
-  T extends RouteDefinition<string, ParameterDefinitionCollection>[]
->(routeDefinitions: T) {
+  T extends (
+    | RouteDefinition<string, ParameterDefinitionCollection>
+    | RouteDefinitionGroup<
+        RouteDefinition<string, ParameterDefinitionCollection>[]
+      >)[]
+>(groupItems: T): RouteDefinitionGroup<T> {
   const routeDefinitionNames: {
     [key: string]: true;
   } = {};
 
-  routeDefinitions.forEach(({ name }) => (routeDefinitionNames[name] = true));
+  groupItems.forEach(item => {
+    if (isRouteDefinitionGroup(item)) {
+      item.getRouteNames().forEach(name => {
+        routeDefinitionNames[name] = true;
+      });
+    } else {
+      routeDefinitionNames[item.name] = true;
+    }
+  });
 
   return {
-    [".routeDefinitions"]: routeDefinitions,
-    has(route: Route<any>): route is Route<T[number]> {
+    [".type"]: null as any,
+    getRouteNames() {
+      return Object.keys(routeDefinitionNames);
+    },
+    has(route: Route<any>): route is any {
       if (route.name === false) {
         return false;
       }
@@ -21,4 +41,20 @@ export function createGroup<
       return value === true ? true : false;
     }
   };
+}
+
+function isRouteDefinitionGroup(
+  groupItem:
+    | RouteDefinition<string, ParameterDefinitionCollection>
+    | RouteDefinitionGroup<
+        RouteDefinition<string, ParameterDefinitionCollection>[]
+      >
+): groupItem is RouteDefinitionGroup<
+  RouteDefinition<string, ParameterDefinitionCollection>[]
+> {
+  return (
+    typeof (groupItem as RouteDefinitionGroup<
+      RouteDefinition<string, ParameterDefinitionCollection>[]
+    >).getRouteNames === "function"
+  );
 }

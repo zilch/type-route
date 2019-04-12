@@ -110,6 +110,12 @@ export type RouteDefinition<K, T extends ParameterDefinitionCollection> = {
   match: MatchFn<T>;
 
   [".builder"]: RouteDefinitionBuilder<T>;
+
+  [".type"]: {
+    name: K;
+    action: Action;
+    params: RouteParameters<T>;
+  };
 };
 
 export type RouteDefinitionBuilderCollection = {
@@ -118,16 +124,6 @@ export type RouteDefinitionBuilderCollection = {
 
 export type RouteDefinitionCollection = {
   [routeName: string]: RouteDefinition<any, any>;
-};
-
-export type RouteDefinitionGroupCollection = RouteDefinition<
-  string,
-  ParameterDefinitionCollection
->[];
-
-export type RouteDefinitionGroup<T extends RouteDefinitionGroupCollection> = {
-  has(route: Route<any>): route is Route<T[number]>;
-  [".routeDefinitions"]: T;
 };
 
 export type Action = "push" | "replace" | "pop" | "initial";
@@ -140,26 +136,38 @@ export type RouteDefinitionToRoute<
   params: RouteParameters<T[".builder"]["params"]>;
 };
 
-export type RouteDefinitionGroupToRoute<
-  T extends RouteDefinition<string, ParameterDefinitionCollection>[]
-> = { [P in keyof T]: RouteDefinitionToRoute<T[P]> };
-
 export type NotFoundRoute = {
   name: false;
   action: Action;
   params: {};
 };
 
+export type RouteDefinitionGroup<
+  T extends (
+    | RouteDefinition<string, ParameterDefinitionCollection>
+    | RouteDefinitionGroup<
+        RouteDefinition<string, ParameterDefinitionCollection>[]
+      >)[]
+> = {
+  [".type"]: T[number][".type"];
+  getRouteNames(): T[number][".type"]["name"][];
+  has(route: Route<any>): route is T[number][".type"];
+};
+
 export type Route<
   T extends
     | RouteDefinitionCollection
-    | RouteDefinitionGroup<RouteDefinitionGroupCollection>
     | RouteDefinitionBuilderCollection
+    | RouteDefinitionGroup<
+        RouteDefinition<string, ParameterDefinitionCollection>[]
+      >
     | RouteDefinition<string, ParameterDefinitionCollection>
 > = T extends RouteDefinition<string, ParameterDefinitionCollection>
   ? RouteDefinitionToRoute<T>
-  : T extends RouteDefinitionGroup<RouteDefinitionGroupCollection>
-  ? RouteDefinitionToRoute<T[".routeDefinitions"][number]>
+  : T extends RouteDefinitionGroup<
+      RouteDefinition<string, ParameterDefinitionCollection>[]
+    >
+  ? T[".type"]
   :
       | {
           [K in keyof T]: {

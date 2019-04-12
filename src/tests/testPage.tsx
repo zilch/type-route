@@ -50,12 +50,16 @@ const { routes, listen, getCurrentRoute } = createRouter({
   )
 });
 
+const issueGroup = createGroup([routes.issue, routes.issueList]);
+const pullRequestGroup = createGroup([
+  routes.pullRequest,
+  routes.pullRequestList
+]);
+
 const repositoryGroup = createGroup([
-  routes.repository,
-  routes.issueList,
-  routes.issue,
-  routes.pullRequestList,
-  routes.pullRequest
+  issueGroup,
+  pullRequestGroup,
+  routes.repository
 ]);
 
 function App() {
@@ -115,6 +119,7 @@ function RepositoryPage(props: { route: Route<typeof repositoryGroup> }) {
   } else if (route.name === routes.issueList.name) {
   } else if (route.name === routes.pullRequest.name) {
   } else if (route.name === routes.pullRequestList.name) {
+    route.params.query;
   }
 
   return <div>{subPage}</div>;
