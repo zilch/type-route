@@ -1,20 +1,68 @@
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
-import { createRouter, defineRoute } from "../index";
+import { createRouter, defineRoute, createGroup, Route } from "../index";
+
+const user = defineRoute(
+  {
+    username: "path.param.string"
+  },
+  p => `/${p.username}`
+);
+
+const repository = user.extend(
+  {
+    repositoryName: "path.param.string"
+  },
+  p => `/${p.repositoryName}`
+);
+
+const issues = repository.extend("/issues");
+const pullRequests = repository.extend("/pulls");
 
 const { routes, listen, getCurrentRoute } = createRouter({
-  p1: defineRoute("/p1"),
-  p2: defineRoute(
+  home: defineRoute("/"),
+  dashboard: defineRoute("/dashboard"),
+  user,
+  repository,
+  issueList: issues.extend(
     {
-      hello: "path.param.string"
+      query: "query.param.string.optional"
     },
-    p => `/p/${p.hello}`
+    () => "/"
   ),
-  p3: defineRoute("/p3"),
-  p4: defineRoute("/p4"),
-  p5: defineRoute("/p5"),
-  p6: defineRoute("/p6")
+  issue: issues.extend(
+    {
+      issueNumber: "path.param.number"
+    },
+    p => `/${p.issueNumber}`
+  ),
+  pullRequestList: pullRequests.extend(
+    {
+      query: "query.param.string.optional"
+    },
+    () => "/"
+  ),
+  pullRequest: pullRequests.extend(
+    {
+      pullRequestNumber: "path.param.number"
+    },
+    p => `/${p.pullRequestNumber}`
+  )
 });
+
+const dashboardGroup = createGroup([routes.home, routes.dashboard]);
+
+const issueGroup = createGroup([routes.issue, routes.issueList]);
+const pullRequestGroup = createGroup([
+  routes.pullRequest,
+  routes.pullRequestList
+]);
+
+const repositoryGroup = createGroup([
+  issueGroup,
+  pullRequestGroup,
+  routes.repository
+]);
 
 function App() {
   const [route, setRoute] = useState(getCurrentRoute());
@@ -25,33 +73,68 @@ function App() {
 
   useEffect(() => {
     const listener = listen(nextRoute => {
-      if (route.name === routes.p2.name && !confirm("Are you sure?")) {
-        return false;
-      }
-
       setRoute(nextRoute);
     });
 
     return () => listener.remove();
   }, [route]);
 
-  if (route.name === routes.p2.name) {
-    route.params.hello;
+  if (repositoryGroup.has(route)) {
+    if (route.name === "pullRequestList") {
+    }
   }
 
   return (
     <>
-      <a href="https://www.bradenhs.com/">external site</a>
-      <a {...routes.p1.link()}>P1</a>
-      <a {...routes.p2.link({ hello: "hi" })}>P2</a>
-      <a {...routes.p3.link()}>P3</a>
-      <a {...routes.p4.link()}>P4</a>
-      <a {...routes.p5.link()}>P5</a>
-      <a {...routes.p6.link()}>P6</a>
+      <a {...routes.dashboard.link()}>Dashboard</a>
+      <a {...routes.user.link({ username: "bradenhs" })}>Profile</a>
 
-      <div>{route.name}</div>
+      <Page route={route} />
     </>
   );
+}
+
+function Page(props: { route: Route<typeof routes> }) {
+  const { route } = props;
+
+  if (repositoryGroup.has(route)) {
+    return <RepositoryPage route={route} />;
+  }
+
+  if (dashboardGroup.has(route)) {
+    return <DashboardPage route={route} />;
+  }
+
+  if (route.name === routes.user.name) {
+    return <div>User Page</div>;
+  }
+
+  return <div>Not Found</div>;
+}
+
+function DashboardPage(props: { route: Route<typeof dashboardGroup> }) {
+  return <div>Dashboard {props.route.name}</div>;
+}
+
+function RepositoryPage(props: { route: Route<typeof repositoryGroup> }) {
+  const { route } = props;
+
+  let subPage: React.ReactNode;
+
+  if (route.name === routes.repository.name) {
+    subPage = <CodeSubPage route={route} />;
+  } else if (route.name === routes.issue.name) {
+  } else if (route.name === routes.issueList.name) {
+  } else if (route.name === routes.pullRequest.name) {
+  } else if (route.name === routes.pullRequestList.name) {
+    route.params.query;
+  }
+
+  return <div>{subPage}</div>;
+}
+
+function CodeSubPage(props: { route: Route<typeof routes.repository> }) {
+  return <div>CodeSubPage {JSON.stringify(props)}</div>;
 }
 
 ReactDOM.render(<App />, document.querySelector("#root"));

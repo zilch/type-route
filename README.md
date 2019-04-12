@@ -26,6 +26,7 @@
 - [Getting Started](#getting-started)
 - [API Overview](#api-overview)
   - [defineRoute](#defineRoute)
+    - [extend](#extend)
   - [createRouter](#createRouter)
     - [routes](#routes)
       - [name](#name)
@@ -37,6 +38,8 @@
     - [listen](#listen)
     - [getCurrentRoute](#getCurrentRoute)
     - [history](#history)
+  - [createGroup](#createGroup)
+    - [has](#has)
 
 <br/>
 
@@ -52,13 +55,13 @@ This project is in its early stages and community feedback is essential to push 
 
 ## Getting Started
 
+**If using TypeScript (at least until https://github.com/type-route/type-route/issues/1 is resolved) explicitly set "strictFunctionTypes" to `false` in your `tsconfig.json`.**
+
 **Install**
 
 ```
 npm install type-route
 ```
-
-If using TypeScript (at least until https://github.com/type-route/type-route/issues/1 is resolved) set "strictFunctionTypes" to `false` in your `tsconfig.json`.
 
 **Sandbox**
 
@@ -190,14 +193,14 @@ function NotFoundPage() {
 ### defineRoute
 
 ```ts
-defineRoute(path: string): RouteDefinitionData;
+defineRoute(path: string): RouteDefinitionBuilder;
 defineRoute(
   params: ParameterCollection,
   path: (pathParams: PathParameterCollection) => string
-): RouteDefinitionData;
+): RouteDefinitionBuilder;
 ```
 
-This method will create a route definition data object to be consumed by `createRouter`. The simplified version of the call is an alias for `defineRoute({}, () => path)`. The parameters object passed to `defineRoute` is a map of variable names to the following strings representing the type of parameter being declared:
+This method will create a route definition builder object to be consumed by `createRouter`. The simplified version of the call is an alias for `defineRoute({}, () => path)`. The parameters object passed to `defineRoute` is a map of variable names to the following strings representing the type of parameter being declared:
 
 - `"path.param.string"` - A parameter of type string found in the pathname of the url.
 - `"path.param.number"` - A parameter of type number found in the pathname of the url.
@@ -229,11 +232,39 @@ Defines a route matching: `"/user/some-id/posts?page=1&search=hello"` or `"/user
 
 <br/>
 
+### extend
+
+```ts
+const user = defineRoute(
+  {
+    userId: "path.param.string"
+  },
+  p => `/user/${p.userId}`
+);
+
+const { routes, listen } = createRouter({
+  home: defineRoute("/"),
+  userSummary: user.extend("/"),
+  userSettings: user.extend("/settings"),
+  userPostList: user.extend("/post"),
+  userPost: user.extend(
+    {
+      postId: "path.param.string"
+    },
+    p => `/post/${p.postId}`
+  )
+});
+```
+
+The `extend` function has the exact same signature as `defineRoute`. Both return a `RouteDefinitionBuilder` object which can then be extended itself. The path parameter of the `extend` function is relative to the base `RouteDefinitionBuilder` object. In the above example the `userSettings` route would match the path `/user/someid/settings`. The parameter definitions you pass to extend are merged with with the parameter definitions from the base `RouteDefinitionBuilder` object. There can be no overlap in parameter definition names between the base and extended `RouteDefinitionBuilder`.
+
+<br/>
+
 ### createRouter
 
 ```ts
-createRouter(routeDefinitions: RouteDefinitionDataCollection): Router
-createRouter(historyType: "browser" | "memory", routeDefinitions: RouteDefinitionDataCollection): Router
+createRouter(routeDefinitions: RouteDefinitionBuilderCollection): Router
+createRouter(historyType: "browser" | "memory", routeDefinitions: RouteDefinitionBuilderCollection): Router
 ```
 
 Initializes a router. By default it will create a browser history router. You may also explicitly set the history type to `"browser"` or `"memory"`. Using `"memory"` will create an environment agnostic router. This would be useful if, for instance, you're developing a React Native application.
@@ -277,7 +308,7 @@ routes.home.link();
 routes.home.match();
 ```
 
-The `routes` property of a `Router` object is a map of route names to a `RouteDefinition` object (not to be confused with the `RouteDefinitionData` object that `defineRoute` creates). The `RouteDefinition` object contains properties and functions for interacting with that specific route in your application.
+The `routes` property of a `Router` object is a map of route names to a `RouteDefinition` object (not to be confused with the `RouteDefinitionBuilder` object that `defineRoute` creates). The `RouteDefinition` object contains properties and functions for interacting with that specific route in your application.
 
 <br/>
 
@@ -524,3 +555,65 @@ history.goForward();
 ```
 
 The `history` property of a router provides direct access to the underlying history instance from the [core library](https://github.com/ReactTraining/history) which powers `type-route`. Most use cases won't require using this property. If you do need to access it, do so with caution as certain uses may cause unexpected behavior.
+
+<br/>
+
+### createGroup
+
+```ts
+const user = defineRoute(
+  {
+    userId: "path.param.string"
+  },
+  p => `/user/${p.userId}`
+);
+
+const { routes, listen } = createRouter({
+  home: defineRoute("/"),
+  userSummary: user.extend("/"),
+  userSettings: user.extend("/settings"),
+  userPostList: user.extend("/post"),
+  userPost: user.extend(
+    {
+      postId: "path.param.string"
+    },
+    p => `/post/${p.postId}`
+  )
+});
+
+const userPostGroup = createGroup([routes.userPostList, routes.userPost]);
+
+const userGroup = createGroup([
+  routes.userSummary,
+  routes.userSettings,
+  userPostGroup
+]);
+
+listen(nextRoute => {
+  if (userGroup.has(nextRoute)) {
+    nextRoute.name; // "userSummary" | "userSettings" | "userPostList" | "userPost"
+  }
+});
+```
+
+The `createGroup` function is useful for composing groups of routes to make checking against htme easier elsewhere in the application with the `has` function. It takes an array composed of both `RouteDefinition` and `RouteDefinitionGroup` objects.
+
+<br/>
+
+### has
+
+See above.
+
+<br/>
+
+### Route
+
+```ts
+import { Route } from "type-route";
+
+Route<typeof routes>
+Route<typeof routes.home>
+Route<typeof userGroup>
+```
+
+The `Route` function is part of the TypeScript specific api. If using TypeScript you can pass various objects in your application to it to get the type of the associated routes for the given object.

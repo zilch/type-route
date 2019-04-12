@@ -1,5 +1,6 @@
 export { createRouter } from "./createRouter";
 export { defineRoute } from "./defineRoute";
+export { createGroup } from "./createGroup";
 export {
   Route,
   RouteDefinition,

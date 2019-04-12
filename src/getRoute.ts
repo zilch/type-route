@@ -29,5 +29,5 @@ export function getRoute<T extends RouteDefinitionCollection>(
     name: false,
     params: {},
     action
-  };
+  } as any;
 }

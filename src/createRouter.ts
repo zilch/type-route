@@ -1,5 +1,5 @@
 import {
-  RouteDefinitionDataCollection,
+  RouteDefinitionBuilderCollection,
   Router,
   NavigationHandler,
   Action
@@ -12,18 +12,18 @@ import {
   Location
 } from "history";
 import { mapObject } from "./mapObject";
-import { getRouteDefinition } from "./getRouteDefinition";
+import { buildRouteDefinition } from "./buildRouteDefinition";
 import { getRoute } from "./getRoute";
 import { error, validate } from "./validate";
 
-export function createRouter<T extends RouteDefinitionDataCollection>(
+export function createRouter<T extends RouteDefinitionBuilderCollection>(
   routeDefinitions: T
 ): Router<T, History>;
-export function createRouter<T extends RouteDefinitionDataCollection>(
+export function createRouter<T extends RouteDefinitionBuilderCollection>(
   historyType: "browser",
   routeDefinitions: T
 ): Router<T, History>;
-export function createRouter<T extends RouteDefinitionDataCollection>(
+export function createRouter<T extends RouteDefinitionBuilderCollection>(
   historyType: "memory",
   routeDefinitions: T
 ): Router<T, MemoryHistory>;
@@ -31,22 +31,22 @@ export function createRouter(...args: any[]) {
   validate["createRouter"](Array.from(arguments));
 
   let historyType: "memory" | "browser";
-  let routeDefinitionData: RouteDefinitionDataCollection;
+  let routeDefinitionBuilderCollection: RouteDefinitionBuilderCollection;
 
   if (args.length === 1) {
     historyType = "browser";
-    routeDefinitionData = args[0];
+    routeDefinitionBuilderCollection = args[0];
   } else {
     historyType = args[0];
-    routeDefinitionData = args[1];
+    routeDefinitionBuilderCollection = args[1];
   }
 
   const createHistory =
     historyType === "browser" ? createBrowserHistory : createMemoryHistory;
 
   const history = createHistory({ getUserConfirmation });
-  const routes = mapObject(routeDefinitionData, (data, name) =>
-    getRouteDefinition(navigate, data, name as string)
+  const routes = mapObject(routeDefinitionBuilderCollection, (builder, name) =>
+    buildRouteDefinition(navigate, builder, name as string)
   );
 
   const navigationHandlers: {
