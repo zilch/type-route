@@ -26,6 +26,7 @@
 - [Getting Started](#getting-started)
 - [API Overview](#api-overview)
   - [defineRoute](#defineRoute)
+    - [extend](#extend)
   - [createRouter](#createRouter)
     - [routes](#routes)
       - [name](#name)
@@ -229,6 +230,34 @@ defineRoute(
 ```
 
 Defines a route matching: `"/user/some-id/posts?page=1&search=hello"` or `"/user/some-id/posts?page=1"`
+
+<br/>
+
+### extend
+
+```ts
+const user = defineRoute(
+  {
+    userId: "path.param.string"
+  },
+  p => `/user/${p.userId}`
+);
+
+const { routes, listen } = createRouter({
+  home: defineRoute("/"),
+  userSummary: user.extend("/"),
+  userSettings: user.extend("/settings"),
+  userPostList: user.extend("/post"),
+  userPost: user.extend(
+    {
+      postId: "path.param.string"
+    },
+    p => `/post/${p.postId}`
+  )
+});
+```
+
+The `extend` function has the exact same signature as `defineRoute`. Both return a `RouteDefinitionBuilder` object which can then be extended itself. The path parameter of the `extend` function is relative to the base `RouteDefinitionBuilder` object. In the above example the `userSettings` route would match the path `/user/someid/settings`. The parameter definitions you pass to extend are merged with with the parameter definitions from the base `RouteDefinitionBuilder` object. There can be no overlap in parameter definition names between the base and extended `RouteDefinitionBuilder`.
 
 <br/>
 
@@ -532,16 +561,60 @@ The `history` property of a router provides direct access to the underlying hist
 
 ### createGroup
 
-TODO
+```ts
+const user = defineRoute(
+  {
+    userId: "path.param.string"
+  },
+  p => `/user/${p.userId}`
+);
+
+const { routes, listen } = createRouter({
+  home: defineRoute("/"),
+  userSummary: user.extend("/"),
+  userSettings: user.extend("/settings"),
+  userPostList: user.extend("/post"),
+  userPost: user.extend(
+    {
+      postId: "path.param.string"
+    },
+    p => `/post/${p.postId}`
+  )
+});
+
+const userPostGroup = createGroup([routes.userPostList, routes.userPost]);
+
+const userGroup = createGroup([
+  routes.userSummary,
+  routes.userSettings,
+  userPostGroup
+]);
+
+listen(nextRoute => {
+  if (userGroup.has(nextRoute)) {
+    nextRoute.name; // "userSummary" | "userSettings" | "userPostList" | "userPost"
+  }
+});
+```
+
+The `createGroup` function is useful for composing groups of routes to make checking against htme easier elsewhere in the application with the `has` function. It takes an array composed of both `RouteDefinition` and `RouteDefinitionGroup` objects.
 
 <br/>
 
 ### has
 
-TODO
+See above.
 
 <br/>
 
 ### Route
 
-TODO
+```ts
+import { Route } from "type-route";
+
+Route<typeof routes>
+Route<typeof routes.home>
+Route<typeof userGroup>
+```
+
+The `Route` function is part of the TypeScript specific api. If using TypeScript you can pass various objects in your application to it to get the type of the associated routes for the given object.
