@@ -40,7 +40,6 @@
     - [history](#history)
   - [createGroup](#createGroup)
     - [has](#has)
-    - [getRouteNames](#getRouteNames)
 
 <br/>
 
