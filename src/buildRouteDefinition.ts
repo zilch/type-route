@@ -35,7 +35,8 @@ export function buildRouteDefinition(
       validate["[route].replace"](Array.from(arguments), builder.params);
       return navigate(href(params), true);
     },
-    [".builder"]: builder
+    [".builder"]: builder,
+    [".type"]: null as any
   };
 
   return routeDefinition;

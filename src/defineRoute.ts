@@ -70,15 +70,18 @@ function createRouteDefinitionBuilder<T extends ParameterDefinitionCollection>({
       parentPath = parentPath.slice(0, -1);
     }
 
-    return parentPath + childPath;
+    return parentPath + childPath || "/";
   };
 
   const routeDefinitionBuilder: RouteDefinitionBuilder<T> = {
     params: parameterDefinitions,
     path: buildPath,
     extend(...args: any[]) {
-      // TODO ensure no child param name is the same as a parent param name
-      validate["[routeDefinitionBuilder].extend"](Array.from(arguments));
+      validate["[routeDefinitionBuilder].extend"](
+        Array.from(arguments),
+        parameterDefinitions
+      );
+
       return createRouteDefinitionBuilder<T>({
         child: parseArgs<T>(args),
         parent: {
@@ -92,7 +95,7 @@ function createRouteDefinitionBuilder<T extends ParameterDefinitionCollection>({
   return routeDefinitionBuilder;
 }
 
-function parseArgs<T extends ParameterDefinitionCollection>(...args: any[]) {
+function parseArgs<T extends ParameterDefinitionCollection>(args: any[]) {
   let parameterDefinitions: T;
   let buildPath: PathFn<T>;
 

@@ -82,6 +82,20 @@ function isString(arg: any) {
   return isTypeOf(arg, "string");
 }
 
+function isStringArray(arg: any) {
+  if (!Array.isArray(arg)) {
+    return `Got type \`${typeof arg}\`\nExpected \`array\``;
+  }
+
+  if (arg.some(value => typeof value !== "string")) {
+    return `Got \`${JSON.stringify(
+      arg
+    )}\`\nExpected all array items to be of type \`string\``;
+  }
+
+  return true;
+}
+
 function isFunction(arg: any) {
   return isTypeOf(arg, "function");
 }
@@ -133,6 +147,29 @@ function isRouteDefinitionBuilderCollection(arg: any) {
     }
 
     return result;
+  }
+
+  return true;
+}
+
+function isRoute(arg: any) {
+  const result = isTypeOf(arg, "object");
+
+  if (result !== true) {
+    return result;
+  }
+
+  const checks = [
+    () => ["name", isString(arg.name)],
+    () => ["action", isString(arg.action)],
+    () => ["params", isTypeOf(arg.params, "object")]
+  ];
+
+  for (const check of checks) {
+    const [name, result] = check();
+    if (result !== true) {
+      return `Unexpected value for key \`${name}\`\n${result}`;
+    }
   }
 
   return true;
@@ -240,6 +277,54 @@ function isParameterDefinitionCollection(arg: any) {
   return true;
 }
 
+function isRouteDefinition(arg: any) {
+  const result = isTypeOf(arg, "object");
+
+  if (result !== true) {
+    return result;
+  }
+
+  const checks = [
+    () => ["name", isString(arg.name)],
+    () => ["href", isFunction(arg.href)],
+    () => ["push", isFunction(arg.push)],
+    () => ["link", isFunction(arg.link)],
+    () => ["replace", isFunction(arg.replace)],
+    () => ["match", isFunction(arg.match)]
+  ];
+
+  for (const check of checks) {
+    const [key, result] = check();
+    if (result !== true) {
+      return `Expected a RouteDefinition object.\nGot unexpected value for key \`${key}\`\n${result}`;
+    }
+  }
+
+  return true as true;
+}
+
+function isRouteDefinitionGroup(arg: any) {
+  const result = isTypeOf(arg, "object");
+
+  if (result !== true) {
+    return result;
+  }
+
+  const checks = [
+    () => ["routeNames", isStringArray(arg.name)],
+    () => ["has", isFunction(arg.href)]
+  ];
+
+  for (const check of checks) {
+    const [key, result] = check();
+    if (result !== true) {
+      return `Expected a RouteDefinition object.\nGot unexpected value for key \`${key}\`\n${result}`;
+    }
+  }
+
+  return true as true;
+}
+
 function createBuildRouteDefinitionAssertion(functionName: string) {
   return assertion(
     {
@@ -249,7 +334,10 @@ function createBuildRouteDefinitionAssertion(functionName: string) {
         `${functionName}(params: Parameters, path: (params: Parameters) => string): RouteDefinitionBuilder;`
       ]
     },
-    (args: any[]) => {
+    (
+      args: any[],
+      parentParameterDefinitions: ParameterDefinitionCollection = {}
+    ) => {
       assertNumArguments(functionName, args, 1, 2);
 
       if (args.length === 1) {
@@ -263,6 +351,21 @@ function createBuildRouteDefinitionAssertion(functionName: string) {
           isParameterDefinitionCollection
         );
         assertArgumentType(functionName, "path", args, 1, isFunction);
+
+        assertArgumentType(functionName, "params", args, 0, arg => {
+          const childParameterNames = Object.keys(arg);
+          const parentParameterNames = Object.keys(parentParameterDefinitions);
+
+          for (const parentParameterName of parentParameterNames) {
+            for (const childParameterName of childParameterNames) {
+              if (childParameterName === parentParameterName) {
+                return `Child routes may not have the same parameters as parent routes. Child attempted to refined parameter \`${childParameterName}\`.`;
+              }
+            }
+          }
+
+          return true;
+        });
       }
     }
   );
@@ -414,6 +517,50 @@ export const validate = {
 
         return true;
       });
+    }
+  ),
+
+  ["createGroup"]: assertion(
+    {
+      functionName: "createGroup",
+      signature:
+        "createGroup(groupItems: (RouteDefinition | RouteDefinitionGroup)[]): RouteDefinitionGroup"
+    },
+    (args: any[]) => {
+      assertNumArguments("createGroup", args, 1, 1);
+      assertArgumentType("createGroup", "groupItems", args, 0, groupItems => {
+        if (!Array.isArray(groupItems)) {
+          return `Expected an array.`;
+        }
+
+        for (const item of groupItems) {
+          const [definitionResult, groupResult] = [
+            isRouteDefinition(item),
+            isRouteDefinitionGroup(item)
+          ];
+
+          if (definitionResult !== true) {
+            return definitionResult;
+          }
+
+          if (groupResult !== true) {
+            return groupResult;
+          }
+        }
+
+        return true as true;
+      });
+    }
+  ),
+
+  ["[group].has"]: assertion(
+    {
+      functionName: "has",
+      signature: "has(route: Route): boolean"
+    },
+    (args: any[]) => {
+      assertNumArguments("has", args, 1, 1);
+      assertArgumentType("has", "route", args, 0, isRoute);
     }
   )
 };

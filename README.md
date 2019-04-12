@@ -531,3 +531,17 @@ The `history` property of a router provides direct access to the underlying hist
 <br/>
 
 ### createGroup
+
+TODO
+
+<br/>
+
+### has
+
+TODO
+
+<br/>
+
+### Route
+
+TODO

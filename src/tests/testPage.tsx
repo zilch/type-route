@@ -50,6 +50,8 @@ const { routes, listen, getCurrentRoute } = createRouter({
   )
 });
 
+const dashboardGroup = createGroup([routes.home, routes.dashboard]);
+
 const issueGroup = createGroup([routes.issue, routes.issueList]);
 const pullRequestGroup = createGroup([
   routes.pullRequest,
@@ -87,7 +89,7 @@ function App() {
       <a {...routes.dashboard.link()}>Dashboard</a>
       <a {...routes.user.link({ username: "bradenhs" })}>Profile</a>
 
-      <div>{route.name}</div>
+      <Page route={route} />
     </>
   );
 }
@@ -95,17 +97,23 @@ function App() {
 function Page(props: { route: Route<typeof routes> }) {
   const { route } = props;
 
-  if (route.name === routes.repository.name) {
-    return <CodeSubPage route={route} />;
-  }
-
   if (repositoryGroup.has(route)) {
     return <RepositoryPage route={route} />;
   }
 
-  route.name;
+  if (dashboardGroup.has(route)) {
+    return <DashboardPage route={route} />;
+  }
 
-  return "hi";
+  if (route.name === routes.user.name) {
+    return <div>User Page</div>;
+  }
+
+  return <div>Not Found</div>;
+}
+
+function DashboardPage(props: { route: Route<typeof dashboardGroup> }) {
+  return <div>Dashboard {props.route.name}</div>;
 }
 
 function RepositoryPage(props: { route: Route<typeof repositoryGroup> }) {

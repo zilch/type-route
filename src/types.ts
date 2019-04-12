@@ -150,7 +150,7 @@ export type RouteDefinitionGroup<
       >)[]
 > = {
   [".type"]: T[number][".type"];
-  getRouteNames(): T[number][".type"]["name"][];
+  routeNames: T[number][".type"]["name"][];
   has(route: Route<any>): route is T[number][".type"];
 };
 

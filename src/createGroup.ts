@@ -4,6 +4,7 @@ import {
   ParameterDefinitionCollection,
   RouteDefinitionGroup
 } from "./types";
+import { validate } from "./validate";
 
 export function createGroup<
   T extends (
@@ -18,7 +19,7 @@ export function createGroup<
 
   groupItems.forEach(item => {
     if (isRouteDefinitionGroup(item)) {
-      item.getRouteNames().forEach(name => {
+      item.routeNames.forEach(name => {
         routeDefinitionNames[name] = true;
       });
     } else {
@@ -28,10 +29,10 @@ export function createGroup<
 
   return {
     [".type"]: null as any,
-    getRouteNames() {
-      return Object.keys(routeDefinitionNames);
-    },
+    routeNames: Object.keys(routeDefinitionNames),
     has(route: Route<any>): route is any {
+      validate["[group].has"](Array.from(arguments));
+
       if (route.name === false) {
         return false;
       }
@@ -52,9 +53,9 @@ function isRouteDefinitionGroup(
 ): groupItem is RouteDefinitionGroup<
   RouteDefinition<string, ParameterDefinitionCollection>[]
 > {
-  return (
-    typeof (groupItem as RouteDefinitionGroup<
+  return Array.isArray(
+    (groupItem as RouteDefinitionGroup<
       RouteDefinition<string, ParameterDefinitionCollection>[]
-    >).getRouteNames === "function"
+    >).routeNames
   );
 }
