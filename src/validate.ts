@@ -152,6 +152,14 @@ function isRouteDefinitionBuilderCollection(arg: any) {
   return true;
 }
 
+function isStringOrFalse(arg: any) {
+  if (arg === false || typeof arg === "string") {
+    return true;
+  }
+
+  return `Expected \`string\` or \`false\`\nGot ${arg}`;
+}
+
 function isRoute(arg: any) {
   const result = isTypeOf(arg, "object");
 
@@ -160,16 +168,7 @@ function isRoute(arg: any) {
   }
 
   const checks = [
-    () => [
-      "name",
-      () => {
-        if (arg === false || typeof arg === "string") {
-          return true;
-        }
-
-        return `Expected \`string\` or \`false\`\nGot ${arg}`;
-      }
-    ],
+    () => ["name", isStringOrFalse(arg)],
     () => ["action", isString(arg.action)],
     () => ["params", isTypeOf(arg.params, "object")]
   ];
