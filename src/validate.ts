@@ -168,7 +168,7 @@ function isRoute(arg: any) {
   }
 
   const checks = [
-    () => ["name", isStringOrFalse(arg)],
+    () => ["name", isStringOrFalse(arg.name)],
     () => ["action", isString(arg.action)],
     () => ["params", isTypeOf(arg.params, "object")]
   ];
