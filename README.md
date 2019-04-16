@@ -40,6 +40,7 @@
     - [history](#history)
   - [createGroup](#createGroup)
     - [has](#has)
+  - [Route](#Route)
 
 <br/>
 
@@ -616,4 +617,4 @@ Route<typeof routes.home>
 Route<typeof userGroup>
 ```
 
-The `Route` function is part of the TypeScript specific api. If using TypeScript you can pass various objects in your application to it to get the type of the associated routes for the given object.
+The `Route` type is part of the TypeScript specific api. If using TypeScript you can pass various objects in your application to it to get the type of the associated routes for the given object.
