@@ -66,7 +66,9 @@ export function buildRouteDefinition(
       if (pathParameters[name]) {
         pathParams[name] = params[name];
       } else {
-        queryParams[name] = params[name];
+        if (params[name] !== undefined) {
+          queryParams[name] = params[name];
+        }
       }
     });
 

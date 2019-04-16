@@ -225,15 +225,19 @@ function assertRouteFn(
       kind === "query.param.number.optional"
     ) {
       if (typeof value !== "number") {
-        throw error(
-          `Got \`${value}\` for key \`${key}\` in params object\nExpected value to be of type \`number\``
-        );
+        if (kind !== "query.param.number.optional" || value !== undefined) {
+          throw error(
+            `Got \`${value}\` for key \`${key}\` in params object\nExpected value to be of type \`number\``
+          );
+        }
       }
     } else {
       if (typeof value !== "string") {
-        throw error(
-          `Got \`${value}\` for key \`${key}\` in params object\nExpected value to be of type \`string\``
-        );
+        if (kind !== "query.param.string.optional" || value !== undefined) {
+          throw error(
+            `Got \`${value}\` for key \`${key}\` in params object\nExpected value to be of type \`string\``
+          );
+        }
       }
     }
 

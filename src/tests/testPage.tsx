@@ -22,6 +22,12 @@ const pullRequests = repository.extend("/pulls");
 const { routes, listen, getCurrentRoute } = createRouter({
   home: defineRoute("/"),
   dashboard: defineRoute("/dashboard"),
+  hosts: defineRoute(
+    {
+      advanced: "query.param.string.optional"
+    },
+    () => "/hosts"
+  ),
   user,
   repository,
   issueList: issues.extend(
@@ -49,6 +55,8 @@ const { routes, listen, getCurrentRoute } = createRouter({
     p => `/${p.pullRequestNumber}`
   )
 });
+
+console.log(routes.hosts.link({ advanced: undefined }));
 
 const dashboardGroup = createGroup([routes.home, routes.dashboard]);
 
