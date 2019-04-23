@@ -4,7 +4,6 @@
     "lib": ["dom", "dom.iterable", "esnext"],
     "esModuleInterop": true,
     "strict": true,
-    "strictFunctionTypes": false,
     "forceConsistentCasingInFileNames": true,
     "module": "commonjs",
     "noUnusedLocals": true,

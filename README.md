@@ -56,8 +56,6 @@ This project is in its early stages and community feedback is essential to push 
 
 ## Getting Started
 
-**If using TypeScript (at least until https://github.com/type-route/type-route/issues/1 is resolved) explicitly set "strictFunctionTypes" to `false` in your `tsconfig.json`.**
-
 **Install**
 
 ```

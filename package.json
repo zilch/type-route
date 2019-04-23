@@ -1,6 +1,6 @@
 {
   "name": "type-route",
-  "version": "0.1.15",
+  "version": "0.1.16",
   "main": "./lib/index",
   "description": "Flexible Routing + Seamless DX = 🚀",
   "repository": {

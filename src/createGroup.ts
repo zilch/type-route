@@ -6,26 +6,32 @@ import {
 } from "./types";
 import { validate } from "./validate";
 
-export function createGroup<
-  T extends (
-    | RouteDefinition<string, ParameterDefinitionCollection>
-    | RouteDefinitionGroup<
-        RouteDefinition<string, ParameterDefinitionCollection>[]
-      >)[]
->(groupItems: T): RouteDefinitionGroup<T> {
+export function createGroup<T extends { [key: string]: any }>(
+  groupItems: T
+): RouteDefinitionGroup<T> {
+  validate["createGroup"](Array.from(arguments));
+
   const routeDefinitionNames: {
     [key: string]: true;
   } = {};
 
-  groupItems.forEach(item => {
-    if (isRouteDefinitionGroup(item)) {
-      item.routeNames.forEach(name => {
-        routeDefinitionNames[name] = true;
-      });
-    } else {
-      routeDefinitionNames[item.name] = true;
+  groupItems.forEach(
+    (
+      item:
+        | RouteDefinition<string, ParameterDefinitionCollection>
+        | RouteDefinitionGroup<
+            RouteDefinition<string, ParameterDefinitionCollection>[]
+          >
+    ) => {
+      if (isRouteDefinitionGroup(item)) {
+        item.routeNames.forEach(name => {
+          routeDefinitionNames[name] = true;
+        });
+      } else {
+        routeDefinitionNames[item.name] = true;
+      }
     }
-  });
+  );
 
   return {
     [".type"]: null as any,

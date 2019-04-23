@@ -16,14 +16,12 @@ import { buildRouteDefinition } from "./buildRouteDefinition";
 import { getRoute } from "./getRoute";
 import { error, validate } from "./validate";
 
-export function createRouter<T extends RouteDefinitionBuilderCollection>(
-  routeDefinitions: T
-): Router<T, History>;
-export function createRouter<T extends RouteDefinitionBuilderCollection>(
+export function createRouter<T>(routeDefinitions: T): Router<T, History>;
+export function createRouter<T>(
   historyType: "browser",
   routeDefinitions: T
 ): Router<T, History>;
-export function createRouter<T extends RouteDefinitionBuilderCollection>(
+export function createRouter<T>(
   historyType: "memory",
   routeDefinitions: T
 ): Router<T, MemoryHistory>;
