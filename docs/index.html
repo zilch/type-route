@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>type-route · A flexible, type safe routing library</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../node_modules/normalize.css/normalize.css"
+    />
+    <style>
+      body {
+        background-color: #383751;
+        background: linear-gradient(#383751, #584761);
+        overflow: hidden;
+      }
+      #particles {
+        position: absolute;
+        z-index: -1;
+        margin-left: -40px;
+        margin-top: -40px;
+        height: calc(100vh + 80px);
+        width: calc(100vw + 80px);
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  </head>
+  <body>
+    <div id="particles"></div>
+    <div id="root"></div>
+    <script src="./index.tsx"></script>
+    <script>
+      particlesJS("particles", {
+        particles: {
+          number: {
+            value: 38,
+            density: {
+              enable: true,
+              value_area: 1000
+            }
+          },
+          color: {
+            value: "#ffffff"
+          },
+          shape: {
+            type: "circle"
+          },
+          opacity: {
+            value: 0.1,
+            random: true
+          },
+          size: {
+            value: 30,
+            random: true,
+            anim: {
+              enable: true,
+              speed: 1,
+              size_min: 1,
+              sync: true
+            }
+          },
+          line_linked: {
+            enable: true,
+            distance: 260,
+            color: "#ffffff",
+            opacity: 0.08,
+            width: 1
+          },
+          move: {
+            enable: true,
+            speed: 1,
+            direction: "top",
+            random: false,
+            straight: false,
+            out_mode: "out",
+            bounce: false
+          }
+        },
+        retina_detect: true
+      });
+    </script>
+  </body>
+</html>

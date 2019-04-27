@@ -13,5 +13,5 @@
     "declaration": true,
     "jsx": "react"
   },
-  "include": ["src", "old/types.ts"]
+  "include": ["src", "docs/types.ts"]
 }
