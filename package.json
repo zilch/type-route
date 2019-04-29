@@ -15,15 +15,15 @@
   "homepage": "https://github.com/type-route/type-route",
   "dependencies": {
     "@types/history": "^4.7.2",
-    "@types/querystringify": "^2.0.0",
     "history": "^4.9.0",
     "querystringify": "^2.1.1"
   },
   "devDependencies": {
     "@types/jest": "^24.0.11",
+    "@types/querystringify": "^2.0.0",
     "@types/react": "16.8.8",
     "@types/react-dom": "16.8.2",
-    "cypress": "^3.2.0",
+    "docz-theme-default": "^1.0.4",
     "jest": "^24.5.0",
     "marked": "^0.6.2",
     "normalize.css": "^8.0.1",
