@@ -1,8 +1,14 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { Splash } from "./Splash";
+import { Header } from "./Header";
 import { forceRenderStyles } from "typestyle";
 
 forceRenderStyles();
 
-ReactDOM.render(<Splash />, document.querySelector("#root"));
+ReactDOM.render(
+  <div>
+    <Header />
+    hi
+  </div>,
+  document.querySelector("#root")
+);
