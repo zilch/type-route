@@ -152,9 +152,9 @@ export type Route<T> = T extends RouteDefinition<any, any>
           [K in keyof T]: {
             name: K;
             action: Action;
-            params: T extends RouteDefinitionCollection
+            params: T[K] extends RouteDefinition<any, any>
               ? RouteParameters<T[K][".builder"]["params"]>
-              : T extends RouteDefinitionBuilderCollection
+              : T[K] extends RouteDefinitionBuilder<any>
               ? RouteParameters<T[K]["params"]>
               : never;
           }
