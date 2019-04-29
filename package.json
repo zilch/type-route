@@ -23,16 +23,11 @@
     "@types/querystringify": "^2.0.0",
     "@types/react": "16.8.8",
     "@types/react-dom": "16.8.2",
-    "docz-theme-default": "^1.0.4",
     "jest": "^24.5.0",
-    "marked": "^0.6.2",
-    "normalize.css": "^8.0.1",
-    "parcel-bundler": "^1.12.3",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
     "ts-jest": "^24.0.0",
-    "typescript": "^3.3.4000",
-    "typestyle": "^2.0.2"
+    "typescript": "^3.3.4000"
   },
   "authors": [
     "Braden Snell"

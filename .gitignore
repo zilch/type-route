@@ -5,3 +5,5 @@
 /.cache
 /dist
 /lib
+
+/website/node_modules
