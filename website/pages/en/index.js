@@ -17,24 +17,29 @@ class Index extends React.Component {
             Get Started
           </a>
           <a href="#" className="secondary-button">
-            Example <span style={{ marginLeft: "4px" }}>→</span>
+            See Example <span style={{ marginLeft: "4px" }}>→</span>
           </a>
         </div>
         <div className="features">
           <div>
             <h4>Flexible</h4>
-            Designed with React in mind but not coupled to any specific
-            framework. Use with Angular, Vue, React or anything else. If it's
-            JavaScript type-route is compatible.
+            `type-route` was designed with excellent React integration in mind
+            but isn't coupled to a specific UI framework. Use it with React,
+            Angular, Vue or anything else. There's even support for non-browser
+            environments such as React Native.
           </div>
           <div>
             <h4>Type Safe</h4>
-            First class TypeScript support was the first and last thought when
-            designing type-route's API.
+            First and foremost `type-route` strives for excellent TypeScript
+            support. An API designed for static analysis not only means the
+            compiler has your back but also enables your editor to be
+            intelligent as you code.
           </div>
           <div>
             <h4>Solid Foundation</h4>
-            Built on top of the same core library that powers React router.
+            The same core library behind React Router also powers `type-route`.
+            From this solid foundation `type-route` adds a simple and flexible
+            API optimized for a developer experience that is second to none.
           </div>
         </div>
         <div className="getStartedContainer">
@@ -42,7 +47,7 @@ class Index extends React.Component {
             Get Started
           </a>
           <a href="#" className="secondary-button">
-            Example <span style={{ marginLeft: "4px" }}>→</span>
+            See Example <span style={{ marginLeft: "4px" }}>→</span>
           </a>
         </div>
       </div>
