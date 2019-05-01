@@ -114,3 +114,20 @@ rgb(255,97,56) orange
 .headerTitleWithLogo {
   font-weight: 300;
 }
+
+.features {
+  display: flex;
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.features > div {
+  min-width: 33%;
+  flex-grow: 1;
+  margin: 40px;
+}
+
+.features h4 {
+  margin-top: 0px;
+}

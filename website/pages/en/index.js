@@ -20,7 +20,23 @@ class Index extends React.Component {
             Example <span style={{ marginLeft: "4px" }}>→</span>
           </a>
         </div>
-        Hi
+        <div className="features">
+          <div>
+            <h4>Flexible</h4>
+            Designed with React in mind but not coupled to any specific
+            framework. Use with Angular, Vue, React or anything else. If it's
+            JavaScript type-route is compatible.
+          </div>
+          <div>
+            <h4>Type Safe</h4>
+            First class TypeScript support was the first and last thought when
+            designing type-route's API.
+          </div>
+          <div>
+            <h4>Solid Foundation</h4>
+            Built on top of the same core library that powers React router.
+          </div>
+        </div>
         <div className="getStartedContainer">
           <a href="#" className="primary-button">
             Get Started
