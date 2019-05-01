@@ -56,8 +56,6 @@ const { routes, listen, getCurrentRoute } = createRouter({
   )
 });
 
-console.log(routes.hosts.link({ advanced: undefined }));
-
 const dashboardGroup = createGroup([routes.home, routes.dashboard]);
 
 const issueGroup = createGroup([routes.issue, routes.issueList]);
