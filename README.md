@@ -12,9 +12,9 @@
 
 **Disclaimer: type-route has not yet reached version 1.0. The api is unstable and subject to change without warning. The library itself may never reach version 1.0. Early feedback is welcome, but using this library in its current state for anything other than a throw away project is not recommended.**
 
-![](https://img.shields.io/npm/v/type-route.svg?style=flat-square)
+<a href="https://npmjs.org/package/type-route"><img src="https://img.shields.io/npm/v/type-route.svg?style=flat-square"/></a>
 &nbsp;
-![](https://img.shields.io/npm/dm/type-route.svg?style=flat-square)
+<a href="https://npmjs.org/package/type-route"><img src="https://img.shields.io/npm/dm/type-route.svg?style=flat-square"/></a>
 
 ---
 
