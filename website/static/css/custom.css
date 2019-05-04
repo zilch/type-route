@@ -28,7 +28,7 @@ body {
 .splash .projectTagLine {
   font-size: 18px;
   color: white;
-  opacity: 0.8;
+  opacity: 0.7;
 }
 
 .splash .getStartedContainer {
@@ -105,6 +105,26 @@ rgb(255,97,56) orange
   max-width: 1100px;
   margin-left: auto;
   margin-right: auto;
+}
+
+.headerWrapper header > a {
+  color: white !important;
+}
+
+a {
+  text-decoration: none;
+  color: rgb(41, 128, 185);
+}
+
+a:hover {
+  color: rgb(41, 128, 185);
+  opacity: 0.8;
+}
+
+.betaNotification a {
+  text-decoration: none;
+  color: #fff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
 }
 
 .features > div {

@@ -17,13 +17,16 @@ class Index extends React.Component {
           </div>
         </div>
         <div className="betaNotification">
-          <MarkdownBlock>
-            **Disclaimer: This is a beta release.** Early adopters are
+          <div>
+            <b>Disclaimer: This is a beta release.</b> Early adopters are
             encouraged but using type-route in its current state for anything
-            mission critical is not recommended. Help the project reach `1.0` by
-            using the GitHub issue tracker for anything from bugs to questions,
-            and suggestions/pain-points to positive experiences.
-          </MarkdownBlock>
+            mission critical is not recommended. Help the project reach{" "}
+            <code>1.0</code> by using the{" "}
+            <a href="https://github.com/type-route/type-route/issues">
+              issue tracker
+            </a>{" "}
+            for bugs, questions, or suggestions.
+          </div>
         </div>
         <div className="getStartedContainer">
           <a href="#" className="primary-button">
@@ -55,28 +58,14 @@ class Index extends React.Component {
           <div>
             <h4>Solid Foundation</h4>
             <MarkdownBlock>
-              The same core library behind React Router also powers
-              `type-route`. From this solid foundation `type-route` adds a
-              simple and flexible API optimized for a developer experience that
-              is second to none.
+              The same [core library](https://github.com) behind React Router
+              also powers `type-route`. From this solid foundation `type-route`
+              adds a simple and flexible API optimized for a developer
+              experience that is second to none.
             </MarkdownBlock>
           </div>
         </div>
-        <div className="sandboxContainer">
-          <h2>
-            See it in Action <span style={{ marginLeft: "10px" }}>🚀</span>
-          </h2>
-          <div className="sandbox">
-            <iframe
-              id="player"
-              type="text/html"
-              width="100%"
-              height="100%"
-              src="http://www.youtube.com/embed/M7lc1UVf-VE?enablejsapi=1&modestbranding=1"
-              frameborder="0"
-            />
-          </div>
-        </div>
+        <div className="sandboxContainer">Hello</div>
         <div className="getStartedContainer">
           <a href="#" className="primary-button">
             Get Started
