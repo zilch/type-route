@@ -65,7 +65,16 @@ class Index extends React.Component {
             </MarkdownBlock>
           </div>
         </div>
-        <div className="sandboxContainer">Hello</div>
+        <div className="sandboxContainer">
+          <h2>See it in Action&nbsp;&nbsp;🚀</h2>
+          <div className="sandbox">
+            <iframe
+              src="https://stackblitz.com/edit/react-5kmqgh?embed=1&file=index.js&hideExplorer=1"
+              title="type-route"
+              sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"
+            />
+          </div>
+        </div>
         <div className="getStartedContainer">
           <a href="#" className="primary-button">
             Get Started
