@@ -69,7 +69,7 @@ class Index extends React.Component {
           <h2>See it in Action&nbsp;&nbsp;🚀</h2>
           <div className="sandbox">
             <iframe
-              src="https://stackblitz.com/edit/react-5kmqgh?embed=1&file=index.js&hideExplorer=1"
+              src="https://stackblitz.com/edit/type-route?embed=1&file=index.ts&hideExplorer=1"
               title="type-route"
               sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"
             />
