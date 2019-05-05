@@ -67,13 +67,13 @@ class Index extends React.Component {
         </div>
         <div className="sandboxContainer">
           <h2>See it in Action&nbsp;&nbsp;🚀</h2>
-          <div className="sandbox">
-            <iframe
-              src="https://stackblitz.com/edit/type-route?embed=1&file=index.ts&hideExplorer=1"
-              title="type-route"
-              sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"
-            />
-          </div>
+          <div
+            className="sandbox"
+            data-code={`
+              console.log("Hello");
+            `}
+            data-html={`<div>Hello</div>`}
+          />
         </div>
         <div className="getStartedContainer">
           <a href="#" className="primary-button">
