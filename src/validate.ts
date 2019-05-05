@@ -323,14 +323,14 @@ function isRouteDefinitionGroup(arg: any) {
   }
 
   const checks = [
-    () => ["routeNames", isStringArray(arg.name)],
-    () => ["has", isFunction(arg.href)]
+    () => ["routeNames", isStringArray(arg.routeNames)],
+    () => ["has", isFunction(arg.has)]
   ];
 
   for (const check of checks) {
     const [key, result] = check();
     if (result !== true) {
-      return `Expected a RouteDefinition object.\nGot unexpected value for key \`${key}\`\n${result}`;
+      return `Expected a RouteDefinitionGroup object.\nGot unexpected value for key \`${key}\`\n${result}`;
     }
   }
 
@@ -545,18 +545,17 @@ export const validate = {
           return `Expected an array.`;
         }
 
-        for (const item of groupItems) {
+        for (let index = 0; index < groupItems.length; index++) {
+          const item = groupItems[index];
+
           const [definitionResult, groupResult] = [
             isRouteDefinition(item),
             isRouteDefinitionGroup(item)
           ];
 
-          if (definitionResult !== true) {
-            return definitionResult;
-          }
-
-          if (groupResult !== true) {
-            return groupResult;
+          if (definitionResult !== true && groupResult !== true) {
+            console.log(item);
+            return `Unable to match element ${index} in groupItems array as RouteDefinition:\n\n${definitionResult}\n\nUnable to match as RouteDefinitionGroup:\n\n${groupResult}\n\nAll values in array must be either a RouteDefinition or RouteDefinitionGroup object.`;
           }
         }
 

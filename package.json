@@ -1,6 +1,6 @@
 {
   "name": "type-route",
-  "version": "0.1.16",
+  "version": "0.1.18",
   "main": "./lib/index",
   "description": "Flexible Routing + Seamless DX = 🚀",
   "repository": {
@@ -15,15 +15,14 @@
   "homepage": "https://github.com/type-route/type-route",
   "dependencies": {
     "@types/history": "^4.7.2",
-    "@types/querystringify": "^2.0.0",
     "history": "^4.9.0",
     "querystringify": "^2.1.1"
   },
   "devDependencies": {
     "@types/jest": "^24.0.11",
+    "@types/querystringify": "^2.0.0",
     "@types/react": "16.8.8",
     "@types/react-dom": "16.8.2",
-    "cypress": "^3.2.0",
     "jest": "^24.5.0",
     "parcel-bundler": "^1.12.3",
     "react": "^16.8.4",
@@ -50,6 +49,7 @@
   ],
   "scripts": {
     "start": "parcel ./src/tests/testPage.html",
+    "docs": "parcel ./docs/index.html",
     "build": "rm -rf ./lib && tsc",
     "test": "jest"
   }

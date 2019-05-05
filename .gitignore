@@ -6,3 +6,4 @@
 /dist
 /lib
 /website/node_modules
+.DS_Store

@@ -56,8 +56,6 @@ const { routes, listen, getCurrentRoute } = createRouter({
   )
 });
 
-console.log(routes.hosts.link({ advanced: undefined }));
-
 const dashboardGroup = createGroup([routes.home, routes.dashboard]);
 
 const issueGroup = createGroup([routes.issue, routes.issueList]);
@@ -75,6 +73,8 @@ const repositoryGroup = createGroup([
 function App() {
   const [route, setRoute] = useState(getCurrentRoute());
 
+  let realRoute: Route<typeof routes> = route;
+
   useEffect(() => {
     document.title = route.name || "Not Found";
   }, [route.name]);
@@ -90,6 +90,14 @@ function App() {
   if (repositoryGroup.has(route)) {
     if (route.name === "pullRequestList") {
     }
+  }
+
+  if (route.name === "pullRequest") {
+    console.log(route.params.pullRequestNumber);
+  }
+
+  if (realRoute.name === "pullRequest") {
+    realRoute.params.pullRequestNumber;
   }
 
   return (
