@@ -1,6 +1,6 @@
 (function() {
   window.onload = function() {
-    document.querySelectorAll("[data-code]").forEach(embedProject);
+    document.querySelectorAll("code.stackblitz").forEach(embedProject);
   };
 
   function embedProject(element) {

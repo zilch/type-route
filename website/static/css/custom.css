@@ -192,7 +192,7 @@ a:hover {
   text-align: center;
 }
 
-[data-code] {
+code.stackblitz {
   border-radius: 5px;
   border: 1px solid #999;
   background: rgb(25, 28, 30);
@@ -200,7 +200,7 @@ a:hover {
   height: 400px;
 }
 
-[data-code] iframe {
+code.stackblitz iframe {
   height: 100%;
   overflow: hidden;
   border: none;

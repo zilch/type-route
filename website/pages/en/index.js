@@ -67,12 +67,13 @@ class Index extends React.Component {
         </div>
         <div className="sandboxContainer">
           <h2>See it in Action&nbsp;&nbsp;🚀</h2>
-          <div
-            className="sandbox"
+          <code
+            className="stackblitz"
             data-code={`
+              <div>Hello</div>
+              ---
               console.log("Hello");
             `}
-            data-html={`<div>Hello</div>`}
           />
         </div>
         <div className="getStartedContainer">
