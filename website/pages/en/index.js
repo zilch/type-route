@@ -71,7 +71,7 @@ class Index extends React.Component {
             className="stackblitz"
             data-code={`
               <div>Hello</div>
-              ---
+              //---
               console.log("Hello");
             `}
           />

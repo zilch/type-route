@@ -198,6 +198,39 @@ code.stackblitz {
   background: rgb(25, 28, 30);
   overflow: hidden;
   height: 400px;
+  padding: 0px !important;
+  color: rgb(25, 28, 30) !important;
+  position: relative;
+  display: block;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+code.stackblitz::before {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40px;
+  height: 40px;
+  margin-left: -23px;
+  margin-top: -23px;
+  opacity: 0.5;
+  content: "";
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  border-top-color: white;
+  border-radius: 100%;
+  animation: spin 1s linear infinite both;
+}
+
+code.stackblitz.loaded::before {
+  display: none;
 }
 
 code.stackblitz iframe {
@@ -207,7 +240,7 @@ code.stackblitz iframe {
   width: 100%;
 }
 
-.sandbox {
+.sandboxContainer code.stackblitz {
   margin-left: auto;
   margin-right: auto;
   position: relative;

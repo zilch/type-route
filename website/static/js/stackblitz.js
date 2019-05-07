@@ -4,8 +4,14 @@
   };
 
   function embedProject(element) {
-    const code = trimCodeBlock(element.getAttribute("data-code"));
-    const html = trimCodeBlock(element.getAttribute("data-html"));
+    const rawCode = element.getAttribute("data-code") || element.innerText;
+    const rawCodeParts = rawCode.split("//---");
+    const code =
+      rawCodeParts.length === 1
+        ? trimCodeBlock(rawCodeParts[0])
+        : trimCodeBlock(rawCodeParts[1]);
+    const html =
+      rawCodeParts.length === 1 ? null : trimCodeBlock(rawCodeParts[0]);
 
     const files = {
       "index.ts": code,
@@ -28,13 +34,15 @@
       }
     };
 
+    element.innerHTML = "";
     const projectContainer = document.createElement("div");
     element.appendChild(projectContainer);
     StackBlitzSDK.embedProject(projectContainer, project, {
       forceEmbedLayout: true,
       hideExplorer: true,
-      view: html === null ? "editor" : undefined,
-      clickToLoad: false
+      view: html === null ? "editor" : undefined
+    }).then(function() {
+      element.classList.add("loaded");
     });
   }
 
