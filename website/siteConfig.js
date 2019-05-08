@@ -46,8 +46,13 @@ const siteConfig = {
     "/js/stackblitz.js"
   ],
 
+  scrollToTop: true,
+  scrollToTopOptions: {
+    backgroundColor: "#383751"
+  },
+
   // On page navigation for the current documentation page.
-  onPageNav: "separate",
+  onPageNav: undefined,
   // No .html extensions for paths.
   cleanUrl: true
 };
