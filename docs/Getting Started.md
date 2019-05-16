@@ -7,8 +7,22 @@ sidebar_label: Example Page
 ## Docs
 
 - Introduction
-- Quick Start
-- Alternatives
+- React
+- Angular
+- Vue
+- Vanilla
+- Nested/similar routes
+- Embedded router
+- No Match (404)
+- Redirects
+- Route parameters
+- Code-splitting
+- Accessibility
+- Complex route parameters
+- Preventing navigation
+- Scroll restoration
+- Server-side rendering
+- Testing
 
 ## API
 
@@ -28,25 +42,6 @@ sidebar_label: Example Page
 - createGroup
 - <RouteDefinitionGroup>.has
 - Route
-
-## Examples
-
-- React
-- Angular
-- Vue
-- Vanilla
-- Nested/similar routes
-- Embedded router
-- No Match (404)
-- Redirects
-- Route parameters
-- Code-splitting
-- Accessibility
-- Complex route parameters
-- Preventing navigation
-- Scroll restoration
-- Server-side rendering
-- Testing
 
 Check the [documentation](https://docusaurus.io) for how to use Docusaurus.
 
