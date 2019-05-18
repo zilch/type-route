@@ -29,10 +29,13 @@ class Index extends React.Component {
           </div>
         </div>
         <div className="getStartedContainer">
-          <a href="#" className="primary-button">
+          <a
+            href="/docs/introduction/getting-started"
+            className="primary-button"
+          >
             Get Started
           </a>
-          <a href="#" className="secondary-button">
+          <a href="/docs/guides/react" className="secondary-button">
             See Examples <span style={{ marginLeft: "4px" }}>→</span>
           </a>
         </div>
@@ -77,10 +80,13 @@ class Index extends React.Component {
           />
         </div>
         <div className="getStartedContainer">
-          <a href="#" className="primary-button">
+          <a
+            href="/docs/introduction/getting-started"
+            className="primary-button"
+          >
             Get Started
           </a>
-          <a href="#" className="secondary-button">
+          <a href="/docs/guides/react" className="secondary-button">
             See Examples <span style={{ marginLeft: "4px" }}>→</span>
           </a>
         </div>

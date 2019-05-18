@@ -43,7 +43,7 @@ const siteConfig = {
   // Add custom scripts here that would be placed in <script> tags.
   scripts: [
     "https://unpkg.com/@stackblitz/sdk/bundles/sdk.umd.js",
-    "/js/stackblitz.js"
+    "/js/site.js"
   ],
 
   scrollToTop: true,

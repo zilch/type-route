@@ -13,6 +13,22 @@ body {
   text-align: center;
 }
 
+@media screen and (min-width: 1024px) {
+  .navPusher {
+    padding-top: 66px;
+  }
+}
+
+.navShadow {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.fixedHeaderContainer {
+  padding: 16px 0;
+  min-height: 66px;
+  transition: all ease 0.2s;
+}
+
 .splash .logo {
   max-width: 150px;
 }
@@ -79,6 +95,7 @@ rgb(255,97,56) orange
 
 .docs-next {
   background: rgb(41, 128, 185) !important;
+  border-radius: 3px;
   color: white !important;
 }
 
@@ -89,7 +106,12 @@ rgb(255,97,56) orange
 
 .primary-button {
   background: rgb(41, 128, 185);
+  border-radius: 3px;
   color: white !important;
+}
+
+.toc .toggleNav ul li.navListItemActive a {
+  color: rgb(41, 128, 185) !important;
 }
 
 .secondary-button {
@@ -195,9 +217,9 @@ a:hover {
 code.stackblitz {
   border-radius: 5px;
   border: 1px solid #999;
-  background: rgb(25, 28, 30);
+  background: rgb(50, 50, 50);
   overflow: hidden;
-  height: 400px;
+  height: 600px;
   padding: 0px !important;
   color: rgb(25, 28, 30) !important;
   position: relative;
@@ -211,26 +233,6 @@ code.stackblitz {
   to {
     transform: rotate(360deg);
   }
-}
-
-code.stackblitz::before {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 40px;
-  height: 40px;
-  margin-left: -23px;
-  margin-top: -23px;
-  opacity: 0.5;
-  content: "";
-  border: 3px solid rgba(255, 255, 255, 0.2);
-  border-top-color: white;
-  border-radius: 100%;
-  animation: spin 1s linear infinite both;
-}
-
-code.stackblitz.loaded::before {
-  display: none;
 }
 
 code.stackblitz iframe {

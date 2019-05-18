@@ -9,46 +9,58 @@
         "title": "defineRoute"
       },
       "api-reference/route-definition-builder/extend": {
-        "title": "extend"
+        "title": "<RouteDefinitionBuilder>.extend",
+        "sidebar_label": "extend"
       },
       "api-reference/route-definition-group/create-group": {
         "title": "createGroup"
       },
       "api-reference/route-definition-group/has": {
-        "title": "has"
+        "title": "<RouteDefinitionGroup>.has",
+        "sidebar_label": "has"
       },
       "api-reference/route-definition/href": {
-        "title": "href"
+        "title": "<RouteDefinition>.href",
+        "sidebar_label": "href"
       },
       "api-reference/route-definition/link": {
-        "title": "link"
+        "title": "<RouteDefinition>.link",
+        "sidebar_label": "link"
       },
       "api-reference/route-definition/match": {
-        "title": "match"
+        "title": "<RouteDefinition>.match",
+        "sidebar_label": "match"
       },
       "api-reference/route-definition/name": {
-        "title": "name"
+        "title": "<RouteDefinition>.name",
+        "sidebar_label": "name"
       },
       "api-reference/route-definition/push": {
-        "title": "push"
+        "title": "<RouteDefinition>.push",
+        "sidebar_label": "push"
       },
       "api-reference/route-definition/replace": {
-        "title": "replace"
+        "title": "<RouteDefinition>.replace",
+        "sidebar_label": "replace"
       },
       "api-reference/router/create-router": {
         "title": "createRouter"
       },
       "api-reference/router/get-current-route": {
-        "title": "getCurrentRoute"
+        "title": "<Router>.getCurrentRoute",
+        "sidebar_label": "getCurrentRoute"
       },
       "api-reference/router/history": {
-        "title": "history"
+        "title": "<Router>.history",
+        "sidebar_label": "history"
       },
       "api-reference/router/listen": {
-        "title": "listen"
+        "title": "<Router>.listen",
+        "sidebar_label": "listen"
       },
       "api-reference/router/routes": {
-        "title": "routes"
+        "title": "<Router>.routes",
+        "sidebar_label": "routes"
       },
       "api-reference/typescript/route": {
         "title": "Route"

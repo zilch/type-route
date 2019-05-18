@@ -1,6 +1,22 @@
 (function() {
   window.onload = function() {
     document.querySelectorAll("code.stackblitz").forEach(embedProject);
+
+    let lastShowShadow = false;
+
+    document.addEventListener("scroll", function() {
+      showShadow = window.scrollY > 10;
+
+      if (lastShowShadow !== showShadow) {
+        lastShowShadow = showShadow;
+        const element = document.querySelector(".fixedHeaderContainer");
+        if (showShadow) {
+          element.classList.add("navShadow");
+        } else {
+          element.classList.remove("navShadow");
+        }
+      }
+    });
   };
 
   function embedProject(element) {
@@ -39,6 +55,7 @@
     element.appendChild(projectContainer);
     StackBlitzSDK.embedProject(projectContainer, project, {
       forceEmbedLayout: true,
+      clickToLoad: true,
       hideExplorer: true,
       view: html === null ? "editor" : undefined
     }).then(function() {
