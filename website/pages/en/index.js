@@ -19,9 +19,9 @@ class Index extends React.Component {
         <div className="betaNotification">
           <div>
             <b>Disclaimer: This is a beta release.</b> Early adopters are
-            encouraged but using type-route in its current state for anything
-            mission critical is not recommended. Help the project reach{" "}
-            <code>1.0</code> by using the{" "}
+            encouraged with the understanding that type-route could undergo
+            significant changes before release <b>1.0</b>. Help the project
+            reach its first stable release by using the{" "}
             <a href="https://github.com/type-route/type-route/issues">
               issue tracker
             </a>{" "}

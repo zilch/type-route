@@ -5,16 +5,110 @@
     "previous": "Previous",
     "tagline": "A flexible, type safe routing library.",
     "docs": {
-      "doc1": {
-        "title": "Latin-ish",
-        "sidebar_label": "Example Page"
+      "api-reference/route-definition-builder/define-route": {
+        "title": "defineRoute"
       },
-      "Introduction": {
-        "title": "Introduction"
+      "api-reference/route-definition-builder/extend": {
+        "title": "extend"
       },
-      "examples.react": {
-        "title": "React Example",
-        "sidebar_label": "React"
+      "api-reference/route-definition-group/create-group": {
+        "title": "createGroup"
+      },
+      "api-reference/route-definition-group/has": {
+        "title": "has"
+      },
+      "api-reference/route-definition/href": {
+        "title": "href"
+      },
+      "api-reference/route-definition/link": {
+        "title": "link"
+      },
+      "api-reference/route-definition/match": {
+        "title": "match"
+      },
+      "api-reference/route-definition/name": {
+        "title": "name"
+      },
+      "api-reference/route-definition/push": {
+        "title": "push"
+      },
+      "api-reference/route-definition/replace": {
+        "title": "replace"
+      },
+      "api-reference/router/create-router": {
+        "title": "createRouter"
+      },
+      "api-reference/router/get-current-route": {
+        "title": "getCurrentRoute"
+      },
+      "api-reference/router/history": {
+        "title": "history"
+      },
+      "api-reference/router/listen": {
+        "title": "listen"
+      },
+      "api-reference/router/routes": {
+        "title": "routes"
+      },
+      "api-reference/typescript/route": {
+        "title": "Route"
+      },
+      "guides/accessibility": {
+        "title": "Accessibility"
+      },
+      "guides/angular": {
+        "title": "Angular"
+      },
+      "guides/code-splitting": {
+        "title": "Code Splitting"
+      },
+      "guides/complex-route-parameters": {
+        "title": "Complex Route Parameters"
+      },
+      "guides/nested-embedded-routers": {
+        "title": "Nested/Embedded Routers"
+      },
+      "guides/nested-similar-routes": {
+        "title": "Nested/Similar Routes"
+      },
+      "guides/no-match-404": {
+        "title": "No Match (404)"
+      },
+      "guides/preventing-navigation": {
+        "title": "Preventing Navigation"
+      },
+      "guides/react": {
+        "title": "React"
+      },
+      "guides/redirects": {
+        "title": "Redirects"
+      },
+      "guides/route-parameters": {
+        "title": "Route Parameters"
+      },
+      "guides/scroll-restoration": {
+        "title": "Scroll Restoration"
+      },
+      "guides/server-side-rendering": {
+        "title": "Server-side Rendering"
+      },
+      "guides/testing": {
+        "title": "Testing"
+      },
+      "guides/vanilla-javascript": {
+        "title": "Vanilla JavaScript"
+      },
+      "guides/vue": {
+        "title": "Vue"
+      },
+      "introduction/core-concepts": {
+        "title": "Core Concepts"
+      },
+      "introduction/getting-started": {
+        "title": "Getting Started"
+      },
+      "introduction/why-type-route": {
+        "title": "Why type-route?"
       }
     },
     "links": {
@@ -23,8 +117,9 @@
       "Feedback": "Feedback"
     },
     "categories": {
-      "Docusaurus": "Docusaurus",
-      "Examples": "Examples"
+      "Introduction": "Introduction",
+      "Guides": "Guides",
+      "API Reference": "API Reference"
     }
   },
   "pages-strings": {

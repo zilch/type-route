@@ -1,30 +1,33 @@
 ---
-id: doc1
-title: Latin-ish
-sidebar_label: Example Page
+title: Getting Started
 ---
 
-## Docs
+## Introduction
 
-- Introduction
+- Getting Started
+- Why `type-route`?
+- Core concepts
+
+## Guides
+
 - React
 - Angular
 - Vue
-- Vanilla
+- Vanilla JavaScript
 - Nested/similar routes
-- Embedded router
+- Nested/embedded routers
 - No Match (404)
 - Redirects
 - Route parameters
+- Complex route parameters
 - Code-splitting
 - Accessibility
-- Complex route parameters
 - Preventing navigation
 - Scroll restoration
 - Server-side rendering
 - Testing
 
-## API
+## API Reference
 
 - defineRoute
 - <RouteDefinitionBuilder>.extend
