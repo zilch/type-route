@@ -167,6 +167,17 @@ a:hover {
   margin-top: 0px;
 }
 
+.headerWrapper header::before {
+  content: "🚧 UNDER CONSTRUCTION - CHECK BACK LATER";
+  font-weight: 900;
+  padding: 6px 20px;
+  margin-right: 20px;
+  background: white;
+  color: darkgoldenrod;
+  border-radius: 30px;
+  display: block;
+}
+
 .headerTitleWithLogo::after {
   content: "beta";
   margin-left: 10px;
