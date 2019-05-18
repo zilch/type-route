@@ -2,8 +2,12 @@
 <br/>
 <p align="center">
   <a href="https://github.com/type-route/type-route">
-    <img src="https://cdn.jsdelivr.net/gh/type-route/type-route/artwork/type-route.svg" width="550" alt="type-route"/>
+    <img src="https://www.type-route.org/img/logo.svg" width="250" alt="type-route"/>
   </a>
+  <br/>
+  <br/>
+  <br/>
+  <b style="font-size: 30px">type-route</b>
 </p>
 <br/>
 <br/>
