@@ -40,7 +40,7 @@ export const { routes, listen, getCurrentRoute } = createRouter({
 });
 ```
 
-Best practice is to immediately destructure the result of [`createRouter`](../api-reference/router/create-router.md) into the properties you'll be using in your application. [`createRouter`](../api-reference/router/create-router.md) accepts a map of route names to route definitions create via [`defineRoute`](../api-reference/route-definition-builder/define-route.md). It returns a new router instance.
+Best practice is to immediately destructure the result of [`createRouter`](../api-reference/router/create-router.md) into the properties you'll be using in your application. [`createRouter`](../api-reference/router/create-router.md) accepts a map of route names to route definitions created via [`defineRoute`](../api-reference/route-definition-builder/define-route.md). It returns a new router instance.
 
 ## Step 2: Connect to Application State
 
@@ -50,6 +50,7 @@ Best practice is to immediately destructure the result of [`createRouter`](../ap
 import React, { useState, useEffect } from "react";
 import { listen, getCurrentRoute } from "./router";
 import { Page } from "./Page";
+import { Navigation } from "./Navigation";
 
 function App() {
   const [route, setRoute] = useState(getCurrentRoute());
@@ -111,7 +112,7 @@ export function Page(props: Props) {
 
 Pass the `route` object from your application's state to your view and check the route's name to determine which component to display. Inside the code blocks above the TypeScript compiler (and your editor) should be able to correctly infer the type of `route.params`. This allows you, for instance, to access the `userId` param with confidence in code blocks where it will definitely exist and warn you when accessing it in code blocks where it may not exist.
 
-> While Type Route is written in TypeScript and designed for TypeScript users, any editor whose JavaScript experience is powered by TypeScript (VSCode for instance) will have many of the same benefits described here.
+> Type Route is written in TypeScript and designed for TypeScript users. Any editor, however, whose JavaScript experience is powered by TypeScript (VSCode for instance) will provide many of the same benefits described here when using regular JavaScript.
 
 ## Step 4: Navigate Between Routes
 
