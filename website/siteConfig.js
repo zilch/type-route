@@ -1,5 +1,5 @@
 const siteConfig = {
-  title: "type-route", // Title for your website.
+  title: "Type Route", // Title for your website.
   tagline: "A flexible, type safe routing library.",
   url: "https://type-route.js.org", // Your website URL
   baseUrl: "/", // Base URL for your project */
@@ -33,7 +33,7 @@ const siteConfig = {
   },
 
   // This copyright info is used in /core/Footer.js and blog RSS/Atom feeds.
-  copyright: `Copyright © ${new Date().getFullYear()} the type-route documentation authors.`,
+  copyright: `Copyright © ${new Date().getFullYear()} the Type Route documentation authors.`,
 
   highlight: {
     // Highlight.js theme to use for syntax highlighting in code blocks.
@@ -49,7 +49,7 @@ const siteConfig = {
   },
 
   // On page navigation for the current documentation page.
-  onPageNav: undefined,
+  onPageNav: "separate",
   // No .html extensions for paths.
   cleanUrl: true
 };

@@ -18,9 +18,12 @@
       "guides/complex-route-parameters",
       "guides/code-splitting",
       "guides/accessibility",
+      "guides/rendering-links",
+      "guides/programmatic-navigation",
       "guides/preventing-navigation",
       "guides/scroll-restoration",
       "guides/server-side-rendering",
+      "guides/data-fetching",
       "guides/testing"
     ],
     "API Reference": [

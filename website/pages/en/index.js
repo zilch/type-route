@@ -10,7 +10,7 @@ class Index extends React.Component {
         <div className="header">
           <img className="logo" src={`${baseUrl}img/logo.svg`} />
           <div className="projectName">
-            type-route <span className="beta">beta</span>
+            Type Route <span className="beta">beta</span>
           </div>
           <div className="projectTagLine">
             A flexible, type safe routing library.
@@ -19,7 +19,7 @@ class Index extends React.Component {
         <div className="betaNotification">
           <div>
             <b>Disclaimer: This is a beta release.</b> Early adopters are
-            encouraged with the understanding that type-route could undergo
+            encouraged with the understanding that Type Route could undergo
             significant changes before release <b>1.0</b>. Help the project
             reach its first stable release by using the{" "}
             <a href="https://github.com/type-route/type-route/issues">
@@ -43,16 +43,17 @@ class Index extends React.Component {
           <div>
             <h4>Flexible</h4>
             <MarkdownBlock>
-              `type-route` was designed with excellent React integration in mind
-              but isn't coupled to a specific UI framework. Use it with React,
-              Angular, Vue or anything else. There's even support for
+              Type Route was designed with excellent React integration in mind
+              but isn't coupled to a specific UI framework. Use it with
+              [React](/docs/guides/react), [Angular](/docs/guides/angular),
+              [Vue](/docs/guides/vue) or anything else. There's even support for
               non-browser environments such as React Native.
             </MarkdownBlock>
           </div>
           <div>
             <h4>Type Safe</h4>
             <MarkdownBlock>
-              First and foremost `type-route` strives for excellent TypeScript
+              First and foremost Type Route strives for excellent TypeScript
               support. An API designed for static analysis not only means the
               compiler has your back but also enables your editor to be
               intelligent as you code.
@@ -60,12 +61,15 @@ class Index extends React.Component {
           </div>
           <div>
             <h4>Solid Foundation</h4>
-            <MarkdownBlock>
-              The same [core library](https://github.com) behind React Router
-              also powers `type-route`. From this solid foundation `type-route`
-              adds a simple and flexible API optimized for a developer
-              experience that is second to none.
-            </MarkdownBlock>
+            <div>
+              The same{" "}
+              <a href="https://github.com/ReactTraining/history">
+                core library
+              </a>{" "}
+              behind React Router also powers Type Route. From this solid
+              foundation Type Route adds a simple and flexible API optimized for
+              a developer experience that is second to none.
+            </div>
           </div>
         </div>
         <div className="sandboxContainer">

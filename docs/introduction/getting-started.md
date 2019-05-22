@@ -2,106 +2,151 @@
 title: Getting Started
 ---
 
-## Introduction
+Type Route is a flexible, type safe routing library built on top of the same [core tool](https://github.com/ReactTraining/history) that powers React Router.
 
-- Getting Started
-- Why `type-route`?
-- Core concepts
+> Type Route was designed with excellent React integration in mind but isn't coupled to a specific UI framework. Most code examples in the documentation use React, but the general principles covered apply regardless of framework. See the [Angular](../guides/angular.md) or [Vue](../guides/vue.md) pages for examples specific to those frameworks.
 
-## Guides
+Continue on this page for a quick overview of how to start using Type Route in your project. Read [Why Type Route?](./why-type-route.md) or [Core Concepts](./core-concepts.md) for a more detailed introduction.
 
-- React
-- Angular
-- Vue
-- Vanilla JavaScript
-- Nested/similar routes
-- Nested/embedded routers
-- No Match (404)
-- Redirects
-- Route parameters
-- Complex route parameters
-- Code-splitting
-- Accessibility
-- Preventing navigation
-- Scroll restoration
-- Server-side rendering
-- Testing
+## Install
 
-## API Reference
+Type Route's primary distribution channel is via the [NPM registry](https://www.npmjs.com/package/type-route) under the package name `type-route`.
 
-- defineRoute
-- <RouteDefinitionBuilder>.extend
-- createRouter
-- <Router>.listen
-- <Router>.getCurrentRoute
-- <Router>.history
-- <Router>.routes
-- <RouteDefinition>.name
-- <RouteDefinition>.push
-- <RouteDefinition>.replace
-- <RouteDefinition>.href
-- <RouteDefinition>.link
-- <RouteDefinition>.match
-- createGroup
-- <RouteDefinitionGroup>.has
-- Route
+```sh
+npm install type-route
+```
 
-Check the [documentation](https://docusaurus.io) for how to use Docusaurus.
+## Step 1: Create a Router
 
-## Lorem
+`router.ts`
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque elementum dignissim ultricies. Fusce rhoncus ipsum tempor eros aliquam consequat. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus elementum massa eget nulla aliquet sagittis. Proin odio tortor, vulputate ut odio in, ultrices ultricies augue. Cras ornare ultrices lorem malesuada iaculis. Etiam sit amet libero tempor, pulvinar mauris sed, sollicitudin sapien.
-
-```? stackblitz
-<h1>Hello</h1>
-
-//---
-
+```ts
 import { createRouter, defineRoute } from "type-route";
 
-const { routes } = createRouter({
-  home: defineRoute("/")
+export const { routes, listen, getCurrentRoute } = createRouter({
+  home: defineRoute("/"),
+  userList: defineRoute(
+    {
+      page: "query.param.number.optional"
+    },
+    () => "/user"
+  ),
+  user: defineRoute(
+    {
+      userId: "path.param.string"
+    },
+    p => `/user/${p.userId}`
+  )
 });
 ```
 
-```? stackblitz
-<h1>Hello</h1>
+Best practice is to immediately destructure the result of [`createRouter`](../api-reference/router/create-router.md) into the properties you'll be using in your application. [`createRouter`](../api-reference/router/create-router.md) accepts a map of route names to route definitions create via [`defineRoute`](../api-reference/route-definition-builder/define-route.md). It returns a new router instance.
 
-//---
+## Step 2: Connect to Application State
 
-import { createRouter, defineRoute } from "type-route";
+`App.tsx`
 
-const { routes } = createRouter({
-  home: defineRoute("/")
-});
+```tsx
+import React, { useState, useEffect } from "react";
+import { listen, getCurrentRoute } from "./router";
+import { Page } from "./Page";
+
+function App() {
+  const [route, setRoute] = useState(getCurrentRoute());
+
+  useEffect(() => {
+    const listener = listen(nextRoute => {
+      setRoute(nextRoute);
+    });
+
+    return () => listener.remove();
+  }, []);
+
+  return (
+    <>
+      <Navigation />
+      <Page route={route} />
+    </>
+  );
+}
 ```
 
-```? stackblitz
-<h1>Hello</h1>
+Retrieve the initial route via [`getCurrentRoute()`](../api-reference/router/get-current-route.md) then subscribe to route updates with [`listen`](../api-reference/router/listen.md).
 
-//---
+## Step 3: Display Current Route
 
-import { createRouter, defineRoute } from "type-route";
+```tsx
+import React from "react";
+import { Route } from "type-route";
+import { routes } from "./router";
 
-const { routes } = createRouter({
-  home: defineRoute("/")
-});
+type Props = {
+  route: Route<typeof routes>;
+};
+
+export function Page(props: Props) {
+  const { route } = props;
+
+  if (route.name === routes.home.name) {
+    return <div>Home</div>;
+  }
+
+  if (route.name === routes.userList.name) {
+    return (
+      <div>
+        User List
+        <br />
+        Page: {route.params.page || "-"}
+      </div>
+    );
+  }
+
+  if (route.name === routes.user.name) {
+    return <div>User {route.params.userId}</div>;
+  }
+
+  return <div>Not Found</div>;
+}
 ```
 
-## Mauris In Code
+Pass the `route` object from your application's state to your view and check the route's name to determine which component to display. Inside the code blocks above the TypeScript compiler (and your editor) should be able to correctly infer the type of `route.params`. This allows you, for instance, to access the `userId` param with confidence in code blocks where it will definitely exist and warn you when accessing it in code blocks where it may not exist.
 
+> While Type Route is written in TypeScript and designed for TypeScript users, any editor whose JavaScript experience is powered by TypeScript (VSCode for instance) will have many of the same benefits described here.
+
+## Step 4: Navigate Between Routes
+
+```tsx
+import React from "react";
+import { routes } from "./router";
+
+export function Navigation() {
+  return (
+    <nav>
+      <a {...routes.home.link()}>Home</a>
+      <a {...routes.userList.link()}>User List</a>
+      <a
+        {...routes.userList.link({
+          page: 2
+        })}
+      >
+        User List Page 2
+      </a>
+      <a
+        {...routes.user.link({
+          userId: "abc"
+        })}
+      >
+        User "abc"
+      </a>
+    </nav>
+  );
+}
 ```
-Mauris vestibulum ullamcorper nibh, ut semper purus pulvinar ut. Donec volutpat orci sit amet mauris malesuada, non pulvinar augue aliquam. Vestibulum ultricies at urna ut suscipit. Morbi iaculis, erat at imperdiet semper, ipsum nulla sodales erat, eget tincidunt justo dui quis justo. Pellentesque dictum bibendum diam at aliquet. Sed pulvinar, dolor quis finibus ornare, eros odio facilisis erat, eu rhoncus nunc dui sed ex. Nunc gravida dui massa, sed ornare arcu tincidunt sit amet. Maecenas efficitur sapien neque, a laoreet libero feugiat ut.
-```
 
-## Nulla
+The [`link`](../api-reference/route-definition/link.md) function returns an object with an `href` property and an `onClick` function. You need both to properly render a link for a single page application. Immediately destructing these into the properties of the `<a>` tag allows for ergonomic use. [Programmatic navigation](../guides/programmatic-navigation.md) is possible with the [`push`](../api-reference/route-definition/push.md) and [`replace`](../api-reference/route-definition/replace.md) functions of a specific route.
 
-Nulla facilisi. Maecenas sodales nec purus eget posuere. Sed sapien quam, pretium a risus in, porttitor dapibus erat. Sed sit amet fringilla ipsum, eget iaculis augue. Integer sollicitudin tortor quis ultricies aliquam. Suspendisse fringilla nunc in tellus cursus, at placerat tellus scelerisque. Sed tempus elit a sollicitudin rhoncus. Nulla facilisi. Morbi nec dolor dolor. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras et aliquet lectus. Pellentesque sit amet eros nisi. Quisque ac sapien in sapien congue accumsan. Nullam in posuere ante. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Proin lacinia leo a nibh fringilla pharetra.
+## Next Steps
 
-## Orci
+Hopefully that was enough to point you in the right direction!
 
-Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Proin venenatis lectus dui, vel ultrices ante bibendum hendrerit. Aenean egestas feugiat dui id hendrerit. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur in tellus laoreet, eleifend nunc id, viverra leo. Proin vulputate non dolor vel vulputate. Curabitur pretium lobortis felis, sit amet finibus lorem suscipit ut. Sed non mollis risus. Duis sagittis, mi in euismod tincidunt, nunc mauris vestibulum urna, at euismod est elit quis erat. Phasellus accumsan vitae neque eu placerat. In elementum arcu nec tellus imperdiet, eget maximus nulla sodales. Curabitur eu sapien eget nisl sodales fermentum.
-
-## Phasellus
-
-Phasellus pulvinar ex id commodo imperdiet. Praesent odio nibh, sollicitudin sit amet faucibus id, placerat at metus. Donec vitae eros vitae tortor hendrerit finibus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Quisque vitae purus dolor. Duis suscipit ac nulla et finibus. Phasellus ac sem sed dui dictum gravida. Phasellus eleifend vestibulum facilisis. Integer pharetra nec enim vitae mattis. Duis auctor, lectus quis condimentum bibendum, nunc dolor aliquam massa, id bibendum orci velit quis magna. Ut volutpat nulla nunc, sed interdum magna condimentum non. Sed urna metus, scelerisque vitae consectetur a, feugiat quis magna. Donec dignissim ornare nisl, eget tempor risus malesuada quis.
+If you need more guidance there is a full _runnable_ version of the above example on the [React](../guides/react.md) page. Alternatively, if React isn't your thing there is an [Angular](../guides/angular.md) example, [Vue](../guides/vue.md) example, and [plain JS](../guides/vanilla-javascript.md) example too. The _Guides_ section of the documentation has detailed overviews and examples for most of the use cases you'll have. Additionally, the _API Reference_ section has notes and examples for each part of the API.

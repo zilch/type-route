@@ -1,5 +1,5 @@
 ---
-title: Why type-route?
+title: Why Type Route?
 ---
 
 Hello

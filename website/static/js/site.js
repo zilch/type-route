@@ -40,12 +40,15 @@ window.onload = function() {
     )
     .forEach(element => {
       const topLink = getSandboxLink(element, "top");
-      const bottomLink = getSandboxLink(element, "bottom");
-
       if (topLink !== null) {
         element.parentNode.insertBefore(topLink, element);
       }
 
+      if (element.clientHeight < window.innerHeight - 300) {
+        return;
+      }
+
+      const bottomLink = getSandboxLink(element, "bottom");
       if (bottomLink !== null) {
         element.parentNode.insertBefore(bottomLink, element.nextSibling);
       }
@@ -67,8 +70,7 @@ window.onload = function() {
 
     const sandboxLink = document.createElement("a");
     sandboxLink.className = "codesandbox-link " + position;
-    sandboxLink.innerHTML =
-      "Edit on CodeSandbox <span class='external-link-icon'/>";
+    sandboxLink.innerHTML = "Run on CodeSandbox&nbsp;&nbsp;&nbsp;▶";
     sandboxLink.href =
       "https://codesandbox.io/api/v1/sandboxes/define?parameters=" + parameters;
     sandboxLink.target = "_blank";
