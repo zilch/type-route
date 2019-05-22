@@ -70,14 +70,9 @@ class Index extends React.Component {
         </div>
         <div className="sandboxContainer">
           <h2>See it in Action&nbsp;&nbsp;🚀</h2>
-          <code
-            className="stackblitz"
-            data-code={`
-              <div>Hello</div>
-              //---
-              console.log("Hello");
-            `}
-          />
+          <div className="stackblitz">
+            <iframe src="https://stackblitz.com/edit/type-route?embed=1&file=index.ts&hideExplorer=1&hideNavigation=1" />
+          </div>
         </div>
         <div className="getStartedContainer">
           <a

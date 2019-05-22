@@ -225,7 +225,7 @@ a:hover {
   text-align: center;
 }
 
-code.stackblitz {
+.stackblitz {
   border-radius: 5px;
   border: 1px solid #999;
   background: rgb(50, 50, 50);
@@ -237,6 +237,31 @@ code.stackblitz {
   display: block;
 }
 
+.codesandbox-link {
+  display: inline-block;
+  position: absolute;
+  right: 0px;
+  font-size: 13px;
+  background: #181c24;
+  color: #abb2bf !important;
+  opacity: 1 !important;
+  padding: 5px 15px;
+  text-align: right;
+}
+
+.codesandbox-link:hover {
+  color: #cbd2df !important;
+}
+
+.codesandbox-link.top {
+  border-radius: 0px 3px 0px 6px;
+}
+
+.codesandbox-link.bottom {
+  border-radius: 6px 0px 3px 0px;
+  margin-top: -29px;
+}
+
 @keyframes spin {
   from {
     transform: rotate(0deg);
@@ -246,14 +271,14 @@ code.stackblitz {
   }
 }
 
-code.stackblitz iframe {
+.stackblitz iframe {
   height: 100%;
   overflow: hidden;
   border: none;
   width: 100%;
 }
 
-.sandboxContainer code.stackblitz {
+.sandboxContainer .stackblitz {
   margin-left: auto;
   margin-right: auto;
   position: relative;

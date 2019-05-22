@@ -8,3 +8,4 @@
 /website/node_modules
 .DS_Store
 /website/build
+/website/static/js/codesandbox.js

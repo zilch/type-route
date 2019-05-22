@@ -1,94 +1,78 @@
-(function() {
-  window.onload = function() {
-    document.querySelectorAll("code.stackblitz").forEach(embedProject);
+window.onload = function() {
+  let lastShowShadow = false;
 
-    let lastShowShadow = false;
+  document.addEventListener("scroll", function() {
+    showShadow = window.scrollY > 10;
 
-    document.addEventListener("scroll", function() {
-      showShadow = window.scrollY > 10;
+    if (lastShowShadow !== showShadow) {
+      lastShowShadow = showShadow;
+      const element = document.querySelector(".fixedHeaderContainer");
+      if (showShadow) {
+        element.classList.add("navShadow");
+      } else {
+        element.classList.remove("navShadow");
+      }
+    }
+  });
 
-      if (lastShowShadow !== showShadow) {
-        lastShowShadow = showShadow;
-        const element = document.querySelector(".fixedHeaderContainer");
-        if (showShadow) {
-          element.classList.add("navShadow");
-        } else {
-          element.classList.remove("navShadow");
+  const configFactoryCollection = {
+    "codesandbox-standard": code => ({
+      files: {
+        "index.ts": {
+          content: code
+        },
+        "package.json": {
+          content: {
+            dependencies: {
+              "type-route": "latest"
+            }
+          }
         }
       }
-    });
+    })
   };
 
-  function embedProject(element) {
-    const rawCode = element.getAttribute("data-code") || element.innerText;
-    const rawCodeParts = rawCode.split("//---");
-    const code =
-      rawCodeParts.length === 1
-        ? trimCodeBlock(rawCodeParts[0])
-        : trimCodeBlock(rawCodeParts[1]);
-    const html =
-      rawCodeParts.length === 1 ? null : trimCodeBlock(rawCodeParts[0]);
+  document
+    .querySelectorAll(
+      Object.keys(configFactoryCollection)
+        .map(key => "." + key)
+        .join(",")
+    )
+    .forEach(element => {
+      const topLink = getSandboxLink(element, "top");
+      const bottomLink = getSandboxLink(element, "bottom");
 
-    const files = {
-      "index.ts": code,
-      "index.html": html || "Nothing to preview for this example."
-    };
-
-    const project = {
-      files,
-      title: "type-route",
-      template: "typescript",
-      dependencies: {
-        "type-route": "*"
-      },
-      settings: {
-        compile: {
-          trigger: "save",
-          action: "refresh",
-          clearConsole: false
-        }
+      if (topLink !== null) {
+        element.parentNode.insertBefore(topLink, element);
       }
-    };
 
-    element.innerHTML = "";
-    const projectContainer = document.createElement("div");
-    element.appendChild(projectContainer);
-    StackBlitzSDK.embedProject(projectContainer, project, {
-      forceEmbedLayout: true,
-      clickToLoad: true,
-      hideExplorer: true,
-      view: html === null ? "editor" : undefined
-    }).then(function() {
-      element.classList.add("loaded");
+      if (bottomLink !== null) {
+        element.parentNode.insertBefore(bottomLink, element.nextSibling);
+      }
     });
-  }
 
-  function trimCodeBlock(code) {
-    if (code === null) {
+  function getSandboxLink(element, position) {
+    const type = [...element.classList].find(name =>
+      name.startsWith("codesandbox-")
+    );
+
+    const createConfig = configFactoryCollection[type];
+
+    if (createConfig === undefined) {
       return null;
     }
 
-    const lines = code.split("\n");
-    const firstContentLine = lines.find(line => line.trim() !== "");
-    const startingWhitespace = getStartingWhitespace(firstContentLine);
+    const config = createConfig(element.textContent);
+    const parameters = codesandbox.getParameters(config);
 
-    return (
-      lines
-        .map(line => line.slice(startingWhitespace))
-        .join("\n")
-        .trim() + "\n"
-    );
-  }
+    const sandboxLink = document.createElement("a");
+    sandboxLink.className = "codesandbox-link " + position;
+    sandboxLink.innerHTML =
+      "Edit on CodeSandbox <span class='external-link-icon'/>";
+    sandboxLink.href =
+      "https://codesandbox.io/api/v1/sandboxes/define?parameters=" + parameters;
+    sandboxLink.target = "_blank";
 
-  function getStartingWhitespace(str) {
-    let startingWhitespace = 0;
-    for (let i = 0; i < str.length; i++) {
-      if (str[i] === " ") {
-        startingWhitespace++;
-      } else {
-        break;
-      }
-    }
-    return startingWhitespace;
+    return sandboxLink;
   }
-})();
+};

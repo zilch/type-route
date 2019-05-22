@@ -11,11 +11,7 @@ Use the `href` function of a `RouteDefinition` object to retrieve that route's c
 
 ### Example
 
-```? stackblitz
-Open console to see logs.
-
-//---
-
+```tsx codesandbox-standard
 import { createRouter, defineRoute } from "type-route";
 
 const { routes } = createRouter({
@@ -25,14 +21,14 @@ const { routes } = createRouter({
     {
       notRequired: "query.param.string.optional"
     },
-    () => '/optional-query-parameter'
+    () => "/optional-query-parameter"
   ),
 
   requiredQueryParameter: defineRoute(
     {
       required: "query.param.string"
     },
-    () => '/required-query-parameter'
+    () => "/required-query-parameter"
   ),
 
   pathParameter: defineRoute(
@@ -40,7 +36,7 @@ const { routes } = createRouter({
       required: "path.param.string"
     },
     p => `/path-parameter/${p.required}`
-  ),
+  )
 });
 
 console.log("==========================");
@@ -49,15 +45,21 @@ console.log(routes.base.href());
 
 console.log(routes.optionalQueryParameter.href());
 
-console.log(routes.optionalQueryParameter.href({
-  notRequired: "example"
-}));
+console.log(
+  routes.optionalQueryParameter.href({
+    notRequired: "example"
+  })
+);
 
-console.log(routes.requiredQueryParameter.href({
-  required: "example"
-}));
+console.log(
+  routes.requiredQueryParameter.href({
+    required: "example"
+  })
+);
 
-console.log(routes.pathParameter.href({
-  required: "example"
-}));
+console.log(
+  routes.pathParameter.href({
+    required: "example"
+  })
+);
 ```
