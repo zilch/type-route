@@ -41,6 +41,15 @@ class Index extends React.Component {
         </div>
         <div className="features">
           <div>
+            <h4>Type Safe</h4>
+            <MarkdownBlock>
+              First and foremost Type Route strives for excellent TypeScript
+              support. An API designed for static analysis not only means the
+              compiler has your back but also enables your editor to be
+              intelligent as you code.
+            </MarkdownBlock>
+          </div>
+          <div>
             <h4>Flexible</h4>
             <MarkdownBlock>
               Type Route was designed with excellent React integration in mind
@@ -51,24 +60,15 @@ class Index extends React.Component {
             </MarkdownBlock>
           </div>
           <div>
-            <h4>Type Safe</h4>
-            <MarkdownBlock>
-              First and foremost Type Route strives for excellent TypeScript
-              support. An API designed for static analysis not only means the
-              compiler has your back but also enables your editor to be
-              intelligent as you code.
-            </MarkdownBlock>
-          </div>
-          <div>
             <h4>Solid Foundation</h4>
             <div>
-              The same{" "}
-              <a href="https://github.com/ReactTraining/history">
-                core library
-              </a>{" "}
-              behind React Router also powers Type Route. From this solid
-              foundation Type Route adds a simple and flexible API optimized for
-              a developer experience that is second to none.
+              <MarkdownBlock>
+                The same [core
+                library](https://github.com/ReactTraining/history) behind React
+                Router also powers Type Route. From this solid foundation Type
+                Route adds a simple and flexible API optimized for a developer
+                experience that is second to none.
+              </MarkdownBlock>
             </div>
           </div>
         </div>

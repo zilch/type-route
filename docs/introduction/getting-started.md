@@ -2,15 +2,15 @@
 title: Getting Started
 ---
 
-Type Route is a flexible, type safe routing library built on top of the same [core tool](https://github.com/ReactTraining/history) that powers React Router.
+Type Route is a flexible, type safe routing library built on top of the same [core library](https://github.com/ReactTraining/history) that powers React Router.
 
 > Type Route was designed with excellent React integration in mind but isn't coupled to a specific UI framework. Most code examples in the documentation use React, but the general principles covered apply regardless of framework. See the [Angular](../guides/angular.md) or [Vue](../guides/vue.md) pages for examples specific to those frameworks.
 
-Continue on this page for a quick overview of how to start using Type Route in your project. Read [Why Type Route?](./why-type-route.md) or [Core Concepts](./core-concepts.md) for a more detailed introduction.
+Continue reading this page for a quick overview of how to start using Type Route in your project. Read [Why Type Route?](./why-type-route.md) or [Core Concepts](./core-concepts.md) for a more detailed introduction.
 
 ## Install
 
-Type Route's primary distribution channel is via the [NPM registry](https://www.npmjs.com/package/type-route) under the package name `type-route`.
+Type Route's primary distribution channel is the [NPM registry](https://www.npmjs.com/package/type-route).
 
 ```sh
 npm install type-route
@@ -40,7 +40,7 @@ export const { routes, listen, getCurrentRoute } = createRouter({
 });
 ```
 
-Best practice is to immediately destructure the result of [`createRouter`](../api-reference/router/create-router.md) into the properties you'll be using in your application. [`createRouter`](../api-reference/router/create-router.md) accepts a map of route names to route definitions created via [`defineRoute`](../api-reference/route-definition-builder/define-route.md). It returns a new router instance.
+Best practice is to immediately destructure the result of [`createRouter`](../api-reference/router/create-router.md) into the properties you'll be using in your application. [`createRouter`](../api-reference/router/create-router.md) accepts a object with route names and route definitions created via [`defineRoute`](../api-reference/route-definition-builder/define-route.md). It returns a new router instance.
 
 ## Step 2: Connect to Application State
 
@@ -75,6 +75,8 @@ function App() {
 Retrieve the initial route via [`getCurrentRoute()`](../api-reference/router/get-current-route.md) then subscribe to route updates with [`listen`](../api-reference/router/listen.md).
 
 ## Step 3: Display Current Route
+
+`Page.tsx`
 
 ```tsx
 import React from "react";
@@ -116,6 +118,8 @@ Pass the `route` object from your application's state to your view and check the
 
 ## Step 4: Navigate Between Routes
 
+`Navigation.tsx`
+
 ```tsx
 import React from "react";
 import { routes } from "./router";
@@ -150,4 +154,4 @@ The [`link`](../api-reference/route-definition/link.md) function returns an obje
 
 Hopefully that was enough to point you in the right direction!
 
-If you need more guidance there is a full _runnable_ version of the above example on the [React](../guides/react.md) page. Alternatively, if React isn't your thing there is an [Angular](../guides/angular.md) example, [Vue](../guides/vue.md) example, and [plain JS](../guides/vanilla-javascript.md) example too. The _Guides_ section of the documentation has detailed overviews and examples for most of the use cases you'll have. Additionally, the _API Reference_ section has notes and examples for each part of the API.
+If you need more guidance there is a full _runnable_ version of the above example on the [React](../guides/react.md) page. Alternatively, if React isn't your thing there is an [Angular](../guides/angular.md) example, [Vue](../guides/vue.md) example, and [plain JS](../guides/vanilla-javascript.md) example too. The _Guides_ section of the documentation has detailed overviews and examples for most use cases. Additionally, the _API Reference_ section has descriptions and examples for each part of the API.
