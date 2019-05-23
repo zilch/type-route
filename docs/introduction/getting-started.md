@@ -12,7 +12,7 @@ Continue reading this page for a quick overview of how to start using Type Route
 
 Type Route's primary distribution channel is the [NPM registry](https://www.npmjs.com/package/type-route).
 
-```sh
+```bash
 npm install type-route
 ```
 
@@ -20,7 +20,7 @@ npm install type-route
 
 `router.ts`
 
-```ts
+```typescript
 import { createRouter, defineRoute } from "type-route";
 
 export const { routes, listen, getCurrentRoute } = createRouter({

@@ -5,6 +5,7 @@ module.exports = {
     __dirname,
     "./node_modules/codesandbox/lib/api/define.js"
   ),
+  mode: "production",
   output: {
     path: path.resolve(__dirname, "./static/js"),
     filename: "codesandbox.js",

@@ -2,9 +2,10 @@
 title: React
 ---
 
-```jsx codesandbox-react
+```tsx codesandbox-react
 import React, { useState, useEffect } from "react";
-import { createRouter, defineRoute } from "type-route";
+import ReactDOM from "react-dom";
+import { createRouter, defineRoute, Route } from "type-route";
 
 const { routes, listen, getCurrentRoute } = createRouter({
   home: defineRoute("/"),
@@ -87,4 +88,6 @@ function Navigation() {
     </nav>
   );
 }
+
+ReactDOM.render(<App />, document.querySelector("#root"));
 ```

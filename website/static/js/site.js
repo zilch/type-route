@@ -16,6 +16,28 @@ window.onload = function() {
   });
 
   const configFactoryCollection = {
+    "codesandbox-react": code => ({
+      files: {
+        "sandbox.config.json": {
+          content:
+            "{\n" + '  "template": "create-react-app-typescript"\n' + "}\n"
+        },
+        "src/index.tsx": {
+          content: code
+        },
+        "package.json": {
+          content: {
+            dependencies: {
+              "type-route": "latest",
+              react: "latest",
+              "@types/react": "latest",
+              "react-dom": "latest",
+              "@types/react-dom": "latest"
+            }
+          }
+        }
+      }
+    }),
     "codesandbox-standard": code => ({
       files: {
         "index.ts": {

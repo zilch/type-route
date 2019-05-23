@@ -242,15 +242,15 @@ a:hover {
   position: absolute;
   right: 0px;
   font-size: 13px;
-  background: #181c24;
-  color: #abb2bf !important;
+  background: #e0e0e0;
+  color: #555 !important;
   opacity: 1 !important;
   padding: 5px 15px;
   text-align: right;
 }
 
 .codesandbox-link:hover {
-  color: #cbd2df !important;
+  color: #222 !important;
 }
 
 .codesandbox-link.top {

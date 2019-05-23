@@ -35,10 +35,7 @@ const siteConfig = {
   // This copyright info is used in /core/Footer.js and blog RSS/Atom feeds.
   copyright: `Copyright © ${new Date().getFullYear()} the Type Route documentation authors.`,
 
-  highlight: {
-    // Highlight.js theme to use for syntax highlighting in code blocks.
-    theme: "atom-one-dark"
-  },
+  usePrism: ["tsx", "typescript", "bash"],
 
   // Add custom scripts here that would be placed in <script> tags.
   scripts: ["/js/codesandbox.js", "/js/site.js"],
