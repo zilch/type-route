@@ -1,5 +1,0 @@
----
-title: Code Splitting
----
-
-Hello

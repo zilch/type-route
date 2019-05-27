@@ -79,13 +79,7 @@ function App() {
     document.title = route.name || "Not Found";
   }, [route.name]);
 
-  useEffect(() => {
-    const listener = listen(nextRoute => {
-      setRoute(nextRoute);
-    });
-
-    return () => listener.remove();
-  }, [route]);
+  useEffect(() => listen(setRoute), [route]);
 
   if (repositoryGroup.has(route)) {
     if (route.name === "pullRequestList") {

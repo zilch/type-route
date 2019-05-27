@@ -1,5 +1,0 @@
----
-title: Accessibility
----
-
-Hello

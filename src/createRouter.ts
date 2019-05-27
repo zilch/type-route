@@ -77,13 +77,13 @@ export function createRouter(...args: any[]) {
 
     const id = addNavigationHandler(handler);
 
-    return {
-      remove() {
-        validate["[router].listen.remove"](Array.from(arguments));
+    return removeListener;
 
-        removeNavigationHandler(id);
-      }
-    };
+    function removeListener() {
+      validate["[router].listen.removeListener"](Array.from(arguments));
+
+      removeNavigationHandler(id);
+    }
   }
 
   function getNextNavigationResolverId() {

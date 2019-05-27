@@ -35,7 +35,10 @@ class Index extends React.Component {
           >
             Get Started
           </a>
-          <a href="/docs/guides/react" className="secondary-button">
+          <a
+            href="/docs/guides/simple-react-example"
+            className="secondary-button"
+          >
             See Examples <span style={{ marginLeft: "4px" }}>→</span>
           </a>
         </div>
@@ -53,9 +56,8 @@ class Index extends React.Component {
             <h4>Flexible</h4>
             <MarkdownBlock>
               Type Route was designed with excellent React integration in mind
-              but isn't coupled to a specific UI framework. Use it with
-              [React](/docs/guides/react), [Angular](/docs/guides/angular),
-              [Vue](/docs/guides/vue) or anything else. There's even support for
+              but isn't coupled to a specific UI framework. Use it with React,
+              Angular, Vue or anything else. There's even support for
               non-browser environments such as React Native.
             </MarkdownBlock>
           </div>
@@ -85,7 +87,10 @@ class Index extends React.Component {
           >
             Get Started
           </a>
-          <a href="/docs/guides/react" className="secondary-button">
+          <a
+            href="/docs/guides/simple-react-example"
+            className="secondary-button"
+          >
             See Examples <span style={{ marginLeft: "4px" }}>→</span>
           </a>
         </div>

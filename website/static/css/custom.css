@@ -237,6 +237,21 @@ a:hover {
   display: block;
 }
 
+details {
+  background: #f5f5f5;
+  border-radius: 3px;
+}
+
+details summary {
+  cursor: pointer;
+  padding: 15px 20px;
+  outline: none;
+}
+
+details[open] summary {
+  padding-bottom: 0px;
+}
+
 .codesandbox-link {
   display: inline-block;
   position: absolute;

@@ -4,7 +4,7 @@ title: Getting Started
 
 Type Route is a flexible, type safe routing library built on top of the same [core library](https://github.com/ReactTraining/history) that powers React Router.
 
-> Type Route was designed with excellent React integration in mind but isn't coupled to a specific UI framework. Most code examples in the documentation use React, but the general principles covered apply regardless of framework. See the [Angular](../guides/angular.md) or [Vue](../guides/vue.md) pages for examples specific to those frameworks.
+> Type Route was designed with excellent React integration in mind but isn't coupled to a specific UI framework. Most code examples in the documentation use React, but the general principles covered apply regardless of framework.
 
 Continue reading this page for a quick overview of how to start using Type Route in your project. Read [Why Type Route?](./why-type-route.md) or [Core Concepts](./core-concepts.md) for a more detailed introduction.
 
@@ -40,7 +40,7 @@ export const { routes, listen, getCurrentRoute } = createRouter({
 });
 ```
 
-Best practice is to immediately destructure the result of [`createRouter`](../api-reference/router/create-router.md) into the properties you'll be using in your application. [`createRouter`](../api-reference/router/create-router.md) accepts a object with route names and route definitions created via [`defineRoute`](../api-reference/route-definition-builder/define-route.md). It returns a new router instance.
+Best practice is to immediately destructure the result of [`createRouter`](../api-reference/router/create-router.md) into the properties you'll be using in your application. The [`createRouter`](../api-reference/router/create-router.md) function accepts an object with route names and route definitions created via [`defineRoute`](../api-reference/route-definition-builder/define-route.md) and returns a new router.
 
 ## Step 2: Connect to Application State
 
@@ -55,13 +55,7 @@ import { Navigation } from "./Navigation";
 function App() {
   const [route, setRoute] = useState(getCurrentRoute());
 
-  useEffect(() => {
-    const listener = listen(nextRoute => {
-      setRoute(nextRoute);
-    });
-
-    return () => listener.remove();
-  }, []);
+  useEffect(() => listen(setRoute), []);
 
   return (
     <>
@@ -154,4 +148,4 @@ The [`link`](../api-reference/route-definition/link.md) function returns an obje
 
 Hopefully that was enough to point you in the right direction!
 
-If you need more guidance there is a full _runnable_ version of the above example on the [React](../guides/react.md) page. Alternatively, if React isn't your thing there is an [Angular](../guides/angular.md) example, [Vue](../guides/vue.md) example, and [plain JS](../guides/vanilla-javascript.md) example too. The _Guides_ section of the documentation has detailed overviews and examples for most use cases. Additionally, the _API Reference_ section has descriptions and examples for each part of the API.
+If you need more guidance there is a full _runnable_ version of the above example on the [React](../guides/simple-react-example.md) page. The _Guides_ section of the documentation has detailed overviews and examples for most use cases. Additionally, the _API Reference_ section has descriptions and examples for each part of the API.

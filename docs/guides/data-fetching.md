@@ -1,5 +1,0 @@
----
-title: Data Fetching
----
-
-Hello

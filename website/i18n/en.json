@@ -65,23 +65,11 @@
       "api-reference/typescript/route": {
         "title": "Route"
       },
-      "guides/accessibility": {
-        "title": "Accessibility"
-      },
-      "guides/angular": {
-        "title": "Angular"
-      },
-      "guides/code-splitting": {
-        "title": "Code Splitting"
-      },
       "guides/complex-route-parameters": {
         "title": "Complex Route Parameters"
       },
-      "guides/data-fetching": {
-        "title": "Data Fetching"
-      },
-      "guides/nested-embedded-routers": {
-        "title": "Nested/Embedded Routers"
+      "guides/guide-missing": {
+        "title": "Guide Missing?"
       },
       "guides/nested-similar-routes": {
         "title": "Nested/Similar Routes"
@@ -95,9 +83,6 @@
       "guides/programmatic-navigation": {
         "title": "Programmatic Navigation"
       },
-      "guides/react": {
-        "title": "React"
-      },
       "guides/redirects": {
         "title": "Redirects"
       },
@@ -110,17 +95,8 @@
       "guides/scroll-restoration": {
         "title": "Scroll Restoration"
       },
-      "guides/server-side-rendering": {
-        "title": "Server-side Rendering"
-      },
-      "guides/testing": {
-        "title": "Testing"
-      },
-      "guides/vanilla-javascript": {
-        "title": "Vanilla JavaScript"
-      },
-      "guides/vue": {
-        "title": "Vue"
+      "guides/simple-react-example": {
+        "title": "Simple React Example"
       },
       "introduction/core-concepts": {
         "title": "Core Concepts"

@@ -6,25 +6,17 @@
       "introduction/core-concepts"
     ],
     "Guides": [
-      "guides/react",
-      "guides/angular",
-      "guides/vue",
-      "guides/vanilla-javascript",
+      "guides/simple-react-example",
       "guides/nested-similar-routes",
-      "guides/nested-embedded-routers",
       "guides/no-match-404",
       "guides/redirects",
       "guides/route-parameters",
       "guides/complex-route-parameters",
-      "guides/code-splitting",
-      "guides/accessibility",
       "guides/rendering-links",
       "guides/programmatic-navigation",
       "guides/preventing-navigation",
       "guides/scroll-restoration",
-      "guides/server-side-rendering",
-      "guides/data-fetching",
-      "guides/testing"
+      "guides/guide-missing"
     ],
     "API Reference": [
       {

@@ -139,11 +139,11 @@ function App() {
   const [route, setRoute] = useState(getCurrentRoute());
 
   useEffect(() => {
-    const listener = listen(nextRoute => {
+    const removeListener = listen(nextRoute => {
       setRoute(nextRoute);
     });
 
-    return () => listener.remove();
+    return removeListener;
   }, []);
 
   return (
@@ -446,7 +446,7 @@ const { listen } = createRouter({
 });
 
 // Creates a new listener
-const listener = listen(nextRoute => {
+const removeListener = listen(nextRoute => {
   console.log(nextRoute);
   // logs:
   // { name: false, params: {} }
@@ -458,7 +458,7 @@ const listener = listen(nextRoute => {
 });
 
 // Removes the listener
-listener.remove();
+removeListener();
 ```
 
 The `listen` function will create a new route listener. Anytime the application route changes this function will be called with the next matching route. If the given url does not match any route in that router an object with a `false` value for the `name` property and empty object for the `params` property will be returned.
@@ -529,13 +529,7 @@ The `getCurrentRoute` function will return the current route. Typically, the `li
 function App() {
   const [route, setRoute] = useState(getCurrentRoute());
 
-  useEffect(() => {
-    const listener = listen(nextRoute => {
-      setRoute(nextRoute);
-    });
-
-    return () => listener.remove();
-  }, []);
+  useEffect(() => listen(setRoute), []);
 
   return <>Route {route.name}</>;
 }

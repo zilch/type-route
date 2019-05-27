@@ -25,14 +25,18 @@ window.onload = function() {
         "src/index.tsx": {
           content: code
         },
+        "public/index.html": {
+          content:
+            '<style>a { margin-right: 10px; } nav { margin-bottom: 10px; } #root { margin: 10px; }</style><div id="root"></div>'
+        },
         "package.json": {
           content: {
             dependencies: {
               "type-route": "latest",
-              react: "latest",
-              "@types/react": "latest",
-              "react-dom": "latest",
-              "@types/react-dom": "latest"
+              react: "=16.8.6",
+              "@types/react": "=16.8.18",
+              "react-dom": "=16.8.6",
+              "@types/react-dom": "=16.8.4"
             }
           }
         }
@@ -40,6 +44,14 @@ window.onload = function() {
     }),
     "codesandbox-standard": code => ({
       files: {
+        "sandbox.config.json": {
+          content:
+            "{\n" + '  "template": "create-react-app-typescript"\n' + "}\n"
+        },
+        "public/index.html": {
+          content:
+            '<style>a { margin-right: 10px; } nav { margin-bottom: 10px; } #root { margin: 10px; }</style><div id="root"></div>'
+        },
         "index.ts": {
           content: code
         },

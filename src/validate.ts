@@ -440,13 +440,13 @@ export const validate = {
     }
   ),
 
-  ["[router].listen.remove"]: assertion(
+  ["[router].listen.removeListener"]: assertion(
     {
-      functionName: "remove",
-      signature: "remove();"
+      functionName: "removeListener",
+      signature: "removeListener();"
     },
     (args: any[]) => {
-      assertNumArguments("remove", args, 0, 0);
+      assertNumArguments("removeListener", args, 0, 0);
     }
   ),
 

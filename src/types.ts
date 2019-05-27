@@ -171,11 +171,7 @@ export type Router<
 > = {
   routes: { [K in keyof T]: RouteDefinition<K, T[K]["params"]> };
 
-  listen: (
-    handler: NavigationHandler<T>
-  ) => {
-    remove: () => void;
-  };
+  listen: (handler: NavigationHandler<T>) => () => void;
 
   getCurrentRoute: () => Route<T>;
 
