@@ -4,6 +4,14 @@ sidebar_label: getCurrentRoute
 ---
 
 ```tsx
+<Router>.getCurrentRoute(): Route
+```
+
+The `getCurrentRoute` function will return the current route. Typically, the `listen` function would be used to update your application's state to reflect the current route over time. The `getCurrentRoute` function is more useful to ensure the initial state of your application is correct.
+
+#### Example
+
+```tsx
 const { getCurrentRoute } = createRouter({
   home: defineRoute("/"),
   post: defineRoute({ postId: "path.param.string" }, p => `/post/${p.postId}`)
@@ -19,7 +27,7 @@ console.log(getCurrentRoute());
 // (where "abc" is whatever was matched from the url)
 ```
 
-The `getCurrentRoute` function will return the current route. Typically, the `listen` function would be used to update your application's state to reflect the current route over time. The `getCurrentRoute` function is more useful to ensure the initial state of your application is correct. For example when using `type-route` with React your code may resemble this:
+When using Type Route with React your code may resemble this:
 
 ```tsx
 function App() {

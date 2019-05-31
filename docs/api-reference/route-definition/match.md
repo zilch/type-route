@@ -4,6 +4,17 @@ sidebar_label: match
 ---
 
 ```tsx
+<RouteDefinition>.match(matchParams: {
+  pathName: string;
+  queryString?: string;
+}): RouteParameters | false;
+```
+
+The `match` function takes an object with a `pathName` field and optionally a `queryString` field. It tests if the route matches the given `pathName` and `queryString`. If the test fails `false` is returned. If the test succeeds an object containing the values of any matched parameters is returned (if the route has no parameters an empty object `{ }` will be returned). While this function is exposed publicly, most applications should not need to make use of it directly.
+
+#### Example
+
+```tsx
 const { routes } = createRouter({
   home: defineRoute("/"),
   post: defineRoute({ postId: "path.param.string" }, p => `/post/${p.postId}`),
@@ -27,5 +38,3 @@ routes.postList.match({
   queryString: "page=1"
 }); // returns { page: 1 }
 ```
-
-The `match` function takes an object with a `pathName` field and optionally a `queryString` field. It tests if the route matches the given `pathName` and `queryString`. If the test fails `false` is returned. If the test succeeds an object containing the values of any matched parameters is returned (if the route has no parameters an empty object `{ }` will be returned). While this function is exposed publicly, most applications should not need to make use of it directly.

@@ -4,6 +4,14 @@ sidebar_label: name
 ---
 
 ```tsx
+<RouteDefinition>.name: string
+```
+
+The `name` field is a constant value used for comparing a specific `Route` to a particular `RouteDefinition`. As shown in the example this allows you to determine which route you're dealing with.
+
+#### Example
+
+```tsx
 const { routes, getCurrentRoute } = createRouter({
   home: defineRoute("/"),
   post: defineRoute({ postId: "path.param.string" }, p => `/post/${p.postId}`)
@@ -18,5 +26,3 @@ if (route.name === routes.post.name) {
   // called "postId" of type string.
 }
 ```
-
-The `name` field is a constant value used for comparing a specific `Route` to a particular `RouteDefinition`. As shown in the example above this allows you to determine which route you're dealing with.

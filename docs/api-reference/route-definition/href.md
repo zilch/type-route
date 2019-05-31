@@ -3,13 +3,13 @@ title: <RouteDefinition>.href
 sidebar_label: href
 ---
 
-```
+```tsx
 <RouteDefinition>.href(parameters?: RouteParameters): string
 ```
 
 Use the `href` function of a `RouteDefinition` object to retrieve that route's corresponding href. If the route takes parameters, pass those to the `href` function to get the parameterized href. In most cases instead of using this function you would use the [link](./link.md) function to generate both an href and onClick handler for your view or would use the [push](./push.md) or [replace](./replace.md) functions for navigating programmatically.
 
-### Example
+#### Example
 
 ```tsx codesandbox-standard
 import { createRouter, defineRoute } from "type-route";

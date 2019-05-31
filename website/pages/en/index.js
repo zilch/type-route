@@ -18,14 +18,15 @@ class Index extends React.Component {
         </div>
         <div className="betaNotification">
           <div>
-            <b>Disclaimer: This is a beta release.</b> Early adopters are
-            encouraged with the understanding that Type Route could undergo
-            significant changes before release <b>1.0</b>. Help the project
-            reach its first stable release by using the{" "}
+            <b>This is a beta release.</b> The Type Route API has been vetted
+            with production code but the library has not yet reached version{" "}
+            <b>1.0</b>. More community feedback is needed to validate the
+            project's maturity. Use the{" "}
             <a href="https://github.com/type-route/type-route/issues">
               issue tracker
             </a>{" "}
-            for bugs, questions, or suggestions.
+            to communicate this feedback in the form of bugs, questions, or
+            suggestions.
           </div>
         </div>
         <div className="getStartedContainer">
@@ -48,8 +49,8 @@ class Index extends React.Component {
             <MarkdownBlock>
               First and foremost Type Route strives for excellent TypeScript
               support. An API designed for static analysis not only means the
-              compiler has your back but also enables your editor to be
-              intelligent as you code.
+              compiler has your back but also enables your editor to provide
+              intelligent hints and warnings as you code.
             </MarkdownBlock>
           </div>
           <div>

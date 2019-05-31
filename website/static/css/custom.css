@@ -257,7 +257,7 @@ details[open] summary {
   position: absolute;
   right: 0px;
   font-size: 13px;
-  background: #e0e0e0;
+  background: rgba(100, 100, 100, 0.1);
   color: #555 !important;
   opacity: 1 !important;
   padding: 5px 15px;

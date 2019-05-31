@@ -4,6 +4,10 @@ sidebar_label: listen
 ---
 
 ```tsx
+<Router>.listen()
+```
+
+```tsx
 const { listen } = createRouter({
   home: defineRoute("/"),
   post: defineRoute({ postId: "path.param.string" }, p => `/post/${p.postId}`)

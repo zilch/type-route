@@ -6,7 +6,7 @@ Type Route is a flexible, type safe routing library built on top of the same [co
 
 > Type Route was designed with excellent React integration in mind but isn't coupled to a specific UI framework. Most code examples in the documentation use React, but the general principles covered apply regardless of framework.
 
-Continue reading this page for a quick overview of how to start using Type Route in your project. Read [Why Type Route?](./why-type-route.md) or [Core Concepts](./core-concepts.md) for a more detailed introduction.
+Continue reading this page for a quick overview of how to start using Type Route in your project. Read [Why Type Route?](./why-type-route.md) or [Core Concepts](./core-concepts.md) for a more detailed introduction. Find a full runnable version of the below examples on the [React](../guides/simple-react-example.md) page.
 
 ## Install
 
