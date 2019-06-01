@@ -1,9 +1,9 @@
 {
   "name": "type-route",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
-  "description": "Flexible Routing + Seamless DX = 🚀",
+  "description": "A flexible, type safe routing library.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/type-route/type-route.git"
@@ -13,7 +13,7 @@
     "url": "https://github.com/type-route/type-route/issues"
   },
   "sideEffects": false,
-  "homepage": "https://github.com/type-route/type-route",
+  "homepage": "https://type-route.org",
   "dependencies": {
     "@types/history": "^4.7.2",
     "history": "^4.9.0",
