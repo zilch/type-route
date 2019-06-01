@@ -10,4 +10,4 @@
 
 ## Type Route
 
-Type Route is a flexible, type safe routing library built on top of the same [core library](https://github.com/ReactTraining/history) that powers React Router. **Find out more at [type-route.org](type-route.org).**
+Type Route is a flexible, type safe routing library built on top of the same [core library](https://github.com/ReactTraining/history) that powers React Router. **Find out more at [type-route.org](https://type-route.org).**
