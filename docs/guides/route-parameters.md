@@ -31,4 +31,4 @@ Here are some url matching scenarios for the above route definition:
 | /users/abc/activity?page=1   | `route.params` = `{"userId":"abc","page":1}` |
 | /users/abc/activity?page=abc | No match                                     |
 
-Path params must be used in the path function when you define your route. While path parameters are always required query parameters can be either required or optional. These are the only data types Type Route supports. For strategies on supporting more complex data types (such as arrays) read the [complex route parameters](./complex-route-paramters.md) page.
+Path params must be used in the path function when you define your route. While path parameters are always required query parameters can be either required or optional. These are the only data types Type Route supports. For strategies on supporting more complex data types (such as arrays) read the [complex route parameters](./complex-route-parameters.md) page.

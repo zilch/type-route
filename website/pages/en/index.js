@@ -75,10 +75,15 @@ class Index extends React.Component {
             </div>
           </div>
         </div>
-        <div className="sandboxContainer">
-          <h2>See it in Action&nbsp;&nbsp;🚀</h2>
-          <div className="stackblitz">
-            <iframe src="https://stackblitz.com/edit/type-route?embed=1&file=index.ts&hideExplorer=1&hideNavigation=1" />
+        <div className="seeItInAction">
+          <a style={{ width: "600px" }} href="#">
+            <div className="actionThumbnail">
+              <img src="/img/code.png" />
+            </div>
+          </a>
+          <div className="seeItInActionText">
+            <b>See it in Action.</b>
+            Run on CodeSandbox.
           </div>
         </div>
         <div className="getStartedContainer">

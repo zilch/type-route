@@ -2,8 +2,7 @@
   "docs": {
     "Introduction": [
       "introduction/getting-started",
-      "introduction/why-type-route",
-      "introduction/core-concepts"
+      "introduction/why-type-route"
     ],
     "Guides": [
       "guides/simple-react-example",

@@ -6,7 +6,7 @@ Type Route is a flexible, type safe routing library built on top of the same [co
 
 > Type Route was designed with excellent React integration in mind but isn't coupled to a specific UI framework. Most code examples in the documentation use React, but the general principles covered apply regardless of framework.
 
-Continue reading this page for a quick overview of how to start using Type Route in your project. Read [Why Type Route?](./why-type-route.md) or [Core Concepts](./core-concepts.md) for a more detailed introduction. Find a full runnable version of the below examples on the [React](../guides/simple-react-example.md) page.
+Continue reading this page for a quick overview of how to start using Type Route in your project. Read the [Why Type Route?](./why-type-route.md) page for a more detailed introduction. Find a full runnable version of the below examples on the [Simple React Example](../guides/simple-react-example.md) page.
 
 ## Install
 
@@ -142,7 +142,7 @@ export function Navigation() {
 }
 ```
 
-The [`link`](../api-reference/route-definition/link.md) function returns an object with an `href` property and an `onClick` function. You need both to properly render a link for a single page application. Immediately destructing these into the properties of the `<a>` tag allows for ergonomic use. [Programmatic navigation](../guides/programmatic-navigation.md) is possible with the [`push`](../api-reference/route-definition/push.md) and [`replace`](../api-reference/route-definition/replace.md) functions of a specific route.
+The [`link`](../api-reference/route-definition/link.md) function returns an object with an `href` property and an `onClick` function. You need both to [properly render](../guides/rendering-links.md) a link for a single page application. Immediately destructing these into the properties of the `<a>` tag allows for ergonomic use. [Programmatic navigation](../guides/programmatic-navigation.md) is possible with the [`push`](../api-reference/route-definition/push.md) and [`replace`](../api-reference/route-definition/replace.md) functions of a specific route.
 
 ## Next Steps
 

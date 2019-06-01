@@ -161,13 +161,28 @@ a:hover {
   .features > div {
     width: calc(100% - 60px);
   }
+  .seeItInAction {
+    display: block !important;
+    margin-top: 60px !important;
+    margin-bottom: 80px !important;
+  }
+  .seeItInActionText {
+    margin-left: 0px !important;
+    margin-top: 60px;
+  }
+}
+
+@media only screen and (max-width: 425px) {
+  .getStartedContainer a {
+    display: block !important;
+  }
 }
 
 .features h4 {
   margin-top: 0px;
 }
 
-.headerWrapper header::before {
+/* .headerWrapper header::before {
   content: "🚧 UNDER CONSTRUCTION - CHECK BACK LATER";
   font-weight: 900;
   padding: 6px 20px;
@@ -176,7 +191,7 @@ a:hover {
   color: darkgoldenrod;
   border-radius: 30px;
   display: block;
-}
+} */
 
 .headerTitleWithLogo::after {
   content: "beta";
@@ -215,27 +230,93 @@ a:hover {
   margin-right: auto;
 }
 
-.sandboxContainer {
-  margin-bottom: 50px;
-}
-
-.sandboxContainer h2 {
-  margin-top: 0px;
-  margin-bottom: 30px;
+.seeItInAction {
+  align-items: center;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 1040px;
   text-align: center;
+  width: calc(100% - 60px);
+  display: flex;
+  margin-top: 40px;
+  margin-bottom: 100px;
 }
 
-.stackblitz {
+.seeItInActionText {
+  font-size: 28px;
+  margin-left: 70px;
+  text-align: center;
+  display: block;
+  flex-grow: 1;
+}
+
+.seeItInActionText b {
+  display: block;
+}
+
+.actionThumbnail {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-top: 68.11%;
+  display: block;
+  cursor: pointer;
+  transition: all ease 0.2s;
+}
+.actionThumbnail:hover {
+  opacity: 1;
+  transform: scale(1.02);
+}
+.actionThumbnail:hover::before {
+  opacity: 0.4;
+}
+
+.actionThumbnail::before {
+  content: "";
+  display: block;
+  width: 100px;
+  height: 100px;
+  border-radius: 100%;
+  background: rgb(255, 255, 255);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  position: absolute;
+  transition: all ease 0.1s;
+  z-index: 1;
+  opacity: 0.2;
+}
+.actionThumbnail::after {
+  content: "";
+  display: block;
+  border: 17px solid transparent;
+  border-left-width: 25px;
+  border-left-color: rgb(40, 44, 52);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-22%, -50%);
+  z-index: 2;
+}
+
+.actionThumbnail img {
+  position: absolute;
+  top: -10.2%;
+  left: -10.45%;
+  width: 120.9%;
+  max-width: unset;
+}
+
+/* .stackblitz {
   border-radius: 5px;
   border: 1px solid #999;
-  background: rgb(50, 50, 50);
   overflow: hidden;
   height: 600px;
   padding: 0px !important;
   color: rgb(25, 28, 30) !important;
   position: relative;
   display: block;
-}
+} */
 
 details {
   background: #f5f5f5;
@@ -275,32 +356,4 @@ details[open] summary {
 .codesandbox-link.bottom {
   border-radius: 6px 0px 3px 0px;
   margin-top: -29px;
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.stackblitz iframe {
-  height: 100%;
-  overflow: hidden;
-  border: none;
-  width: 100%;
-}
-
-.sandboxContainer .stackblitz {
-  margin-left: auto;
-  margin-right: auto;
-  position: relative;
-  max-width: 1400px;
-  max-height: 900px;
-  width: calc(100% - 120px);
-  height: calc(100vh - 150px);
-  min-height: 500px;
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
 }

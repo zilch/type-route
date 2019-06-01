@@ -4,8 +4,14 @@ sidebar_label: listen
 ---
 
 ```tsx
-<Router>.listen()
+<Router>.listen(navigationHandler: (nextRoute: Route) => Promise<false | void> | false | void): () => void;
 ```
+
+The `listen` function will create a new route listener. Anytime the application route changes this function will be called with the next matching route. If the given url does not match any route in that router an object with a `false` value for the `name` property and an empty object for the `params` property will be returned.
+
+Returning `false` (or a `Promise` which resolves to `false`) from the navigation handler function will abort the url change. Read the [Preventing Navigation](../../guides/preventing-navigation.md) guide for more information on how this works.
+
+#### Example
 
 ```tsx
 const { listen } = createRouter({
@@ -28,7 +34,3 @@ const removeListener = listen(nextRoute => {
 // Removes the listener
 removeListener();
 ```
-
-The `listen` function will create a new route listener. Anytime the application route changes this function will be called with the next matching route. If the given url does not match any route in that router an object with a `false` value for the `name` property and empty object for the `params` property will be returned.
-
-Returning `false` (or a `Promise` which resolves to `false`) from this function will abort the url change. Read the [Preventing Navigation](../../guides/preventing-navigation.md) guide for more information on how this works.

@@ -9,3 +9,4 @@
 .DS_Store
 /website/build
 /website/static/js/codesandbox.js
+/website/i18n

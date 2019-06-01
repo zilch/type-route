@@ -26,8 +26,8 @@ function assertion<T extends (...args: any[]) => void>(
 }
 
 export function error(message: string) {
-  const err = new Error(message);
-  err.name = "TypeRouteError";
+  const err = new Error(`Hope this helps:\n\n${message}`);
+  err.name = "Friendly Type Route Error Here 😁";
   return err;
 }
 
@@ -432,7 +432,7 @@ export const validate = {
     {
       functionName: "listen",
       signature:
-        "listen(handler: (nextRoute: Route, currentRoute: Route) => Promise<false | void> | false | void): { remove: () => void }"
+        "listen(handler: (nextRoute: Route, currentRoute: Route) => Promise<false | void> | false | void): () => void"
     },
     (args: any[]) => {
       assertNumArguments("listen", args, 1, 1);
