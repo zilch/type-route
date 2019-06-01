@@ -66,6 +66,14 @@ window.onload = function() {
     })
   };
 
+  document.querySelectorAll("a[data-code]").forEach(function(element) {
+    const code = element.getAttribute("data-code");
+    const config = configFactoryCollection["codesandbox-react"](code);
+    const parameters = codesandbox.getParameters(config);
+    element.href =
+      "https://codesandbox.io/api/v1/sandboxes/define?parameters=" + parameters;
+  });
+
   document
     .querySelectorAll(
       Object.keys(configFactoryCollection)
