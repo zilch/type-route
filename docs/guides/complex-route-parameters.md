@@ -26,7 +26,7 @@ function App() {
   let pageContents;
 
   if (route.name === routes.example.name) {
-    const arr = JSON.parse(route.params.arr) as number[];
+    const arr = JSON.parse(route.params.numArray) as number[];
 
     pageContents = (
       <>
@@ -43,7 +43,7 @@ function App() {
     <>
       <nav>
         <a
-          {...routes.complexRoute.link({
+          {...routes.example.link({
             numArray: JSON.stringify([1, 2])
           })}
         >
