@@ -18,6 +18,9 @@ const siteConfig = {
     {
       href: "https://github.com/type-route/type-route/issues/new",
       label: "Feedback"
+    },
+    {
+      search: true
     }
   ],
 
@@ -48,7 +51,12 @@ const siteConfig = {
   // On page navigation for the current documentation page.
   onPageNav: "separate",
   // No .html extensions for paths.
-  cleanUrl: true
+  cleanUrl: true,
+
+  algolia: {
+    apiKey: "4a2bd93ab352acbdeac847eb2563ac5e",
+    indexName: "type-route"
+  }
 };
 
 module.exports = siteConfig;
