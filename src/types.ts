@@ -143,9 +143,7 @@ export type RouteDefinitionGroup<T extends any> = {
 
 export type Route<T> = T extends RouteDefinition<any, any>
   ? RouteDefinitionToRoute<T>
-  : T extends RouteDefinitionGroup<
-      RouteDefinition<string, ParameterDefinitionCollection>[]
-    >
+  : T extends RouteDefinitionGroup<any>
   ? T[".type"]
   :
       | {
