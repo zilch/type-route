@@ -2,7 +2,9 @@ import {
   RouteDefinitionBuilderCollection,
   Router,
   NavigationHandler,
-  Action
+  Action,
+  MemoryHistoryConfig,
+  HistoryConfig
 } from "./types";
 import {
   History,
@@ -16,33 +18,27 @@ import { buildRouteDefinition } from "./buildRouteDefinition";
 import { getRoute } from "./getRoute";
 import { error, validate } from "./validate";
 
-export function createRouter<T>(routeDefinitions: T): Router<T, History>;
-export function createRouter<T>(
-  historyType: "browser",
-  routeDefinitions: T
-): Router<T, History>;
-export function createRouter<T>(
-  historyType: "memory",
-  routeDefinitions: T
-): Router<T, MemoryHistory>;
+export function createRouter<T, K extends HistoryConfig>(
+  routeDefinitions: T,
+  historyConfig?: K
+): Router<T, K extends MemoryHistoryConfig ? MemoryHistory : History>;
 export function createRouter(...args: any[]) {
   validate["createRouter"](Array.from(arguments));
 
-  let historyType: "memory" | "browser";
-  let routeDefinitionBuilderCollection: RouteDefinitionBuilderCollection;
+  let historyConfig: HistoryConfig;
+  let routeDefinitionBuilderCollection: RouteDefinitionBuilderCollection =
+    args[0];
 
   if (args.length === 1) {
-    historyType = "browser";
-    routeDefinitionBuilderCollection = args[0];
+    historyConfig = { type: "browser" };
   } else {
-    historyType = args[0];
-    routeDefinitionBuilderCollection = args[1];
+    historyConfig = args[1];
   }
 
-  const createHistory =
-    historyType === "browser" ? createBrowserHistory : createMemoryHistory;
-
-  const history = createHistory({ getUserConfirmation });
+  const history =
+    historyConfig.type === "browser"
+      ? createBrowserHistory({ ...historyConfig, getUserConfirmation })
+      : createMemoryHistory({ ...historyConfig, getUserConfirmation });
   const routes = mapObject(routeDefinitionBuilderCollection, (builder, name) =>
     buildRouteDefinition(navigate, builder, name as string)
   );

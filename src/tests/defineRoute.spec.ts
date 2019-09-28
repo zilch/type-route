@@ -277,6 +277,9 @@ export function getRouteDefinition<T extends ParameterDefinitionCollection>(
   params: T,
   path: PathFn<T>
 ) {
-  const { routes } = createRouter("memory", { def: defineRoute(params, path) });
+  const { routes } = createRouter(
+    { def: defineRoute(params, path) },
+    { type: "memory" }
+  );
   return routes.def;
 }

@@ -50,7 +50,6 @@
   ],
   "scripts": {
     "start": "parcel ./src/tests/testPage.html",
-    "docs": "parcel ./docs/index.html",
     "build": "rm -rf ./lib && tsc",
     "test": "jest"
   }

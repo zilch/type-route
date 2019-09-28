@@ -8,7 +8,7 @@ export type QueryParamStringOptional = "query.param.string.optional";
 export type QueryParamNumberOptional = "query.param.number.optional";
 
 export type KeysMatching<T, V> = {
-  [K in keyof T]: T[K] extends V ? K : never
+  [K in keyof T]: T[K] extends V ? K : never;
 }[keyof T];
 
 export type ParsedPathParameter = {
@@ -121,6 +121,19 @@ export type RouteDefinitionCollection = {
 
 export type Action = "push" | "replace" | "pop" | "initial";
 
+export type BrowserHistoryConfig = {
+  type: "browser";
+  forceRefresh?: boolean;
+};
+
+export type MemoryHistoryConfig = {
+  type: "memory";
+  initialEntries?: string[];
+  initialIndex?: number;
+};
+
+export type HistoryConfig = BrowserHistoryConfig | MemoryHistoryConfig;
+
 export type RouteDefinitionToRoute<
   T extends RouteDefinition<string, ParameterDefinitionCollection>
 > = {
@@ -155,7 +168,7 @@ export type Route<T> = T extends RouteDefinition<any, any>
               : T[K] extends RouteDefinitionBuilder<any>
               ? RouteParameters<T[K]["params"]>
               : never;
-          }
+          };
         }[keyof T]
       | NotFoundRoute;
 
