@@ -101,7 +101,7 @@ function isFunction(arg: any) {
 }
 
 function isHistoryConfig(arg: any) {
-  if (arg === "browser" || arg === "memory") {
+  if (arg === undefined) {
     return true;
   }
 
@@ -457,8 +457,7 @@ export const validate = {
     {
       functionName: "createRouter",
       signature: [
-        "createRouter(routeDefinitions: RouteDefinitions): Router;",
-        'createRouter(historyType: "browser" | "memory", routeDefinitions: RouteDefinitions): Router;'
+        "createRouter(routeDefinitions: RouteDefinitions, historyConfig?: HistoryConfig): Router;"
       ]
     },
     (args: any[]) => {

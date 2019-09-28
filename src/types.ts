@@ -121,18 +121,20 @@ export type RouteDefinitionCollection = {
 
 export type Action = "push" | "replace" | "pop" | "initial";
 
-export type BrowserHistoryConfig = {
+export type BrowserHistoryRouterConfig = {
   type: "browser";
   forceRefresh?: boolean;
 };
 
-export type MemoryHistoryConfig = {
+export type MemoryHistoryRouterConfig = {
   type: "memory";
   initialEntries?: string[];
   initialIndex?: number;
 };
 
-export type HistoryConfig = BrowserHistoryConfig | MemoryHistoryConfig;
+export type RouterConfig =
+  | BrowserHistoryRouterConfig
+  | MemoryHistoryRouterConfig;
 
 export type RouteDefinitionToRoute<
   T extends RouteDefinition<string, ParameterDefinitionCollection>
@@ -176,15 +178,16 @@ export type NavigationHandler<T> = (
   nextRoute: Route<T>
 ) => Promise<false | void> | false | void;
 
-export type Router<
-  T extends { [key: string]: any },
-  H extends History | MemoryHistory
-> = {
+export type Router<T extends { [key: string]: any }> = {
   routes: { [K in keyof T]: RouteDefinition<K, T[K]["params"]> };
 
   listen: (handler: NavigationHandler<T>) => () => void;
 
   getCurrentRoute: () => Route<T>;
 
-  history: H;
+  getHistoryInstance: () =>
+    | ({ type: "browser" } & History)
+    | ({ type: "memory" } & MemoryHistory);
+
+  configure: (routerConfig: RouterConfig) => void;
 };

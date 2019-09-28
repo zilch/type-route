@@ -3,42 +3,32 @@ import {
   Router,
   NavigationHandler,
   Action,
-  MemoryHistoryConfig,
-  HistoryConfig
+  RouterConfig,
+  Route
 } from "./types";
 import {
   History,
-  MemoryHistory,
   createBrowserHistory,
   createMemoryHistory,
-  Location
+  Location,
+  MemoryHistory
 } from "history";
 import { mapObject } from "./mapObject";
 import { buildRouteDefinition } from "./buildRouteDefinition";
 import { getRoute } from "./getRoute";
 import { error, validate } from "./validate";
 
-export function createRouter<T, K extends HistoryConfig>(
-  routeDefinitions: T,
-  historyConfig?: K
-): Router<T, K extends MemoryHistoryConfig ? MemoryHistory : History>;
+export function createRouter<T>(routeDefinitions: T): Router<T>;
 export function createRouter(...args: any[]) {
   validate["createRouter"](Array.from(arguments));
 
-  let historyConfig: HistoryConfig;
   let routeDefinitionBuilderCollection: RouteDefinitionBuilderCollection =
     args[0];
 
-  if (args.length === 1) {
-    historyConfig = { type: "browser" };
-  } else {
-    historyConfig = args[1];
-  }
+  let history:
+    | (History & { type: "browser" })
+    | (MemoryHistory & { type: "memory" });
 
-  const history =
-    historyConfig.type === "browser"
-      ? createBrowserHistory({ ...historyConfig, getUserConfirmation })
-      : createMemoryHistory({ ...historyConfig, getUserConfirmation });
   const routes = mapObject(routeDefinitionBuilderCollection, (builder, name) =>
     buildRouteDefinition(navigate, builder, name as string)
   );
@@ -47,7 +37,7 @@ export function createRouter(...args: any[]) {
     id: number;
     handler: NavigationHandler<any>;
   }[] = [];
-  let currentRoute = getRoute(routes, history.location, "initial");
+  let currentRoute: Route<any>;
   let navigationHandlerIdCounter = 0;
   let unblock: (() => void) | undefined = undefined;
   let nextLocation: Location;
@@ -56,17 +46,44 @@ export function createRouter(...args: any[]) {
   let navigationResolverIdBase = Date.now().toString();
   let navigationResolvers: { [id: string]: (result: boolean) => void } = {};
 
-  const router: Router<any, any> = {
+  if (typeof window !== "undefined" && typeof window.document !== "undefined") {
+    configure({ type: "browser" });
+  } else {
+    configure({ type: "memory" });
+  }
+
+  const router: Router<any> = {
     routes,
     listen,
-    history,
     getCurrentRoute() {
       validate["[router].getCurrentRoute"](Array.from(arguments));
       return currentRoute;
+    },
+    configure,
+    getHistoryInstance() {
+      return history;
     }
   };
 
   return router;
+
+  function configure(routerConfig: RouterConfig) {
+    if (routerConfig.type === "browser") {
+      history = createBrowserHistory({
+        ...routerConfig,
+        getUserConfirmation
+      }) as any;
+      history.type = "browser";
+    } else {
+      history = createMemoryHistory({
+        ...routerConfig,
+        getUserConfirmation
+      }) as any;
+      history.type = "memory";
+    }
+
+    currentRoute = getRoute(routes, history.location, "initial");
+  }
 
   function listen(handler: NavigationHandler<any>) {
     validate["[router].listen"](Array.from(arguments));
