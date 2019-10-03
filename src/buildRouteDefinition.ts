@@ -55,7 +55,13 @@ export function buildRouteDefinition(
           event.shiftKey
         );
 
+        const isSelfTarget =
+          !event.target ||
+          !event.target.target ||
+          event.target.target === "_self";
+
         if (
+          isSelfTarget && // Ignore everything but links with target self
           !event.defaultPrevented && // onClick prevented default
           event.button === 0 && // ignore everything but left clicks
           !isModifiedEvent // ignore clicks with modifier keys

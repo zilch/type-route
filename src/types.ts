@@ -95,6 +95,7 @@ export type ClickEvent = {
   altKey?: boolean | null;
   ctrlKey?: boolean | null;
   shiftKey?: boolean | null;
+  target?: { target?: string | null } | null;
 };
 
 export type OnClickHandler = (event?: ClickEvent) => void;
