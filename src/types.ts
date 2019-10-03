@@ -98,7 +98,7 @@ export type ClickEvent = {
   target?: { target?: string | null } | null;
 };
 
-export type OnClickHandler = (event?: ClickEvent) => void;
+export type OnClickHandler = (event?: any) => void;
 
 export type RouteDefinition<K, T> = {
   name: K;
