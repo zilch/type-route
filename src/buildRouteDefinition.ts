@@ -5,7 +5,8 @@ import {
   PathParameterDefinitionCollection,
   QueryParameterDefinitionCollection,
   MatchFnParams,
-  RouteParameters
+  RouteParameters,
+  ClickEvent
 } from "./types";
 import qs from "querystringify";
 import { getPathMatch } from "./getPathMatch";
@@ -46,12 +47,25 @@ export function buildRouteDefinition(
 
     return {
       href: href(params),
-      onClick: (event?: { preventDefault?: () => void }) => {
-        if (event && event.preventDefault) {
-          event.preventDefault();
-        }
+      onClick: (event: ClickEvent = {}) => {
+        const isModifiedEvent = !!(
+          event.metaKey ||
+          event.altKey ||
+          event.ctrlKey ||
+          event.shiftKey
+        );
 
-        navigate(href(params));
+        if (
+          !event.defaultPrevented && // onClick prevented default
+          event.button === 0 && // ignore everything but left clicks
+          !isModifiedEvent // ignore clicks with modifier keys
+        ) {
+          if (event && event.preventDefault) {
+            event.preventDefault();
+          }
+
+          navigate(href(params));
+        }
       }
     };
   }

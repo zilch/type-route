@@ -8,7 +8,7 @@ export type QueryParamStringOptional = "query.param.string.optional";
 export type QueryParamNumberOptional = "query.param.number.optional";
 
 export type KeysMatching<T, V> = {
-  [K in keyof T]: T[K] extends V ? K : never
+  [K in keyof T]: T[K] extends V ? K : never;
 }[keyof T];
 
 export type ParsedPathParameter = {
@@ -87,7 +87,17 @@ export type RouteDefinitionBuilder<T> = {
   extend(path: string): RouteDefinitionBuilder<T>;
 };
 
-export type OnClickHandler = (event?: { preventDefault?: () => void }) => void;
+export type ClickEvent = {
+  preventDefault?: () => void;
+  button?: number | null;
+  defaultPrevented?: boolean | null;
+  metaKey?: boolean | null;
+  altKey?: boolean | null;
+  ctrlKey?: boolean | null;
+  shiftKey?: boolean | null;
+};
+
+export type OnClickHandler = (event?: ClickEvent) => void;
 
 export type RouteDefinition<K, T> = {
   name: K;
@@ -155,7 +165,7 @@ export type Route<T> = T extends RouteDefinition<any, any>
               : T[K] extends RouteDefinitionBuilder<any>
               ? RouteParameters<T[K]["params"]>
               : never;
-          }
+          };
         }[keyof T]
       | NotFoundRoute;
 
