@@ -97,7 +97,9 @@ function App() {
   return (
     <>
       <a {...routes.dashboard.link()}>Dashboard</a>
-      <a {...routes.user.link({ username: "bradenhs" })}>Profile</a>
+      <a {...routes.user.link({ username: "bradenhs" })} target="_blank">
+        Profile
+      </a>
 
       <Page route={route} />
     </>

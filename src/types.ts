@@ -87,7 +87,18 @@ export type RouteDefinitionBuilder<T> = {
   extend(path: string): RouteDefinitionBuilder<T>;
 };
 
-export type OnClickHandler = (event?: { preventDefault?: () => void }) => void;
+export type ClickEvent = {
+  preventDefault?: () => void;
+  button?: number | null;
+  defaultPrevented?: boolean | null;
+  metaKey?: boolean | null;
+  altKey?: boolean | null;
+  ctrlKey?: boolean | null;
+  shiftKey?: boolean | null;
+  target?: { target?: string | null } | null;
+};
+
+export type OnClickHandler = (event?: any) => void;
 
 export type RouteDefinition<K, T> = {
   name: K;
