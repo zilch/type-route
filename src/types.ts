@@ -143,7 +143,7 @@ export type MemoryHistoryRouterConfig = {
   initialIndex?: number;
 };
 
-export type RouterConfig =
+export type HistoryConfig =
   | BrowserHistoryRouterConfig
   | MemoryHistoryRouterConfig;
 
@@ -196,9 +196,10 @@ export type Router<T extends { [key: string]: any }> = {
 
   getCurrentRoute: () => Route<T>;
 
-  getHistoryInstance: () =>
-    | ({ type: "browser" } & History)
-    | ({ type: "memory" } & MemoryHistory);
-
-  configure: (routerConfig: RouterConfig) => void;
+  history: {
+    getActiveInstance: () =>
+      | ({ type: "browser" } & History)
+      | ({ type: "memory" } & MemoryHistory);
+    reset: (config: HistoryConfig) => void;
+  };
 };

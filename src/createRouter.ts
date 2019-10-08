@@ -3,7 +3,7 @@ import {
   Router,
   NavigationHandler,
   Action,
-  RouterConfig,
+  HistoryConfig,
   Route
 } from "./types";
 import {
@@ -47,9 +47,9 @@ export function createRouter(...args: any[]) {
   let navigationResolvers: { [id: string]: (result: boolean) => void } = {};
 
   if (typeof window !== "undefined" && typeof window.document !== "undefined") {
-    configure({ type: "browser" });
+    reset({ type: "browser" });
   } else {
-    configure({ type: "memory" });
+    reset({ type: "memory" });
   }
 
   const router: Router<any> = {
@@ -59,24 +59,29 @@ export function createRouter(...args: any[]) {
       validate["[router].getCurrentRoute"](Array.from(arguments));
       return currentRoute;
     },
-    configure,
-    getHistoryInstance() {
-      return history;
+    history: {
+      reset,
+      getActiveInstance() {
+        validate["[router].history.getActiveInstance"](Array.from(arguments));
+        return history;
+      }
     }
   };
 
   return router;
 
-  function configure(routerConfig: RouterConfig) {
-    if (routerConfig.type === "browser") {
+  function reset(config: HistoryConfig) {
+    validate["[router].history.reset"](Array.from(arguments));
+
+    if (config.type === "browser") {
       history = createBrowserHistory({
-        ...routerConfig,
+        ...config,
         getUserConfirmation
       }) as any;
       history.type = "browser";
     } else {
       history = createMemoryHistory({
-        ...routerConfig,
+        ...config,
         getUserConfirmation
       }) as any;
       history.type = "memory";

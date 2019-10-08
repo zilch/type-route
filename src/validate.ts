@@ -483,6 +483,26 @@ export const validate = {
     }
   ),
 
+  ["[router].history.getActiveInstance"]: assertion(
+    {
+      functionName: "getActiveInstance",
+      signature: "getActiveInstance(): History | MemoryHistory"
+    },
+    (args: any[]) => {
+      assertNumArguments("getActiveInstance", args, 0, 0);
+    }
+  ),
+
+  ["[router].history.reset"]: assertion(
+    {
+      functionName: "reset",
+      signature: "reset(config: HistoryConfig): void"
+    },
+    (args: any[]) => {
+      assertNumArguments("reset", args, 1, 1);
+    }
+  ),
+
   ["[router].listen"]: assertion(
     {
       functionName: "listen",
