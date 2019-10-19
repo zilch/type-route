@@ -200,6 +200,6 @@ export type Router<T extends { [key: string]: any }> = {
     getActiveInstance: () =>
       | ({ type: "browser" } & History)
       | ({ type: "memory" } & MemoryHistory);
-    reset: (config: HistoryConfig) => void;
+    configure: (config: HistoryConfig) => void;
   };
 };

@@ -47,9 +47,9 @@ export function createRouter(...args: any[]) {
   let navigationResolvers: { [id: string]: (result: boolean) => void } = {};
 
   if (typeof window !== "undefined" && typeof window.document !== "undefined") {
-    reset({ type: "browser" });
+    configure({ type: "browser" });
   } else {
-    reset({ type: "memory" });
+    configure({ type: "memory" });
   }
 
   const router: Router<any> = {
@@ -60,7 +60,7 @@ export function createRouter(...args: any[]) {
       return currentRoute;
     },
     history: {
-      reset,
+      configure,
       getActiveInstance() {
         validate["[router].history.getActiveInstance"](Array.from(arguments));
         return history;
@@ -70,7 +70,7 @@ export function createRouter(...args: any[]) {
 
   return router;
 
-  function reset(config: HistoryConfig) {
+  function configure(config: HistoryConfig) {
     validate["[router].history.reset"](Array.from(arguments));
 
     if (config.type === "browser") {
