@@ -101,10 +101,6 @@ function isFunction(arg: any) {
 }
 
 function isHistoryConfig(arg: any) {
-  if (arg === undefined) {
-    return true;
-  }
-
   let result = isTypeOf(arg, "object");
 
   if (typeof result === "string") {
@@ -461,7 +457,7 @@ export const validate = {
       ]
     },
     (args: any[]) => {
-      assertNumArguments("createRouter", args, 1, 2);
+      assertNumArguments("createRouter", args, 1, 1);
 
       assertArgumentType(
         "createRouter",
@@ -470,16 +466,6 @@ export const validate = {
         0,
         isRouteDefinitionBuilderCollection
       );
-
-      if (args.length === 2) {
-        assertArgumentType(
-          "createRouter",
-          "historyConfig",
-          args,
-          1,
-          isHistoryConfig
-        );
-      }
     }
   ),
 
@@ -500,6 +486,14 @@ export const validate = {
     },
     (args: any[]) => {
       assertNumArguments("configure", args, 1, 1);
+
+      assertArgumentType(
+        "createRouter",
+        "historyConfig",
+        args,
+        0,
+        isHistoryConfig
+      );
     }
   ),
 
