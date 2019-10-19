@@ -1,6 +1,6 @@
 {
   "name": "type-route",
-  "version": "0.2.5",
+  "version": "0.3.1",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "description": "A flexible, type safe routing library.",
@@ -50,7 +50,6 @@
   ],
   "scripts": {
     "start": "parcel ./src/tests/testPage.html",
-    "docs": "parcel ./docs/index.html",
     "build": "rm -rf ./lib && tsc",
     "test": "jest"
   }

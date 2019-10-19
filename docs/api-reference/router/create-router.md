@@ -4,10 +4,13 @@ title: createRouter
 
 ```tsx
 createRouter(routeDefinitions: RouteDefinitionBuilderCollection): Router
-createRouter(historyType: "browser" | "memory", routeDefinitions: RouteDefinitionBuilderCollection): Router
 ```
 
-Initializes a router. By default it will create a browser history router. You may also explicitly set the history type to `"browser"` or `"memory"`. Using `"memory"` will create an environment agnostic router. This would be useful if, for instance, you're developing a React Native application.
+Initializes a router. By default the underlying history instance which powers Type
+Route will be configured according to the environment your code is running in. This
+means Type Route should work out of the box in both browser and non-browser environments
+such as React Native. You can always reconfigure the history instance you are given to
+cover other use cases (such as server-side rendering).
 
 #### Example
 

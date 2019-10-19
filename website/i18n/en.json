@@ -95,6 +95,9 @@
       "guides/scroll-restoration": {
         "title": "Scroll Restoration"
       },
+      "guides/server-side-rendering": {
+        "title": "Server Side Rendering"
+      },
       "guides/simple-react-example": {
         "title": "Simple React Example"
       },

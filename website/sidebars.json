@@ -15,6 +15,7 @@
       "guides/programmatic-navigation",
       "guides/preventing-navigation",
       "guides/scroll-restoration",
+      "guides/server-side-rendering",
       "guides/guide-missing"
     ],
     "API Reference": [

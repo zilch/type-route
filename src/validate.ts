@@ -100,12 +100,57 @@ function isFunction(arg: any) {
   return isTypeOf(arg, "function");
 }
 
-function isHistoryType(arg: any) {
-  if (arg === "browser" || arg === "memory") {
-    return true;
+function isHistoryConfig(arg: any) {
+  let result = isTypeOf(arg, "object");
+
+  if (typeof result === "string") {
+    return result;
   }
 
-  return `Got \`${arg}\`\nExpected either \`browser\` or \`memory\``;
+  if (arg.type === "browser") {
+    result = hasOnlyAllowedKeys(["type", "forceRefresh"], arg);
+
+    if (typeof result === "string") {
+      return result;
+    }
+
+    if (
+      arg.forceRefresh !== undefined &&
+      typeof arg.forceRefresh !== "boolean"
+    ) {
+      return `Got \`${arg.forceRefresh}\` for property \`forceRefresh\`\nExpected either a \`boolean\` or \`undefined\``;
+    }
+
+    return true;
+  } else if (arg.type === "memory") {
+    result = hasOnlyAllowedKeys(
+      ["type", "initialEntries", "initialIndex"],
+      arg
+    );
+
+    if (typeof result === "string") {
+      return result;
+    }
+
+    if (
+      arg.initialEntries !== undefined &&
+      (!Array.isArray(arg.initialEntries) ||
+        (arg.initialEntries as any[]).some(entry => typeof entry !== "string"))
+    ) {
+      return `Got \`${arg.initialEntries}\` for property \`initialEntries\`\nExpected either an array of strings or \`undefined\``;
+    }
+
+    if (
+      arg.initialIndex !== undefined &&
+      typeof arg.initialIndex !== "number"
+    ) {
+      return `Got \`${arg.initialIndex}\` for property \`initialIndex\`\nExpected either \`undefined\` or a \`number\``;
+    }
+
+    return true;
+  } else {
+    return `Got \`${arg.type}\` for property \`type\`\nExpected either \`browser\` or \`memory\``;
+  }
 }
 
 function isRouteDefinitionBuilder(key: string, value: any) {
@@ -147,6 +192,20 @@ function isRouteDefinitionBuilderCollection(arg: any) {
     }
 
     return result;
+  }
+
+  return true;
+}
+
+function hasOnlyAllowedKeys(allowedKeys: string[], obj: Record<string, any>) {
+  const actualKeys = Object.keys(obj);
+
+  for (const actualKey of actualKeys) {
+    const actualKeyInAllowedKeys = allowedKeys.some(key => key === actualKey);
+
+    if (!actualKeyInAllowedKeys) {
+      return `Extraneous property \`${actualKey}\` provided. Expected only the following properties \`${allowedKeys.join()}\``;
+    }
   }
 
   return true;
@@ -394,37 +453,47 @@ export const validate = {
     {
       functionName: "createRouter",
       signature: [
-        "createRouter(routeDefinitions: RouteDefinitions): Router;",
-        'createRouter(historyType: "browser" | "memory", routeDefinitions: RouteDefinitions): Router;'
+        "createRouter(routeDefinitions: RouteDefinitions, historyConfig?: HistoryConfig): Router;"
       ]
     },
     (args: any[]) => {
-      assertNumArguments("createRouter", args, 1, 2);
+      assertNumArguments("createRouter", args, 1, 1);
 
-      if (args.length === 1) {
-        assertArgumentType(
-          "createRouter",
-          "routeDefinitions",
-          args,
-          0,
-          isRouteDefinitionBuilderCollection
-        );
-      } else {
-        assertArgumentType(
-          "createRouter",
-          "historyType",
-          args,
-          0,
-          isHistoryType
-        );
-        assertArgumentType(
-          "createRouter",
-          "routeDefinitions",
-          args,
-          1,
-          isRouteDefinitionBuilderCollection
-        );
-      }
+      assertArgumentType(
+        "createRouter",
+        "routeDefinitions",
+        args,
+        0,
+        isRouteDefinitionBuilderCollection
+      );
+    }
+  ),
+
+  ["[router].history.getActiveInstance"]: assertion(
+    {
+      functionName: "getActiveInstance",
+      signature: "getActiveInstance(): History | MemoryHistory"
+    },
+    (args: any[]) => {
+      assertNumArguments("getActiveInstance", args, 0, 0);
+    }
+  ),
+
+  ["[router].history.configure"]: assertion(
+    {
+      functionName: "configure",
+      signature: "configure(config: HistoryConfig): void"
+    },
+    (args: any[]) => {
+      assertNumArguments("configure", args, 1, 1);
+
+      assertArgumentType(
+        "createRouter",
+        "historyConfig",
+        args,
+        0,
+        isHistoryConfig
+      );
     }
   ),
 
