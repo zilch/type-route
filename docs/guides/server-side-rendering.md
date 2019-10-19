@@ -2,7 +2,7 @@
 title: Server Side Rendering
 ---
 
-Type Route support server side rendering. The key to making this support possible
+Type Route supports server side rendering. The key to making this support possible
 is the `router.history.configure` function. This function allows you to reconfigure
 the underlying history instance that powers Type Route. By setting the type of the
 instance to "memory" and giving it an initial entry of the current url the user is
