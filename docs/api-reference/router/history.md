@@ -15,7 +15,7 @@ The `history` property of a router provides direct access to the underlying hist
 To access the current instance use the `getActiveInstance` function on the `history` property.
 There is also a `configure` function on the `history` property you can use to build a new
 history instance with different properties. Reconfiguring your history instance can be useful
-for use cases like server side rendering.
+for use cases like [server side rendering](../../guides/server-side-rendering.md).
 
 #### Example
 

@@ -493,13 +493,13 @@ export const validate = {
     }
   ),
 
-  ["[router].history.reset"]: assertion(
+  ["[router].history.configure"]: assertion(
     {
-      functionName: "reset",
-      signature: "reset(config: HistoryConfig): void"
+      functionName: "configure",
+      signature: "configure(config: HistoryConfig): void"
     },
     (args: any[]) => {
-      assertNumArguments("reset", args, 1, 1);
+      assertNumArguments("configure", args, 1, 1);
     }
   ),
 

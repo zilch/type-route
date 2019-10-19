@@ -71,7 +71,7 @@ export function createRouter(...args: any[]) {
   return router;
 
   function configure(config: HistoryConfig) {
-    validate["[router].history.reset"](Array.from(arguments));
+    validate["[router].history.configure"](Array.from(arguments));
 
     if (config.type === "browser") {
       history = createBrowserHistory({
