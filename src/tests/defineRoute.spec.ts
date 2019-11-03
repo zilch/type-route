@@ -104,6 +104,21 @@ describe("defineRoute.getMatch", () => {
     });
   });
 
+  it("should match for parameterized route at beginning", () => {
+    const routeDefinition = getRouteDefinition(
+      { userId: "path.param.string" },
+      p => `/${p.userId}/hi`
+    );
+
+    const match = routeDefinition.match({
+      pathName: "/abc/hi"
+    });
+
+    expect(match).toEqual({
+      userId: "abc"
+    });
+  });
+
   it("should match for parameterized route not at end", () => {
     const routeDefinition = getRouteDefinition(
       { userId: "path.param.string" },

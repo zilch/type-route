@@ -14,7 +14,7 @@ export function getPathMatch(pathName: string, parsedPath: ParsedPath) {
         return false;
       }
 
-      pathName = pathName.split(pathPart)[1];
+      pathName = pathName.slice(pathPart.length);
     } else {
       const [first, ...rest] = pathName.split("/");
 
