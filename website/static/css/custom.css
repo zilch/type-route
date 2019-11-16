@@ -53,6 +53,10 @@ body {
   text-align: center;
 }
 
+.nav-footer .copyright {
+  color: rgba(255, 255, 255, 0.6);
+}
+
 /*
 rgb(41,128,185) blue
 rgb(255,190,83) yellow
@@ -93,29 +97,34 @@ rgb(255,97,56) orange
   opacity: 0.8;
 }
 
+blockquote {
+  color: #666;
+  border-radius: 4px;
+}
+
 .docs-next {
-  background: rgb(41, 128, 185) !important;
+  background: rgb(36, 112, 163) !important;
   border-radius: 3px;
   color: white !important;
 }
 
 .docs-prev {
-  color: rgb(41, 128, 185) !important;
+  color: rgb(36, 112, 163) !important;
   background: white !important;
 }
 
 .primary-button {
-  background: rgb(41, 128, 185);
+  background: rgb(36, 112, 163);
   border-radius: 3px;
   color: white !important;
 }
 
 .toc .toggleNav ul li.navListItemActive a {
-  color: rgb(41, 128, 185) !important;
+  color: rgb(36, 112, 163) !important;
 }
 
 .secondary-button {
-  color: rgb(41, 128, 185) !important;
+  color: rgb(36, 112, 163) !important;
 }
 
 .headerTitleWithLogo {
@@ -135,11 +144,11 @@ rgb(255,97,56) orange
 
 a {
   text-decoration: none;
-  color: rgb(41, 128, 185);
+  color: rgb(36, 112, 163);
 }
 
 a:hover {
-  color: rgb(41, 128, 185);
+  color: rgb(36, 112, 163);
   opacity: 0.8;
 }
 
@@ -299,6 +308,11 @@ a:hover {
   z-index: 2;
 }
 
+nav.toc a,
+.onPageNav a {
+  color: #666 !important;
+}
+
 .actionThumbnail img {
   position: absolute;
   top: -10.2%;
@@ -307,19 +321,8 @@ a:hover {
   max-width: unset;
 }
 
-/* .stackblitz {
-  border-radius: 5px;
-  border: 1px solid #999;
-  overflow: hidden;
-  height: 600px;
-  padding: 0px !important;
-  color: rgb(25, 28, 30) !important;
-  position: relative;
-  display: block;
-} */
-
 details {
-  background: #f5f5f5;
+  background: #eee;
   border-radius: 3px;
 }
 
@@ -356,4 +359,9 @@ details[open] summary {
 .codesandbox-link.bottom {
   border-radius: 6px 0px 3px 0px;
   margin-top: -29px;
+}
+
+code.hljs {
+  background: white;
+  border: 1px solid #eee;
 }

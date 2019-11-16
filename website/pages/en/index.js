@@ -91,7 +91,11 @@ class Index extends React.Component {
     return (
       <div className="splash">
         <div className="header">
-          <img className="logo" src={`${baseUrl}img/logo.svg`} />
+          <img
+            className="logo"
+            src={`${baseUrl}img/logo.svg`}
+            alt="Type Route"
+          />
           <div className="projectName">
             Type Route <span className="beta">beta</span>
           </div>
@@ -160,9 +164,12 @@ class Index extends React.Component {
         </div>
         <div className="seeItInAction">
           <a style={{ width: "600px" }} target="_blank" data-code={code}>
-            <div className="actionThumbnail">
-              <img src="/img/code.png" />
-            </div>
+            <span className="actionThumbnail">
+              <img
+                src="/img/code.png"
+                alt="See it in Action. Run on CodeSandbox."
+              />
+            </span>
           </a>
           <div className="seeItInActionText">
             <b>See it in Action.</b>

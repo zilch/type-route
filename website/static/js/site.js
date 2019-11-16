@@ -1,3 +1,5 @@
+document.documentElement.lang = "en";
+
 window.onload = function() {
   let lastShowShadow = false;
 
