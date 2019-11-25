@@ -6,7 +6,7 @@ Type Route supports server side rendering. The key to making this support possib
 is the `router.history.configure` function. This function allows you to reconfigure
 the underlying history instance that powers Type Route. By setting the type of the
 instance to "memory" and giving it an initial entry of the current url the user is
-requesting, you can be sure that you app will render correctly. Below is an example
+requesting, you can be sure that your app will render correctly. Below is an example
 of how to accomplish this using React.
 
 ### Server Code

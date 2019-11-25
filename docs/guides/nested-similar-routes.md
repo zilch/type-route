@@ -18,7 +18,7 @@ A poor implementation of this in Type Route might look something like this:
 ```tsx
 import { createRouter, defineRoute } from "type-route";
 
-const { routes, listen, getInitialRoute } = createRouter({
+const { routes, listen, getCurrentRoute } = createRouter({
   home: defineRoute("/"),
   about: defineRoute("/about"),
   user: defineRoute(
@@ -59,7 +59,7 @@ const user = defineRoute(
   p => `/users/${p.userId}`
 );
 
-const { routes, listen, getInitialRoute } = createRouter({
+const { routes, listen, getCurrentRoute } = createRouter({
   home: defineRoute("/"),
   about: defineRoute("/about"),
   user,
@@ -154,7 +154,7 @@ const user = defineRoute(
   p => `/users/${p.userId}`
 );
 
-const { routes, listen, getInitialRoute } = createRouter({
+const { routes, listen, getCurrentRoute } = createRouter({
   home: defineRoute("/"),
   about: defineRoute("/about"),
   user,

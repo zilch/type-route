@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import ReactDOM from "react-dom";
 import { createRouter, defineRoute, createGroup, Route } from "../index";
 
@@ -70,6 +70,18 @@ const repositoryGroup = createGroup([
   routes.repository
 ]);
 
+const routeContext = React.createContext<Route<typeof routes> | null>(null);
+const ProvideRoute = routeContext.Provider;
+const useRoute = function() {
+  const route = useContext(routeContext);
+
+  if (route === null) {
+    throw new Error("Provide route via the ProvideRoute component");
+  }
+
+  return route;
+};
+
 function App() {
   const [route, setRoute] = useState(getCurrentRoute());
 
@@ -100,7 +112,6 @@ function App() {
       <a {...routes.user.link({ username: "bradenhs" })} target="_blank">
         Profile
       </a>
-
       <Page route={route} />
     </>
   );

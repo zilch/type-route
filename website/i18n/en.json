@@ -77,6 +77,9 @@
       "guides/no-match-404": {
         "title": "No Match (404)"
       },
+      "guides/page-layout": {
+        "title": "Page Layout"
+      },
       "guides/preventing-navigation": {
         "title": "Preventing Navigation"
       },
@@ -88,6 +91,9 @@
       },
       "guides/rendering-links": {
         "title": "Rendering Links"
+      },
+      "guides/route-components": {
+        "title": "Route Components & React Context"
       },
       "guides/route-parameters": {
         "title": "Route Parameters"
