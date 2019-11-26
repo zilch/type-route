@@ -70,18 +70,6 @@ const repositoryGroup = createGroup([
   routes.repository
 ]);
 
-const routeContext = React.createContext<Route<typeof routes> | null>(null);
-const ProvideRoute = routeContext.Provider;
-const useRoute = function() {
-  const route = useContext(routeContext);
-
-  if (route === null) {
-    throw new Error("Provide route via the ProvideRoute component");
-  }
-
-  return route;
-};
-
 function App() {
   const [route, setRoute] = useState(getCurrentRoute());
 
