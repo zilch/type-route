@@ -2,7 +2,7 @@
 title: Redirects
 ---
 
-Inside the [`listen`](../api-reference/router/listen.md) function you can check what the next route is and choose whether or not to opt out of that update. Simple return `false` in your `listen` callback and the route update will not be applied. In this case we check if the next route was the "old" route and replace it with the "new" route. We make sure to return `false` from the listen callback so the change doesn't propagate to the url. Keep in mind however, that the `listen` callback is only called when the route _changes_ - not on initial page load. To handle initial page load we'll use a separate `useEffect` hook that reruns every time the route changes and call the same `handleRedirects` function. Since it is possible for the "old" route to be rendered for a split second we still need to make sure we handle that case when rendering the view.
+Inside the [`listen`](../api-reference/router/listen.md) function you can check what the next route is and choose whether or not to opt out of that update. Simple return `false` in your `listen` callback and the route update will not be applied. In this case we check if the next route was the "old" route and replace it with the "new" route. We make sure to return `false` from the listen callback so the change doesn't propagate to the url. Keep in mind however, that the `listen` callback is only called when the route _changes_ - not on initial page load. To handle initial page load we'll use a separate `useEffect` hook that runs when the components is mounted and calls the same `handleRedirects` function. Since its possible for the "old" route to be rendered for a split second we still need to make sure we handle that case when rendering the view.
 
 ```tsx codesandbox-react
 import { createRouter, defineRoute, Route } from "type-route";
@@ -33,7 +33,7 @@ function App() {
 
   useEffect(() => {
     handleRedirects(route);
-  }, [route]);
+  }, []);
 
   if (route.name === routes.old.name) {
     return <div>Redirecting...</div>;

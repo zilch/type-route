@@ -2,7 +2,7 @@
 title: Page Layout
 ---
 
-Most pages have a layout structure resembling something like the following:
+Most applications have a layout structure resembling something like the following:
 
 - Header
 - Page Content (dynamic based on route)

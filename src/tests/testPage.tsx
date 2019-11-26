@@ -112,6 +112,7 @@ function App() {
       <a {...routes.user.link({ username: "bradenhs" })} target="_blank">
         Profile
       </a>
+      {route.name === "dashboard" && <DashboardPage route={route} />}
       <Page route={route} />
     </>
   );
