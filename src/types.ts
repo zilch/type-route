@@ -187,7 +187,7 @@ export type Route<T> = T extends RouteDefinition<any, any>
 
 export type NavigationHandler<T> = (
   nextRoute: Route<T>
-) => Promise<false | void> | false | void;
+) => Promise<boolean | void> | boolean | void;
 
 export type Router<T extends { [key: string]: any }> = {
   routes: { [K in keyof T]: RouteDefinition<K, T[K]["params"]> };

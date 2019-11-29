@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { createRouter, defineRoute, createGroup, Route } from "../index";
 
@@ -79,7 +79,14 @@ function App() {
     document.title = route.name || "Not Found";
   }, [route.name]);
 
-  useEffect(() => listen(setRoute), [route]);
+  useEffect(() => {
+    const removeListener = listen(async nextRoute => {
+      setRoute(nextRoute);
+      return false;
+    });
+
+    return removeListener;
+  }, []);
 
   if (repositoryGroup.has(route)) {
     if (route.name === "pullRequestList") {
