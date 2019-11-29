@@ -1,6 +1,6 @@
 {
   "name": "type-route",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "description": "A flexible, type safe routing library.",
