@@ -11,18 +11,23 @@ main().catch(error => {
 async function main() {
   const client = new github.GitHub(process.env.GITHUB_TOKEN);
 
-  console.log(readFiles("./src"));
+  const files = readFiles("./src");
+
+  const playgroundFiles = {};
+
+  Object.keys(files).forEach(fileName => {
+    const playgroundFileName = fileName.slice(process.cwd().length);
+    playgroundFiles[playgroundFileName] = files[fileName];
+  });
 
   const prEnvironmentLink =
     "https://codesandbox.io/api/v1/sandboxes/define?parameters=" +
     codesandbox.getParameters({
       files: {
+        ...playgroundFiles,
         "sandbox.config.json": {
           content:
             "{\n" + '  "template": "create-react-app-typescript"\n' + "}\n"
-        },
-        "src/index.tsx": {
-          content: 'import "@bradenhs/npm-release-test"'
         },
         "public/index.html": {
           content:
@@ -45,7 +50,7 @@ async function main() {
 
   await client.issues.createComment({
     issue_number: github.context.payload.pull_request.number,
-    body: `**🚀 TEST CodeSandbox playground available **[here](${prEnvironmentLink})**`,
+    body: `**🚀 TEST CodeSandbox playground available [here](${prEnvironmentLink})**`,
     owner: "bradenhs",
     repo: "type-route"
   });
