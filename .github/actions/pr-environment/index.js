@@ -45,7 +45,7 @@ async function main() {
 
   await client.issues.createComment({
     issue_number: github.context.payload.pull_request.number,
-    body: `**🚀 CodeSandbox playground available **[here](${prEnvironmentLink})**`,
+    body: `**🚀 TEST CodeSandbox playground available **[here](${prEnvironmentLink})**`,
     owner: "bradenhs",
     repo: "type-route"
   });
