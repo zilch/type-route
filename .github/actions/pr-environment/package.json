@@ -1,0 +1,8 @@
+{
+  "private": true,
+  "dependencies": {
+    "@actions/core": "^1.2.0",
+    "@actions/github": "^2.0.0",
+    "codesandbox": "^2.1.11"
+  }
+}

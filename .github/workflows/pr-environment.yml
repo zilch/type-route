@@ -1,0 +1,12 @@
+name: pr environment
+
+on: pull_request
+
+jobs:
+  pr-environment:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/pr-environment
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

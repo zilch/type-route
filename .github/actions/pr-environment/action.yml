@@ -1,0 +1,5 @@
+name: PR Environment
+description: Creates a PR environment
+runs:
+  using: node12
+  main: index.js

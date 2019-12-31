@@ -49,7 +49,7 @@
     "typescript"
   ],
   "scripts": {
-    "start": "parcel ./src/tests/testPage.html",
+    "playground": "parcel ./src/playground.html",
     "build": "rm -rf ./lib && tsc",
     "test": "jest"
   }
