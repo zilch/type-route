@@ -3,6 +3,7 @@ const github = require("@actions/github");
 const codesandbox = require("codesandbox/lib/api/define");
 const fs = require("fs");
 const path = require("path");
+const packageJson = require("../../../package.json");
 
 main().catch(error => {
   core.setFailed(error.message);
@@ -25,19 +26,19 @@ async function main() {
     codesandbox.getParameters({
       files: {
         ...playgroundFiles,
-        "sandbox.config.json": {
-          content:
-            "{\n" + '  "template": "create-react-app-typescript"\n' + "}\n"
-        },
-        "public/index.html": {
-          content:
-            '<style>a { margin-right: 10px; } nav { margin-bottom: 10px; } #root { margin: 10px; }</style><div id="root"></div>'
+        "tsconfig.json": {
+          content: fs.readFileSync("./tsconfig.json")
         },
         "package.json": {
           content: {
+            main: "./src/playground.html",
+            scripts: {
+              start: "parcel ./src/playground.html --open",
+              build: "parcel build ./src/playground/index.html"
+            },
             dependencies: {
-              "@bradenhs/npm-release-test": "test",
-              "type-route": "latest",
+              ...packageJson.dependencies,
+              "parcel-bundler": "^1.6.1",
               react: "=16.8.6",
               "@types/react": "=16.8.18",
               "react-dom": "=16.8.6",
@@ -50,18 +51,18 @@ async function main() {
 
   await client.issues.createComment({
     issue_number: github.context.payload.pull_request.number,
-    body: `**🚀 TEST CodeSandbox playground available [here](${prEnvironmentLink})**`,
+    body: `New CodeSandbox playground ready (based on ${github.context.sha}). View playground [here](${prEnvironmentLink}).`,
     owner: "bradenhs",
     repo: "type-route"
   });
 }
 
-function readFiles(directory) {
-  const fileNameCollection = fs.readdirSync(directory);
+function readFiles(directoryName) {
+  const fileNameCollection = fs.readdirSync(directoryName);
   const files = {};
 
   for (const fileName of fileNameCollection) {
-    const filePath = path.resolve(directory, fileName);
+    const filePath = path.resolve(directoryName, fileName);
 
     const stat = fs.statSync(filePath);
 
