@@ -25,7 +25,7 @@ async function main() {
   const { sandbox_id: sandboxId } = await got({
     url: "https://codesandbox.io/api/v1/sandboxes/define",
     method: "POST",
-    body: {
+    json: {
       json: 1,
       parameters: {
         files: {
