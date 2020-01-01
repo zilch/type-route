@@ -6,14 +6,14 @@
 ## Install
 
 ```
-$ npm install --save lowercase-keys
+$ npm install lowercase-keys
 ```
 
 
 ## Usage
 
 ```js
-var lowercaseKeys = require('lowercase-keys');
+const lowercaseKeys = require('lowercase-keys');
 
 lowercaseKeys({FOO: true, bAr: false});
 //=> {foo: true, bar: false}
@@ -24,10 +24,9 @@ lowercaseKeys({FOO: true, bAr: false});
 
 ### lowercaseKeys(object)
 
-Lowercases the keys and returns a new object.
-
+Returns a new object with the keys lowercased.
 
 
 ## License
 
-MIT © [Sindre Sorhus](http://sindresorhus.com)
+MIT © [Sindre Sorhus](https://sindresorhus.com)

@@ -4,6 +4,7 @@ const codesandbox = require("codesandbox/lib/api/define");
 const fs = require("fs");
 const path = require("path");
 const packageJson = require("../../../package.json");
+const got = require("got");
 
 main().catch(error => {
   core.setFailed(error.message);
@@ -21,37 +22,41 @@ async function main() {
     playgroundFiles[playgroundFileName] = files[fileName];
   });
 
-  const prEnvironmentLink =
-    "https://codesandbox.io/api/v1/sandboxes/define?parameters=" +
-    codesandbox.getParameters({
-      files: {
-        ...playgroundFiles,
-        "tsconfig.json": {
-          content: fs.readFileSync("./tsconfig.json")
-        },
-        "package.json": {
-          content: {
-            main: "./src/playground.html",
-            scripts: {
-              start: "parcel ./src/playground.html --open",
-              build: "parcel build ./src/playground/index.html"
-            },
-            dependencies: {
-              ...packageJson.dependencies,
-              "parcel-bundler": "^1.6.1",
-              react: "=16.8.6",
-              "@types/react": "=16.8.18",
-              "react-dom": "=16.8.6",
-              "@types/react-dom": "=16.8.4"
+  const { sandbox_id: sandboxId } = await got({
+    url: "https://codesandbox.io/api/v1/sandboxes/define",
+    body: {
+      json: 1,
+      parameters: {
+        files: {
+          ...playgroundFiles,
+          "tsconfig.json": {
+            content: fs.readFileSync("./tsconfig.json")
+          },
+          "package.json": {
+            content: {
+              main: "./src/playground.html",
+              scripts: {
+                start: "parcel ./src/playground.html --open",
+                build: "parcel build ./src/playground/index.html"
+              },
+              dependencies: {
+                ...packageJson.dependencies,
+                "parcel-bundler": "^1.6.1",
+                react: "=16.8.6",
+                "@types/react": "=16.8.18",
+                "react-dom": "=16.8.6",
+                "@types/react-dom": "=16.8.4"
+              }
             }
           }
         }
       }
-    });
+    }
+  });
 
   await client.issues.createComment({
     issue_number: github.context.payload.pull_request.number,
-    body: `New CodeSandbox playground ready (based on ${github.context.sha}). View playground [here](${prEnvironmentLink}).`,
+    body: `New CodeSandbox playground ready (based on ${github.context.sha}). View playground ${sandboxId}.`,
     owner: "bradenhs",
     repo: "type-route"
   });
