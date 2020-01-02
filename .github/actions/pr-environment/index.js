@@ -19,8 +19,10 @@ async function main() {
 
   Object.keys(files).forEach(fileName => {
     const playgroundFileName = fileName.slice(process.cwd().length);
-    playgroundFiles[playgroundFileName] = files[fileName];
+    playgroundFiles[playgroundFileName] = { content: files[fileName] };
   });
+
+  console.log(playgroundFiles);
 
   const response = await got.post(
     "https://codesandbox.io/api/v1/sandboxes/define",
@@ -29,7 +31,7 @@ async function main() {
       json: {
         json: 1,
         files: {
-          // ...playgroundFiles,
+          ...playgroundFiles,
           "package.json": {
             content: {
               main: "./src/playground.html",
