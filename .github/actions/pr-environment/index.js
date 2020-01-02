@@ -4,6 +4,7 @@ const codesandbox = require("codesandbox/lib/api/define");
 const fs = require("fs");
 const path = require("path");
 const packageJson = require("../../../package.json");
+const tsConfig = require("../../../tsconfig.json");
 const got = require("got");
 
 main().catch(error => {
@@ -26,13 +27,12 @@ async function main() {
     "https://codesandbox.io/api/v1/sandboxes/define",
     {
       responseType: "json",
-      throwHttpErrors: false,
       json: {
         json: 1,
         files: {
-          // ...playgroundFiles,
+          ...playgroundFiles,
           "tsconfig.json": {
-            content: fs.readFileSync("./tsconfig.json")
+            content: tsConfig
           },
           "package.json": {
             content: {
@@ -56,11 +56,9 @@ async function main() {
     }
   );
 
-  console.log(response.body);
-
   await client.issues.createComment({
     issue_number: github.context.payload.pull_request.number,
-    body: `New CodeSandbox playground ready (based on ${github.context.sha}). View playground.`,
+    body: `**PR Environment Ready**\n**Commit:** ${github.context.sha}\n**CodeSandbox:** https://codesandbox.io/s/${response.body.sandbox_id}`,
     owner: "bradenhs",
     repo: "type-route"
   });
