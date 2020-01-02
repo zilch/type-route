@@ -58,7 +58,7 @@ async function main() {
     }
   );
 
-  console.log(response);
+  console.log(response.body);
 
   await client.issues.createComment({
     issue_number: github.context.payload.pull_request.number,
