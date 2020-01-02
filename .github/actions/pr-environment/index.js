@@ -29,27 +29,25 @@ async function main() {
       throwHttpErrors: false,
       json: {
         json: 1,
-        parameters: {
-          files: {
-            // ...playgroundFiles,
-            "tsconfig.json": {
-              content: fs.readFileSync("./tsconfig.json")
-            },
-            "package.json": {
-              content: {
-                main: "./src/playground.html",
-                scripts: {
-                  start: "parcel ./src/playground.html --open",
-                  build: "parcel build ./src/playground/index.html"
-                },
-                dependencies: {
-                  ...packageJson.dependencies,
-                  "parcel-bundler": "^1.6.1",
-                  react: "=16.8.6",
-                  "@types/react": "=16.8.18",
-                  "react-dom": "=16.8.6",
-                  "@types/react-dom": "=16.8.4"
-                }
+        files: {
+          // ...playgroundFiles,
+          "tsconfig.json": {
+            content: fs.readFileSync("./tsconfig.json")
+          },
+          "package.json": {
+            content: {
+              main: "./src/playground.html",
+              scripts: {
+                start: "parcel ./src/playground.html --open",
+                build: "parcel build ./src/playground/index.html"
+              },
+              dependencies: {
+                ...packageJson.dependencies,
+                "parcel-bundler": "^1.6.1",
+                react: "=16.8.6",
+                "@types/react": "=16.8.18",
+                "react-dom": "=16.8.6",
+                "@types/react-dom": "=16.8.4"
               }
             }
           }
