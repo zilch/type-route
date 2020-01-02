@@ -29,7 +29,7 @@ async function main() {
       json: {
         json: 1,
         files: {
-          ...playgroundFiles,
+          // ...playgroundFiles,
           "package.json": {
             content: {
               main: "./src/playground.html",
