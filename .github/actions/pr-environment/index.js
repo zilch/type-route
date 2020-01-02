@@ -22,42 +22,47 @@ async function main() {
     playgroundFiles[playgroundFileName] = files[fileName];
   });
 
-  const { sandbox_id: sandboxId } = await got({
-    url: "https://codesandbox.io/api/v1/sandboxes/define",
-    method: "POST",
-    json: {
-      json: 1,
-      parameters: {
-        files: {
-          ...playgroundFiles,
-          "tsconfig.json": {
-            content: fs.readFileSync("./tsconfig.json")
-          },
-          "package.json": {
-            content: {
-              main: "./src/playground.html",
-              scripts: {
-                start: "parcel ./src/playground.html --open",
-                build: "parcel build ./src/playground/index.html"
-              },
-              dependencies: {
-                ...packageJson.dependencies,
-                "parcel-bundler": "^1.6.1",
-                react: "=16.8.6",
-                "@types/react": "=16.8.18",
-                "react-dom": "=16.8.6",
-                "@types/react-dom": "=16.8.4"
+  const response = await got.post(
+    "https://codesandbox.io/api/v1/sandboxes/define",
+    {
+      responseType: "json",
+      throwHttpErrors: false,
+      json: {
+        json: 1,
+        parameters: {
+          files: {
+            // ...playgroundFiles,
+            "tsconfig.json": {
+              content: fs.readFileSync("./tsconfig.json")
+            },
+            "package.json": {
+              content: {
+                main: "./src/playground.html",
+                scripts: {
+                  start: "parcel ./src/playground.html --open",
+                  build: "parcel build ./src/playground/index.html"
+                },
+                dependencies: {
+                  ...packageJson.dependencies,
+                  "parcel-bundler": "^1.6.1",
+                  react: "=16.8.6",
+                  "@types/react": "=16.8.18",
+                  "react-dom": "=16.8.6",
+                  "@types/react-dom": "=16.8.4"
+                }
               }
             }
           }
         }
       }
     }
-  });
+  );
+
+  console.lop(response);
 
   await client.issues.createComment({
     issue_number: github.context.payload.pull_request.number,
-    body: `New CodeSandbox playground ready (based on ${github.context.sha}). View playground ${sandboxId}.`,
+    body: `New CodeSandbox playground ready (based on ${github.context.sha}). View playground.`,
     owner: "bradenhs",
     repo: "type-route"
   });
