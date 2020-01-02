@@ -22,8 +22,6 @@ async function main() {
     playgroundFiles[playgroundFileName] = { content: files[fileName] };
   });
 
-  console.log(playgroundFiles);
-
   const response = await got.post(
     "https://codesandbox.io/api/v1/sandboxes/define",
     {
@@ -59,7 +57,7 @@ async function main() {
 
   await client.issues.createComment({
     issue_number: github.context.payload.pull_request.number,
-    body: `Created new CodeSandbox playground at **https://codesandbox.io/s/${response.body.sandbox_id}** with most recent commit (${github.context.sha}).`,
+    body: `🤖 New CodeSandbox playground available at **https://codesandbox.io/s/${response.body.sandbox_id}** for most recent commit (${github.context.sha}).`,
     owner: "bradenhs",
     repo: "type-route"
   });
