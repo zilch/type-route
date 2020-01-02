@@ -57,7 +57,7 @@ async function main() {
 
   await client.issues.createComment({
     issue_number: github.context.payload.pull_request.number,
-    body: `**🚀 PR Environment Ready**\n\n🖥️ Environment https://codesandbox.io/s/${response.body.sandbox_id}\n📝 Merge Commit ${github.context.sha}`,
+    body: `**🚀 PR Environment Ready** - https://codesandbox.io/s/${response.body.sandbox_id}`,
     owner: "bradenhs",
     repo: "type-route"
   });
