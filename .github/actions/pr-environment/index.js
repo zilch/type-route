@@ -4,7 +4,6 @@ const codesandbox = require("codesandbox/lib/api/define");
 const fs = require("fs");
 const path = require("path");
 const packageJson = require("../../../package.json");
-const tsConfig = require("../../../tsconfig.json");
 const got = require("got");
 
 main().catch(error => {
@@ -31,9 +30,6 @@ async function main() {
         json: 1,
         files: {
           ...playgroundFiles,
-          "tsconfig.json": {
-            content: tsConfig
-          },
           "package.json": {
             content: {
               main: "./src/playground.html",
