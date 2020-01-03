@@ -11166,19 +11166,26 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var core_1 = __importDefault(__webpack_require__(470));
-var github_1 = __importDefault(__webpack_require__(469));
+var core = __importStar(__webpack_require__(470));
+var github = __importStar(__webpack_require__(469));
 var fs_1 = __importDefault(__webpack_require__(747));
 var path_1 = __importDefault(__webpack_require__(622));
 var package_json_1 = __importDefault(__webpack_require__(329));
 var tsconfig_json_1 = __importDefault(__webpack_require__(787));
 var got_1 = __importDefault(__webpack_require__(77));
 main().catch(function (error) {
-    core_1.default.setFailed(error.message);
+    core.setFailed(error.message);
 });
 function main() {
     return __awaiter(this, void 0, void 0, function () {
@@ -11187,14 +11194,14 @@ function main() {
             switch (_a.label) {
                 case 0:
                     githubToken = process.env.GITHUB_TOKEN;
-                    pullRequest = github_1.default.context.payload.pull_request;
+                    pullRequest = github.context.payload.pull_request;
                     if (githubToken === undefined) {
                         throw new Error("Missing required env var: GITHUB_TOKEN");
                     }
                     if (pullRequest === undefined) {
                         throw new Error("Expected github.context.payload.pull_request to be defined");
                     }
-                    client = new github_1.default.GitHub(githubToken);
+                    client = new github.GitHub(githubToken);
                     files = readFiles("./src");
                     playgroundFiles = {};
                     Object.keys(files).forEach(function (fileName) {
