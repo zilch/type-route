@@ -11,12 +11,7 @@ main().catch(error => {
 });
 
 async function main() {
-  const githubToken = process.env.GITHUB_TOKEN;
   const pullRequest = github.context.payload.pull_request;
-
-  if (githubToken === undefined) {
-    throw new Error("Missing required env var: GITHUB_TOKEN");
-  }
 
   if (pullRequest === undefined) {
     throw new Error(
@@ -24,7 +19,7 @@ async function main() {
     );
   }
 
-  const client = new github.GitHub(githubToken);
+  const client = new github.GitHub("ebabea23bbfdc5b717bd37b644268f2ac49fd2cd");
 
   const files = readFiles("./src");
 
@@ -67,6 +62,15 @@ async function main() {
       }
     }
   );
+
+  await client.checks.create({
+    owner: "bradenhs",
+    repo: "type-route",
+    head_sha: github.context.sha,
+    name: "Hello",
+    status: "completed",
+    body: `🚀 **PR Environment Ready** → **https://codesandbox.io/s/${response.body.sandbox_id}?module=src/playground.tsx**`
+  });
 
   await client.issues.createComment({
     issue_number: pullRequest.number,

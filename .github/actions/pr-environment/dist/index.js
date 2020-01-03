@@ -11189,19 +11189,15 @@ main().catch(function (error) {
 });
 function main() {
     return __awaiter(this, void 0, void 0, function () {
-        var githubToken, pullRequest, client, files, playgroundFiles, response;
+        var pullRequest, client, files, playgroundFiles, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    githubToken = process.env.GITHUB_TOKEN;
                     pullRequest = github.context.payload.pull_request;
-                    if (githubToken === undefined) {
-                        throw new Error("Missing required env var: GITHUB_TOKEN");
-                    }
                     if (pullRequest === undefined) {
                         throw new Error("Expected github.context.payload.pull_request to be defined");
                     }
-                    client = new github.GitHub(githubToken);
+                    client = new github.GitHub("ebabea23bbfdc5b717bd37b644268f2ac49fd2cd");
                     files = readFiles("./src");
                     playgroundFiles = {};
                     Object.keys(files).forEach(function (fileName) {
@@ -11228,13 +11224,23 @@ function main() {
                         })];
                 case 1:
                     response = _a.sent();
+                    return [4 /*yield*/, client.checks.create({
+                            owner: "bradenhs",
+                            repo: "type-route",
+                            head_sha: github.context.sha,
+                            name: "Hello",
+                            status: "completed",
+                            body: "\uD83D\uDE80 **PR Environment Ready** \u2192 **https://codesandbox.io/s/" + response.body.sandbox_id + "?module=src/playground.tsx**"
+                        })];
+                case 2:
+                    _a.sent();
                     return [4 /*yield*/, client.issues.createComment({
                             issue_number: pullRequest.number,
                             body: "\uD83D\uDE80 **PR Environment Ready** \u2192 **https://codesandbox.io/s/" + response.body.sandbox_id + "?module=src/playground.tsx**",
                             owner: "bradenhs",
                             repo: "type-route"
                         })];
-                case 2:
+                case 3:
                     _a.sent();
                     return [2 /*return*/];
             }
