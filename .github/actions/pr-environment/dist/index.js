@@ -11189,7 +11189,7 @@ main().catch(function (error) {
 });
 function main() {
     return __awaiter(this, void 0, void 0, function () {
-        var pullRequest, githubToken, headSha, client, files, playgroundFiles, response, h;
+        var pullRequest, githubToken, headSha, client, files, playgroundFiles, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -11232,23 +11232,16 @@ function main() {
                         })];
                 case 1:
                     response = _a.sent();
-                    console.log("sha", headSha);
-                    console.log("github.context.sha", github.context.sha);
                     return [4 /*yield*/, client.checks.create({
                             owner: "bradenhs",
                             repo: "type-route",
                             head_sha: headSha,
-                            headers: {
-                                "X-GitHub-Media-Type": "application/vnd.github.hi-preview+json"
-                            },
                             name: "Hello",
                             details_url: "https://codesandbox.io/s/" + response.body.sandbox_id + "?module=src/playground.tsx",
                             conclusion: "success"
                         })];
                 case 2:
-                    h = _a.sent();
-                    console.log(h);
-                    response;
+                    _a.sent();
                     return [2 /*return*/];
             }
         });

@@ -73,31 +73,14 @@ async function main() {
     }
   );
 
-  console.log("sha", headSha);
-  console.log("github.context.sha", github.context.sha);
-
-  const h = await client.checks.create({
+  await client.checks.create({
     owner: "bradenhs",
     repo: "type-route",
     head_sha: headSha,
-    headers: {
-      "X-GitHub-Media-Type": "application/vnd.github.hi-preview+json"
-    },
     name: "Hello",
     details_url: `https://codesandbox.io/s/${response.body.sandbox_id}?module=src/playground.tsx`,
     conclusion: "success"
   });
-
-  console.log(h);
-
-  response;
-
-  // await client.issues.createComment({
-  //   issue_number: pullRequest.number,
-  //   body: `🚀 **PR Environment Ready** → **https://codesandbox.io/s/${response.body.sandbox_id}?module=src/playground.tsx**`,
-  //   owner: "bradenhs",
-  //   repo: "type-route"
-  // });
 }
 
 function readFiles(directoryName: string) {
