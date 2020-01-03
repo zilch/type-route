@@ -11235,9 +11235,9 @@ function main() {
                     return [4 /*yield*/, client.checks.create({
                             owner: "bradenhs",
                             repo: "type-route",
-                            head_sha: sha,
+                            head_sha: github.context.sha,
                             headers: {
-                                "X-GitHub-Media-Type": "application/vnd.github.antiope-preview+json"
+                                "X-GitHub-Media-Type": "application/vnd.github.hi-preview+json"
                             },
                             name: "Hello",
                             details_url: "https://codesandbox.io/s/" + response.body.sandbox_id + "?module=src/playground.tsx",
