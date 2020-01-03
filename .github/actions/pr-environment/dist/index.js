@@ -11189,12 +11189,16 @@ main().catch(function (error) {
 });
 function main() {
     return __awaiter(this, void 0, void 0, function () {
-        var pullRequest, githubToken, client, files, playgroundFiles, response;
+        var pullRequest, githubToken, sha, client, files, playgroundFiles, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     pullRequest = github.context.payload.pull_request;
                     githubToken = process.env.GITHUB_TOKEN;
+                    sha = process.env.GITHUB_SHA;
+                    if (sha === undefined) {
+                        throw new Error("Expect sha to be defined");
+                    }
                     if (pullRequest === undefined) {
                         throw new Error("Expected github.context.payload.pull_request to be defined");
                     }
@@ -11231,7 +11235,7 @@ function main() {
                     return [4 /*yield*/, client.checks.create({
                             owner: "bradenhs",
                             repo: "type-route",
-                            head_sha: github.context.sha,
+                            head_sha: sha,
                             name: "Hello",
                             conclusion: "success"
                         })];
