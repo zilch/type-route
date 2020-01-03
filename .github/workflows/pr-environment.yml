@@ -9,9 +9,5 @@ jobs:
       - uses: actions/checkout@v2
       - name: Create PR Environment
         uses: ./.github/actions/pr-environment
-      - name: Post Link to Created PR
-        uses: actions/github@v1.0.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          args: comment "Hello World"

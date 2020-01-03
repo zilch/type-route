@@ -12,6 +12,7 @@ main().catch(error => {
 
 async function main() {
   const pullRequest = github.context.payload.pull_request;
+  const githubToken = process.env.GITHUB_TOKEN;
 
   if (pullRequest === undefined) {
     throw new Error(
@@ -19,7 +20,11 @@ async function main() {
     );
   }
 
-  const client = new github.GitHub("ebabea23bbfdc5b717bd37b644268f2ac49fd2cd");
+  if (githubToken === undefined) {
+    throw new Error("Expected GITHUB_TOKEN env var to be defined");
+  }
+
+  const client = new github.GitHub(githubToken);
 
   const files = readFiles("./src");
 
