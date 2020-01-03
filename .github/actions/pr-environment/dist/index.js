@@ -11230,7 +11230,7 @@ function main() {
                     response = _a.sent();
                     return [4 /*yield*/, client.issues.createComment({
                             issue_number: pullRequest.number,
-                            body: "\uD83D\uDE80 **PR Environment Ready** \u2192 **https://codesandbox.io/s/" + response.body.sandbox_id + "**",
+                            body: "\uD83D\uDE80 **PR Environment Ready** \u2192 **https://codesandbox.io/s/" + response.body.sandbox_id + "?module=src/playground.tsx**",
                             owner: "bradenhs",
                             repo: "type-route"
                         })];

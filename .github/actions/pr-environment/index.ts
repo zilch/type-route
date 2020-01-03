@@ -70,7 +70,7 @@ async function main() {
 
   await client.issues.createComment({
     issue_number: pullRequest.number,
-    body: `🚀 **PR Environment Ready** → **https://codesandbox.io/s/${response.body.sandbox_id}**`,
+    body: `🚀 **PR Environment Ready** → **https://codesandbox.io/s/${response.body.sandbox_id}?module=src/playground.tsx**`,
     owner: "bradenhs",
     repo: "type-route"
   });

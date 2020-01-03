@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { createRouter, defineRoute, Route } from "./index";
-import "playground.css";
+import "./playground.css";
 
 const { routes, listen, getCurrentRoute } = createRouter({
   home: defineRoute("/"),
