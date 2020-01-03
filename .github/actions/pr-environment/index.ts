@@ -73,22 +73,17 @@ async function main() {
     repo: "type-route",
     head_sha: github.context.sha,
     name: "Hello",
-    conclusion: "success",
-    actions: [
-      {
-        label: "View PR Environment",
-        description: "Open PR",
-        identifier: "view-pr-environment"
-      }
-    ]
+    conclusion: "success"
   });
 
-  await client.issues.createComment({
-    issue_number: pullRequest.number,
-    body: `🚀 **PR Environment Ready** → **https://codesandbox.io/s/${response.body.sandbox_id}?module=src/playground.tsx**`,
-    owner: "bradenhs",
-    repo: "type-route"
-  });
+  response;
+
+  // await client.issues.createComment({
+  //   issue_number: pullRequest.number,
+  //   body: `🚀 **PR Environment Ready** → **https://codesandbox.io/s/${response.body.sandbox_id}?module=src/playground.tsx**`,
+  //   owner: "bradenhs",
+  //   repo: "type-route"
+  // });
 }
 
 function readFiles(directoryName: string) {
