@@ -11,18 +11,31 @@ main().catch(error => {
 });
 
 async function main() {
-  const client = new github.GitHub(process.env.GITHUB_TOKEN);
+  const githubToken = process.env.GITHUB_TOKEN;
+  const pullRequest = github.context.payload.pull_request;
+
+  if (githubToken === undefined) {
+    throw new Error("Missing required env var: GITHUB_TOKEN");
+  }
+
+  if (pullRequest === undefined) {
+    throw new Error(
+      "Expected github.context.payload.pull_request to be defined"
+    );
+  }
+
+  const client = new github.GitHub(githubToken);
 
   const files = readFiles("./src");
 
-  const playgroundFiles = {};
+  const playgroundFiles: { [fileName: string]: { content: string } } = {};
 
   Object.keys(files).forEach(fileName => {
     const playgroundFileName = fileName.slice(process.cwd().length);
     playgroundFiles[playgroundFileName] = { content: files[fileName] };
   });
 
-  const response = await got.post(
+  const response = await got.post<{ sandbox_id: string }>(
     "https://codesandbox.io/api/v1/sandboxes/define",
     {
       responseType: "json",
@@ -56,16 +69,16 @@ async function main() {
   );
 
   await client.issues.createComment({
-    issue_number: github.context.payload.pull_request.number,
+    issue_number: pullRequest.number,
     body: `🚀 **PR Environment Ready** → **https://codesandbox.io/s/${response.body.sandbox_id}**`,
     owner: "bradenhs",
     repo: "type-route"
   });
 }
 
-function readFiles(directoryName) {
+function readFiles(directoryName: string) {
   const fileNameCollection = fs.readdirSync(directoryName);
-  const files = {};
+  const files: { [filePath: string]: string } = {};
 
   for (const fileName of fileNameCollection) {
     const filePath = path.resolve(directoryName, fileName);

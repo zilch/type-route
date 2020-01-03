@@ -1,7 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "build": "ncc index.ts"
+    "build": "ncc build ./index.ts"
   },
   "dependencies": {
     "@actions/core": "^1.2.0",
