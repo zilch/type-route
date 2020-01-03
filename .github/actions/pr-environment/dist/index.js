@@ -11236,7 +11236,11 @@ function main() {
                             owner: "bradenhs",
                             repo: "type-route",
                             head_sha: headSha,
-                            name: "Hello",
+                            name: "PR Environment Link",
+                            output: {
+                                title: "PR Link",
+                                summary: "https://codesandbox.io/s/${response.body.sandbox_id}?module=src/playground.tsx"
+                            },
                             details_url: "https://codesandbox.io/s/" + response.body.sandbox_id + "?module=src/playground.tsx",
                             conclusion: "success"
                         })];
