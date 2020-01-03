@@ -11233,25 +11233,11 @@ function main() {
                             repo: "type-route",
                             head_sha: github.context.sha,
                             name: "Hello",
-                            conclusion: "success",
-                            actions: [
-                                {
-                                    label: "View PR Environment",
-                                    description: "Open PR",
-                                    identifier: "view-pr-environment"
-                                }
-                            ]
+                            conclusion: "success"
                         })];
                 case 2:
                     _a.sent();
-                    return [4 /*yield*/, client.issues.createComment({
-                            issue_number: pullRequest.number,
-                            body: "\uD83D\uDE80 **PR Environment Ready** \u2192 **https://codesandbox.io/s/" + response.body.sandbox_id + "?module=src/playground.tsx**",
-                            owner: "bradenhs",
-                            repo: "type-route"
-                        })];
-                case 3:
-                    _a.sent();
+                    response;
                     return [2 /*return*/];
             }
         });
