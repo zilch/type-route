@@ -11233,8 +11233,14 @@ function main() {
                             repo: "type-route",
                             head_sha: github.context.sha,
                             name: "Hello",
-                            status: "completed",
-                            body: "\uD83D\uDE80 **PR Environment Ready** \u2192 **https://codesandbox.io/s/" + response.body.sandbox_id + "?module=src/playground.tsx**"
+                            conclusion: "success",
+                            actions: [
+                                {
+                                    label: "View PR Environment",
+                                    description: "Open PR",
+                                    identifier: "view-pr-environment"
+                                }
+                            ]
                         })];
                 case 2:
                     _a.sent();

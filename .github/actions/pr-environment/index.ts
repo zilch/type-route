@@ -73,9 +73,14 @@ async function main() {
     repo: "type-route",
     head_sha: github.context.sha,
     name: "Hello",
-    status: "completed",
     conclusion: "success",
-    body: `🚀 **PR Environment Ready** → **https://codesandbox.io/s/${response.body.sandbox_id}?module=src/playground.tsx**`
+    actions: [
+      {
+        label: "View PR Environment",
+        description: "Open PR",
+        identifier: "view-pr-environment"
+      }
+    ]
   });
 
   await client.issues.createComment({
