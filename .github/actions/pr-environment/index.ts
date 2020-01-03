@@ -13,9 +13,9 @@ main().catch(error => {
 async function main() {
   const pullRequest = github.context.payload.pull_request;
   const githubToken = process.env.GITHUB_TOKEN;
-  const sha = process.env.GITHUB_SHA;
+  const headSha = core.getInput("head_sha");
 
-  if (sha === undefined) {
+  if (headSha === undefined) {
     throw new Error("Expect sha to be defined");
   }
 
@@ -73,13 +73,13 @@ async function main() {
     }
   );
 
-  console.log("sha", sha);
+  console.log("sha", headSha);
   console.log("github.context.sha", github.context.sha);
 
   const h = await client.checks.create({
     owner: "bradenhs",
     repo: "type-route",
-    head_sha: github.context.sha,
+    head_sha: headSha,
     headers: {
       "X-GitHub-Media-Type": "application/vnd.github.hi-preview+json"
     },
