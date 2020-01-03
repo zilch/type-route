@@ -73,6 +73,9 @@ async function main() {
     }
   );
 
+  console.log("sha", sha);
+  console.log("github.context.sha", github.context.sha);
+
   const h = await client.checks.create({
     owner: "bradenhs",
     repo: "type-route",
