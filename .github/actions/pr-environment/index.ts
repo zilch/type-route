@@ -74,6 +74,7 @@ async function main() {
     head_sha: github.context.sha,
     name: "Hello",
     status: "completed",
+    conclusion: "success",
     body: `🚀 **PR Environment Ready** → **https://codesandbox.io/s/${response.body.sandbox_id}?module=src/playground.tsx**`
   });
 
