@@ -1,9 +1,12 @@
 {
   "private": true,
+  "scripts": {
+    "build": "ncc index.ts"
+  },
   "dependencies": {
     "@actions/core": "^1.2.0",
     "@actions/github": "^2.0.0",
-    "codesandbox": "^2.1.11",
-    "got": "^10.2.1"
+    "got": "^10.2.1",
+    "@zeit/ncc": "^0.20.5"
   }
 }

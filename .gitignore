@@ -10,3 +10,4 @@
 /website/build
 /website/static/js/codesandbox.js
 /website/i18n
+/.github/actions/pr-environment/node_modules
