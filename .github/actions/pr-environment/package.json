@@ -1,7 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "build": "ncc build ./index.ts"
+    "build": "rm -rf ./dist && ncc build ./index.ts"
   },
   "dependencies": {
     "@actions/core": "^1.2.0",
