@@ -36,7 +36,7 @@ function Page(props: { route: Route<typeof routes> }) {
   const { route } = props;
 
   if (route.name === routes.home.name) {
-    return <div>Home</div>;
+    return <div>Home Page</div>;
   }
 
   if (route.name === routes.userList.name) {
