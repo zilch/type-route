@@ -73,7 +73,7 @@ async function main() {
     }
   );
 
-  await client.checks.create({
+  const h = await client.checks.create({
     owner: "bradenhs",
     repo: "type-route",
     head_sha: sha,
@@ -81,6 +81,8 @@ async function main() {
     details_url: `https://codesandbox.io/s/${response.body.sandbox_id}?module=src/playground.tsx`,
     conclusion: "success"
   });
+
+  console.log(h);
 
   response;
 

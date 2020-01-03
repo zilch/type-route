@@ -11189,7 +11189,7 @@ main().catch(function (error) {
 });
 function main() {
     return __awaiter(this, void 0, void 0, function () {
-        var pullRequest, githubToken, sha, client, files, playgroundFiles, response;
+        var pullRequest, githubToken, sha, client, files, playgroundFiles, response, h;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -11241,7 +11241,8 @@ function main() {
                             conclusion: "success"
                         })];
                 case 2:
-                    _a.sent();
+                    h = _a.sent();
+                    console.log(h);
                     response;
                     return [2 /*return*/];
             }
