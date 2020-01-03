@@ -11232,6 +11232,8 @@ function main() {
                         })];
                 case 1:
                     response = _a.sent();
+                    console.log("sha", sha);
+                    console.log("github.context.sha", github.context.sha);
                     return [4 /*yield*/, client.checks.create({
                             owner: "bradenhs",
                             repo: "type-route",
