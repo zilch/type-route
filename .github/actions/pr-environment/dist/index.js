@@ -11189,14 +11189,14 @@ main().catch(function (error) {
 });
 function main() {
     return __awaiter(this, void 0, void 0, function () {
-        var pullRequest, githubToken, sha, client, files, playgroundFiles, response, h;
+        var pullRequest, githubToken, headSha, client, files, playgroundFiles, response, h;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     pullRequest = github.context.payload.pull_request;
                     githubToken = process.env.GITHUB_TOKEN;
-                    sha = process.env.GITHUB_SHA;
-                    if (sha === undefined) {
+                    headSha = core.getInput("head_sha");
+                    if (headSha === undefined) {
                         throw new Error("Expect sha to be defined");
                     }
                     if (pullRequest === undefined) {
@@ -11232,12 +11232,12 @@ function main() {
                         })];
                 case 1:
                     response = _a.sent();
-                    console.log("sha", sha);
+                    console.log("sha", headSha);
                     console.log("github.context.sha", github.context.sha);
                     return [4 /*yield*/, client.checks.create({
                             owner: "bradenhs",
                             repo: "type-route",
-                            head_sha: github.context.sha,
+                            head_sha: headSha,
                             headers: {
                                 "X-GitHub-Media-Type": "application/vnd.github.hi-preview+json"
                             },
