@@ -11189,15 +11189,19 @@ main().catch(function (error) {
 });
 function main() {
     return __awaiter(this, void 0, void 0, function () {
-        var pullRequest, client, files, playgroundFiles, response;
+        var pullRequest, githubToken, client, files, playgroundFiles, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     pullRequest = github.context.payload.pull_request;
+                    githubToken = process.env.GITHUB_TOKEN;
                     if (pullRequest === undefined) {
                         throw new Error("Expected github.context.payload.pull_request to be defined");
                     }
-                    client = new github.GitHub("ebabea23bbfdc5b717bd37b644268f2ac49fd2cd");
+                    if (githubToken === undefined) {
+                        throw new Error("Expected GITHUB_TOKEN env var to be defined");
+                    }
+                    client = new github.GitHub(githubToken);
                     files = readFiles("./src");
                     playgroundFiles = {};
                     Object.keys(files).forEach(function (fileName) {
