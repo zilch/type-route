@@ -76,7 +76,7 @@ async function main() {
   const h = await client.checks.create({
     owner: "bradenhs",
     repo: "type-route",
-    head_sha: sha,
+    head_sha: github.context.sha,
     headers: {
       "X-GitHub-Media-Type": "application/vnd.github.hi-preview+json"
     },
