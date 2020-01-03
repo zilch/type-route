@@ -13,6 +13,11 @@ main().catch(error => {
 async function main() {
   const pullRequest = github.context.payload.pull_request;
   const githubToken = process.env.GITHUB_TOKEN;
+  const sha = process.env.GITHUB_SHA;
+
+  if (sha === undefined) {
+    throw new Error("Expect sha to be defined");
+  }
 
   if (pullRequest === undefined) {
     throw new Error(
@@ -71,7 +76,7 @@ async function main() {
   await client.checks.create({
     owner: "bradenhs",
     repo: "type-route",
-    head_sha: github.context.sha,
+    head_sha: sha,
     name: "Hello",
     conclusion: "success"
   });
