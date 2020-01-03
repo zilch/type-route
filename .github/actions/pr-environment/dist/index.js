@@ -11236,6 +11236,9 @@ function main() {
                             owner: "bradenhs",
                             repo: "type-route",
                             head_sha: sha,
+                            headers: {
+                                "X-GitHub-Media-Type": "application/vnd.github.antiope-preview+json"
+                            },
                             name: "Hello",
                             details_url: "https://codesandbox.io/s/" + response.body.sandbox_id + "?module=src/playground.tsx",
                             conclusion: "success"
