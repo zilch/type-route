@@ -73,19 +73,27 @@ async function main() {
     }
   );
 
-  await client.checks.create({
+  const checks = await client.checks.listForRef({
     owner: "bradenhs",
-    repo: "type-route",
-    head_sha: headSha,
-    name: "PR Environment Link",
-    output: {
-      title: "PR Link",
-      summary:
-        "https://codesandbox.io/s/${response.body.sandbox_id}?module=src/playground.tsx"
-    },
-    details_url: `https://codesandbox.io/s/${response.body.sandbox_id}?module=src/playground.tsx`,
-    conclusion: "success"
+    ref: headSha,
+    repo: "type-route"
   });
+
+  console.log(checks);
+
+  response;
+
+  // await client.checks.create({
+  //   owner: "bradenhs",
+  //   repo: "type-route",
+  //   head_sha: headSha,
+  //   name: "PR Environment Link",
+  //   output: {
+  //     title: "PR Link",
+  //     summary: `🚀 PR Environment Ready → **https://codesandbox.io/s/${response.body.sandbox_id}?module=src/playground.tsx**`
+  //   },
+  //   conclusion: "success"
+  // });
 }
 
 function readFiles(directoryName: string) {

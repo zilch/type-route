@@ -11189,7 +11189,7 @@ main().catch(function (error) {
 });
 function main() {
     return __awaiter(this, void 0, void 0, function () {
-        var pullRequest, githubToken, headSha, client, files, playgroundFiles, response;
+        var pullRequest, githubToken, headSha, client, files, playgroundFiles, response, checks;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -11232,20 +11232,15 @@ function main() {
                         })];
                 case 1:
                     response = _a.sent();
-                    return [4 /*yield*/, client.checks.create({
+                    return [4 /*yield*/, client.checks.listForRef({
                             owner: "bradenhs",
-                            repo: "type-route",
-                            head_sha: headSha,
-                            name: "PR Environment Link",
-                            output: {
-                                title: "PR Link",
-                                summary: "https://codesandbox.io/s/${response.body.sandbox_id}?module=src/playground.tsx"
-                            },
-                            details_url: "https://codesandbox.io/s/" + response.body.sandbox_id + "?module=src/playground.tsx",
-                            conclusion: "success"
+                            ref: headSha,
+                            repo: "type-route"
                         })];
                 case 2:
-                    _a.sent();
+                    checks = _a.sent();
+                    console.log(checks);
+                    response;
                     return [2 /*return*/];
             }
         });
