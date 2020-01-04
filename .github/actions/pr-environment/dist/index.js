@@ -5220,7 +5220,7 @@ module.exports = cloneResponse;
 /***/ 329:
 /***/ (function(module) {
 
-module.exports = {"name":"type-route","version":"0.3.4","main":"./lib/index.js","types":"./lib/index.d.ts","description":"A flexible, type safe routing library.","repository":{"type":"git","url":"git+https://github.com/type-route/type-route.git"},"license":"MIT","bugs":{"url":"https://github.com/type-route/type-route/issues"},"sideEffects":false,"homepage":"https://type-route.org","dependencies":{"@types/history":"^4.7.2","history":"^4.9.0","querystringify":"^2.1.1"},"devDependencies":{"@types/jest":"^24.0.11","@types/querystringify":"^2.0.0","@types/react":"16.8.8","@types/react-dom":"16.8.2","jest":"^24.5.0","parcel-bundler":"^1.12.3","react":"^16.8.4","react-dom":"^16.8.4","ts-jest":"^24.0.0","typescript":"^3.7.4"},"authors":["Braden Snell"],"files":["lib"],"keywords":["react","router","route","routing","history","link","type","types","typescript"],"scripts":{"playground":"parcel ./src/playground.html","build":"rm -rf ./lib && tsc","test":"jest"}};
+module.exports = {"name":"type-route","version":"0.3.4","main":"./lib/index.js","types":"./lib/index.d.ts","description":"A flexible, type safe routing library.","repository":{"type":"git","url":"git+https://github.com/type-route/type-route.git"},"license":"MIT","bugs":{"url":"https://github.com/type-route/type-route/issues"},"sideEffects":false,"homepage":"https://type-route.org","dependencies":{"@types/history":"^4.7.2","history":"^4.9.0","querystringify":"^2.1.1"},"devDependencies":{"@types/jest":"^24.0.11","@types/querystringify":"^2.0.0","@types/react":"16.8.8","@types/react-dom":"16.8.2","jest":"^24.5.0","parcel-bundler":"^1.12.3","react":"^16.8.4","react-dom":"^16.8.4","ts-jest":"^24.0.0","typescript":"^3.7.4"},"authors":["Braden Snell"],"files":["lib"],"keywords":["react","router","route","routing","history","link","type","types","typescript"],"scripts":{"playground":"parcel ./src/playground.html","build":"rm -rf ./lib && tsc","unit-test":"jest","integration-test":"echo \"TODO\""}};
 
 /***/ }),
 
@@ -11189,15 +11189,23 @@ main().catch(function (error) {
 });
 function main() {
     return __awaiter(this, void 0, void 0, function () {
-        var pullRequest, client, files, playgroundFiles, response;
+        var pullRequest, githubToken, headSha, client, files, playgroundFiles, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     pullRequest = github.context.payload.pull_request;
+                    githubToken = process.env.GITHUB_TOKEN;
+                    headSha = core.getInput("head_sha");
+                    if (headSha === undefined) {
+                        throw new Error("Expect sha to be defined");
+                    }
                     if (pullRequest === undefined) {
                         throw new Error("Expected github.context.payload.pull_request to be defined");
                     }
-                    client = new github.GitHub("ebabea23bbfdc5b717bd37b644268f2ac49fd2cd");
+                    if (githubToken === undefined) {
+                        throw new Error("Expected GITHUB_TOKEN env var to be defined");
+                    }
+                    client = new github.GitHub(githubToken);
                     files = readFiles("./src");
                     playgroundFiles = {};
                     Object.keys(files).forEach(function (fileName) {
@@ -11227,20 +11235,15 @@ function main() {
                     return [4 /*yield*/, client.checks.create({
                             owner: "bradenhs",
                             repo: "type-route",
-                            head_sha: github.context.sha,
-                            name: "Hello",
-                            status: "completed",
-                            body: "\uD83D\uDE80 **PR Environment Ready** \u2192 **https://codesandbox.io/s/" + response.body.sandbox_id + "?module=src/playground.tsx**"
+                            head_sha: headSha,
+                            name: "PR Environment Link",
+                            output: {
+                                title: "PR Link",
+                                summary: "\uD83D\uDE80 PR Environment Ready \u2192 **https://codesandbox.io/s/" + response.body.sandbox_id + "?module=src/playground.tsx**"
+                            },
+                            conclusion: "success"
                         })];
                 case 2:
-                    _a.sent();
-                    return [4 /*yield*/, client.issues.createComment({
-                            issue_number: pullRequest.number,
-                            body: "\uD83D\uDE80 **PR Environment Ready** \u2192 **https://codesandbox.io/s/" + response.body.sandbox_id + "?module=src/playground.tsx**",
-                            owner: "bradenhs",
-                            repo: "type-route"
-                        })];
-                case 3:
                     _a.sent();
                     return [2 /*return*/];
             }

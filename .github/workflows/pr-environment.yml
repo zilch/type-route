@@ -1,4 +1,4 @@
-name: pr environment
+name: pr-environment
 
 on: pull_request
 
@@ -7,11 +7,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Create PR Environment
-        uses: ./.github/actions/pr-environment
-      - name: Post Link to Created PR
-        uses: actions/github@v1.0.0
+      - uses: ./.github/actions/pr-environment
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          args: comment "Hello World"
+          head_sha: ${{ github.event.pull_request.head.sha }}
