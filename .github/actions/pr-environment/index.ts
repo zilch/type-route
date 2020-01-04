@@ -79,7 +79,7 @@ async function main() {
     repo: "type-route"
   });
 
-  console.log(checks);
+  console.log(checks.data.check_runs);
 
   response;
 

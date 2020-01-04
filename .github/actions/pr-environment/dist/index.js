@@ -11239,7 +11239,7 @@ function main() {
                         })];
                 case 2:
                     checks = _a.sent();
-                    console.log(checks);
+                    console.log(checks.data.check_runs);
                     response;
                     return [2 /*return*/];
             }
