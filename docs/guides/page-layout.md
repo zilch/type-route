@@ -55,33 +55,33 @@ function Footer() {
 
 function HomePage() {
   return <>
-    <Header>
+    <Header />
     <div>Home Page</div>
-    </Footer>
+    <Footer />
   </>
 }
 
 function FooPage() {
   return <>
-    <Header>
+    <Header />
     <div>Foo Page</div>
-    </Footer>
+    <Footer />
   </>
 }
 
 function BarPage() {
   return <>
-    <Header>
+    <Header />
     <div>Bar Page</div>
-    </Footer>
+    <Footer />
   </>
 }
 
 function NotFoundPage() {
   return <>
-    <Header>
+    <Header />
     <div>Bar Page</div>
-    </Footer>
+    <Footer />
   </>
 }
 ```
@@ -121,9 +121,9 @@ function App() {
   }
 
   return <>
-    <Header>
+    <Header />
     {page}
-    </Footer>
+    <Footer />
   </>;
 }
 
