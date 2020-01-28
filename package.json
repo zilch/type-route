@@ -1,6 +1,6 @@
 {
   "name": "type-route",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "description": "A flexible, type safe routing library.",
@@ -25,7 +25,7 @@
     "@types/react": "16.8.8",
     "@types/react-dom": "16.8.2",
     "jest": "^24.5.0",
-    "parcel-bundler": "^1.12.3",
+    "parcel-bundler": "^1.12.4",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
     "ts-jest": "^24.0.0",

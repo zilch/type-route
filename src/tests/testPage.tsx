@@ -4,16 +4,17 @@ import { createRouter, defineRoute, createGroup, Route } from "../index";
 
 const user = defineRoute(
   {
-    username: "path.param.string"
+    username: "path.param.string",
+    somethingElse: "query.param.string"
   },
-  p => `/${p.username}`
+  p => `/user/${p.username}`
 );
 
 const repository = user.extend(
   {
     repositoryName: "path.param.string"
   },
-  p => `/${p.repositoryName}`
+  p => `/repository/${p.repositoryName}`
 );
 
 const issues = repository.extend("/issues");
@@ -82,7 +83,6 @@ function App() {
   useEffect(() => {
     const removeListener = listen(async nextRoute => {
       setRoute(nextRoute);
-      return false;
     });
 
     return removeListener;
@@ -104,10 +104,11 @@ function App() {
   return (
     <>
       <a {...routes.dashboard.link()}>Dashboard</a>
-      <a {...routes.user.link({ username: "bradenhs" })} target="_blank">
+      <a
+        {...routes.user.link({ username: "braden/hs", somethingElse: "wh/at" })}
+      >
         Profile
       </a>
-      {route.name === "dashboard" && <DashboardPage route={route} />}
       <Page route={route} />
     </>
   );
@@ -125,7 +126,7 @@ function Page(props: { route: Route<typeof routes> }) {
   }
 
   if (route.name === routes.user.name) {
-    return <div>User Page</div>;
+    return <div>User Page {route.params.username}</div>;
   }
 
   return <div>Not Found</div>;

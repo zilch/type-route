@@ -84,9 +84,12 @@ export function buildRouteDefinition(
 
     Object.keys(params).forEach(name => {
       if (pathParameters[name]) {
-        pathParams[name] = params[name];
+        const value = params[name];
+        pathParams[name] =
+          typeof value === "string" ? encodeURIComponent(value) : value;
       } else {
         if (params[name] !== undefined) {
+          // qs.stringify already encodes the uri component
           queryParams[name] = params[name];
         }
       }
