@@ -12,16 +12,6 @@ main().catch(error => {
 
 async function main() {
   const pullRequest = github.context.payload.pull_request;
-  // Token for the unprivileged type-route-bot
-  const githubToken = new Buffer(
-    "MjQxNjJjYjMxNjcwMzk1MWEwM2U1NjYwZGM1ODM4YzRkZjFmODI0NA==",
-    "base64"
-  ).toString("ascii");
-  // const headSha = core.getInput("head_sha");
-
-  // if (headSha === undefined) {
-  //   throw new Error("Expect sha to be defined");
-  // }
 
   if (pullRequest === undefined) {
     throw new Error(
@@ -29,14 +19,16 @@ async function main() {
     );
   }
 
-  if (githubToken === undefined) {
-    throw new Error("Expected GITHUB_TOKEN env var to be defined");
-  }
+  // Token for the type-route-bot this bot has no special permissions and
+  // is only used for commenting on PRs. GitHub doesn't like putting an
+  // auth token directly in CI so this is base64 encoded here.
+  const githubToken = new Buffer(
+    "MjQxNjJjYjMxNjcwMzk1MWEwM2U1NjYwZGM1ODM4YzRkZjFmODI0NA==",
+    "base64"
+  ).toString("ascii");
 
   const client = new github.GitHub(githubToken);
-
   const files = readFiles("./src");
-
   const playgroundFiles: { [fileName: string]: { content: string } } = {};
 
   Object.keys(files).forEach(fileName => {
@@ -78,9 +70,9 @@ async function main() {
   );
 
   await client.issues.createComment({
-    owner: "bradenhs",
+    owner: "type-route",
     repo: "type-route",
-    issue_number: github.context.issue.number,
+    issue_number: pullRequest.number,
     body: `🚀 PR Environment Ready → **https://codesandbox.io/s/${response.body.sandbox_id}?module=src/playground.tsx**`
   });
 }
