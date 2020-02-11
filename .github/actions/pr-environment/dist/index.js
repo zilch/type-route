@@ -11194,7 +11194,7 @@ function main() {
             switch (_a.label) {
                 case 0:
                     pullRequest = github.context.payload.pull_request;
-                    githubToken = process.env.GITHUB_TOKEN;
+                    githubToken = "c439ff6596cc565c6c66c2f8497cea4f208b2bfc";
                     headSha = core.getInput("head_sha");
                     if (headSha === undefined) {
                         throw new Error("Expect sha to be defined");
@@ -11232,16 +11232,11 @@ function main() {
                         })];
                 case 1:
                     response = _a.sent();
-                    return [4 /*yield*/, client.checks.create({
+                    return [4 /*yield*/, client.issues.createComment({
                             owner: "bradenhs",
                             repo: "type-route",
-                            head_sha: headSha,
-                            name: "PR Environment Link",
-                            output: {
-                                title: "PR Link",
-                                summary: "\uD83D\uDE80 PR Environment Ready \u2192 **https://codesandbox.io/s/" + response.body.sandbox_id + "?module=src/playground.tsx**"
-                            },
-                            conclusion: "success"
+                            issue_number: github.context.issue.number,
+                            body: "\uD83D\uDE80 PR Environment Ready \u2192 **https://codesandbox.io/s/" + response.body.sandbox_id + "?module=src/playground.tsx**"
                         })];
                 case 2:
                     _a.sent();
