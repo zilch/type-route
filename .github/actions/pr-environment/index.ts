@@ -14,7 +14,7 @@ async function main() {
   const pullRequest = github.context.payload.pull_request;
   // Token for the unprivileged type-route-bot
   const githubToken = new Buffer(
-    "YTQwMzE1NDliNWZhMjE5ZGI3MjUxODZlYWMwMzQ5ZjRlNTBlZTQxZQ==",
+    "MjQxNjJjYjMxNjcwMzk1MWEwM2U1NjYwZGM1ODM4YzRkZjFmODI0NA==",
     "base64"
   ).toString("ascii");
   // const headSha = core.getInput("head_sha");
