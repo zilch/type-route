@@ -25,7 +25,7 @@ export function getPathMatch(pathName: string, parsedPath: ParsedPath) {
           return false;
         }
       } else {
-        match[pathPart.name] = first;
+        match[pathPart.name] = decodeURIComponent(first);
       }
 
       pathName = rest.length === 0 ? "" : "/" + rest.join("/");
