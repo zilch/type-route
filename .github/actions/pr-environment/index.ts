@@ -13,12 +13,13 @@ main().catch(error => {
 async function main() {
   const pullRequest = github.context.payload.pull_request;
   // Token for the unprivileged type-route-bot
-  const githubToken = "7564f37d98011aa0d15c04e6eeb28c410ef6e3d8";
-  const headSha = core.getInput("head_sha");
+  const githubToken = "7188878ecc9fd67ea422d0d7b256d51c095144c6";
+  // const headSha = core.getInput("head_sha");
 
-  if (headSha === undefined) {
-    throw new Error("Expect sha to be defined");
-  }
+  console.log(githubToken);
+  // if (headSha === undefined) {
+  //   throw new Error("Expect sha to be defined");
+  // }
 
   if (pullRequest === undefined) {
     throw new Error(

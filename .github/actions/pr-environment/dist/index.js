@@ -11189,16 +11189,17 @@ main().catch(function (error) {
 });
 function main() {
     return __awaiter(this, void 0, void 0, function () {
-        var pullRequest, githubToken, headSha, client, files, playgroundFiles, response;
+        var pullRequest, githubToken, client, files, playgroundFiles, response;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     pullRequest = github.context.payload.pull_request;
-                    githubToken = "7564f37d98011aa0d15c04e6eeb28c410ef6e3d8";
-                    headSha = core.getInput("head_sha");
-                    if (headSha === undefined) {
-                        throw new Error("Expect sha to be defined");
-                    }
+                    githubToken = "7188878ecc9fd67ea422d0d7b256d51c095144c6";
+                    // const headSha = core.getInput("head_sha");
+                    console.log(githubToken);
+                    // if (headSha === undefined) {
+                    //   throw new Error("Expect sha to be defined");
+                    // }
                     if (pullRequest === undefined) {
                         throw new Error("Expected github.context.payload.pull_request to be defined");
                     }
