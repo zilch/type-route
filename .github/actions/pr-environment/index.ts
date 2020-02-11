@@ -12,7 +12,8 @@ main().catch(error => {
 
 async function main() {
   const pullRequest = github.context.payload.pull_request;
-  const githubToken = process.env.GITHUB_TOKEN;
+  // Token for the unprivileged type-route-bot
+  const githubToken = "c439ff6596cc565c6c66c2f8497cea4f208b2bfc";
   const headSha = core.getInput("head_sha");
 
   if (headSha === undefined) {
@@ -73,16 +74,11 @@ async function main() {
     }
   );
 
-  await client.checks.create({
+  await client.issues.createComment({
     owner: "bradenhs",
     repo: "type-route",
-    head_sha: headSha,
-    name: "PR Environment Link",
-    output: {
-      title: "PR Link",
-      summary: `🚀 PR Environment Ready → **https://codesandbox.io/s/${response.body.sandbox_id}?module=src/playground.tsx**`
-    },
-    conclusion: "success"
+    issue_number: github.context.issue.number,
+    body: `🚀 PR Environment Ready → **https://codesandbox.io/s/${response.body.sandbox_id}?module=src/playground.tsx**`
   });
 }
 
