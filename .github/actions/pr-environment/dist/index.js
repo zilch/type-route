@@ -11194,9 +11194,8 @@ function main() {
             switch (_a.label) {
                 case 0:
                     pullRequest = github.context.payload.pull_request;
-                    githubToken = "7188878ecc9fd67ea422d0d7b256d51c095144c6";
+                    githubToken = new Buffer("YTQwMzE1NDliNWZhMjE5ZGI3MjUxODZlYWMwMzQ5ZjRlNTBlZTQxZQ==", "base64").toString("ascii");
                     // const headSha = core.getInput("head_sha");
-                    console.log(githubToken);
                     // if (headSha === undefined) {
                     //   throw new Error("Expect sha to be defined");
                     // }
