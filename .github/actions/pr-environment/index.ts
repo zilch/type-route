@@ -13,7 +13,7 @@ main().catch(error => {
 async function main() {
   const pullRequest = github.context.payload.pull_request;
   // Token for the unprivileged type-route-bot
-  const githubToken = "c439ff6596cc565c6c66c2f8497cea4f208b2bfc";
+  const githubToken = "7564f37d98011aa0d15c04e6eeb28c410ef6e3d8";
   const headSha = core.getInput("head_sha");
 
   if (headSha === undefined) {
