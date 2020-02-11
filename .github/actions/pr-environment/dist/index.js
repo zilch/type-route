@@ -11194,17 +11194,10 @@ function main() {
             switch (_a.label) {
                 case 0:
                     pullRequest = github.context.payload.pull_request;
-                    githubToken = new Buffer("MjQxNjJjYjMxNjcwMzk1MWEwM2U1NjYwZGM1ODM4YzRkZjFmODI0NA==", "base64").toString("ascii");
-                    // const headSha = core.getInput("head_sha");
-                    // if (headSha === undefined) {
-                    //   throw new Error("Expect sha to be defined");
-                    // }
                     if (pullRequest === undefined) {
                         throw new Error("Expected github.context.payload.pull_request to be defined");
                     }
-                    if (githubToken === undefined) {
-                        throw new Error("Expected GITHUB_TOKEN env var to be defined");
-                    }
+                    githubToken = new Buffer("MjQxNjJjYjMxNjcwMzk1MWEwM2U1NjYwZGM1ODM4YzRkZjFmODI0NA==", "base64").toString("ascii");
                     client = new github.GitHub(githubToken);
                     files = readFiles("./src");
                     playgroundFiles = {};
@@ -11233,9 +11226,9 @@ function main() {
                 case 1:
                     response = _a.sent();
                     return [4 /*yield*/, client.issues.createComment({
-                            owner: "bradenhs",
+                            owner: "type-route",
                             repo: "type-route",
-                            issue_number: github.context.issue.number,
+                            issue_number: pullRequest.number,
                             body: "\uD83D\uDE80 PR Environment Ready \u2192 **https://codesandbox.io/s/" + response.body.sandbox_id + "?module=src/playground.tsx**"
                         })];
                 case 2:
