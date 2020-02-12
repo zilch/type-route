@@ -29,10 +29,10 @@ jobs:
           node-version: 12.x
       - run: npm install
       - run: npm run build
-      - run: npm version 0.0.0-${{ github.sha }} --git-tag-version=false --tag=${{ steps.branch.outputs.branch }}
+      - run: npm version 0.0.0-${{ github.sha }} --git-tag-version=false
       # We don't want to fail in the case where the npm token isn't available b/c this was triggered by a
       # pull_request event from a fork.
-      - run: npm publish ${NODE_AUTH_TOKEN:---dry-run}
+      - run: npm publish ${NODE_AUTH_TOKEN:---dry-run} --tag=${{ steps.branch.outputs.branch }}
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
   pr-environment:
