@@ -12,4 +12,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - run: echo "Hello"
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - run: npm install
+      - run: npm run build
+      - run: npm run lint
+      - run: npm run unit-test
+      - run: npm run integration-test
+      - run: echo "npm run publish"
