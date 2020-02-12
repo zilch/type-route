@@ -19,13 +19,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - id: branch
+        run: echo ::set-output name=branch::${GITHUB_REF/refs\/heads\//}
       - uses: actions/setup-node@v1
         with:
           node-version: 12.x
       - run: npm install
       - run: npm run build
-      - run: npm version 0.0.0-${{ github.sha }} --git-tag-version=false --tag=${{ github.ref }}
-      - run: npm run publish --dry-run
+      - run: npm version 0.0.0-${{ github.sha }} --git-tag-version=false --tag=${{ steps.branch.outputs.branch }}
+      - run: npm publish --dry-run
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
   pr-environment:

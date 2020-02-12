@@ -9,7 +9,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - id: version
-        run: echo ::set-output name=version::${GITHUB_REF:10}
+        run: echo ::set-output name=version::${GITHUB_REF/refs\/tags\//}
       - uses: actions/setup-node@v1
         with:
           node-version: 12.x
@@ -19,6 +19,6 @@ jobs:
       - run: npm run unit-test
       - run: npm run integration-test
       - run: npm version ${{ steps.version.outputs.version }} --git-tag-version=false
-      - run: npm run publish --dry-run
+      - run: npm publish --dry-run
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
