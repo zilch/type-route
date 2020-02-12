@@ -19,7 +19,7 @@ async function main() {
     );
   }
 
-  // Token for the type-route-bot this bot has no special permissions and
+  // Token for the type-route-bot. This bot has no special permissions and
   // is only used for commenting on PRs. GitHub doesn't like putting an
   // auth token directly in CI so this is base64 encoded here.
   const githubToken = new Buffer(
