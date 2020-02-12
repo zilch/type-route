@@ -37,7 +37,7 @@ jobs:
       # pull_request event from a fork.
       - run: |
           args=( --tag=${{ steps.branch.outputs.branch }} );
-          if [ -z NODE_AUTH_TOKEN ] then
+          if [ -z NODE_AUTH_TOKEN ]; then
             args += ( --dry-run )
           fi;
           npm publish "${args[@]}"
