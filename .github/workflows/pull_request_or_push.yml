@@ -35,7 +35,12 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       # We don't want to fail in the case where the npm token isn't available b/c this was triggered by a
       # pull_request event from a fork.
-      - run: npm publish "${NODE_AUTH_TOKEN:---dry-run}" --tag=${{ steps.branch.outputs.branch }}
+      - run: |
+          args=( --tag=${{ steps.branch.outputs.branch }} );
+          if [ -z NODE_AUTH_TOKEN ] then
+            args += ( --dry-run )
+          fi;
+          npm publish "${args[@]}"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
   pr-environment:
