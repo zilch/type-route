@@ -73,7 +73,7 @@ async function main() {
     owner: "type-route",
     repo: "type-route",
     issue_number: pullRequest.number,
-    body: `🚀 PR Environment Ready → **https://codesandbox.io/s/${response.body.sandbox_id}?module=src/playground.tsx**`
+    body: `🚀 **PR Environment Ready** → **https://codesandbox.io/s/${response.body.sandbox_id}?module=src/playground.tsx**`
   });
 }
 

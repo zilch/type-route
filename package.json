@@ -51,6 +51,7 @@
   "scripts": {
     "playground": "parcel ./src/playground.html",
     "build": "rm -rf ./lib && tsc",
+    "lint": "echo \"TODO\"",
     "unit-test": "jest",
     "integration-test": "echo \"TODO\""
   }
