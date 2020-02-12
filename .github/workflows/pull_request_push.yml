@@ -19,8 +19,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      # Branch name is used to tag the release
       - id: branch
         run: echo ::set-output name=branch::${GITHUB_REF/refs\/heads\//}
+      # We don't want to accidentally overwrite the latest release if the name of the branch is "latest"
       - run: if [ "${{ steps.branch.outputs.branch }}" = "latest" ]; then exit 1; fi
       - uses: actions/setup-node@v1
         with:
@@ -28,7 +30,9 @@ jobs:
       - run: npm install
       - run: npm run build
       - run: npm version 0.0.0-${{ github.sha }} --git-tag-version=false --tag=${{ steps.branch.outputs.branch }}
-      - run: npm publish --dry-run
+      # We don't want to fail in the case where the npm token isn't available b/c this was triggered by a
+      # pull_request event from a fork.
+      - run: npm publish --dry-run="false"
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
   pr-environment:
