@@ -1,0 +1,43 @@
+on: [pull_request, push]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        action: [build, lint, unit-test, integration-test]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - run: npm install
+      - run: npm run ${{ matrix.action }}
+  prerelease:
+    needs: check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      # Branch name is used to tag the release
+      - id: branch
+        run: echo ::set-output name=branch::${GITHUB_REF/refs\/heads\//}
+      # We don't want to accidentally overwrite the latest release if the name of the branch is "latest"
+      - run: if [ "${{ steps.branch.outputs.branch }}" = "latest" ]; then exit 1; fi
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - run: npm install
+      - run: npm run build
+      - run: npm version 0.0.0-${{ github.sha }} --git-tag-version=false --tag=${{ steps.branch.outputs.branch }}
+      # We don't want to fail in the case where the npm token isn't available b/c this was triggered by a
+      # pull_request event from a fork.
+      - run: npm publish ${NODE_AUTH_TOKEN:---dry-run}
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+  pr-environment:
+    if: github.event_name	== 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/pr-environment

@@ -1,6 +1,6 @@
-import { defineRoute } from "../defineRoute";
-import { ParameterDefinitionCollection, PathFn } from "../types";
-import { createRouter } from "../createRouter";
+import { defineRoute } from "./defineRoute";
+import { ParameterDefinitionCollection, PathFn } from "./types";
+import { createRouter } from "./createRouter";
 
 describe("defineRoute", () => {
   it("should error for invalid arguments", () => {

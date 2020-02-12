@@ -1,0 +1,12 @@
+{
+  "private": true,
+  "scripts": {
+    "build": "rm -rf ./dist && ncc build ./index.ts"
+  },
+  "dependencies": {
+    "@actions/core": "^1.2.0",
+    "@actions/github": "^2.0.0",
+    "got": "^10.2.1",
+    "@zeit/ncc": "^0.20.5"
+  }
+}
