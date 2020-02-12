@@ -21,7 +21,7 @@ jobs:
       - uses: actions/checkout@v2
       - id: branch
         run: echo ::set-output name=branch::${GITHUB_REF/refs\/heads\//}
-      - run: ${{ steps.branch.outputs.branch }} = "master" && exit 1
+      - run: if [ "${{ steps.branch.outputs.branch }}" = "master" ] then exit 1; fi
       - uses: actions/setup-node@v1
         with:
           node-version: 12.x
