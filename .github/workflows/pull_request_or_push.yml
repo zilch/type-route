@@ -27,18 +27,16 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 12.x
+          registry-url: https://registry.npmjs.org
       - run: npm install
       - run: npm run build
       - run: npm version 0.0.0-${{ github.sha }} --git-tag-version=false
-      - run: echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" >> ~/.npmrc
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       # We don't want to fail in the case where the npm token isn't available b/c this was triggered by a
       # pull_request event from a fork.
       - run: |
           args=( --tag=${{ steps.branch.outputs.branch }} );
           if [ -z NODE_AUTH_TOKEN ]; then
-            args += ( --dry-run )
+            args+= ( --dry-run )
           fi;
           npm publish "${args[@]}"
         env:

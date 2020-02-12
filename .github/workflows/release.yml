@@ -13,6 +13,7 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 12.x
+          registry-url: https://registry.npmjs.org
       - run: npm install
       - run: npm run build
       - run: npm run lint
@@ -22,7 +23,6 @@ jobs:
       # biggest version number in the package - otherwise we probably don't want to
       # tag what's published here with the latest tag.
       - run: npm version ${{ steps.version.outputs.version }} --git-tag-version=false
-      - run: echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" >> ~/.npmrc
+      - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - run: npm publish
