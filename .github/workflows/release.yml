@@ -22,6 +22,7 @@ jobs:
       # biggest version number in the package - otherwise we probably don't want to
       # tag what's published here with the latest tag.
       - run: npm version ${{ steps.version.outputs.version }} --git-tag-version=false
-      - run: npm publish --dry-run
+      - run: echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" >> ~/.npmrc
         env:
-          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: npm publish
