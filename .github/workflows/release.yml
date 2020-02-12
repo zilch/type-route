@@ -12,4 +12,4 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - steps: echo "Hello"
+      - run: echo "Hello"
