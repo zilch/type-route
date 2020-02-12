@@ -10,8 +10,10 @@ jobs:
     name: Create Release
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
+      - id: version
+        run: echo ::set-output name=version::${GITHUB_REF:10}
+      - run: ${{ steps.version.outputs.version }}
       - uses: actions/setup-node@v1
         with:
           node-version: 12.x
