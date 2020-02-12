@@ -1,7 +1,7 @@
 on: [pull_request, push]
 
 jobs:
-  build-test:
+  check:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -15,12 +15,13 @@ jobs:
       - run: npm install
       - run: npm run ${{ matrix.action }}
   prerelease:
-    needs: build-test
+    needs: check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - id: branch
         run: echo ::set-output name=branch::${GITHUB_REF/refs\/heads\//}
+      - run: ${{ steps.branch.outputs.branch }} = "master" && exit 1
       - uses: actions/setup-node@v1
         with:
           node-version: 12.x
