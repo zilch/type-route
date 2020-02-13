@@ -1,7 +1,8 @@
 on:
   pull_request:
   push:
-    branches:
+    tags-ignore:
+      - "**"
   release:
     types:
       - created
