@@ -7684,7 +7684,7 @@ main().catch(function (error) {
 function main() {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
-            console.log(JSON.stringify(github, null, 2));
+            console.log(JSON.stringify(github, null, 1));
             return [2 /*return*/];
         });
     });

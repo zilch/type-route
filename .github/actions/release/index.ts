@@ -6,5 +6,5 @@ main().catch(error => {
 });
 
 async function main() {
-  console.log(JSON.stringify(github, null, 2));
+  console.log(JSON.stringify(github, null, 1));
 }
