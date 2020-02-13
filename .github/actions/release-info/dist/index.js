@@ -8961,12 +8961,12 @@ var semver_1 = __importDefault(__webpack_require__(876));
 main().catch(function (error) {
     core.setFailed(error.message);
 });
-var refsTagsPrefix = "refs/tags/";
-var refsHeadsPrefix = "refs/heads/";
 function main() {
     return __awaiter(this, void 0, void 0, function () {
-        var ref, refPrefix, triggeredByTag, parsedRef, version, distTag, latestVersion;
+        var refsTagsPrefix, refsHeadsPrefix, ref, refPrefix, triggeredByTag, parsedRef, version, distTag, latestVersion;
         return __generator(this, function (_a) {
+            refsTagsPrefix = "refs/tags/";
+            refsHeadsPrefix = "refs/heads/";
             ref = github.context.ref;
             refPrefix = ref.startsWith(refsTagsPrefix)
                 ? refsTagsPrefix
