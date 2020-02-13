@@ -7,10 +7,10 @@ main().catch(error => {
   core.setFailed(error.message);
 });
 
-const refsTagsPrefix = "refs/tags/";
-const refsHeadsPrefix = "refs/heads/";
-
 async function main() {
+  const refsTagsPrefix = "refs/tags/";
+  const refsHeadsPrefix = "refs/heads/";
+
   const { ref } = github.context;
 
   const refPrefix = ref.startsWith(refsTagsPrefix)

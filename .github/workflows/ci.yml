@@ -23,10 +23,10 @@ jobs:
         with:
           node-version: 12.x
           registry-url: https://registry.npmjs.org
-      - run: npm install
-      - run: npm run build
       - id: release-info
         uses: ./.github/actions/release-info
+      - run: npm install
+      - run: npm run build
       - run: npm version ${{ steps.release-info.outputs.version }} --git-tag-version=false
       - run: |
           args=( --tag="${{ steps.release-info.outputs.distTag }}" )
