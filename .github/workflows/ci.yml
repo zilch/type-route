@@ -1,0 +1,39 @@
+on:
+  pull_request:
+  push:
+  release:
+    types:
+      - created
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        action: [build, lint, unit-test, integration-test]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - run: npm install
+      - run: npm run ${{ matrix.action }}
+  release:
+    needs: check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+          registry-url: https://registry.npmjs.org
+      - run: npm install
+      - run: npm run build
+      - uses: ./.github/actions/release
+  pr-environment:
+    if: github.event_name	== "pull_request"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/pr-environment
