@@ -1,5 +1,0 @@
-name: Release
-description: Publishes the Package
-runs:
-  using: node12
-  main: dist/index.js

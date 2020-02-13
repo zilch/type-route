@@ -11,4 +11,4 @@
 /website/static/js/codesandbox.js
 /website/i18n
 /.github/actions/pr-environment/node_modules
-/.github/actions/release/node_modules
+/.github/actions/release-info/node_modules

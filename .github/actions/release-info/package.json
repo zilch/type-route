@@ -6,6 +6,8 @@
   "dependencies": {
     "@actions/core": "^1.2.0",
     "@actions/github": "^2.0.0",
-    "@zeit/ncc": "^0.20.5"
+    "@types/semver": "^7.1.0",
+    "@zeit/ncc": "^0.20.5",
+    "semver": "^7.1.3"
   }
 }
