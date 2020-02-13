@@ -1,6 +1,7 @@
 on:
   pull_request:
   push:
+    branches:
   release:
     types:
       - created
