@@ -8977,7 +8977,7 @@ function main() {
                 throw new Error("Expected ref to match \"" + refsTagsPrefix + "*\" or \"" + refsHeadsPrefix + "*\"");
             }
             triggeredByTag = refPrefix === refsTagsPrefix;
-            parsedRef = ref.slice(refPrefix.length, -1);
+            parsedRef = ref.slice(refPrefix.length);
             if (!triggeredByTag && parsedRef === "latest") {
                 throw new Error('Unable to publish branch with ref "latest"');
             }
@@ -8997,6 +8997,7 @@ function main() {
             }
             core.setOutput("distTag", distTag);
             core.setOutput("version", version);
+            console.log({ distTag: distTag, version: version });
             return [2 /*return*/];
         });
     });

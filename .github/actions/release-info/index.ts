@@ -26,7 +26,7 @@ async function main() {
   }
 
   const triggeredByTag = refPrefix === refsTagsPrefix;
-  const parsedRef = ref.slice(refPrefix.length, -1);
+  const parsedRef = ref.slice(refPrefix.length);
 
   if (!triggeredByTag && parsedRef === "latest") {
     throw new Error('Unable to publish branch with ref "latest"');
@@ -55,4 +55,6 @@ async function main() {
 
   core.setOutput("distTag", distTag);
   core.setOutput("version", version);
+
+  console.log({ distTag, version });
 }
