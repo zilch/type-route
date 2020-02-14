@@ -8991,7 +8991,7 @@ function main() {
             }
             if (distTag === "latest") {
                 latestVersion = child_process_1.execSync("npm show type-route version").toString();
-                if (semver_1.default.gte(version, latestVersion)) {
+                if (semver_1.default.lt(version, latestVersion)) {
                     distTag = github.context.sha;
                 }
             }

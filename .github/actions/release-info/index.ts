@@ -48,7 +48,7 @@ async function main() {
 
   if (distTag === "latest") {
     const latestVersion = execSync("npm show type-route version").toString();
-    if (semver.gte(version, latestVersion)) {
+    if (semver.lt(version, latestVersion)) {
       distTag = github.context.sha;
     }
   }
