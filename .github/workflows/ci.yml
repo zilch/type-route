@@ -31,7 +31,7 @@ jobs:
       - run: |
           args=( --tag="${{ steps.release-info.outputs.distTag }}" )
           if [ -z "${NODE_AUTH_TOKEN}" ]; then
-            echo "HERE"
+            echo "Auth token not found. Executing dry run publish."
             args+=( --dry-run )
           fi;
           npm publish "${args[@]}"
