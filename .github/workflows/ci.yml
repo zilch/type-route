@@ -30,7 +30,7 @@ jobs:
       - run: npm version ${{ steps.release-info.outputs.version }} --git-tag-version=false
       - run: |
           args=( --tag="${{ steps.release-info.outputs.distTag }}" )
-          if [ -z NODE_AUTH_TOKEN ]; then
+          if [ -z "${NODE_AUTH_TOKEN}" ]; then
             echo "HERE"
             args+=( --dry-run )
           fi;
