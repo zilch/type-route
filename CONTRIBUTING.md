@@ -1,25 +1,18 @@
-## Setup
+## Type Route Source
 
-1. Fork the repo (click the <kbd>Fork</kbd> button at the top right of [this page](https://github.com/type-route/type-route))
-2. Clone your fork locally
+`npm install` then `npm run playground` or `npm test`
 
-```bash
-# in a terminal, cd to parent directory where you want your clone to be, then
-git clone https://github.com/<your_github_username>/type-route.git
-cd type-route
-```
+## Documentation Website
 
-3. Install project dependencies. Type Route uses `npm`, so you should too. If you install using `yarn`, an unnecessary `yarn.lock` file will be generated.
+`cd website` then `npm install` then `npm start`
 
-```bash
-npm install
-```
+## Releasing New Versions
 
-4. Install documentation website dependencies.
+Releases are handled via commits pushed to origin and the GitHub release user interface. Every commit is published and official releases (complete with changelog entries in the release description) happen via creating tags in the GitHub releases interface. Here's a summary of which actions trigger which type of release.
 
-```bash
-cd website
-npm install
-```
-
-## Release
+| Event                                          | Version     | Dist Tag    |
+| ---------------------------------------------- | ----------- | ----------- |
+| Commit pushed                                  | 0.0.0-sha   | branch name |
+| Tag vX.Y.Z-alpha (where alpha can be anything) | X.Y.Z-alpha | `alpha`     |
+| Tag vX.Y.Z (version greater than latest)       | X.Y.Z       | `latest`    |
+| Tag vX.Y.Z (version less than latest)          | X.Y.Z       | commit Sha  |
