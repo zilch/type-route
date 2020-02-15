@@ -21,7 +21,7 @@ async function main() {
 
   if (refPrefix === null) {
     throw new Error(
-      `Expected ref to match "${refsTagsPrefix}*" or "${refsHeadsPrefix}*" was "${refPrefix}"`
+      `Expected ref to match "${refsTagsPrefix}*" or "${refsHeadsPrefix}*" was "${ref}"`
     );
   }
 

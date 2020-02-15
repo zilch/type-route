@@ -8974,7 +8974,7 @@ function main() {
                     ? refsHeadsPrefix
                     : null;
             if (refPrefix === null) {
-                throw new Error("Expected ref to match \"" + refsTagsPrefix + "*\" or \"" + refsHeadsPrefix + "*\" was \"" + refPrefix + "\"");
+                throw new Error("Expected ref to match \"" + refsTagsPrefix + "*\" or \"" + refsHeadsPrefix + "*\" was \"" + ref + "\"");
             }
             triggeredByTag = refPrefix === refsTagsPrefix;
             parsedRef = ref.slice(refPrefix.length);
