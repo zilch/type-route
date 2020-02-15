@@ -10,6 +10,7 @@ main().catch(error => {
 async function main() {
   const refsTagsPrefix = "refs/tags/";
   const refsHeadsPrefix = "refs/heads/";
+  const refsPullPrefix = "refs/pull/";
 
   const { ref } = github.context;
 
@@ -17,6 +18,8 @@ async function main() {
     ? refsTagsPrefix
     : ref.startsWith(refsHeadsPrefix)
     ? refsHeadsPrefix
+    : ref.startsWith(refsPullPrefix)
+    ? refsPullPrefix
     : null;
 
   if (refPrefix === null) {

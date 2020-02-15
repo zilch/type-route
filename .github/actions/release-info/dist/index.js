@@ -8963,16 +8963,19 @@ main().catch(function (error) {
 });
 function main() {
     return __awaiter(this, void 0, void 0, function () {
-        var refsTagsPrefix, refsHeadsPrefix, ref, refPrefix, triggeredByTag, parsedRef, version, distTag, latestVersion;
+        var refsTagsPrefix, refsHeadsPrefix, refsPullPrefix, ref, refPrefix, triggeredByTag, parsedRef, version, distTag, latestVersion;
         return __generator(this, function (_a) {
             refsTagsPrefix = "refs/tags/";
             refsHeadsPrefix = "refs/heads/";
+            refsPullPrefix = "refs/pull/";
             ref = github.context.ref;
             refPrefix = ref.startsWith(refsTagsPrefix)
                 ? refsTagsPrefix
                 : ref.startsWith(refsHeadsPrefix)
                     ? refsHeadsPrefix
-                    : null;
+                    : ref.startsWith(refsPullPrefix)
+                        ? refsPullPrefix
+                        : null;
             if (refPrefix === null) {
                 throw new Error("Expected ref to match \"" + refsTagsPrefix + "*\" or \"" + refsHeadsPrefix + "*\" was \"" + ref + "\"");
             }
