@@ -1,0 +1,5 @@
+name: Release Info
+description: Outputs release info
+runs:
+  using: node12
+  main: dist/index.js

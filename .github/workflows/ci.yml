@@ -1,9 +1,10 @@
-on:
-  pull_request:
-  push:
+name: CI
+
+on: [push, pull_request]
 
 jobs:
   check:
+    name: Check
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -16,34 +17,40 @@ jobs:
           node-version: 12.x
       - run: npm install
       - run: npm run ${{ matrix.action }}
-  prerelease:
+  release:
+    name: Release
     needs: check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      # Branch name is used to tag the release
-      - id: branch
-        run: echo ::set-output name=branch::${GITHUB_REF/refs\/heads\//}
-      # We don't want to accidentally overwrite the latest release if the name of the branch is "latest"
-      - run: if [ "${{ steps.branch.outputs.branch }}" = "latest" ]; then exit 1; fi
       - uses: actions/setup-node@v1
         with:
           node-version: 12.x
           registry-url: https://registry.npmjs.org
-      - run: npm install
-      - run: npm run build
-      - run: npm version 0.0.0-${{ github.sha }} --git-tag-version=false
-      # We don't want to fail in the case where the npm token isn't available b/c this was triggered by a
-      # pull_request event from a fork.
-      - run: |
-          args=( --tag="${{ steps.branch.outputs.branch }}" )
-          if [ -z NODE_AUTH_TOKEN ]; then
+      - name: Determine Release Information
+        id: release-info
+        uses: ./.github/actions/release-info
+      - name: Install Dependencies
+        run: npm install
+      - name: Build
+        run: npm run build
+      - name: Set Version
+        run: npm version ${{ steps.release-info.outputs.version }} --git-tag-version=false
+      - name: Publish
+        run: |
+          args=( --tag="${{ steps.release-info.outputs.distTag }}" )
+          if [ -z "${NODE_AUTH_TOKEN}" ]; then
+            echo "Auth token not found. Executing dry run publish."
             args+=( --dry-run )
           fi;
           npm publish "${args[@]}"
+          if [ -z "${NODE_AUTH_TOKEN}" ]; then
+            echo "Dry run publish complete."
+          fi;
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
   pr-environment:
+    name: Create PR Environment
     if: github.event_name	== 'pull_request'
     runs-on: ubuntu-latest
     steps:
