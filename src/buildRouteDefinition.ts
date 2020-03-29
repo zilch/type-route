@@ -48,6 +48,7 @@ export function buildRouteDefinition(
     return {
       href: href(params),
       onClick: (event: ClickEvent = {}) => {
+        // This logic copied from here: https://github.com/type-route/type-route/blob/9a7855ae14c64268ee43a74bacb68e948f6fd27e/src/buildRouteDefinition.ts#L50
         const isModifiedEvent = !!(
           event.metaKey ||
           event.altKey ||
