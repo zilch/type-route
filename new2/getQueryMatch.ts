@@ -1,5 +1,5 @@
 import { getObjectMatch } from "./getObjectMatch";
-import { ParamDefCollection } from "./param";
+import { ParamDefCollection } from "./types";
 import { queryStringSerializer } from "./queryStringSerializer";
 
 export function getQueryMatch(

@@ -1,7 +1,8 @@
 import { param } from "./param";
-import { buildPathDef, BuildPathDefContext, PathDef } from "./buildPathDef";
+import { buildPathDef } from "./buildPathDef";
 import { TypeRouteError } from "./TypeRouteError";
 import { expectTypeRouteError } from "./expectTypeRouteError";
+import { BuildPathDefContext, PathDef } from "./types";
 
 const testContext: BuildPathDefContext = {
   routeName: "test"

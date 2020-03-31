@@ -1,4 +1,4 @@
-import { ParamDefType, ParamDefCollection } from "./param";
+import { ParamDefType, ParamDefCollection } from "./types";
 
 export function getParamDefsOfType<TParamType extends ParamDefType>(
   type: TParamType,

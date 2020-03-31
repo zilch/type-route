@@ -1,36 +1,5 @@
 import { noMatch } from "./constants";
-
-export type ParamDefType = "path" | "query" | "state";
-
-export interface ValueSerializer<TValue = unknown> {
-  urlEncode?: boolean;
-  parse(raw: string): TValue | typeof noMatch;
-  stringify(value: TValue): string;
-}
-
-export interface ParamDef<
-  TParamDefType extends ParamDefType,
-  TValue = unknown
-> {
-  type: TParamDefType;
-  valueSerializer: ValueSerializer<TValue>;
-  optional: boolean;
-  trailing?: boolean;
-}
-
-export interface ParamDefCollection<
-  TParamDefType extends ParamDefType = ParamDefType
-> {
-  [parameterName: string]: ParamDef<TParamDefType>;
-}
-
-export interface PathParamDef<TValue = unknown>
-  extends ParamDef<"path", TValue> {}
-
-export interface NamedPathParamDef<TValue = unknown>
-  extends PathParamDef<TValue> {
-  name: string;
-}
+import { ValueSerializer, ParamDefType, ParamDef } from "./types";
 
 const number: ValueSerializer<number> = {
   parse: raw => {

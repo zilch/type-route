@@ -1,23 +1,13 @@
-import { PathParamDef, NamedPathParamDef } from "./param";
-import { TypeRouteError, BuildPathDefErrorContext } from "./TypeRouteError";
-
-type PathSegmentDef = {
-  leading: string;
-  trailing: string;
-  namedParamDef: NamedPathParamDef | null;
-};
-
-type ParamIdCollection = {
-  [paramName: string]: string;
-};
-
-export type GetRawPath = (paramIdCollection: ParamIdCollection) => string;
-
-export type PathDef = PathSegmentDef[];
-
-export type BuildPathDefContext = {
-  routeName: string;
-};
+import { TypeRouteError } from "./TypeRouteError";
+import {
+  PathParamDef,
+  NamedPathParamDef,
+  BuildPathDefErrorContext,
+  BuildPathDefContext,
+  GetRawPath,
+  PathDef,
+  ParamIdCollection
+} from "./types";
 
 export function buildPathDef(
   context: BuildPathDefContext,

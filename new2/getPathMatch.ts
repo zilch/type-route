@@ -1,10 +1,8 @@
-import { PathDef } from "./buildPathDef";
 import { noMatch } from "./constants";
+import { PathDef } from "./types";
 
-type Match = Record<string, any>;
-
-export function getPathMatch(path: string, pathDef: PathDef): Match | false {
-  const match: Match = {};
+export function getPathMatch(path: string, pathDef: PathDef) {
+  const match: Record<string, unknown> = {};
 
   if (!path.startsWith("/")) {
     throw new Error(

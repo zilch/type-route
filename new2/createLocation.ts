@@ -1,6 +1,4 @@
-import { ParamDefCollection } from "./param";
-import { Location } from "./createMatcher";
-import { PathDef } from "./buildPathDef";
+import { ParamDefCollection, Location, PathDef } from "./types";
 import { queryStringSerializer } from "./queryStringSerializer";
 
 export function createLocation(

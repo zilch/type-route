@@ -1,4 +1,4 @@
-import { ParamDefCollection } from "./param";
+import { ParamDefCollection } from "./types";
 import { getObjectMatch } from "./getObjectMatch";
 
 export function getStateMatch(

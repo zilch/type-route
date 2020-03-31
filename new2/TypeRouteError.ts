@@ -1,12 +1,4 @@
-type ErrorDef = {
-  errorCode: number;
-  getDetails: (...args: any[]) => string[];
-};
-
-export type BuildPathDefErrorContext = {
-  routeName: string;
-  rawPath: string;
-};
+import { ErrorDef, BuildPathDefErrorContext } from "./types";
 
 function getBuildPathDefRouteNameMessage(routeName: string) {
   return `This problem occurred when building the route definition for the "${routeName}" route.`;

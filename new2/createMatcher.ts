@@ -1,22 +1,16 @@
-import { ParamDefCollection } from "./param";
-import { PathDef } from "./buildPathDef";
+import { ParamDefCollection, Location, PathDef } from "./types";
 import { getPathMatch } from "./getPathMatch";
 import { getStateMatch } from "./getStateMatch";
 import { getQueryMatch } from "./getQueryMatch";
 import { getParamDefsOfType } from "./getParamDefsOfType";
 
-export type Location = {
-  path: string;
-  query?: string;
-  state?: Record<string, string>;
-};
-
-type MatcherArgs = {
+export function createMatcher({
+  pathDef,
+  params
+}: {
   pathDef: PathDef;
   params: ParamDefCollection;
-};
-
-export function createMatcher({ pathDef, params }: MatcherArgs) {
+}) {
   const queryParamDefCollection = getParamDefsOfType("query", params);
   const stateParamDefCollection = getParamDefsOfType("state", params);
 

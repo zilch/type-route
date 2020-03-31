@@ -1,7 +1,4 @@
-export interface QueryStringSerializer {
-  parse: (raw: string) => Record<string, string>;
-  stringify: (queryParams: Record<string, string>) => string;
-}
+import { QueryStringSerializer } from "./types";
 
 export const queryStringSerializer: QueryStringSerializer = {
   parse: raw => {

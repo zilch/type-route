@@ -1,7 +1,8 @@
-import { buildPathDef, GetRawPath } from "./buildPathDef";
+import { buildPathDef } from "./buildPathDef";
 import { getPathMatch } from "./getPathMatch";
-import { param, PathParamDef } from "./param";
+import { param } from "./param";
 import { noMatch } from "./constants";
+import { PathParamDef, GetRawPath } from "./types";
 
 describe("getPathMatch", () => {
   it("should work for simple case", () => {

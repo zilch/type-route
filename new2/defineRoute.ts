@@ -1,28 +1,5 @@
-import { KeysMatching } from "./types";
+import { PathFn, RouteDefBuilder, PathParams } from "./types";
 import { TypeRouteError } from "./TypeRouteError";
-
-type PathParamNames<TParamDefCollection> = KeysMatching<
-  TParamDefCollection,
-  { type: "path" }
->;
-
-type PathParams<TParamDefCollection> = {
-  [TParamName in PathParamNames<TParamDefCollection>]: string;
-};
-
-export type PathFn<TParamDefCollection> = (
-  x: PathParams<TParamDefCollection>
-) => string;
-
-export type RouteDefBuilder<TParamDefCollection> = {
-  params: TParamDefCollection;
-  path: PathFn<TParamDefCollection>;
-
-  extend<TExtensionParamDefCollection>(
-    params: TExtensionParamDefCollection,
-    path: PathFn<TExtensionParamDefCollection>
-  ): RouteDefBuilder<TParamDefCollection & TExtensionParamDefCollection>;
-};
 
 export function defineRoute<TParamDefCollection>(
   params: TParamDefCollection,

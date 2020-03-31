@@ -1,6 +1,5 @@
-import { RouteDefBuilder } from "./defineRoute";
-import { ParamDefCollection } from "./param";
-import { Location, createMatcher } from "./createMatcher";
+import { ParamDefCollection, Location, RouteDefBuilder } from "./types";
+import { createMatcher } from "./createMatcher";
 import { buildPathDef } from "./buildPathDef";
 import { getParamDefsOfType } from "./getParamDefsOfType";
 import { createLocation } from "./createLocation";

@@ -1,8 +1,9 @@
-import { createMatcher, Location } from "./createMatcher";
-import { defineRoute, PathFn } from "./defineRoute";
-import { param, ParamDefCollection } from "./param";
+import { createMatcher } from "./createMatcher";
+import { defineRoute } from "./defineRoute";
+import { param } from "./param";
 import { buildPathDef } from "./buildPathDef";
 import { getParamDefsOfType } from "./getParamDefsOfType";
+import { Location, ParamDefCollection, PathFn } from "./types";
 
 describe("createMatcher", () => {
   it("should do a simple match", () => {
