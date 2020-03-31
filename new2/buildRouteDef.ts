@@ -1,37 +1,15 @@
-import { ParamDefCollection, Location, RouteDefBuilder } from "./types";
+import {
+  ParamDefCollection,
+  RouteDefBuilder,
+  NavigateFn,
+  RouteDef,
+  ClickEvent,
+  Link
+} from "./types";
 import { createMatcher } from "./createMatcher";
 import { buildPathDef } from "./buildPathDef";
 import { getParamDefsOfType } from "./getParamDefsOfType";
 import { createLocation } from "./createLocation";
-
-type NavigateFn = (location: Location, replace?: boolean) => Promise<boolean>;
-
-export type OnClickHandler = (event?: any) => void;
-
-export type Link = {
-  href: string;
-  onClick: OnClickHandler;
-};
-
-type RouteDef = {
-  name: string;
-  href(params?: Record<string, unknown>): string;
-  push(params?: Record<string, unknown>): Promise<boolean>;
-  replace(params?: Record<string, unknown>): Promise<boolean>;
-  link(params?: Record<string, unknown>): Link;
-  match(location: Location): Record<string, unknown> | false;
-};
-
-export type ClickEvent = {
-  preventDefault?: () => void;
-  button?: number | null;
-  defaultPrevented?: boolean | null;
-  metaKey?: boolean | null;
-  altKey?: boolean | null;
-  ctrlKey?: boolean | null;
-  shiftKey?: boolean | null;
-  target?: { target?: string | null } | null;
-};
 
 export function buildRouteDef(
   routeName: string,
@@ -43,11 +21,10 @@ export function buildRouteDef(
     getParamDefsOfType("path", builder.params),
     builder.path
   );
-  const match = createMatcher({ params: builder.params, pathDef });
 
   return {
     name: routeName,
-    match,
+    match: createMatcher({ params: builder.params, pathDef }),
     href,
     replace,
     push,
@@ -80,32 +57,22 @@ export function buildRouteDef(
             event.preventDefault();
           }
 
-          navigate(createRouteLocation(params));
+          navigate(createLocation(params, builder.params, pathDef));
         }
       }
     };
   }
 
   function href(params: Record<string, unknown>) {
-    const location = createRouteLocation(params);
-
-    let href = location.path;
-    if (location.query) {
-      href += `?${location.query}`;
-    }
-
-    return href;
+    const location = createLocation(params, builder.params, pathDef);
+    return location.path + (location.query ? `?${location.query}` : "");
   }
 
   function push(params: Record<string, unknown>) {
-    return navigate(createRouteLocation(params));
+    return navigate(createLocation(params, builder.params, pathDef));
   }
 
   function replace(params: Record<string, unknown>) {
-    return navigate(createRouteLocation(params), true);
-  }
-
-  function createRouteLocation(params: Record<string, unknown>): Location {
-    return createLocation(params, builder.params, pathDef);
+    return navigate(createLocation(params, builder.params, pathDef), true);
   }
 }

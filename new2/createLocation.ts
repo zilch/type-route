@@ -28,11 +28,9 @@ export function createLocation(
   const path =
     "/" +
     pathDef
-      .map(pathSegmentDef => {
-        const rawParam = pathSegmentDef.namedParamDef
-          ? params.path[pathSegmentDef.namedParamDef.name]
-          : "";
-        return pathSegmentDef.leading + rawParam + pathSegmentDef.trailing;
+      .map(({ namedParamDef, leading, trailing }) => {
+        const rawParam = namedParamDef ? params.path[namedParamDef.name] : "";
+        return leading + rawParam + trailing;
       })
       .join("/");
 

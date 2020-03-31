@@ -97,3 +97,70 @@ export interface RouteDefBuilder<TParamDefCollection> {
     path: PathFn<TExtensionParamDefCollection>
   ): RouteDefBuilder<TParamDefCollection & TExtensionParamDefCollection>;
 }
+
+export type NavigateFn = (
+  location: Location,
+  replace?: boolean
+) => Promise<boolean>;
+
+export type OnClickHandler = (event?: any) => void;
+
+export interface Link {
+  href: string;
+  onClick: OnClickHandler;
+}
+
+export interface RouteDef {
+  name: string;
+  href(params?: Record<string, unknown>): string;
+  push(params?: Record<string, unknown>): Promise<boolean>;
+  replace(params?: Record<string, unknown>): Promise<boolean>;
+  link(params?: Record<string, unknown>): Link;
+  match(location: Location): Record<string, unknown> | false;
+}
+
+export interface ClickEvent {
+  preventDefault?: () => void;
+  button?: number | null;
+  defaultPrevented?: boolean | null;
+  metaKey?: boolean | null;
+  altKey?: boolean | null;
+  ctrlKey?: boolean | null;
+  shiftKey?: boolean | null;
+  target?: { target?: string | null } | null;
+}
+
+export type Action = "push" | "replace" | "pop" | "initial";
+
+export interface Route {
+  name: string | false;
+  action: Action;
+  params: Record<string, unknown>;
+}
+
+export type NavigationHandler = (
+  nextRoute: Route
+) => Promise<boolean | void> | boolean | void;
+
+export interface Router {
+  routes: Record<string, RouteDef>;
+  history: RouterHistory;
+  listen: (handler: NavigationHandler) => () => void;
+}
+
+interface HistoryEntry {
+  url: string;
+  state?: any;
+}
+
+export interface RouterHistory {
+  push(url: string, state?: any): Promise<boolean>;
+  replace(url: string, state?: any): Promise<boolean>;
+  getInitialRoute(): Route;
+  back(amount?: number): Promise<boolean>;
+  forward(amount?: number): Promise<boolean>;
+  reset(initialState?: {
+    entries?: (string | HistoryEntry)[];
+    index?: number;
+  }): void;
+}
