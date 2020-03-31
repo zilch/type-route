@@ -1,22 +1,20 @@
-type ErrorDefinition = {
+type ErrorDef = {
   errorCode: number;
   getDetails: (...args: any[]) => string[];
 };
 
-export type BuildPathDefinitionErrorContext = {
+export type BuildPathDefErrorContext = {
   routeName: string;
   rawPath: string;
 };
 
-function getBuildPathDefinitionRouteNameMessage(routeName: string) {
+function getBuildPathDefRouteNameMessage(routeName: string) {
   return `This problem occurred when building the route definition for the "${routeName}" route.`;
 }
 
-function getBuildPathDefinitionErrorMessage(
-  context: BuildPathDefinitionErrorContext
-) {
+function getBuildPathDefErrorMessage(context: BuildPathDefErrorContext) {
   return [
-    getBuildPathDefinitionRouteNameMessage(context.routeName),
+    getBuildPathDefRouteNameMessage(context.routeName),
     `The path was constructed as \`${context.rawPath}\``
   ];
 }
@@ -24,41 +22,41 @@ function getBuildPathDefinitionErrorMessage(
 export const TypeRouteError = buildErrorCollection({
   Path_may_not_be_an_empty_string: {
     errorCode: 1000,
-    getDetails: getBuildPathDefinitionErrorMessage
+    getDetails: getBuildPathDefErrorMessage
   },
 
   Path_must_start_with_a_forward_slash: {
     errorCode: 1001,
-    getDetails: getBuildPathDefinitionErrorMessage
+    getDetails: getBuildPathDefErrorMessage
   },
 
   Path_may_not_end_with_a_forward_slash: {
     errorCode: 1002,
-    getDetails: getBuildPathDefinitionErrorMessage
+    getDetails: getBuildPathDefErrorMessage
   },
 
   Path_may_not_include_characters_that_must_be_URL_encoded: {
     errorCode: 1003,
     getDetails: (
-      context: BuildPathDefinitionErrorContext,
+      context: BuildPathDefErrorContext,
       segment: {
         leading: string;
-        parameterId?: string;
+        paramId?: string;
         trailing?: string;
       }
     ) => {
       const leading = segment.leading;
       const trailing = segment.trailing ?? "";
-      const parameterId = segment.parameterId ?? "";
+      const paramId = segment.paramId ?? "";
 
       const invalidCharacters = (leading + trailing)
         .split("")
         .filter(character => character !== encodeURIComponent(character));
 
       return [
-        ...getBuildPathDefinitionErrorMessage(context),
+        ...getBuildPathDefErrorMessage(context),
         `The path segment \`${
-          leading + parameterId + trailing
+          leading + paramId + trailing
         }\` has the following invalid characters: ${invalidCharacters.join(
           ", "
         )}`
@@ -68,9 +66,9 @@ export const TypeRouteError = buildErrorCollection({
 
   Path_may_not_include_empty_segments: {
     errorCode: 1004,
-    getDetails: (context: BuildPathDefinitionErrorContext) => {
+    getDetails: (context: BuildPathDefErrorContext) => {
       return [
-        ...getBuildPathDefinitionErrorMessage(context),
+        ...getBuildPathDefErrorMessage(context),
         "Empty segments can be spotted by finding the place in the path with two consecutive forward slashes '//'."
       ];
     }
@@ -79,11 +77,11 @@ export const TypeRouteError = buildErrorCollection({
   Path_may_have_at_most_one_parameter_per_segment: {
     errorCode: 1005,
     getDetails: (
-      context: BuildPathDefinitionErrorContext,
+      context: BuildPathDefErrorContext,
       parameterNames: string[]
     ) => {
       return [
-        ...getBuildPathDefinitionErrorMessage(context),
+        ...getBuildPathDefErrorMessage(context),
         `A single segment of the path included the following parameters: ${parameterNames}`
       ];
     }
@@ -91,12 +89,9 @@ export const TypeRouteError = buildErrorCollection({
 
   Path_parameters_may_not_be_used_more_than_once_when_building_a_path: {
     errorCode: 1005,
-    getDetails: (
-      context: BuildPathDefinitionErrorContext,
-      parameterName: string
-    ) => {
+    getDetails: (context: BuildPathDefErrorContext, parameterName: string) => {
       return [
-        ...getBuildPathDefinitionErrorMessage(context),
+        ...getBuildPathDefErrorMessage(context),
         `The parameter "${parameterName}" was used more than once.`
       ];
     }
@@ -105,12 +100,12 @@ export const TypeRouteError = buildErrorCollection({
   Optional_path_parameters_may_not_have_any_text_around_the_parameter: {
     errorCode: 1006,
     getDetails: (
-      context: BuildPathDefinitionErrorContext,
+      context: BuildPathDefErrorContext,
       parameterName: string,
       leadingText: string,
       trailingText: string
     ) => {
-      const messages = getBuildPathDefinitionErrorMessage(context);
+      const messages = getBuildPathDefErrorMessage(context);
 
       if (leadingText) {
         messages.push(
@@ -131,11 +126,11 @@ export const TypeRouteError = buildErrorCollection({
   Path_may_have_at_most_one_optional_or_trailing_parameter: {
     errorCode: 1007,
     getDetails(
-      context: BuildPathDefinitionErrorContext,
+      context: BuildPathDefErrorContext,
       numOptionalTrailingParameterNames: number
     ) {
       return [
-        ...getBuildPathDefinitionErrorMessage(context),
+        ...getBuildPathDefErrorMessage(context),
         `At most one optional/trailing parameter should be given but ${numOptionalTrailingParameterNames} were provided.`
       ];
     }
@@ -143,17 +138,14 @@ export const TypeRouteError = buildErrorCollection({
 
   Optional_or_trailing_path_parameters_may_only_appear_in_the_last_path_segment: {
     errorCode: 1008,
-    getDetails: getBuildPathDefinitionErrorMessage
+    getDetails: getBuildPathDefErrorMessage
   },
 
   All_path_parameters_must_be_used_in_path_construction: {
     errorCode: 1009,
-    getDetails(
-      context: BuildPathDefinitionErrorContext,
-      unusedParameters: string[]
-    ) {
+    getDetails(context: BuildPathDefErrorContext, unusedParameters: string[]) {
       return [
-        ...getBuildPathDefinitionErrorMessage(context),
+        ...getBuildPathDefErrorMessage(context),
         `The following parameters were not used: ${unusedParameters.join(", ")}`
       ];
     }
@@ -163,16 +155,27 @@ export const TypeRouteError = buildErrorCollection({
     errorCode: 1010,
     getDetails(routeName: string, parameterName: string) {
       return [
-        getBuildPathDefinitionRouteNameMessage(routeName),
+        getBuildPathDefRouteNameMessage(routeName),
         `The $ { } or / character was used in this parameter name: ${parameterName}`
+      ];
+    }
+  },
+
+  Extension_route_definition_parameter_names_may_not_be_the_same_as_base_route_definition_parameter_names: {
+    errorCode: 1011,
+    getDetails(duplicateParameterNames: string[]) {
+      return [
+        `The following parameter names were used in both the base route definition and the extension: ${duplicateParameterNames.join(
+          ", "
+        )}`
       ];
     }
   }
 });
 
-function buildErrorCollection<T extends Record<string, ErrorDefinition>>(
-  definitions: T
-) {
+function buildErrorCollection<
+  TErrorDefCollection extends Record<string, ErrorDef>
+>(definitions: TErrorDefCollection) {
   const errors: Record<
     string,
     {
@@ -206,10 +209,12 @@ function buildErrorCollection<T extends Record<string, ErrorDefinition>>(
   });
 
   return errors as {
-    [K in keyof T]: {
-      create(...args: Parameters<T[K]["getDetails"]>): Error;
-      name: K;
-      errorCode: T[K]["errorCode"];
+    [TName in keyof TErrorDefCollection]: {
+      create(
+        ...args: Parameters<TErrorDefCollection[TName]["getDetails"]>
+      ): Error;
+      name: TName;
+      errorCode: TErrorDefCollection[TName]["errorCode"];
     };
   };
 }

@@ -1,95 +1,36 @@
-type ValueSerializer<Value> = {
+import { noMatch } from "./constants";
+
+export type ParamDefType = "path" | "query" | "state";
+
+export interface ValueSerializer<TValue = unknown> {
   urlEncode?: boolean;
-  parse(raw: string): Value | typeof noMatch;
-  toString(value: Value): string;
-};
+  parse(raw: string): TValue | typeof noMatch;
+  stringify(value: TValue): string;
+}
 
-type BasePathParameterDefinition<Value> = {
-  type: "path";
-  valueSerializer: ValueSerializer<Value>;
-  trailing: boolean;
-};
+export interface ParamDef<
+  TParamDefType extends ParamDefType,
+  TValue = unknown
+> {
+  type: TParamDefType;
+  valueSerializer: ValueSerializer<TValue>;
+  optional: boolean;
+  trailing?: boolean;
+}
 
-type BaseQueryParameterDefinition<Value> = {
-  type: "query";
-  valueSerializer: ValueSerializer<Value>;
-};
+export interface ParamDefCollection<
+  TParamDefType extends ParamDefType = ParamDefType
+> {
+  [parameterName: string]: ParamDef<TParamDefType>;
+}
 
-type BaseStateParameterDefinition<Value> = {
-  type: "state";
-  valueSerializer: ValueSerializer<Value>;
-};
+export interface PathParamDef<TValue = unknown>
+  extends ParamDef<"path", TValue> {}
 
-type RequiredParameterDefinitionPart = {
-  optional: false;
-};
-
-type OptionalParameterDefinitionPart = {
-  optional: true;
-};
-
-type NamedParameterDefinitionPart = {
+export interface NamedPathParamDef<TValue = unknown>
+  extends PathParamDef<TValue> {
   name: string;
-};
-
-type RequiredPathParameterDefinition<Value> = BasePathParameterDefinition<
-  Value
-> &
-  RequiredParameterDefinitionPart;
-type OptionalPathParameterDefinition<Value> = BasePathParameterDefinition<
-  Value
-> &
-  OptionalParameterDefinitionPart;
-export type PathParameterDefinition<Value> =
-  | RequiredPathParameterDefinition<Value>
-  | OptionalPathParameterDefinition<Value>;
-export type NamedPathParameterDefinition<Value> = PathParameterDefinition<
-  Value
-> &
-  NamedParameterDefinitionPart;
-
-type RequiredQueryParameterDefinition<Value> = BaseQueryParameterDefinition<
-  Value
-> &
-  RequiredParameterDefinitionPart;
-type OptionalQueryParameterDefinition<Value> = BaseQueryParameterDefinition<
-  Value
-> &
-  OptionalParameterDefinitionPart;
-export type QueryParameterDefinition<Value> =
-  | RequiredQueryParameterDefinition<Value>
-  | OptionalQueryParameterDefinition<Value>;
-export type NamedQueryParameterDefinition<Value> = QueryParameterDefinition<
-  Value
-> &
-  NamedParameterDefinitionPart;
-
-type RequiredStateParameterDefinition<Value> = BaseStateParameterDefinition<
-  Value
-> &
-  RequiredParameterDefinitionPart;
-type OptionalStateParameterDefinition<Value> = BaseStateParameterDefinition<
-  Value
-> &
-  OptionalParameterDefinitionPart;
-export type StateParameterDefinition<Value> =
-  | RequiredStateParameterDefinition<Value>
-  | OptionalStateParameterDefinition<Value>;
-export type NamedStateParameterDefinition<Value> = StateParameterDefinition<
-  Value
-> &
-  NamedParameterDefinitionPart;
-
-export type ParameterDefinition<Value> =
-  | PathParameterDefinition<Value>
-  | QueryParameterDefinition<Value>
-  | StateParameterDefinition<Value>;
-export type NamedParameterDefinition<Value> =
-  | NamedPathParameterDefinition<Value>
-  | NamedQueryParameterDefinition<Value>
-  | NamedStateParameterDefinition<Value>;
-
-const noMatch = Symbol("noMatch");
+}
 
 const number: ValueSerializer<number> = {
   parse: raw => {
@@ -99,142 +40,22 @@ const number: ValueSerializer<number> = {
 
     return parseFloat(raw);
   },
-  toString: value => value.toString()
+  stringify: value => value.toString()
 };
 
 function isNumeric(value: string) {
-  return !isNaN(parseFloat(value)) && /\-?\d*\.?\d*/.test(value);
+  return !isNaN(parseFloat(value)) && /^\-?\d*\.?\d*$/.test(value);
 }
 
 const string: ValueSerializer<string> = {
   parse: raw => raw,
-  toString: value => value
+  stringify: value => value
 };
 
-export const param = {
-  path: {
-    string: getRequiredPathParameterDefinition(string, false),
-    number: getRequiredPathParameterDefinition(number, false),
-    ofType: <Value>(valueSerializer: ValueSerializer<Value> = json<Value>()) =>
-      getRequiredPathParameterDefinition(valueSerializer, false),
-    optional: {
-      string: getOptionalPathParameterDefinition(string, false),
-      number: getOptionalPathParameterDefinition(number, false),
-      ofType: <Value>(
-        valueSerializer: ValueSerializer<Value> = json<Value>()
-      ) => getOptionalPathParameterDefinition(valueSerializer, false)
-    },
-    trailing: {
-      string: getRequiredPathParameterDefinition(string, true),
-      number: getRequiredPathParameterDefinition(number, true),
-      ofType: <Value>(
-        valueSerializer: ValueSerializer<Value> = json<Value>()
-      ) => getRequiredPathParameterDefinition(valueSerializer, true),
-      optional: {
-        string: getOptionalPathParameterDefinition(string, true),
-        number: getOptionalPathParameterDefinition(number, true),
-        ofType: <Value>(
-          valueSerializer: ValueSerializer<Value> = json<Value>()
-        ) => getOptionalPathParameterDefinition(valueSerializer, true)
-      }
-    }
-  },
-  query: {
-    string: getRequiredQueryParameterDefinition(string),
-    number: getRequiredQueryParameterDefinition(number),
-    ofType: <Value>(valueSerializer: ValueSerializer<Value> = json<Value>()) =>
-      getRequiredQueryParameterDefinition(valueSerializer),
-    optional: {
-      string: getOptionalQueryParameterDefinition(string),
-      number: getOptionalQueryParameterDefinition(number),
-      ofType: <Value>(
-        valueSerializer: ValueSerializer<Value> = json<Value>()
-      ) => getOptionalQueryParameterDefinition(valueSerializer)
-    }
-  },
-  state: {
-    string: getRequiredStateParameterDefinition(string),
-    number: getRequiredStateParameterDefinition(number),
-    ofType: <Value>(valueSerializer: ValueSerializer<Value> = json<Value>()) =>
-      getRequiredStateParameterDefinition(valueSerializer),
-    optional: {
-      string: getOptionalStateParameterDefinition(string),
-      number: getOptionalStateParameterDefinition(number),
-      ofType: <Value>(
-        valueSerializer: ValueSerializer<Value> = json<Value>()
-      ) => getOptionalStateParameterDefinition(valueSerializer)
-    }
-  }
-};
-
-function getRequiredPathParameterDefinition<Value>(
-  valueSerializer: ValueSerializer<Value>,
-  trailing: boolean
-): RequiredPathParameterDefinition<Value> {
-  return {
-    type: "path",
-    optional: false,
-    trailing,
-    valueSerializer
-  };
-}
-
-function getOptionalPathParameterDefinition<Value>(
-  valueSerializer: ValueSerializer<Value>,
-  trailing: boolean
-): OptionalPathParameterDefinition<Value> {
-  return {
-    type: "path",
-    optional: true,
-    trailing,
-    valueSerializer
-  };
-}
-
-function getRequiredQueryParameterDefinition<Value>(
-  valueSerializer: ValueSerializer<Value>
-): RequiredQueryParameterDefinition<Value> {
-  return {
-    type: "query",
-    optional: false,
-    valueSerializer
-  };
-}
-
-function getOptionalQueryParameterDefinition<Value>(
-  valueSerializer: ValueSerializer<Value>
-): OptionalQueryParameterDefinition<Value> {
-  return {
-    type: "query",
-    optional: true,
-    valueSerializer
-  };
-}
-
-function getRequiredStateParameterDefinition<Value>(
-  valueSerializer: ValueSerializer<Value>
-): RequiredStateParameterDefinition<Value> {
-  return {
-    type: "state",
-    optional: false,
-    valueSerializer
-  };
-}
-
-function getOptionalStateParameterDefinition<Value>(
-  valueSerializer: ValueSerializer<Value>
-): OptionalStateParameterDefinition<Value> {
-  return {
-    type: "state",
-    optional: true,
-    valueSerializer
-  };
-}
-
-function json<Value = unknown>() {
-  const paramType: ValueSerializer<Value> = {
+const json = <TValue = unknown>() => {
+  const paramType: ValueSerializer<TValue> = {
     parse: raw => {
-      let value: Value;
+      let value: TValue;
 
       try {
         value = JSON.parse(raw);
@@ -244,8 +65,63 @@ function json<Value = unknown>() {
 
       return value;
     },
-    toString: value => JSON.stringify(value)
+    stringify: value => JSON.stringify(value)
   };
 
   return paramType;
+};
+
+export const param = {
+  path: {
+    ...getParamDefTypeSection("path", false),
+    trailing: getParamDefTypeSection("path", true)
+  },
+  query: getParamDefTypeSection("query", false),
+  state: getParamDefTypeSection("state", false)
+};
+
+function getParamDefTypeSection<
+  TType extends ParamDefType,
+  TTrailing extends boolean
+>(type: TType, trailing: TTrailing) {
+  return {
+    ...getParamDefOptionalitySection(false),
+    optional: {
+      ...getParamDefOptionalitySection(true)
+    }
+  };
+
+  function getParamDefOptionalitySection<TOptional extends boolean>(
+    optional: TOptional
+  ) {
+    return {
+      string: getParamDef({
+        type,
+        optional,
+        valueSerializer: string,
+        trailing
+      }),
+
+      number: getParamDef({
+        type,
+        optional,
+        valueSerializer: number,
+        trailing
+      }),
+
+      ofType: <TValue = unknown>(
+        valueSerializer: ValueSerializer<TValue> = json<TValue>()
+      ) =>
+        getParamDef({
+          type,
+          optional,
+          valueSerializer,
+          trailing
+        })
+    };
+  }
+
+  function getParamDef<T extends ParamDef<TType>>(definition: T) {
+    return definition;
+  }
 }
