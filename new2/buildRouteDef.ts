@@ -1,10 +1,10 @@
 import {
   ParamDefCollection,
   RouteDefBuilder,
-  NavigateFn,
   RouteDef,
   ClickEvent,
-  Link
+  Link,
+  RouterContext
 } from "./types";
 import { createMatcher } from "./createMatcher";
 import { buildPathDef } from "./buildPathDef";
@@ -14,7 +14,7 @@ import { createLocation } from "./createLocation";
 export function buildRouteDef(
   routeName: string,
   builder: RouteDefBuilder<ParamDefCollection>,
-  navigate: NavigateFn
+  getRouterContext: () => RouterContext
 ): RouteDef {
   const pathDef = buildPathDef(
     { routeName },
@@ -57,22 +57,44 @@ export function buildRouteDef(
             event.preventDefault();
           }
 
-          navigate(createLocation(params, builder.params, pathDef));
+          const { navigate, queryStringSerializer } = getRouterContext();
+
+          navigate(
+            createLocation(
+              params,
+              builder.params,
+              pathDef,
+              queryStringSerializer
+            )
+          );
         }
       }
     };
   }
 
   function href(params: Record<string, unknown>) {
-    const location = createLocation(params, builder.params, pathDef);
+    const { queryStringSerializer } = getRouterContext();
+    const location = createLocation(
+      params,
+      builder.params,
+      pathDef,
+      queryStringSerializer
+    );
     return location.path + (location.query ? `?${location.query}` : "");
   }
 
   function push(params: Record<string, unknown>) {
-    return navigate(createLocation(params, builder.params, pathDef));
+    const { navigate, queryStringSerializer } = getRouterContext();
+    return navigate(
+      createLocation(params, builder.params, pathDef, queryStringSerializer)
+    );
   }
 
   function replace(params: Record<string, unknown>) {
-    return navigate(createLocation(params, builder.params, pathDef), true);
+    const { navigate, queryStringSerializer } = getRouterContext();
+    return navigate(
+      createLocation(params, builder.params, pathDef, queryStringSerializer),
+      true
+    );
   }
 }

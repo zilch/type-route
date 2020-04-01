@@ -37,6 +37,11 @@ export interface ParamDef<
   trailing?: boolean;
 }
 
+export interface RouterContext {
+  queryStringSerializer: QueryStringSerializer;
+  navigate: NavigateFn;
+}
+
 export interface ParamDefCollection<
   TParamDefType extends ParamDefType = ParamDefType
 > {
@@ -116,7 +121,10 @@ export interface RouteDef {
   push(params?: Record<string, unknown>): Promise<boolean>;
   replace(params?: Record<string, unknown>): Promise<boolean>;
   link(params?: Record<string, unknown>): Link;
-  match(location: Location): Record<string, unknown> | false;
+  match(
+    location: Location,
+    queryStringSerializer: QueryStringSerializer
+  ): Record<string, unknown> | false;
 }
 
 export interface ClickEvent {
@@ -148,19 +156,16 @@ export interface Router {
   listen: (handler: NavigationHandler) => () => void;
 }
 
-interface HistoryEntry {
-  url: string;
-  state?: any;
-}
-
 export interface RouterHistory {
   push(url: string, state?: any): Promise<boolean>;
   replace(url: string, state?: any): Promise<boolean>;
   getInitialRoute(): Route;
-  back(amount?: number): Promise<boolean>;
-  forward(amount?: number): Promise<boolean>;
-  reset(initialState?: {
-    entries?: (string | HistoryEntry)[];
-    index?: number;
-  }): void;
+  back(amount?: number): void;
+  forward(amount?: number): void;
+  reset(options?: RouterOptions): void;
 }
+
+export type RouterOptions = {
+  type?: "memory" | "browser";
+  queryStringSerializer?: QueryStringSerializer;
+};

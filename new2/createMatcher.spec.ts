@@ -2,8 +2,9 @@ import { createMatcher } from "./createMatcher";
 import { defineRoute } from "./defineRoute";
 import { param } from "./param";
 import { buildPathDef } from "./buildPathDef";
-import { getParamDefsOfType } from "./getParamDefsOfType";
+import { getParamDefsOfType } from "./utils/getParamDefsOfType";
 import { Location, ParamDefCollection, PathFn } from "./types";
+import { defaultQueryStringSerializer } from "./defaultQueryStringSerializer";
 
 describe("createMatcher", () => {
   it("should do a simple match", () => {
@@ -72,5 +73,5 @@ function expectMatch(
     )
   });
 
-  return expect(match(location));
+  return expect(match(location, defaultQueryStringSerializer));
 }

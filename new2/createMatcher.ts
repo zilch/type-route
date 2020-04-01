@@ -1,4 +1,9 @@
-import { ParamDefCollection, Location, PathDef } from "./types";
+import {
+  ParamDefCollection,
+  Location,
+  PathDef,
+  QueryStringSerializer
+} from "./types";
 import { getPathMatch } from "./getPathMatch";
 import { getStateMatch } from "./getStateMatch";
 import { getQueryMatch } from "./getQueryMatch";
@@ -14,13 +19,17 @@ export function createMatcher({
   const queryParamDefCollection = getParamDefsOfType("query", params);
   const stateParamDefCollection = getParamDefsOfType("state", params);
 
-  return (location: Location) => {
+  return (location: Location, queryStringSerializer: QueryStringSerializer) => {
     const pathMatch = getPathMatch(location.path, pathDef);
     if (pathMatch === false) {
       return false;
     }
 
-    const queryMatch = getQueryMatch(location.query, queryParamDefCollection);
+    const queryMatch = getQueryMatch(
+      location.query,
+      queryParamDefCollection,
+      queryStringSerializer
+    );
     if (queryMatch === false) {
       return false;
     }

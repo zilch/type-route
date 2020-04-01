@@ -1,10 +1,15 @@
-import { ParamDefCollection, Location, PathDef } from "./types";
-import { queryStringSerializer } from "./queryStringSerializer";
+import {
+  ParamDefCollection,
+  Location,
+  PathDef,
+  QueryStringSerializer
+} from "./types";
 
 export function createLocation(
   paramCollection: Record<string, unknown>,
   paramDefCollection: ParamDefCollection,
-  pathDef: PathDef
+  pathDef: PathDef,
+  queryStringSerializer: QueryStringSerializer
 ): Location {
   const params = {
     path: {} as Record<string, string>,

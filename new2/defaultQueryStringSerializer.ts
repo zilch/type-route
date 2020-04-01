@@ -1,6 +1,6 @@
 import { QueryStringSerializer } from "./types";
 
-export const queryStringSerializer: QueryStringSerializer = {
+export const defaultQueryStringSerializer: QueryStringSerializer = {
   parse: raw => {
     const queryParams: Record<string, string> = {};
 

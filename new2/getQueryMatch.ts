@@ -1,10 +1,10 @@
 import { getObjectMatch } from "./getObjectMatch";
-import { ParamDefCollection } from "./types";
-import { queryStringSerializer } from "./queryStringSerializer";
+import { ParamDefCollection, QueryStringSerializer } from "./types";
 
 export function getQueryMatch(
   query: string | undefined,
-  paramDefs: ParamDefCollection<"query">
+  paramDefs: ParamDefCollection<"query">,
+  queryStringSerializer: QueryStringSerializer
 ) {
   return getObjectMatch({
     object: query ? queryStringSerializer.parse(query) : {},
