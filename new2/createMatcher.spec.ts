@@ -2,7 +2,7 @@ import { createMatcher } from "./createMatcher";
 import { defineRoute } from "./defineRoute";
 import { param } from "./param";
 import { buildPathDef } from "./buildPathDef";
-import { getParamDefsOfType } from "./utils/getParamDefsOfType";
+import { getParamDefsOfType } from "./getParamDefsOfType";
 import { Location, ParamDefCollection, PathFn } from "./types";
 import { defaultQueryStringSerializer } from "./defaultQueryStringSerializer";
 
@@ -67,7 +67,7 @@ function expectMatch(
   const match = createMatcher({
     params: route.params,
     pathDef: buildPathDef(
-      { routeName: "test" },
+      "test",
       getParamDefsOfType("path", route.params),
       route.path
     )

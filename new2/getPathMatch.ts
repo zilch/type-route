@@ -1,4 +1,4 @@
-import { noMatch } from "./constants";
+import { noMatch } from "./noMatch";
 import { PathDef } from "./types";
 
 export function getPathMatch(path: string, pathDef: PathDef) {
@@ -116,7 +116,7 @@ export function getPathMatch(path: string, pathDef: PathDef) {
       }
     }
 
-    match[pathSegmentDef.namedParamDef.name] = value;
+    match[pathSegmentDef.namedParamDef.paramName] = value;
 
     if (pathSegmentDef.namedParamDef.trailing) {
       break;

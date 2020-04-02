@@ -1,6 +1,4 @@
 import {
-  RouteDefBuilder,
-  ParamDefCollection,
   Router,
   RouteDef,
   Location,
@@ -9,7 +7,8 @@ import {
   Action,
   RouterOptions,
   QueryStringSerializer,
-  RouterContext
+  SharedRouterProperties,
+  HistoryOptions
 } from "./types";
 import { buildRouteDef } from "./buildRouteDef";
 import {
@@ -22,9 +21,10 @@ import { defaultQueryStringSerializer } from "./defaultQueryStringSerializer";
 
 const stateParamsKey = "stateParams";
 
-export function createRouter(
-  routeDefs: Record<string, RouteDefBuilder<ParamDefCollection>>
-): Router {
+export function createRouter<TRouteDefs>(
+  routeDefs: TRouteDefs,
+  options: RouterOptions = {}
+): Router<TRouteDefs> {
   let history: History;
   let routes: Record<string, RouteDef> = {};
 
@@ -32,7 +32,7 @@ export function createRouter(
     routes[routeName] = buildRouteDef(
       routeName,
       routeDefs[routeName],
-      getRouterContext
+      getSharedRouterProperties
     );
   }
 
@@ -47,14 +47,12 @@ export function createRouter(
   let nextAction: Action;
   let navigationResolverIdCounter = 0;
   let navigationResolverIdBase = Date.now().toString();
-  let navigationResolvers: { [id: string]: (result: boolean) => void } = {};
+  let navigationResolvers: {
+    [id: string]: ((result: boolean) => void) | undefined;
+  } = {};
   let queryStringSerializer: QueryStringSerializer;
 
-  if (typeof window !== "undefined" && typeof window.document !== "undefined") {
-    initializeRouter({ type: "browser" });
-  } else {
-    initializeRouter({ type: "memory" });
-  }
+  initializeRouter(options);
 
   return {
     routes,
@@ -69,15 +67,29 @@ export function createRouter(
         history.go(amount);
       },
       getInitialRoute: () => initialRoute,
-      reset: options => initializeRouter(options)
+      reset: history => initializeRouter({ history, queryStringSerializer })
     }
   };
 
-  function initializeRouter(options: RouterOptions = {}) {
-    if (options.type === "memory") {
-      history = createMemoryHistory({ getUserConfirmation });
+  function initializeRouter(options: RouterOptions) {
+    const historyOptions: HistoryOptions = options.history ?? {
+      type:
+        typeof window !== "undefined" && typeof window.document !== "undefined"
+          ? "browser"
+          : "memory"
+    };
+
+    if (historyOptions.type === "memory") {
+      history = createMemoryHistory({
+        getUserConfirmation,
+        initialEntries: historyOptions.initialEntries,
+        initialIndex: historyOptions.initialIndex
+      });
     } else {
-      history = createBrowserHistory({ getUserConfirmation });
+      history = createBrowserHistory({
+        getUserConfirmation,
+        forceRefresh: historyOptions.forceRefresh
+      });
     }
 
     queryStringSerializer =
@@ -108,7 +120,7 @@ export function createRouter(
       const href = query ? `${path}?${query}` : path;
       history[replace ? "replace" : "push"](href, {
         navigationResolverId,
-        stateParams: state
+        [stateParamsKey]: state
       });
     });
   }
@@ -139,7 +151,7 @@ export function createRouter(
     navigationHandlers.splice(indexToRemove, 1);
 
     if (unblock === undefined) {
-      throw new Error(`\n\nUnexpected error "unblock" should be defined\n`);
+      throw new Error(`\n\nUnexpected error: "unblock" should be defined\n`);
     }
 
     if (navigationHandlers.length === 0) {
@@ -165,14 +177,13 @@ export function createRouter(
     _: string,
     callback: (proceed: boolean) => void
   ) {
-    const navigationResolverId = (nextLocation.state || {})
-      .navigationResolverId;
+    const navigationResolverId = nextLocation.state?.navigationResolverId;
     const result = await handleNavigation(nextLocation, nextAction);
 
-    const resolve = navigationResolvers[navigationResolverId];
+    const resolve = navigationResolvers[navigationResolverId!];
     if (resolve) {
       resolve(result);
-      delete navigationResolvers[navigationResolverId];
+      delete navigationResolvers[navigationResolverId!];
     }
 
     callback(result);
@@ -213,7 +224,7 @@ export function createRouter(
     };
   }
 
-  function getRouterContext(): RouterContext {
+  function getSharedRouterProperties(): SharedRouterProperties {
     return { navigate, queryStringSerializer };
   }
 }

@@ -4,7 +4,7 @@ import { TypeRouteError } from "./TypeRouteError";
 export function defineRoute<TParamDefCollection>(
   params: TParamDefCollection,
   path: PathFn<TParamDefCollection>
-) {
+): RouteDefBuilder<TParamDefCollection> {
   const parent = { params, path };
 
   const routeDefBuilder: RouteDefBuilder<TParamDefCollection> = {

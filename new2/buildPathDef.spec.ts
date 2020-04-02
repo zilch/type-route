@@ -2,16 +2,12 @@ import { param } from "./param";
 import { buildPathDef } from "./buildPathDef";
 import { TypeRouteError } from "./TypeRouteError";
 import { expectTypeRouteError } from "./expectTypeRouteError";
-import { BuildPathDefContext, PathDef } from "./types";
-
-const testContext: BuildPathDefContext = {
-  routeName: "test"
-};
+import { PathDef } from "./types";
 
 describe("buildPathDef", () => {
   it("should work for simple example", () => {
     const actual = buildPathDef(
-      testContext,
+      "test",
       {
         userId: param.path.string
       },
@@ -27,7 +23,7 @@ describe("buildPathDef", () => {
       {
         leading: "",
         trailing: "",
-        namedParamDef: { name: "userId", ...param.path.string }
+        namedParamDef: { paramName: "userId", ...param.path.string }
       }
     ];
 
@@ -36,7 +32,7 @@ describe("buildPathDef", () => {
 
   it("should work with leading and trailing text around paramter", () => {
     const actual = buildPathDef(
-      testContext,
+      "test",
       {
         userId: param.path.string
       },
@@ -47,7 +43,7 @@ describe("buildPathDef", () => {
       {
         leading: "hello-",
         trailing: "-there",
-        namedParamDef: { name: "userId", ...param.path.string }
+        namedParamDef: { paramName: "userId", ...param.path.string }
       }
     ];
 
@@ -56,28 +52,28 @@ describe("buildPathDef", () => {
 
   it("should error if the path is an empty string", () => {
     expectTypeRouteError(TypeRouteError.Path_may_not_be_an_empty_string, () =>
-      buildPathDef(testContext, {}, () => "")
+      buildPathDef("test", {}, () => "")
     );
   });
 
   it("should error if the path does not start with a slash", () => {
     expectTypeRouteError(
       TypeRouteError.Path_must_start_with_a_forward_slash,
-      () => buildPathDef(testContext, {}, () => "hello/there")
+      () => buildPathDef("test", {}, () => "hello/there")
     );
   });
 
   it("should error if the path ends with a forward slash", () => {
     expectTypeRouteError(
       TypeRouteError.Path_may_not_end_with_a_forward_slash,
-      () => buildPathDef(testContext, {}, () => "/hello/")
+      () => buildPathDef("test", {}, () => "/hello/")
     );
   });
 
   it("should error if the path contains any empty segments", () => {
     expectTypeRouteError(
       TypeRouteError.Path_may_not_include_empty_segments,
-      () => buildPathDef(testContext, {}, () => "/hello//there")
+      () => buildPathDef("test", {}, () => "/hello//there")
     );
   });
 
@@ -86,7 +82,7 @@ describe("buildPathDef", () => {
       TypeRouteError.Path_may_have_at_most_one_parameter_per_segment,
       () =>
         buildPathDef(
-          testContext,
+          "test",
           {
             first: param.path.string,
             second: param.path.number
@@ -101,7 +97,7 @@ describe("buildPathDef", () => {
       TypeRouteError.Path_parameters_may_not_be_used_more_than_once_when_building_a_path,
       () =>
         buildPathDef(
-          testContext,
+          "test",
           { repeat: param.path.string },
           x => `/${x.repeat}/${x.repeat}`
         )
@@ -115,7 +111,7 @@ describe("buildPathDef", () => {
           TypeRouteError.Path_parameter_name_must_not_include_curly_brackets_dollar_signs_or_the_forward_slash_character,
           () =>
             buildPathDef(
-              testContext,
+              "test",
               { hello: param.path.string, [paramName]: param.path.number },
               x => `/${x.hello}/${x[paramName]}`
             )
@@ -127,7 +123,7 @@ describe("buildPathDef", () => {
   it("should error if the path contains characters that must be url encoded", () => {
     expectTypeRouteError(
       TypeRouteError.Path_may_not_include_characters_that_must_be_URL_encoded,
-      () => buildPathDef(testContext, {}, () => `/hello%/there`)
+      () => buildPathDef("test", {}, () => `/hello%/there`)
     );
   });
 
@@ -136,7 +132,7 @@ describe("buildPathDef", () => {
       TypeRouteError.Path_may_not_include_characters_that_must_be_URL_encoded,
       () =>
         buildPathDef(
-          testContext,
+          "test",
           { hi: param.path.string },
           x => `/hello${x.hi}%/there`
         )
@@ -144,7 +140,7 @@ describe("buildPathDef", () => {
 
     try {
       buildPathDef(
-        testContext,
+        "test",
         { hi: param.path.string },
         x => `/#hello${x.hi}%/there`
       );
@@ -160,7 +156,7 @@ describe("buildPathDef", () => {
       TypeRouteError.Optional_path_parameters_may_not_have_any_text_around_the_parameter,
       () =>
         buildPathDef(
-          testContext,
+          "test",
           { hello: param.path.optional.string },
           x => `/hi/hello-${x.hello}`
         )
@@ -172,7 +168,7 @@ describe("buildPathDef", () => {
       TypeRouteError.Path_may_have_at_most_one_optional_or_trailing_parameter,
       () =>
         buildPathDef(
-          testContext,
+          "test",
           { test: param.path.optional.number, hi: param.path.trailing.string },
           x => `/${x.test}/${x.hi}`
         )
@@ -184,7 +180,7 @@ describe("buildPathDef", () => {
       TypeRouteError.Optional_or_trailing_path_parameters_may_only_appear_in_the_last_path_segment,
       () =>
         buildPathDef(
-          testContext,
+          "test",
           { test: param.path.optional.number, hi: param.path.string },
           x => `/${x.test}/${x.hi}`
         )
@@ -196,7 +192,7 @@ describe("buildPathDef", () => {
       TypeRouteError.All_path_parameters_must_be_used_in_path_construction,
       () =>
         buildPathDef(
-          testContext,
+          "test",
           {
             test: param.path.optional.number,
             hi: param.path.string

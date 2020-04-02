@@ -1,7 +1,7 @@
 import { buildPathDef } from "./buildPathDef";
 import { getPathMatch } from "./getPathMatch";
 import { param } from "./param";
-import { noMatch } from "./constants";
+import { noMatch } from "./noMatch";
 import { PathParamDef, GetRawPath } from "./types";
 
 describe("getPathMatch", () => {
@@ -205,9 +205,6 @@ function expectGetPathMatch(
   path: string
 ) {
   return expect(
-    getPathMatch(
-      path,
-      buildPathDef({ routeName: "test" }, pathParamDefCollection, getRawPath)
-    )
+    getPathMatch(path, buildPathDef("test", pathParamDefCollection, getRawPath))
   );
 }

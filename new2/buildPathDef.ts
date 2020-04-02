@@ -3,49 +3,50 @@ import {
   PathParamDef,
   NamedPathParamDef,
   BuildPathDefErrorContext,
-  BuildPathDefContext,
   GetRawPath,
   PathDef,
   ParamIdCollection
 } from "./types";
 
 export function buildPathDef(
-  context: BuildPathDefContext,
+  routeName: string,
   pathParamDefCollection: Record<string, PathParamDef>,
   getRawPath: GetRawPath
 ): PathDef {
-  const namedPathParamDefs = Object.keys(pathParamDefCollection).map(name => {
-    const namedPathParameterDefinition: NamedPathParamDef = {
-      name,
-      ...pathParamDefCollection[name]
-    };
+  const namedPathParamDefs = Object.keys(pathParamDefCollection).map(
+    paramName => {
+      const namedPathParameterDefinition: NamedPathParamDef = {
+        paramName,
+        ...pathParamDefCollection[paramName]
+      };
 
-    return namedPathParameterDefinition;
-  });
+      return namedPathParameterDefinition;
+    }
+  );
 
   const paramIdCollection: ParamIdCollection = {};
 
-  namedPathParamDefs.forEach(({ name }) => {
+  namedPathParamDefs.forEach(({ paramName }) => {
     if (
-      name.includes("$") ||
-      name.includes("{") ||
-      name.includes("}") ||
-      name.includes("/")
+      paramName.includes("$") ||
+      paramName.includes("{") ||
+      paramName.includes("}") ||
+      paramName.includes("/")
     ) {
       throw TypeRouteError.Path_parameter_name_must_not_include_curly_brackets_dollar_signs_or_the_forward_slash_character.create(
-        context.routeName,
-        name
+        routeName,
+        paramName
       );
     }
 
-    paramIdCollection[name] = getParamId(name);
+    paramIdCollection[paramName] = getParamId(paramName);
   });
 
   const rawPath = getRawPath(paramIdCollection);
 
   const errorContext: BuildPathDefErrorContext = {
     rawPath,
-    routeName: context.routeName
+    routeName
   };
 
   if (rawPath.length === 0) {
@@ -83,29 +84,29 @@ export function buildPathDef(
     let includedParamDef: NamedPathParamDef<unknown> | null = null;
 
     for (const paramDef of namedPathParamDefs) {
-      if (rawSegment.includes(getParamId(paramDef.name))) {
+      if (rawSegment.includes(getParamId(paramDef.paramName))) {
         if (includedParamDef !== null) {
           throw TypeRouteError.Path_may_have_at_most_one_parameter_per_segment.create(
             errorContext,
-            [paramDef.name, includedParamDef.name]
+            [paramDef.paramName, includedParamDef.paramName]
           );
         }
 
-        if (usedPathParams.has(paramDef.name)) {
+        if (usedPathParams.has(paramDef.paramName)) {
           throw TypeRouteError.Path_parameters_may_not_be_used_more_than_once_when_building_a_path.create(
             errorContext,
-            paramDef.name
+            paramDef.paramName
           );
         }
 
         includedParamDef = paramDef;
-        usedPathParams.add(paramDef.name);
+        usedPathParams.add(paramDef.paramName);
       }
     }
 
     if (includedParamDef) {
       const [leading, trailing] = rawSegment.split(
-        getParamId(includedParamDef.name)
+        getParamId(includedParamDef.paramName)
       );
 
       if (
@@ -116,7 +117,7 @@ export function buildPathDef(
           errorContext,
           {
             leading,
-            paramId: getParamId(includedParamDef.name),
+            paramId: getParamId(includedParamDef.paramName),
             trailing
           }
         );
@@ -125,7 +126,7 @@ export function buildPathDef(
       if (includedParamDef.optional && (leading !== "" || trailing !== "")) {
         throw TypeRouteError.Optional_path_parameters_may_not_have_any_text_around_the_parameter.create(
           errorContext,
-          includedParamDef.name,
+          includedParamDef.paramName,
           leading,
           trailing
         );
@@ -177,7 +178,7 @@ export function buildPathDef(
   }
 
   const unusedPathParameterDefinitions = namedPathParamDefs
-    .map(({ name }) => name)
+    .map(({ paramName: name }) => name)
     .filter(name => !usedPathParams.has(name));
 
   if (unusedPathParameterDefinitions.length > 0) {

@@ -145,10 +145,10 @@ export const TypeRouteError = buildErrorCollection({
 
   Path_parameter_name_must_not_include_curly_brackets_dollar_signs_or_the_forward_slash_character: {
     errorCode: 1010,
-    getDetails(routeName: string, parameterName: string) {
+    getDetails(routeName: string, paramName: string) {
       return [
         getBuildPathDefRouteNameMessage(routeName),
-        `The $ { } or / character was used in this parameter name: ${parameterName}`
+        `The $ { } or / character was used in this parameter name: ${paramName}`
       ];
     }
   },

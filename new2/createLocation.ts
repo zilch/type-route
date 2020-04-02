@@ -34,7 +34,9 @@ export function createLocation(
     "/" +
     pathDef
       .map(({ namedParamDef, leading, trailing }) => {
-        const rawParam = namedParamDef ? params.path[namedParamDef.name] : "";
+        const rawParam = namedParamDef
+          ? params.path[namedParamDef.paramName]
+          : "";
         return leading + rawParam + trailing;
       })
       .join("/");

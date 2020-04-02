@@ -1,5 +1,5 @@
 import { ParamDefCollection } from "./types";
-import { noMatch } from "./constants";
+import { noMatch } from "./noMatch";
 
 export function getObjectMatch({
   object,

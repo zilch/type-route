@@ -1,4 +1,4 @@
-import { noMatch } from "./constants";
+import { noMatch } from "./noMatch";
 import { ValueSerializer, ParamDefType, ParamDef } from "./types";
 
 const number: ValueSerializer<number> = {

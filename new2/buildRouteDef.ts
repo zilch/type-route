@@ -4,7 +4,7 @@ import {
   RouteDef,
   ClickEvent,
   Link,
-  RouterContext
+  SharedRouterProperties
 } from "./types";
 import { createMatcher } from "./createMatcher";
 import { buildPathDef } from "./buildPathDef";
@@ -14,10 +14,10 @@ import { createLocation } from "./createLocation";
 export function buildRouteDef(
   routeName: string,
   builder: RouteDefBuilder<ParamDefCollection>,
-  getRouterContext: () => RouterContext
+  getSharedRouterProperties: () => SharedRouterProperties
 ): RouteDef {
   const pathDef = buildPathDef(
-    { routeName },
+    routeName,
     getParamDefsOfType("path", builder.params),
     builder.path
   );
@@ -57,7 +57,10 @@ export function buildRouteDef(
             event.preventDefault();
           }
 
-          const { navigate, queryStringSerializer } = getRouterContext();
+          const {
+            navigate,
+            queryStringSerializer
+          } = getSharedRouterProperties();
 
           navigate(
             createLocation(
@@ -73,25 +76,27 @@ export function buildRouteDef(
   }
 
   function href(params: Record<string, unknown>) {
-    const { queryStringSerializer } = getRouterContext();
+    const { queryStringSerializer } = getSharedRouterProperties();
+
     const location = createLocation(
       params,
       builder.params,
       pathDef,
       queryStringSerializer
     );
+
     return location.path + (location.query ? `?${location.query}` : "");
   }
 
   function push(params: Record<string, unknown>) {
-    const { navigate, queryStringSerializer } = getRouterContext();
+    const { navigate, queryStringSerializer } = getSharedRouterProperties();
     return navigate(
       createLocation(params, builder.params, pathDef, queryStringSerializer)
     );
   }
 
   function replace(params: Record<string, unknown>) {
-    const { navigate, queryStringSerializer } = getRouterContext();
+    const { navigate, queryStringSerializer } = getSharedRouterProperties();
     return navigate(
       createLocation(params, builder.params, pathDef, queryStringSerializer),
       true
