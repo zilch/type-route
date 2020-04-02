@@ -217,8 +217,16 @@ export type NotFoundRoute = {
   params: {};
 };
 
-export type Route<T> = T extends UmbrellaRouteDef
+export type Route<T> = T extends RouteDef<any, any>
   ? T["_internal"]["Route"]
+  : T extends RouteDefGroup
+  ? T["_internal"]["Route"]
+  : T extends Record<string, RouteDef<any, any>>
+  ?
+      | {
+          [TRouteName in keyof T]: T[TRouteName]["_internal"]["Route"];
+        }[keyof T]
+      | NotFoundRoute
   : T extends Record<string, RouteDefBuilder<any>>
   ?
       | {

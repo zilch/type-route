@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
-import { createRouter, defineRoute, createGroup, param } from "./index";
+import { createRouter, defineRoute, param, Route } from "./index";
 
-param.path.number;
-param.path.optional.ofType<number>().default(5);
+import "./playground.css";
 
 const { routes, listen, history } = createRouter({
   home: defineRoute({}, () => "/"),
@@ -21,43 +20,66 @@ const { routes, listen, history } = createRouter({
   )
 });
 
-const userGroup = createGroup([routes.user, routes.userList]);
-
 function App() {
-  const [route, setRoute] = useState(history.getInitialRoute());
-
-  routes.home;
-  routes.userList;
-  routes.userList.link({});
+  const [route, setRoute] = useState(() => history.getInitialRoute());
 
   useEffect(() => listen(setRoute), []);
 
-  let page;
-
-  if (userGroup.has(route)) {
-    route.name;
-  }
-
-  if (route.name === routes.home.name) {
-    page = <div>Home</div>;
-  } else if (route.name === routes.userList.name) {
-    page = <div>User List (Page {route.params.page}</div>;
-  } else if (route.name === routes.user.name) {
-    page = <div>User {route.params.userId}</div>;
-  } else {
-    page = <div>Not Found</div>;
-  }
-
   return (
-    <div>
-      <header>
-        <a {...routes.home.link()}>Home</a>
-        <a {...routes.userList.link()}>User List</a>
-        <a {...routes.user.link({ userId: "abc" })}>User abc</a>
-      </header>
-      {page}
-    </div>
+    <>
+      <Navigation />
+      <Page route={route} />
+    </>
   );
 }
 
-ReactDOM.render(<App />, document.querySelector("#app"));
+function Page(props: { route: Route<typeof routes> }) {
+  const { route } = props;
+
+  if (route.name === routes.home.name) {
+    return <div>Home Page</div>;
+  }
+
+  if (route.name === routes.userList.name) {
+    return (
+      <div>
+        User List
+        <br />
+        Page: {route.params.page || "-"}
+      </div>
+    );
+  }
+
+  if (route.name === routes.user.name) {
+    return <div>User {route.params.userId}</div>;
+  }
+
+  return <div>Not Found</div>;
+}
+
+function Navigation() {
+  return (
+    <nav>
+      <a {...routes.home.link()}>Home</a>
+      <a {...routes.userList.link()}>User List</a>
+      <a
+        {...routes.userList.link({
+          page: 2
+        })}
+      >
+        User List Page 2
+      </a>
+      <a
+        {...routes.user.link({
+          userId: "abc"
+        })}
+      >
+        User "abc"
+      </a>
+    </nav>
+  );
+}
+
+const appContainer = document.createElement("div");
+document.body.appendChild(appContainer);
+ReactDOM.render(<App />, appContainer);
