@@ -18,7 +18,10 @@ describe("createMatcher", () => {
         query: "userId=hello"
       }
     ).toEqual({
-      userId: "hello"
+      params: {
+        userId: "hello"
+      },
+      numExtraneousParams: 0
     });
   });
 
@@ -36,11 +39,14 @@ describe("createMatcher", () => {
         }
       }
     ).toEqual({
-      userId: "hello"
+      numExtraneousParams: 1,
+      params: {
+        userId: "hello"
+      }
     });
   });
 
-  it("should not allow extraneous query params", () => {
+  it("should capture extraneous query params", () => {
     expectMatch(
       {
         userId: param.query.string
@@ -53,7 +59,30 @@ describe("createMatcher", () => {
           hello: "test"
         }
       }
-    ).toEqual(false);
+    ).toEqual({
+      numExtraneousParams: 2,
+      params: {
+        userId: "hello"
+      }
+    });
+  });
+
+  it("should work with path with query", () => {
+    expectMatch(
+      {
+        page: param.query.optional.number.default(1)
+      },
+      () => `/users`,
+      {
+        path: "/users",
+        query: "page=2"
+      }
+    ).toEqual({
+      numExtraneousParams: 0,
+      params: {
+        page: 2
+      }
+    });
   });
 });
 

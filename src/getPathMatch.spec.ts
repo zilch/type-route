@@ -5,6 +5,13 @@ import { noMatch } from "./noMatch";
 import { PathParamDef, GetRawPath } from "./types";
 
 describe("getPathMatch", () => {
+  it("should work for root", () => {
+    expectGetPathMatch({}, () => "/", "/").toEqual({
+      params: {},
+      numExtraneousParams: 0
+    });
+  });
+
   it("should work for simple case", () => {
     expectGetPathMatch(
       {
@@ -13,7 +20,10 @@ describe("getPathMatch", () => {
       x => `/user/${x.userId}`,
       "/user/foo"
     ).toEqual({
-      userId: "foo"
+      params: {
+        userId: "foo"
+      },
+      numExtraneousParams: 0
     });
   });
 
@@ -24,7 +34,10 @@ describe("getPathMatch", () => {
       },
       x => `/user/${x.userId}`,
       "/user"
-    ).toEqual({});
+    ).toEqual({
+      params: {},
+      numExtraneousParams: 0
+    });
   });
 
   it("should work for trailing param", () => {
@@ -35,7 +48,10 @@ describe("getPathMatch", () => {
       x => `/docs/${x.docsPage}`,
       "/docs/this/is/the/page"
     ).toEqual({
-      docsPage: "/this/is/the/page"
+      params: {
+        docsPage: "/this/is/the/page"
+      },
+      numExtraneousParams: 0
     });
   });
 
@@ -46,7 +62,10 @@ describe("getPathMatch", () => {
       },
       x => `/docs/${x.docsPage}`,
       "/docs"
-    ).toEqual({});
+    ).toEqual({
+      params: {},
+      numExtraneousParams: 0
+    });
   });
 
   it("should not match when trailing param is required", () => {
@@ -67,7 +86,10 @@ describe("getPathMatch", () => {
       x => `/docs/hello-${x.docsPage}-there`,
       "/docs/hello-today/again-there"
     ).toEqual({
-      docsPage: "today/again"
+      params: {
+        docsPage: "today/again"
+      },
+      numExtraneousParams: 0
     });
   });
 
@@ -78,7 +100,10 @@ describe("getPathMatch", () => {
       },
       x => `/page/${x.page}`,
       "/page/1"
-    ).toEqual({ page: 1 });
+    ).toEqual({
+      params: { page: 1 },
+      numExtraneousParams: 0
+    });
   });
 
   it("should not match numeric param", () => {
@@ -92,11 +117,17 @@ describe("getPathMatch", () => {
   });
 
   it("should match static with trailing slash", () => {
-    expectGetPathMatch({}, () => `/page`, "/page/").toEqual({});
+    expectGetPathMatch({}, () => `/page`, "/page/").toEqual({
+      params: {},
+      numExtraneousParams: 0
+    });
   });
 
   it("should work for static route", () => {
-    expectGetPathMatch({}, () => `/docs/today`, "/docs/today").toEqual({});
+    expectGetPathMatch({}, () => `/docs/today`, "/docs/today").toEqual({
+      params: {},
+      numExtraneousParams: 0
+    });
   });
 
   it("should match url encoded json param", () => {
@@ -107,7 +138,10 @@ describe("getPathMatch", () => {
       x => `/json/${x.json}`,
       `/json/%7B%22hello%22%3A%22there%22%7D`
     ).toEqual({
-      json: { hello: "there" }
+      params: {
+        json: { hello: "there" }
+      },
+      numExtraneousParams: 0
     });
   });
 
@@ -136,7 +170,10 @@ describe("getPathMatch", () => {
       x => `/json/hi-${x.json}-now/today`,
       `/json/hi-hello-there-now/today`
     ).toEqual({
-      json: { hello: "hello", there: "there" }
+      params: {
+        json: { hello: "hello", there: "there" }
+      },
+      numExtraneousParams: 0
     });
   });
 
@@ -146,7 +183,10 @@ describe("getPathMatch", () => {
       x => `/hello/${x.hi}`,
       "/hello/there/"
     ).toEqual({
-      hi: "/there/"
+      params: {
+        hi: "/there/"
+      },
+      numExtraneousParams: 0
     });
   });
 
@@ -156,7 +196,10 @@ describe("getPathMatch", () => {
       x => `/hello/${x.num}`,
       "/hello/1"
     ).toEqual({
-      num: 1
+      params: {
+        num: 1
+      },
+      numExtraneousParams: 0
     });
 
     expectGetPathMatch(
@@ -164,7 +207,10 @@ describe("getPathMatch", () => {
       x => `/hello/${x.num}`,
       "/hello/1.1"
     ).toEqual({
-      num: 1.1
+      params: {
+        num: 1.1
+      },
+      numExtraneousParams: 0
     });
 
     expectGetPathMatch(
@@ -172,7 +218,10 @@ describe("getPathMatch", () => {
       x => `/hello/${x.num}`,
       "/hello/-1.1"
     ).toEqual({
-      num: -1.1
+      params: {
+        num: -1.1
+      },
+      numExtraneousParams: 0
     });
 
     expectGetPathMatch(
@@ -180,7 +229,10 @@ describe("getPathMatch", () => {
       x => `/hello/${x.num}`,
       "/hello/-00.1"
     ).toEqual({
-      num: -0.1
+      params: {
+        num: -0.1
+      },
+      numExtraneousParams: 0
     });
 
     expectGetPathMatch(
@@ -188,7 +240,10 @@ describe("getPathMatch", () => {
       x => `/hello/${x.num}`,
       "/hello/-.1"
     ).toEqual({
-      num: -0.1
+      params: {
+        num: -0.1
+      },
+      numExtraneousParams: 0
     });
 
     expectGetPathMatch(

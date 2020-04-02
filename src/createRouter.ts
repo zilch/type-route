@@ -249,7 +249,9 @@ export function createRouter(
   function getTypeRouteLocation(historyLocation: HistoryLocation): Location {
     return {
       path: historyLocation.pathname,
-      query: historyLocation.search || undefined,
+      query: historyLocation.search
+        ? historyLocation.search.slice(1)
+        : undefined,
       state: historyLocation.state?.[stateParamsKey] || undefined
     };
   }

@@ -4,6 +4,10 @@ import { PathDef } from "./types";
 export function getPathMatch(path: string, pathDef: PathDef) {
   const params: Record<string, unknown> = {};
 
+  if (path === "/" && pathDef.length === 0) {
+    return { params, numExtraneousParams: 0 };
+  }
+
   if (!path.startsWith("/")) {
     throw new Error(
       "Unexpected condition - path should start with a forward slash."
@@ -23,10 +27,12 @@ export function getPathMatch(path: string, pathDef: PathDef) {
     segmentIndex < Math.max(pathDef.length, pathSegmentList.length);
     segmentIndex++
   ) {
-    const pathSegmentDef = pathDef[segmentIndex] ? pathDef[segmentIndex] : null;
-    let pathSegment = pathSegmentList[segmentIndex]
-      ? pathSegmentList[segmentIndex]
-      : null;
+    const pathSegmentDef =
+      segmentIndex >= pathDef.length ? null : pathDef[segmentIndex];
+    let pathSegment =
+      segmentIndex >= pathSegmentList.length
+        ? null
+        : pathSegmentList[segmentIndex];
 
     if (pathSegment === null && pathSegmentDef === null) {
       throw new Error("Unexpected condition - both should not be null");
