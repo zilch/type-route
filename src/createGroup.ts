@@ -1,67 +1,35 @@
-import {
-  Route,
-  RouteDefinition,
-  ParameterDefinitionCollection,
-  RouteDefinitionGroup
-} from "./types";
-import { validate } from "./validate";
+import { RouteDefGroup, UmbrellaRoute, UmbrellaRouteDef } from "./types";
 
-export function createGroup<T extends { [key: string]: any }>(
-  groupItems: T
-): RouteDefinitionGroup<T> {
-  validate["createGroup"](Array.from(arguments));
+export function createGroup<T extends any[]>(groupItems: T): RouteDefGroup<T> {
+  const routeNames: Record<string, true> = {};
 
-  const routeDefinitionNames: {
-    [key: string]: true;
-  } = {};
-
-  groupItems.forEach(
-    (
-      item:
-        | RouteDefinition<string, ParameterDefinitionCollection>
-        | RouteDefinitionGroup<
-            RouteDefinition<string, ParameterDefinitionCollection>[]
-          >
-    ) => {
-      if (isRouteDefinitionGroup(item)) {
-        item.routeNames.forEach(name => {
-          routeDefinitionNames[name] = true;
-        });
-      } else {
-        routeDefinitionNames[item.name] = true;
-      }
+  groupItems.forEach(item => {
+    if (isRouteDefGroup(item)) {
+      item.routeNames.forEach(name => {
+        routeNames[name] = true;
+      });
+    } else {
+      routeNames[item.name] = true;
     }
-  );
+  });
 
   return {
-    [".type"]: null as any,
-    routeNames: Object.keys(routeDefinitionNames),
-    has(route: Route<any>): route is any {
-      validate["[group].has"](Array.from(arguments));
-
+    _internal: {
+      Route: null as any
+    },
+    routeNames: Object.keys(routeNames),
+    has(route: UmbrellaRoute): route is UmbrellaRoute {
       if (route.name === false) {
         return false;
       }
 
-      const value = routeDefinitionNames[route.name];
-
-      return value === true ? true : false;
+      return !!routeNames[route.name];
     }
   };
 }
 
-function isRouteDefinitionGroup(
-  groupItem:
-    | RouteDefinition<string, ParameterDefinitionCollection>
-    | RouteDefinitionGroup<
-        RouteDefinition<string, ParameterDefinitionCollection>[]
-      >
-): groupItem is RouteDefinitionGroup<
-  RouteDefinition<string, ParameterDefinitionCollection>[]
-> {
-  return Array.isArray(
-    (groupItem as RouteDefinitionGroup<
-      RouteDefinition<string, ParameterDefinitionCollection>[]
-    >).routeNames
-  );
+function isRouteDefGroup(
+  value: RouteDefGroup | UmbrellaRouteDef
+): value is RouteDefGroup {
+  return !!(value as RouteDefGroup).routeNames;
 }

@@ -123,7 +123,10 @@ export function buildPathDef(
         );
       }
 
-      if (includedParamDef.optional && (leading !== "" || trailing !== "")) {
+      if (
+        includedParamDef._internal.optional &&
+        (leading !== "" || trailing !== "")
+      ) {
         throw TypeRouteError.Optional_path_parameters_may_not_have_any_text_around_the_parameter.create(
           errorContext,
           includedParamDef.paramName,
@@ -154,7 +157,9 @@ export function buildPathDef(
   }
 
   const numOptionalOrTrailingParams = pathDef.filter(
-    part => part.namedParamDef?.optional || part.namedParamDef?.trailing
+    part =>
+      part.namedParamDef?._internal.optional ||
+      part.namedParamDef?._internal.trailing
   ).length;
 
   if (numOptionalOrTrailingParams > 1) {
@@ -169,8 +174,8 @@ export function buildPathDef(
 
   if (
     numOptionalOrTrailingParams === 1 &&
-    !lastPathSegmentParameterDefinition?.optional &&
-    !lastPathSegmentParameterDefinition?.trailing
+    !lastPathSegmentParameterDefinition?._internal.optional &&
+    !lastPathSegmentParameterDefinition?._internal.trailing
   ) {
     throw TypeRouteError.Optional_or_trailing_path_parameters_may_only_appear_in_the_last_path_segment.create(
       errorContext

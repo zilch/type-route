@@ -3,7 +3,7 @@ import { defineRoute } from "./defineRoute";
 import { param } from "./param";
 import { buildPathDef } from "./buildPathDef";
 import { getParamDefsOfType } from "./getParamDefsOfType";
-import { Location, ParamDefCollection, PathFn } from "./types";
+import { Location, PathFn, UmbrellaParamDefCollection } from "./types";
 import { defaultQueryStringSerializer } from "./defaultQueryStringSerializer";
 
 describe("createMatcher", () => {
@@ -58,18 +58,18 @@ describe("createMatcher", () => {
 });
 
 function expectMatch(
-  paramDefs: ParamDefCollection,
-  path: PathFn<ParamDefCollection>,
+  paramDefs: UmbrellaParamDefCollection,
+  path: PathFn<UmbrellaParamDefCollection>,
   location: Location
 ) {
   const route = defineRoute(paramDefs, path);
 
   const match = createMatcher({
-    params: route.params,
+    params: route._internal.params,
     pathDef: buildPathDef(
       "test",
-      getParamDefsOfType("path", route.params),
-      route.path
+      getParamDefsOfType("path", route._internal.params),
+      route._internal.path
     )
   });
 

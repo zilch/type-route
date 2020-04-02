@@ -1,13 +1,13 @@
 import {
-  ParamDefCollection,
   Location,
   PathDef,
-  QueryStringSerializer
+  QueryStringSerializer,
+  UmbrellaParamDefCollection
 } from "./types";
 
 export function createLocation(
   paramCollection: Record<string, unknown>,
-  paramDefCollection: ParamDefCollection,
+  paramDefCollection: UmbrellaParamDefCollection,
   pathDef: PathDef,
   queryStringSerializer: QueryStringSerializer
 ): Location {
@@ -19,13 +19,14 @@ export function createLocation(
 
   for (const paramName in paramCollection) {
     const paramDef = paramDefCollection[paramName];
-    const paramValue = paramDef.valueSerializer.stringify(
+    const paramValue = paramDef._internal.valueSerializer.stringify(
       paramCollection[paramName]
     );
-    const urlEncodeDefault = paramDef.type !== "state" && !paramDef.trailing;
+    const urlEncodeDefault =
+      paramDef._internal.type !== "state" && !paramDef._internal.trailing;
 
-    params[paramDef.type][paramName] =
-      paramDef.valueSerializer.urlEncode ?? urlEncodeDefault
+    params[paramDef._internal.type][paramName] =
+      paramDef._internal.valueSerializer.urlEncode ?? urlEncodeDefault
         ? encodeURIComponent(paramValue)
         : paramValue;
   }

@@ -1,37 +1,39 @@
 import {
-  ParamDefCollection,
-  RouteDefBuilder,
-  RouteDef,
   ClickEvent,
   Link,
-  SharedRouterProperties
+  SharedRouterProperties,
+  UmbrellaRouteDefBuilder,
+  UmbrellaRouteDef
 } from "./types";
-import { createMatcher } from "./createMatcher";
 import { buildPathDef } from "./buildPathDef";
 import { getParamDefsOfType } from "./getParamDefsOfType";
 import { createLocation } from "./createLocation";
+import { createMatcher } from "./createMatcher";
 
 export function buildRouteDef(
   routeName: string,
-  builder: RouteDefBuilder<ParamDefCollection>,
+  builder: UmbrellaRouteDefBuilder,
   getSharedRouterProperties: () => SharedRouterProperties
-): RouteDef {
+): UmbrellaRouteDef {
   const pathDef = buildPathDef(
     routeName,
-    getParamDefsOfType("path", builder.params),
-    builder.path
+    getParamDefsOfType("path", builder._internal.params),
+    builder._internal.path
   );
 
   return {
     name: routeName,
-    match: createMatcher({ params: builder.params, pathDef }),
     href,
     replace,
     push,
-    link
+    link,
+    _internal: {
+      match: createMatcher({ pathDef, params: builder._internal.params }),
+      Route: null as any
+    }
   };
 
-  function link(params: Record<string, unknown>): Link {
+  function link(params: Record<string, unknown> = {}): Link {
     return {
       href: href(params),
       onClick: (event: ClickEvent = {}) => {
@@ -65,7 +67,7 @@ export function buildRouteDef(
           navigate(
             createLocation(
               params,
-              builder.params,
+              builder._internal.params,
               pathDef,
               queryStringSerializer
             )
@@ -75,12 +77,12 @@ export function buildRouteDef(
     };
   }
 
-  function href(params: Record<string, unknown>) {
+  function href(params: Record<string, unknown> = {}) {
     const { queryStringSerializer } = getSharedRouterProperties();
 
     const location = createLocation(
       params,
-      builder.params,
+      builder._internal.params,
       pathDef,
       queryStringSerializer
     );
@@ -88,17 +90,27 @@ export function buildRouteDef(
     return location.path + (location.query ? `?${location.query}` : "");
   }
 
-  function push(params: Record<string, unknown>) {
+  function push(params: Record<string, unknown> = {}) {
     const { navigate, queryStringSerializer } = getSharedRouterProperties();
     return navigate(
-      createLocation(params, builder.params, pathDef, queryStringSerializer)
+      createLocation(
+        params,
+        builder._internal.params,
+        pathDef,
+        queryStringSerializer
+      )
     );
   }
 
-  function replace(params: Record<string, unknown>) {
+  function replace(params: Record<string, unknown> = {}) {
     const { navigate, queryStringSerializer } = getSharedRouterProperties();
     return navigate(
-      createLocation(params, builder.params, pathDef, queryStringSerializer),
+      createLocation(
+        params,
+        builder._internal.params,
+        pathDef,
+        queryStringSerializer
+      ),
       true
     );
   }

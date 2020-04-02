@@ -1,105 +1,115 @@
 import {
-  RouteDefinitionBuilderCollection,
   Router,
-  NavigationHandler,
-  Action,
-  HistoryConfig,
-  Route
-} from "./types";
-import {
-  History,
-  createBrowserHistory,
-  createMemoryHistory,
   Location,
-  MemoryHistory
+  Action,
+  RouterOptions,
+  QueryStringSerializer,
+  SharedRouterProperties,
+  HistoryOptions,
+  UmbrellaRouteDef,
+  UmbrellaRouter,
+  UmbrellaRouteDefBuilder,
+  UmbrellaNavigationHandler,
+  UmbrellaRoute,
+  Match
+} from "./types";
+import { buildRouteDef } from "./buildRouteDef";
+import {
+  createBrowserHistory,
+  History,
+  Location as HistoryLocation,
+  createMemoryHistory
 } from "history";
-import { mapObject } from "./mapObject";
-import { buildRouteDefinition } from "./buildRouteDefinition";
-import { getRoute } from "./getRoute";
-import { error, validate } from "./validate";
+import { defaultQueryStringSerializer } from "./defaultQueryStringSerializer";
 
-export function createRouter<T>(routeDefinitions: T): Router<T>;
-export function createRouter(...args: any[]) {
-  validate["createRouter"](Array.from(arguments));
+const stateParamsKey = "stateParams";
 
-  let routeDefinitionBuilderCollection: RouteDefinitionBuilderCollection =
-    args[0];
+export function createRouter<TRouteDefs>(
+  routeDefs: TRouteDefs,
+  options?: RouterOptions
+): Router<TRouteDefs>;
+export function createRouter(
+  routeDefs: Record<string, UmbrellaRouteDefBuilder>,
+  options: RouterOptions = {}
+): UmbrellaRouter {
+  let history: History;
+  let routes: Record<string, UmbrellaRouteDef> = {};
 
-  let history:
-    | (History & { type: "browser" })
-    | (MemoryHistory & { type: "memory" });
-
-  const routes = mapObject(routeDefinitionBuilderCollection, (builder, name) =>
-    buildRouteDefinition(navigate, builder, name as string)
-  );
+  for (const routeName of Object.keys(routeDefs)) {
+    routes[routeName] = buildRouteDef(
+      routeName,
+      routeDefs[routeName],
+      getSharedRouterProperties
+    );
+  }
 
   const navigationHandlers: {
     id: number;
-    handler: NavigationHandler<any>;
+    handler: UmbrellaNavigationHandler;
   }[] = [];
-  let currentRoute: Route<any>;
+  let initialRoute: UmbrellaRoute;
   let navigationHandlerIdCounter = 0;
   let unblock: (() => void) | undefined = undefined;
   let nextLocation: Location;
-  let nextAction: "pop" | "push" | "replace";
+  let nextAction: Action;
   let navigationResolverIdCounter = 0;
   let navigationResolverIdBase = Date.now().toString();
-  let navigationResolvers: { [id: string]: (result: boolean) => void } = {};
+  let navigationResolvers: {
+    [id: string]: ((result: boolean) => void) | undefined;
+  } = {};
+  let queryStringSerializer: QueryStringSerializer;
 
-  if (typeof window !== "undefined" && typeof window.document !== "undefined") {
-    configure({ type: "browser" });
-  } else {
-    configure({ type: "memory" });
-  }
+  initializeRouter(options);
 
-  const router: Router<any> = {
+  return {
     routes,
     listen,
-    getCurrentRoute() {
-      validate["[router].getCurrentRoute"](Array.from(arguments));
-      return currentRoute;
-    },
     history: {
-      configure,
-      getActiveInstance() {
-        validate["[router].history.getActiveInstance"](Array.from(arguments));
-        return history;
-      }
+      push: (url, state) => navigate(getLocation(url, state)),
+      replace: (url, state) => navigate(getLocation(url, state), true),
+      back: (amount = 1) => {
+        history.go(-amount);
+      },
+      forward: (amount = 1) => {
+        history.go(amount);
+      },
+      getInitialRoute: () => initialRoute,
+      reset: history => initializeRouter({ history, queryStringSerializer })
     }
   };
 
-  return router;
+  function initializeRouter(options: RouterOptions) {
+    const historyOptions: HistoryOptions = options.history ?? {
+      type:
+        typeof window !== "undefined" && typeof window.document !== "undefined"
+          ? "browser"
+          : "memory"
+    };
 
-  function configure(config: HistoryConfig) {
-    validate["[router].history.configure"](Array.from(arguments));
-
-    if (config.type === "browser") {
-      history = createBrowserHistory({
-        ...config,
-        getUserConfirmation
-      }) as any;
-      history.type = "browser";
-    } else {
+    if (historyOptions.type === "memory") {
       history = createMemoryHistory({
-        ...config,
-        getUserConfirmation
-      }) as any;
-      history.type = "memory";
+        getUserConfirmation,
+        initialEntries: historyOptions.initialEntries,
+        initialIndex: historyOptions.initialIndex
+      });
+    } else {
+      history = createBrowserHistory({
+        getUserConfirmation,
+        forceRefresh: historyOptions.forceRefresh
+      });
     }
 
-    currentRoute = getRoute(routes, history.location, "initial");
+    queryStringSerializer =
+      options.queryStringSerializer ?? defaultQueryStringSerializer;
+    initialRoute = getRoute(getTypeRouteLocation(history.location), "initial");
   }
 
-  function listen(handler: NavigationHandler<any>) {
-    validate["[router].listen"](Array.from(arguments));
-
+  function listen(handler: UmbrellaNavigationHandler) {
     const id = addNavigationHandler(handler);
 
     return removeListener;
 
     function removeListener() {
-      validate["[router].listen.removeListener"](Array.from(arguments));
-
       removeNavigationHandler(id);
     }
   }
@@ -109,20 +119,20 @@ export function createRouter(...args: any[]) {
     return `${navigationResolverIdBase}-${navigationResolverIdCounter}`;
   }
 
-  function navigate(href: string, replace?: boolean) {
+  function navigate({ path, query, state }: Location, replace?: boolean) {
     return new Promise<boolean>(resolve => {
       const navigationResolverId = getNextNavigationResolverId();
       navigationResolvers[navigationResolverId] = resolve;
 
-      if (replace) {
-        history.replace(href, { navigationResolverId });
-      } else {
-        history.push(href, { navigationResolverId });
-      }
+      const href = query ? `${path}?${query}` : path;
+      history[replace ? "replace" : "push"](href, {
+        navigationResolverId,
+        [stateParamsKey]: state
+      });
     });
   }
 
-  function addNavigationHandler(handler: NavigationHandler<{}>) {
+  function addNavigationHandler(handler: UmbrellaNavigationHandler) {
     const id = navigationHandlerIdCounter++;
 
     navigationHandlers.push({
@@ -131,13 +141,9 @@ export function createRouter(...args: any[]) {
     });
 
     if (navigationHandlers.length === 1) {
-      unblock = history.block((location, action) => {
-        nextLocation = location;
-        nextAction = {
-          POP: "pop" as "pop",
-          PUSH: "push" as "push",
-          REPLACE: "replace" as "replace"
-        }[action];
+      unblock = history.block((historyLocation, historyAction) => {
+        nextLocation = getTypeRouteLocation(historyLocation);
+        nextAction = historyAction.toLowerCase() as Action;
         return "";
       });
     }
@@ -152,7 +158,7 @@ export function createRouter(...args: any[]) {
     navigationHandlers.splice(indexToRemove, 1);
 
     if (unblock === undefined) {
-      throw error(`\n\nUnexpected error "unblock" should be defined\n`);
+      throw new Error(`\n\nUnexpected error: "unblock" should be defined\n`);
     }
 
     if (navigationHandlers.length === 0) {
@@ -161,14 +167,7 @@ export function createRouter(...args: any[]) {
   }
 
   async function handleNavigation(location: Location, action: Action) {
-    if (
-      location.pathname === history.location.pathname &&
-      location.search === history.location.search
-    ) {
-      return false;
-    }
-
-    const nextRoute = getRoute(routes, location, action);
+    const nextRoute = getRoute(location, action);
 
     for (const { handler } of navigationHandlers) {
       const proceed = await handler(nextRoute);
@@ -178,7 +177,6 @@ export function createRouter(...args: any[]) {
       }
     }
 
-    currentRoute = nextRoute;
     return true;
   }
 
@@ -186,16 +184,77 @@ export function createRouter(...args: any[]) {
     _: string,
     callback: (proceed: boolean) => void
   ) {
-    const navigationResolverId = (nextLocation.state || {})
-      .navigationResolverId;
+    const navigationResolverId = nextLocation.state?.navigationResolverId;
     const result = await handleNavigation(nextLocation, nextAction);
 
-    const resolve = navigationResolvers[navigationResolverId];
+    const resolve = navigationResolvers[navigationResolverId!];
     if (resolve) {
       resolve(result);
-      delete navigationResolvers[navigationResolverId];
+      delete navigationResolvers[navigationResolverId!];
     }
 
     callback(result);
+  }
+
+  function getRoute(location: Location, action: Action): UmbrellaRoute {
+    let nonExactMatch: (Match & { name: string }) | false = false;
+
+    for (const routeName in routes) {
+      const match = routes[routeName]._internal.match(
+        location,
+        queryStringSerializer
+      );
+
+      if (match === false) {
+        continue;
+      }
+
+      if (match.numExtraneousParams === 0) {
+        return {
+          name: routeName,
+          action,
+          params: match.params
+        };
+      }
+
+      if (
+        nonExactMatch === false ||
+        match.numExtraneousParams < nonExactMatch.numExtraneousParams
+      ) {
+        nonExactMatch = { ...match, name };
+      }
+    }
+
+    if (nonExactMatch) {
+      return {
+        name: nonExactMatch.name,
+        params: nonExactMatch.params,
+        action
+      };
+    }
+
+    return {
+      name: false,
+      action,
+      params: {}
+    };
+  }
+
+  function getLocation(url: string, state?: any): Location {
+    const [path, ...rest] = url.split("?");
+    const query = rest.length === 0 ? undefined : rest.join("?");
+    return { path, query, state };
+  }
+
+  function getTypeRouteLocation(historyLocation: HistoryLocation): Location {
+    return {
+      path: historyLocation.pathname,
+      query: historyLocation.search || undefined,
+      state: historyLocation.state?.[stateParamsKey] || undefined
+    };
+  }
+
+  function getSharedRouterProperties(): SharedRouterProperties {
+    return { navigate, queryStringSerializer };
   }
 }

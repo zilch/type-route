@@ -1,4 +1,4 @@
-import { ParamDefCollection } from "./types";
+import { UmbrellaParamDefCollection } from "./types";
 import { noMatch } from "./noMatch";
 
 export function getObjectMatch({
@@ -7,42 +7,45 @@ export function getObjectMatch({
   urlEncodeDefault
 }: {
   object: Record<string, string>;
-  paramDefs: ParamDefCollection;
+  paramDefs: UmbrellaParamDefCollection;
   urlEncodeDefault: boolean;
 }) {
-  const match: Record<string, unknown> = {};
+  const params: Record<string, unknown> = {};
 
   const namedParamDefs = Object.keys(paramDefs).map(name => {
     return { name, ...paramDefs[name] };
   });
 
+  const extraneousParams = { ...object };
+
   for (const paramDef of namedParamDefs) {
     let raw = object[paramDef.name];
+    delete extraneousParams[paramDef.name];
 
     if (raw === undefined) {
-      if (paramDef.optional) {
+      if (paramDef._internal.optional) {
         continue;
       }
 
       return false;
     }
 
-    const value = paramDef.valueSerializer.parse(
-      paramDef.valueSerializer.urlEncode ?? urlEncodeDefault
+    const value = paramDef._internal.valueSerializer.parse(
+      paramDef._internal.valueSerializer.urlEncode ?? urlEncodeDefault
         ? decodeURIComponent(raw)
         : raw
     );
 
     if (value === noMatch) {
-      if (paramDef.optional) {
+      if (paramDef._internal.optional) {
         continue;
       }
 
       return false;
     }
 
-    match[paramDef.name] = value;
+    params[paramDef.name] = value;
   }
 
-  return match;
+  return { params, numExtraneousParams: Object.keys(extraneousParams).length };
 }

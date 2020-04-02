@@ -14,5 +14,5 @@
     "declaration": true,
     "jsx": "react"
   },
-  "include": ["src", "new2", "new"]
+  "include": ["src"]
 }

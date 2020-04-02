@@ -1,91 +1,202 @@
-import { MemoryHistory, History } from "history";
+import { noMatch } from "./noMatch";
 
-export type QueryParamString = "query.param.string";
-export type QueryParamNumber = "query.param.number";
-export type PathParamString = "path.param.string";
-export type PathParamNumber = "path.param.number";
-export type QueryParamStringOptional = "query.param.string.optional";
-export type QueryParamNumberOptional = "query.param.number.optional";
+export type KeysMatching<TObject, TCondition> = {
+  [TKey in keyof TObject]: TObject[TKey] extends TCondition ? TKey : never;
+}[keyof TObject];
+export type KeysDiffering<TObject, TCondition> = {
+  [TKey in keyof TObject]: TObject[TKey] extends TCondition ? never : TKey;
+}[keyof TObject];
 
-export type KeysMatching<T, V> = {
-  [K in keyof T]: T[K] extends V ? K : never;
-}[keyof T];
-
-export type ParsedPathParameter = {
-  name: string;
-  kind: PathParamNumber | PathParamString;
-  id: string;
+export type ErrorDef = {
+  errorCode: number;
+  getDetails: (...args: any[]) => string[];
 };
 
-export type ParsedPath = (string | ParsedPathParameter)[];
-
-export type ParsedPathParameterCollection = {
-  [name: string]: ParsedPathParameter;
+export type BuildPathDefErrorContext = {
+  routeName: string;
+  rawPath: string;
 };
 
-export type ParameterDefinition =
-  | QueryParamString
-  | QueryParamNumber
-  | PathParamString
-  | PathParamNumber
-  | QueryParamStringOptional
-  | QueryParamNumberOptional;
-
-export type QueryParameterDefinitionCollection = {
-  [parameterName: string]:
-    | QueryParamNumber
-    | QueryParamString
-    | QueryParamNumberOptional
-    | QueryParamStringOptional;
+export type QueryStringSerializer = {
+  parse: (raw: string) => Record<string, string>;
+  stringify: (queryParams: Record<string, string>) => string;
 };
 
-export type ParameterDefinitionCollection = {
-  [parameterName: string]: ParameterDefinition;
+export type ParamDefType = "path" | "query" | "state";
+
+export type ValueSerializer<TValue = unknown> = {
+  urlEncode?: boolean;
+  parse(raw: string): TValue | typeof noMatch;
+  stringify(value: TValue): string;
 };
 
-export type PathParameterDefinitionCollection = {
-  [parameterName: string]: PathParamNumber | PathParamString;
+export type ParamDef<TParamDefType, TValue = unknown> = {
+  _internal: {
+    type: TParamDefType;
+    valueSerializer: ValueSerializer<TValue>;
+    optional: boolean;
+    default: TValue | undefined;
+    trailing?: boolean;
+  };
+};
+export type UmbrellaParamDef = ParamDef<ParamDefType>;
+
+export type SharedRouterProperties = {
+  queryStringSerializer: QueryStringSerializer;
+  navigate: NavigateFn;
 };
 
-export type PathParams<T> = Record<
-  KeysMatching<T, PathParamNumber | PathParamString>,
-  string
+export type ParamDefCollection<TParamDefType> = {
+  [parameterName: string]: ParamDef<TParamDefType>;
+};
+export type UmbrellaParamDefCollection = ParamDefCollection<ParamDefType>;
+
+export type PathParamDef<TValue = unknown> = ParamDef<"path", TValue>;
+
+export type NamedPathParamDef<TValue = unknown> = PathParamDef<TValue> & {
+  paramName: string;
+};
+
+export type Location = {
+  path: string;
+  query?: string;
+  state?: Record<string, string>;
+};
+
+export type PathSegmentDef = {
+  leading: string;
+  trailing: string;
+  namedParamDef: NamedPathParamDef | null;
+};
+
+export type PathDef = PathSegmentDef[];
+
+export type ParamIdCollection = {
+  [paramName: string]: string;
+};
+
+export type GetRawPath = (paramIdCollection: ParamIdCollection) => string;
+
+export type PathParamNames<TParamDefCollection> = KeysMatching<
+  TParamDefCollection,
+  { _internal: { type: "path" } }
+>;
+type OptionalParamNames<TParamDefCollection> = KeysMatching<
+  TParamDefCollection,
+  { _internal: { optional: true } }
+>;
+type RequiredParamNames<TParamDefCollection> = KeysMatching<
+  TParamDefCollection,
+  { _internal: { optional: false } }
+>;
+type RequiredOutputParamsNames<TParamDefCollection> =
+  | RequiredParamNames<TParamDefCollection>
+  | KeysDiffering<
+      TParamDefCollection,
+      { _internal: { optional: true; default: undefined } }
+    >;
+type OptionalOutputParamsNames<TParamDefCollection> = Exclude<
+  keyof TParamDefCollection,
+  RequiredOutputParamsNames<TParamDefCollection>
 >;
 
-export type PathFn<T> = (params: PathParams<T>) => string;
+export type ParamValue<TParamDef> = TParamDef extends ParamDef<
+  any,
+  infer TValue
+>
+  ? TValue
+  : never;
 
-export type MatchFnParams = {
-  pathName: string;
-  queryString?: string;
+type InputRouteParams<TParamDefCollection> = {
+  [TParamName in RequiredParamNames<TParamDefCollection>]: ParamValue<
+    TParamDefCollection[TParamName]
+  >;
+} &
+  {
+    [TParamName in OptionalParamNames<TParamDefCollection>]?: ParamValue<
+      TParamDefCollection[TParamName]
+    >;
+  };
+
+type OutputRouteParams<TParamDefCollection> = {
+  [TParamName in OptionalOutputParamsNames<TParamDefCollection>]?: ParamValue<
+    TParamDefCollection[TParamName]
+  >;
+} &
+  {
+    [TParamName in RequiredOutputParamsNames<TParamDefCollection>]: ParamValue<
+      TParamDefCollection[TParamName]
+    >;
+  };
+
+export type PathParams<TParamDefCollection> = {
+  [TParamName in PathParamNames<TParamDefCollection>]: string;
 };
 
-export type MatchFn<T> = (params: MatchFnParams) => RouteParameters<T> | false;
+export type PathFn<TParamDefCollection> = (
+  x: PathParams<TParamDefCollection>
+) => string;
 
-export type RouteParameters<T> = Record<
-  KeysMatching<T, QueryParamString | PathParamString>,
-  string
-> &
-  Record<KeysMatching<T, QueryParamNumber | PathParamNumber>, number> &
-  Partial<Record<KeysMatching<T, QueryParamStringOptional>, string>> &
-  Partial<Record<KeysMatching<T, QueryParamNumberOptional>, number>>;
+export type RouteDefBuilder<TParamDefCollection> = {
+  _internal: {
+    params: TParamDefCollection;
+    path: PathFn<TParamDefCollection>;
+  };
 
-type RouteParameterFunction<T, R> = KeysMatching<
-  T,
-  QueryParamString | QueryParamNumber | PathParamNumber | PathParamString
+  extend<TExtensionParamDefCollection>(
+    params: TExtensionParamDefCollection,
+    path: PathFn<TExtensionParamDefCollection>
+  ): RouteDefBuilder<TParamDefCollection & TExtensionParamDefCollection>;
+};
+export type UmbrellaRouteDefBuilder = RouteDefBuilder<
+  UmbrellaParamDefCollection
+>;
+
+export type NavigateFn = (
+  location: Location,
+  replace?: boolean
+) => Promise<boolean>;
+
+export type OnClickHandler = (event?: any) => void;
+
+export type Link = {
+  href: string;
+  onClick: OnClickHandler;
+};
+
+type RouteParamsFunction<TParamDefCollection, TReturnType> = KeysMatching<
+  TParamDefCollection,
+  {}
 > extends never
-  ? (params?: RouteParameters<T>) => R
-  : (params: RouteParameters<T>) => R;
+  ? () => TReturnType
+  : RequiredParamNames<TParamDefCollection> extends never
+  ? (params?: InputRouteParams<TParamDefCollection>) => TReturnType
+  : (params: InputRouteParams<TParamDefCollection>) => TReturnType;
 
-export type RouteDefinitionBuilder<T> = {
-  params: T;
-  path: PathFn<T>;
-
-  extend<K extends ParameterDefinitionCollection>(
-    params: K,
-    path: PathFn<K>
-  ): RouteDefinitionBuilder<T & K>;
-  extend(path: string): RouteDefinitionBuilder<T>;
+export type Match = {
+  params: Record<string, unknown>;
+  numExtraneousParams: number;
 };
+
+export type RouteDef<TRouteName, TParamDefCollection> = {
+  name: TRouteName;
+  href: RouteParamsFunction<TParamDefCollection, string>;
+  push: RouteParamsFunction<TParamDefCollection, Promise<boolean>>;
+  replace: RouteParamsFunction<TParamDefCollection, Promise<boolean>>;
+  link: RouteParamsFunction<TParamDefCollection, Link>;
+  _internal: {
+    match: (
+      location: Location,
+      queryStringSerializer: QueryStringSerializer
+    ) => Match | false;
+    Route: {
+      name: TRouteName;
+      action: Action;
+      params: OutputRouteParams<TParamDefCollection>;
+    };
+  };
+};
+export type UmbrellaRouteDef = RouteDef<string, UmbrellaParamDefCollection>;
 
 export type ClickEvent = {
   preventDefault?: () => void;
@@ -98,62 +209,7 @@ export type ClickEvent = {
   target?: { target?: string | null } | null;
 };
 
-export type OnClickHandler = (event?: any) => void;
-
-export type RouteDefinition<K, T> = {
-  name: K;
-
-  href: RouteParameterFunction<T, string>;
-
-  push: RouteParameterFunction<T, Promise<boolean>>;
-
-  link: RouteParameterFunction<T, { href: string; onClick: OnClickHandler }>;
-
-  replace: RouteParameterFunction<T, Promise<boolean>>;
-
-  match: MatchFn<T>;
-
-  [".builder"]: RouteDefinitionBuilder<T>;
-
-  [".type"]: {
-    name: K;
-    action: Action;
-    params: RouteParameters<T>;
-  };
-};
-
-export type RouteDefinitionBuilderCollection = {
-  [routeName: string]: RouteDefinitionBuilder<ParameterDefinitionCollection>;
-};
-
-export type RouteDefinitionCollection = {
-  [routeName: string]: RouteDefinition<string, ParameterDefinitionCollection>;
-};
-
 export type Action = "push" | "replace" | "pop" | "initial";
-
-export type BrowserHistoryRouterConfig = {
-  type: "browser";
-  forceRefresh?: boolean;
-};
-
-export type MemoryHistoryRouterConfig = {
-  type: "memory";
-  initialEntries?: string[];
-  initialIndex?: number;
-};
-
-export type HistoryConfig =
-  | BrowserHistoryRouterConfig
-  | MemoryHistoryRouterConfig;
-
-export type RouteDefinitionToRoute<
-  T extends RouteDefinition<string, ParameterDefinitionCollection>
-> = {
-  name: T["name"];
-  action: Action;
-  params: RouteParameters<T[".builder"]["params"]>;
-};
 
 export type NotFoundRoute = {
   name: false;
@@ -161,45 +217,88 @@ export type NotFoundRoute = {
   params: {};
 };
 
-export type RouteDefinitionGroup<T extends any> = {
-  [".type"]: T[number][".type"];
-  routeNames: T[number][".type"]["name"][];
-  has(route: Route<any>): route is T[number][".type"];
-};
-
-export type Route<T> = T extends RouteDefinition<any, any>
-  ? RouteDefinitionToRoute<T>
-  : T extends RouteDefinitionGroup<any>
-  ? T[".type"]
-  :
+export type Route<T> = T extends UmbrellaRouteDef
+  ? T["_internal"]["Route"]
+  : T extends Record<string, RouteDefBuilder<any>>
+  ?
       | {
-          [K in keyof T]: {
-            name: K;
+          [TRouteName in keyof T]: {
+            name: TRouteName;
             action: Action;
-            params: T[K] extends RouteDefinition<any, any>
-              ? RouteParameters<T[K][".builder"]["params"]>
-              : T[K] extends RouteDefinitionBuilder<any>
-              ? RouteParameters<T[K]["params"]>
-              : never;
+            params: OutputRouteParams<T[TRouteName]["_internal"]["params"]>;
           };
         }[keyof T]
-      | NotFoundRoute;
+      | NotFoundRoute
+  : never;
 
-export type NavigationHandler<T> = (
-  nextRoute: Route<T>
+export type UmbrellaRoute = {
+  name: string | false;
+  action: Action;
+  params: Record<string, unknown>;
+};
+
+export type NavigationHandler<TRouteDefBuilderCollection> = (
+  nextRoute: Route<TRouteDefBuilderCollection>
 ) => Promise<boolean | void> | boolean | void;
+export type UmbrellaNavigationHandler = NavigationHandler<
+  UmbrellaRouteDefBuilderCollection
+>;
 
-export type Router<T extends { [key: string]: any }> = {
-  routes: { [K in keyof T]: RouteDefinition<K, T[K]["params"]> };
+export type RouterHistory<TRouteDefBuilderCollection> = {
+  push(url: string, state?: any): Promise<boolean>;
+  replace(url: string, state?: any): Promise<boolean>;
+  getInitialRoute(): Route<TRouteDefBuilderCollection>;
+  back(amount?: number): void;
+  forward(amount?: number): void;
+  reset(options: HistoryOptions): void;
+};
+export type UmbrellaRouterHistory = RouterHistory<
+  UmbrellaRouteDefBuilderCollection
+>;
 
-  listen: (handler: NavigationHandler<T>) => () => void;
+export type MemoryHistoryOptions = {
+  type: "memory";
+  initialEntries?: string[];
+  initialIndex?: number;
+};
 
-  getCurrentRoute: () => Route<T>;
+export type BrowserHistoryOptions = {
+  type: "browser";
+  forceRefresh?: boolean;
+};
 
-  history: {
-    getActiveInstance: () =>
-      | ({ type: "browser" } & History)
-      | ({ type: "memory" } & MemoryHistory);
-    configure: (config: HistoryConfig) => void;
+export type HistoryOptions = MemoryHistoryOptions | BrowserHistoryOptions;
+
+export type RouterOptions = {
+  history?: HistoryOptions;
+  queryStringSerializer?: QueryStringSerializer;
+};
+
+export type UmbrellaRouteDefBuilderCollection = Record<
+  string,
+  UmbrellaRouteDefBuilder
+>;
+
+export type Router<
+  TRouteDefBuilderCollection extends { [routeName: string]: any }
+> = {
+  routes: {
+    [TRouteName in keyof TRouteDefBuilderCollection]: RouteDef<
+      TRouteName,
+      TRouteDefBuilderCollection[TRouteName]["_internal"]["params"]
+    >;
   };
+  history: RouterHistory<TRouteDefBuilderCollection>;
+  listen: (
+    handler: NavigationHandler<TRouteDefBuilderCollection>
+  ) => () => void;
+};
+export type UmbrellaRouter = Router<UmbrellaRouteDefBuilderCollection>;
+
+export type RouteDefGroup<T extends any[] = any[]> = {
+  _internal: {
+    Route: T[number]["_internal"]["Route"];
+  };
+  routeNames: T[number]["_internal"]["Route"]["name"][];
+  has(route: Route<any>): route is T[number]["_internal"]["Route"];
 };

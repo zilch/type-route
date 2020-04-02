@@ -1,151 +1,63 @@
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
-import { createRouter, defineRoute, Route } from "./index";
+import { createRouter, defineRoute, createGroup, param } from "./index";
 
-// router.create;
-// router.Link;
-// router.ParameterType;
-// router.Route;
-// router.defineRoute;
-// router.noMatch;
-// router.path;
-// router.query;
-// router.state;
+param.path.number;
+param.path.optional.ofType<number>().default(5);
 
-// TODO
-// - Redirects? More seamless somehow (change recommendation)
-// - Trailing/optional path parameter
-// - Custom parameter types
-// - Partial path parameter (i.e. not just between slashes / /)
-// - ? Custom query string parsing
-// - Location state parameters
-// - Initial route from history as opposed to current route
-// - Abstraction of safe history methods and hide rest behind `getInternalInstance`
-// - Integration tests (cypress)
-// - export link type
-// referential integrity of route
-// updated docs
-// hashes?
-// on link click intercept
+const { routes, listen, history } = createRouter({
+  home: defineRoute({}, () => "/"),
+  userList: defineRoute(
+    {
+      page: param.query.optional.number.default(1)
+    },
+    () => `/users`
+  ),
+  user: defineRoute(
+    {
+      userId: param.path.string
+    },
+    x => `/users/${x.userId}`
+  )
+});
 
-import "./playground.css";
-
-// const number: ParameterType<number> = {
-//   urlEncode: false,
-//   parse: raw => {
-//     if (!isNumeric(raw)) {
-//       return noMatch;
-//     }
-
-//     return parseFloat(raw);
-//   },
-//   toString: value => value.toString()
-// };
-
-// const hostListParams: ParamterType<HostListParams> = {
-//   urlEncode: false
-// };
-
-// parameter.path.number;
-// parameter.path.string;
-
-const { routes, listen, getCurrentRoute } = createRouter(
-  {
-    home: defineRoute("/"),
-    userList: defineRoute(
-      {
-        page: "query.param.number.optional"
-      },
-      () => "/user"
-    ),
-    user: defineRoute(
-      {
-        userId: "path.param.string"
-      },
-      x => `/user/${x.userId}`
-    )
-  }
-  // {
-  //   queryStringParser: routeName => {
-  //     if (routeName) {
-  //       return null;
-  //     }
-
-  //     return {
-  //       parse: () => {},
-  //       toString: () => {}
-  //     };
-  //   }
-  // }
-);
-
-// history.getInitialRoute();
-// history.navigate();
-// history.goBack();
-// history.getInternalInstance();
-// history.reinitialize();
-// history.getEntries();
+const userGroup = createGroup([routes.user, routes.userList]);
 
 function App() {
-  const [route, setRoute] = useState(() => getCurrentRoute());
+  const [route, setRoute] = useState(history.getInitialRoute());
+
+  routes.home;
+  routes.userList;
+  routes.userList.link({});
 
   useEffect(() => listen(setRoute), []);
 
-  return (
-    <>
-      <Navigation />
-      <Page route={route} />
-    </>
-  );
-}
+  let page;
 
-function Page(props: { route: Route<typeof routes> }) {
-  const { route } = props;
+  if (userGroup.has(route)) {
+    route.name;
+  }
 
   if (route.name === routes.home.name) {
-    return <div>Home Page</div>;
+    page = <div>Home</div>;
+  } else if (route.name === routes.userList.name) {
+    page = <div>User List (Page {route.params.page}</div>;
+  } else if (route.name === routes.user.name) {
+    page = <div>User {route.params.userId}</div>;
+  } else {
+    page = <div>Not Found</div>;
   }
 
-  if (route.name === routes.userList.name) {
-    return (
-      <div>
-        User List
-        <br />
-        Page: {route.params.page || "-"}
-      </div>
-    );
-  }
-
-  if (route.name === routes.user.name) {
-    return <div>User {route.params.userId}</div>;
-  }
-
-  return <div>Not Found</div>;
-}
-
-function Navigation() {
   return (
-    <nav>
-      <a {...routes.home.link()}>Home</a>
-      <a {...routes.userList.link()}>User List</a>
-      <a
-        {...routes.userList.link({
-          page: 2
-        })}
-      >
-        User List Page 2
-      </a>
-      <a
-        {...routes.user.link({
-          userId: "abc"
-        })}
-      >
-        User "abc"
-      </a>
-    </nav>
+    <div>
+      <header>
+        <a {...routes.home.link()}>Home</a>
+        <a {...routes.userList.link()}>User List</a>
+        <a {...routes.user.link({ userId: "abc" })}>User abc</a>
+      </header>
+      {page}
+    </div>
   );
 }
 
-const appContainer = document.createElement("div");
-document.body.appendChild(appContainer);
-ReactDOM.render(<App />, appContainer);
+ReactDOM.render(<App />, document.querySelector("#app"));
