@@ -8,12 +8,6 @@ export function getPathMatch(path: string, pathDef: PathDef) {
     return { params, numExtraneousParams: 0 };
   }
 
-  if (!startsWith(path, "/")) {
-    throw new Error(
-      "Unexpected condition - path should start with a forward slash."
-    );
-  }
-
   const pathHasTrailingSlash = path.length > 1 && endsWith(path, "/");
 
   if (pathHasTrailingSlash) {
@@ -34,10 +28,6 @@ export function getPathMatch(path: string, pathDef: PathDef) {
         ? null
         : pathSegmentList[segmentIndex];
 
-    if (pathSegment === null && pathSegmentDef === null) {
-      throw new Error("Unexpected condition - both should not be null");
-    }
-
     if (pathSegmentDef === null) {
       return false;
     }
@@ -56,12 +46,6 @@ export function getPathMatch(path: string, pathDef: PathDef) {
     }
 
     if (pathSegmentDef.namedParamDef?._internal.trailing) {
-      if (numRemainingPathSegmentDefs > 0) {
-        throw new Error(
-          "Unexpected condition - trailing parameter should be the last"
-        );
-      }
-
       pathSegment = pathSegmentList.slice(segmentIndex).join("/");
     }
 

@@ -159,12 +159,8 @@ export function createRouter(
       .indexOf(idToRemove);
     navigationHandlers.splice(indexToRemove, 1);
 
-    if (unblock === undefined) {
-      throw new Error(`\n\nUnexpected error: "unblock" should be defined\n`);
-    }
-
     if (navigationHandlers.length === 0) {
-      unblock();
+      unblock?.();
     }
   }
 
