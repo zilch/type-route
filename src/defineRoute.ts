@@ -1,11 +1,11 @@
 import {
   PathFn,
   RouteDefBuilder,
-  PathParams,
   UmbrellaParamDefCollection,
   UmbrellaRouteDefBuilder
 } from "./types";
 import { TypeRouteError } from "./TypeRouteError";
+import { assert } from "./assert";
 
 export function defineRoute<TParamDefCollection>(
   params: TParamDefCollection,
@@ -13,27 +13,22 @@ export function defineRoute<TParamDefCollection>(
 ): RouteDefBuilder<TParamDefCollection>;
 export function defineRoute(path: string): RouteDefBuilder<{}>;
 export function defineRoute(...args: any[]): UmbrellaRouteDefBuilder {
-  const _internal: {
-    params: UmbrellaParamDefCollection;
-    path: PathFn<UmbrellaParamDefCollection>;
-  } =
-    args.length === 1
-      ? {
-          params: {},
-          path: () => args[0]
-        }
-      : {
-          params: args[0],
-          path: args[1]
-        };
+  assertDefineRouteOrExtendArgs("defineRoute", args);
+
+  const parent = parseArgs(args);
 
   const routeDefBuilder: UmbrellaRouteDefBuilder = {
-    _internal,
-    extend<TExtensionParamDefCollection extends {}>(
-      params: TExtensionParamDefCollection,
-      path: PathFn<TExtensionParamDefCollection>
-    ) {
-      const parentParamNames = Object.keys(_internal.params);
+    _internal: {
+      type: "RouteDefBuilder",
+      params: parent.params,
+      path: parent.path
+    },
+    extend(...args: any[]) {
+      assertDefineRouteOrExtendArgs("extend", args);
+
+      const { params, path } = parseArgs(args);
+
+      const parentParamNames = Object.keys(parent.params);
       const extensionParamNames = Object.keys(params);
 
       const duplicateParamNames = parentParamNames.filter(
@@ -49,16 +44,12 @@ export function defineRoute(...args: any[]): UmbrellaRouteDefBuilder {
       return defineRoute(
         {
           ...params,
-          ..._internal.params
+          ...parent.params
         },
         x => {
           return (
-            _internal.path(filter(parentParamNames)) +
-            path(
-              filter(extensionParamNames) as PathParams<
-                TExtensionParamDefCollection
-              >
-            )
+            parent.path(filter(parentParamNames)) +
+            path(filter(extensionParamNames))
           );
 
           function filter(allowedKeys: string[]) {
@@ -76,4 +67,33 @@ export function defineRoute(...args: any[]): UmbrellaRouteDefBuilder {
   };
 
   return routeDefBuilder;
+}
+
+function assertDefineRouteOrExtendArgs(functionName: string, args: any[]) {
+  if (args.length === 1) {
+    assert(functionName, [assert.type("string", "path", args[0])]);
+  } else {
+    assert(functionName, [
+      assert.numArgs(args, 1, 2),
+      assert.collectionOfType("ParamDef", "params", args[0]),
+      assert.type("function", "path", args[1])
+    ]);
+  }
+}
+
+function parseArgs(
+  args: any[]
+): {
+  params: UmbrellaParamDefCollection;
+  path: PathFn<UmbrellaParamDefCollection>;
+} {
+  return args.length === 1
+    ? {
+        params: {},
+        path: () => args[0]
+      }
+    : {
+        params: args[0],
+        path: args[1]
+      };
 }

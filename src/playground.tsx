@@ -46,7 +46,7 @@ function Page(props: { route: Route<typeof routes> }) {
       <div>
         User List
         <br />
-        Page: {route.params.page || "-"}
+        Page: {route.params.page}
       </div>
     );
   }

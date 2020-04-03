@@ -1,4 +1,5 @@
 import { ErrorDef, BuildPathDefErrorContext } from "./types";
+import { typeOf } from "./assert";
 
 function getBuildPathDefRouteNameMessage(routeName: string) {
   return `This problem occurred when building the route definition for the "${routeName}" route.`;
@@ -160,6 +161,61 @@ export const TypeRouteError = buildErrorCollection({
         `The following parameter names were used in both the base route definition and the extension: ${duplicateParameterNames.join(
           ", "
         )}`
+      ];
+    }
+  },
+
+  Expected_type_does_not_match_actual_type: {
+    errorCode: 1012,
+    getDetails({
+      context,
+      value,
+      valueName,
+      expectedType,
+      actualType
+    }: {
+      context: string;
+      valueName: string;
+      expectedType: string | string[];
+      actualType: string;
+      value: any;
+    }) {
+      return [
+        `Problem found with your usage of \`${context}\``,
+        `\`${valueName}\` was expected to be of type \`${
+          Array.isArray(expectedType) ? expectedType.join(" | ") : expectedType
+        }\` but was of type \`${actualType}\``,
+        `The actual value provided was: ${
+          typeOf(value) === "object"
+            ? "\n" +
+              JSON.stringify(value, null, 2)
+                .split("\n")
+                .map(line => `  ${line}`)
+                .join("\n")
+            : "`" + value + "`"
+        }`
+      ];
+    }
+  },
+
+  Expected_number_of_arguments_does_match_actual_number: {
+    errorCode: 1013,
+    getDetails({
+      context,
+      args,
+      min,
+      max
+    }: {
+      context: string;
+      args: any[];
+      min: number;
+      max: number;
+    }) {
+      return [
+        `Problem found with your usage of \`${context}\``,
+        `Expected ${min}${min === max ? "" : " - " + max} but received ${
+          args.length
+        } argument${args.length === 1 ? "" : "s"}`
       ];
     }
   }

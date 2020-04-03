@@ -22,22 +22,33 @@ import {
   createMemoryHistory
 } from "history";
 import { defaultQueryStringSerializer } from "./defaultQueryStringSerializer";
+import { assert } from "./assert";
 
-export function createRouter<TRouteDefs>(
-  routeDefs: TRouteDefs,
+export function createRouter<TRouteDefBuilders>(
+  routeDefBuilders: TRouteDefBuilders,
   options?: RouterOptions
-): Router<TRouteDefs>;
+): Router<TRouteDefBuilders>;
 export function createRouter(
-  routeDefs: Record<string, UmbrellaRouteDefBuilder>,
+  routeDefBuilders: Record<string, UmbrellaRouteDefBuilder>,
   options: RouterOptions = {}
 ): UmbrellaRouter {
+  assert("createRouter", [
+    assert.numArgs([].slice.call(arguments), 1, 2),
+    assert.collectionOfType(
+      "RouteDefBuilder",
+      "routeDefBuilders",
+      routeDefBuilders
+    ),
+    assert.type(["undefined", "object"], "options", options)
+  ]);
+
   let history: History<LocationState>;
   let routes: Record<string, UmbrellaRouteDef> = {};
 
-  for (const routeName of Object.keys(routeDefs)) {
+  for (const routeName of Object.keys(routeDefBuilders)) {
     routes[routeName] = buildRouteDef(
       routeName,
-      routeDefs[routeName],
+      routeDefBuilders[routeName],
       getSharedRouterProperties
     );
   }
@@ -64,16 +75,55 @@ export function createRouter(
     routes,
     listen,
     history: {
-      push: (url, state) => navigate(getLocation(url, state)),
-      replace: (url, state) => navigate(getLocation(url, state), true),
-      back: (amount = 1) => {
+      push(url, state) {
+        assert("[RouterHistory].push", [
+          assert.numArgs([].slice.call(arguments), 1, 2),
+          assert.type("string", "url", url),
+          assert.type(["object", "undefined"], "state", state)
+        ]);
+
+        return navigate(getLocation(url, state));
+      },
+      replace(url, state) {
+        assert("[RouterHistory].replace", [
+          assert.numArgs([].slice.call(arguments), 1, 2),
+          assert.type("string", "url", url),
+          assert.type(["object", "undefined"], "state", state)
+        ]);
+
+        return navigate(getLocation(url, state), true);
+      },
+      back(amount = 1) {
+        assert("[RouterHistory].back", [
+          assert.numArgs([].slice.call(arguments), 0, 1),
+          assert.type("number", "amount", amount)
+        ]);
+
         history.go(-amount);
       },
-      forward: (amount = 1) => {
+      forward(amount = 1) {
+        assert("[RouterHistory].forward", [
+          assert.numArgs([].slice.call(arguments), 0, 1),
+          assert.type("number", "amount", amount)
+        ]);
+
         history.go(amount);
       },
-      getInitialRoute: () => initialRoute,
-      reset: history => initializeRouter({ history, queryStringSerializer })
+      getInitialRoute() {
+        assert("[RouterHistory].getInitialRoute", [
+          assert.numArgs([].slice.call(arguments), 0)
+        ]);
+
+        return initialRoute;
+      },
+      reset(history) {
+        assert("[RouterHistory].reset", [
+          assert.numArgs([].slice.call(arguments), 1),
+          assert.type("object", "history", history)
+        ]);
+
+        return initializeRouter({ history, queryStringSerializer });
+      }
     }
   };
 
@@ -168,9 +218,17 @@ export function createRouter(
     const nextRoute = getRoute(location, action);
 
     for (const { handler } of navigationHandlers) {
-      const proceed = await handler(nextRoute);
+      const navigationHandlerResult = await handler(nextRoute);
 
-      if (proceed === false) {
+      assert("NavigationHandler", [
+        assert.type(
+          ["boolean", "undefined"],
+          "navigationHandlerResult",
+          navigationHandlerResult
+        )
+      ]);
+
+      if (navigationHandlerResult === false) {
         return false;
       }
     }

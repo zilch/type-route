@@ -4,6 +4,7 @@ import {
   QueryStringSerializer,
   UmbrellaParamDefCollection
 } from "./types";
+import { assert } from "./assert";
 
 export function createLocation(
   paramCollection: Record<string, unknown>,
@@ -18,17 +19,26 @@ export function createLocation(
   };
 
   for (const paramName in paramCollection) {
-    const paramDef = paramDefCollection[paramName];
-    const paramValue = paramDef._internal.valueSerializer.stringify(
-      paramCollection[paramName]
-    );
-    const urlEncodeDefault =
-      paramDef._internal.type !== "state" && !paramDef._internal.trailing;
+    const paramValue = paramCollection[paramName];
 
-    params[paramDef._internal.type][paramName] =
+    if (paramValue === undefined) {
+      continue;
+    }
+
+    const paramDef = paramDefCollection[paramName];
+    const result = paramDef._internal.valueSerializer.stringify(paramValue);
+
+    assert("[ValueSerializer].stringify", [
+      assert.type("string", "result", result)
+    ]);
+
+    const urlEncodeDefault =
+      paramDef._internal.kind !== "state" && !paramDef._internal.trailing;
+
+    params[paramDef._internal.kind][paramName] =
       paramDef._internal.valueSerializer.urlEncode ?? urlEncodeDefault
-        ? encodeURIComponent(paramValue)
-        : paramValue;
+        ? encodeURIComponent(result)
+        : result;
   }
 
   const path =
@@ -42,10 +52,15 @@ export function createLocation(
       })
       .join("/");
 
-  const query =
-    Object.keys(params.query).length === 0
-      ? undefined
-      : queryStringSerializer.stringify(params.query);
+  const hasQueryParams = Object.keys(params.query).length > 0;
+
+  const query = hasQueryParams
+    ? queryStringSerializer.stringify(params.query)
+    : undefined;
+
+  if (hasQueryParams) {
+    assert("query", [assert.type("string", "query", query)]);
+  }
 
   const state =
     Object.keys(params.state).length === 0 ? undefined : params.state;

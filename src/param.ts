@@ -1,5 +1,6 @@
 import { noMatch } from "./noMatch";
-import { ValueSerializer, ParamDefType, ParamDef, ParamValue } from "./types";
+import { ValueSerializer, ParamDefKind, ParamDef, ParamValue } from "./types";
+import { assert } from "./assert";
 
 const number: ValueSerializer<number> = {
   parse: raw => {
@@ -22,7 +23,7 @@ const string: ValueSerializer<string> = {
 };
 
 const json = <TValue = unknown>() => {
-  const paramType: ValueSerializer<TValue> = {
+  const valueSerializer: ValueSerializer<TValue> = {
     parse: raw => {
       let value: TValue;
 
@@ -37,22 +38,22 @@ const json = <TValue = unknown>() => {
     stringify: value => JSON.stringify(value)
   };
 
-  return paramType;
+  return valueSerializer;
 };
 
 export const param = {
   path: {
-    ...getParamDefTypeSection("path", false),
-    trailing: getParamDefTypeSection("path", true)
+    ...getParamDefKindSection("path", false),
+    trailing: getParamDefKindSection("path", true)
   },
-  query: getParamDefTypeSection("query", false),
-  state: getParamDefTypeSection("state", false)
+  query: getParamDefKindSection("query", false),
+  state: getParamDefKindSection("state", false)
 };
 
-function getParamDefTypeSection<
-  TType extends ParamDefType,
+function getParamDefKindSection<
+  TKind extends ParamDefKind,
   TTrailing extends boolean
->(type: TType, trailing: TTrailing) {
+>(kind: TKind, trailing: TTrailing) {
   return {
     ...getParamDefOptionalitySection(false),
     optional: {
@@ -66,7 +67,8 @@ function getParamDefTypeSection<
     return {
       string: getParamDef({
         _internal: {
-          type,
+          type: "ParamDef",
+          kind,
           optional,
           valueSerializer: string,
           trailing,
@@ -76,7 +78,8 @@ function getParamDefTypeSection<
 
       number: getParamDef({
         _internal: {
-          type,
+          type: "ParamDef",
+          kind,
           optional,
           valueSerializer: number,
           trailing,
@@ -84,23 +87,30 @@ function getParamDefTypeSection<
         }
       }),
 
-      ofType: <TValue = unknown>(
+      ofType<TValue = unknown>(
         valueSerializer: ValueSerializer<TValue> = json<TValue>()
-      ) =>
-        getParamDef({
+      ) {
+        assert("[ParamDef].ofType", [
+          assert.numArgs([].slice.call(arguments), 0, 1),
+          assert.type("object", "valueSerializer", valueSerializer)
+        ]);
+
+        return getParamDef({
           _internal: {
-            type,
+            type: "ParamDef",
+            kind,
             optional,
             valueSerializer,
             trailing,
             default: undefined as never
           }
-        })
+        });
+      }
     };
   }
 
   type GetParamDefResult<
-    T extends ParamDef<TType>
+    T extends ParamDef<TKind>
   > = T["_internal"]["optional"] extends true
     ? {
         _internal: T["_internal"];
@@ -108,7 +118,8 @@ function getParamDefTypeSection<
           value: ParamValue<T>
         ): {
           _internal: {
-            type: T["_internal"]["type"];
+            type: "ParamDef";
+            kind: T["_internal"]["kind"];
             valueSerializer: T["_internal"]["valueSerializer"];
             optional: T["_internal"]["optional"];
             default: ParamValue<T>;
@@ -118,7 +129,7 @@ function getParamDefTypeSection<
       }
     : T;
 
-  function getParamDef<T extends ParamDef<TType>>({
+  function getParamDef<T extends ParamDef<TKind>>({
     _internal
   }: T): GetParamDefResult<T> {
     if (!_internal.optional) {
@@ -128,6 +139,10 @@ function getParamDefTypeSection<
     return {
       _internal,
       default(value: any) {
+        assert("[ParamDef].default", [
+          assert.numArgs([].slice.call(arguments), 1)
+        ]);
+
         return {
           _internal: { ..._internal, default: value }
         };

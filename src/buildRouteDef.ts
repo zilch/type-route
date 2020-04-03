@@ -9,6 +9,7 @@ import { buildPathDef } from "./buildPathDef";
 import { getParamDefsOfType } from "./getParamDefsOfType";
 import { createLocation } from "./createLocation";
 import { createMatcher } from "./createMatcher";
+import { assert } from "./assert";
 
 export function buildRouteDef(
   routeName: string,
@@ -28,12 +29,15 @@ export function buildRouteDef(
     push,
     link,
     _internal: {
+      type: "RouteDef",
       match: createMatcher({ pathDef, params: builder._internal.params }),
       Route: null as any
     }
   };
 
   function link(params: Record<string, unknown> = {}): Link {
+    assertRouteDefFnArgs("link", [].slice.call(arguments), params);
+
     return {
       href: href(params),
       onClick: (event: ClickEvent = {}) => {
@@ -78,6 +82,8 @@ export function buildRouteDef(
   }
 
   function href(params: Record<string, unknown> = {}) {
+    assertRouteDefFnArgs("link", [].slice.call(arguments), params);
+
     const { queryStringSerializer } = getSharedRouterProperties();
 
     const location = createLocation(
@@ -91,7 +97,10 @@ export function buildRouteDef(
   }
 
   function push(params: Record<string, unknown> = {}) {
+    assertRouteDefFnArgs("link", [].slice.call(arguments), params);
+
     const { navigate, queryStringSerializer } = getSharedRouterProperties();
+
     return navigate(
       createLocation(
         params,
@@ -103,7 +112,10 @@ export function buildRouteDef(
   }
 
   function replace(params: Record<string, unknown> = {}) {
+    assertRouteDefFnArgs("link", [].slice.call(arguments), params);
+
     const { navigate, queryStringSerializer } = getSharedRouterProperties();
+
     return navigate(
       createLocation(
         params,
@@ -113,5 +125,16 @@ export function buildRouteDef(
       ),
       true
     );
+  }
+
+  function assertRouteDefFnArgs(
+    fnName: string,
+    args: any[],
+    params: Record<string, unknown>
+  ) {
+    assert(`routes.${routeName}.${fnName}`, [
+      assert.numArgs(args, 0, 1),
+      assert.type("object", "params", params)
+    ]);
   }
 }

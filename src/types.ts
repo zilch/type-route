@@ -22,7 +22,7 @@ export type QueryStringSerializer = {
   stringify: (queryParams: Record<string, string>) => string;
 };
 
-export type ParamDefType = "path" | "query" | "state";
+export type ParamDefKind = "path" | "query" | "state";
 
 export type ValueSerializer<TValue = unknown> = {
   urlEncode?: boolean;
@@ -30,26 +30,27 @@ export type ValueSerializer<TValue = unknown> = {
   stringify(value: TValue): string;
 };
 
-export type ParamDef<TParamDefType, TValue = unknown> = {
+export type ParamDef<TParamDefKind, TValue = unknown> = {
   _internal: {
-    type: TParamDefType;
+    type: "ParamDef";
+    kind: TParamDefKind;
     valueSerializer: ValueSerializer<TValue>;
     optional: boolean;
     default: TValue | undefined;
     trailing?: boolean;
   };
 };
-export type UmbrellaParamDef = ParamDef<ParamDefType>;
+export type UmbrellaParamDef = ParamDef<ParamDefKind>;
 
 export type SharedRouterProperties = {
   queryStringSerializer: QueryStringSerializer;
   navigate: NavigateFn;
 };
 
-export type ParamDefCollection<TParamDefType> = {
-  [parameterName: string]: ParamDef<TParamDefType>;
+export type ParamDefCollection<TParamDefKind> = {
+  [parameterName: string]: ParamDef<TParamDefKind>;
 };
-export type UmbrellaParamDefCollection = ParamDefCollection<ParamDefType>;
+export type UmbrellaParamDefCollection = ParamDefCollection<ParamDefKind>;
 
 export type PathParamDef<TValue = unknown> = ParamDef<"path", TValue>;
 
@@ -79,7 +80,7 @@ export type GetRawPath = (paramIdCollection: ParamIdCollection) => string;
 
 export type PathParamNames<TParamDefCollection> = KeysMatching<
   TParamDefCollection,
-  { _internal: { type: "path" } }
+  { _internal: { kind: "path" } }
 >;
 type OptionalParamNames<TParamDefCollection> = KeysMatching<
   TParamDefCollection,
@@ -139,6 +140,7 @@ export type PathFn<TParamDefCollection> = (
 
 export type RouteDefBuilder<TParamDefCollection> = {
   _internal: {
+    type: "RouteDefBuilder";
     params: TParamDefCollection;
     path: PathFn<TParamDefCollection>;
   };
@@ -147,6 +149,7 @@ export type RouteDefBuilder<TParamDefCollection> = {
     params: TExtensionParamDefCollection,
     path: PathFn<TExtensionParamDefCollection>
   ): RouteDefBuilder<TParamDefCollection & TExtensionParamDefCollection>;
+  extend(path: string): RouteDefBuilder<TParamDefCollection>;
 };
 export type UmbrellaRouteDefBuilder = RouteDefBuilder<
   UmbrellaParamDefCollection
@@ -185,6 +188,7 @@ export type RouteDef<TRouteName, TParamDefCollection> = {
   replace: RouteParamsFunction<TParamDefCollection, Promise<boolean>>;
   link: RouteParamsFunction<TParamDefCollection, Link>;
   _internal: {
+    type: "RouteDef";
     match: (
       location: Location,
       queryStringSerializer: QueryStringSerializer
@@ -312,6 +316,7 @@ export type UmbrellaRouter = Router<UmbrellaRouteDefBuilderCollection>;
 
 export type RouteDefGroup<T extends any[] = any[]> = {
   _internal: {
+    type: "RouteDefGroup";
     Route: T[number]["_internal"]["Route"];
   };
   routeNames: T[number]["_internal"]["Route"]["name"][];
