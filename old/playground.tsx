@@ -15,7 +15,7 @@ import { createRouter, defineRoute, Route } from "./index";
 // TODO
 // - Redirects? More seamless somehow (change recommendation)
 // - Trailing/optional path parameter 👍
-// - Default parameter
+// - Default parameter 👍
 // - Custom parameter types 👍
 // - Partial path parameter (i.e. not just between slashes / /) 👍
 // - ? Custom query string parsing 👍
@@ -23,8 +23,8 @@ import { createRouter, defineRoute, Route } from "./index";
 // - Initial route from history as opposed to current route 👍
 // - Abstraction of safe history methods 👍
 // - Integration tests (cypress)
-// - export link type
-// referential integrity of route
+// - export link type 👍
+// referential integrity of route 👍
 // updated docs
 // hashes?
 // on link click intercept

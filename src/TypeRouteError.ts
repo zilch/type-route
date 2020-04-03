@@ -191,7 +191,9 @@ function buildErrorCollection<
           .join("\n");
 
         const error = new Error(
-          message ? `\n\n${messageTitle}\n\n${message}` : `\n\n${messageTitle}`
+          message
+            ? `\n\n${messageTitle}\n\n${message}\n`
+            : `\n\n${messageTitle}\n`
         );
         error.name = `(hopefully helpful 😄) TypeRouteError`;
 
