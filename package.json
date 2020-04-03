@@ -22,6 +22,7 @@
     "@types/jest": "^25.1.4",
     "@types/react": "16.8.8",
     "@types/react-dom": "16.8.2",
+    "@zeit/ncc": "^0.22.0",
     "jest": "^25.2.3",
     "parcel-bundler": "^1.12.4",
     "prettier": "^2.0.2",
@@ -50,7 +51,7 @@
   ],
   "scripts": {
     "playground": "parcel ./src/playground.html",
-    "build": "rm -rf ./lib && tsc",
+    "build": "./build.sh",
     "lint": "echo \"TODO\"",
     "unit-test": "jest",
     "integration-test": "echo \"TODO\""

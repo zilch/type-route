@@ -8,10 +8,9 @@
     "module": "commonjs",
     "noUnusedLocals": true,
     "sourceMap": false,
-    "resolveJsonModule": true,
     "noUnusedParameters": true,
     "outDir": "lib",
-    "declaration": true,
+    "declaration": false,
     "jsx": "react"
   },
   "include": ["src"]

@@ -119,6 +119,9 @@ export function createRouter(
   }
 
   function navigate({ path, query, state }: Location, replace?: boolean) {
+    // Necessary b/c the type declaration generation step of the build has
+    // has issues with Promise for some reason
+    // @ts-ignore
     return new Promise<boolean>(resolve => {
       const navigationResolverId = getNextNavigationResolverId();
       navigationResolvers[navigationResolverId] = resolve;
