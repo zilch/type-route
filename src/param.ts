@@ -70,7 +70,7 @@ function getParamDefTypeSection<
           optional,
           valueSerializer: string,
           trailing,
-          default: undefined
+          default: undefined as never
         }
       }),
 
@@ -80,7 +80,7 @@ function getParamDefTypeSection<
           optional,
           valueSerializer: number,
           trailing,
-          default: undefined
+          default: undefined as never
         }
       }),
 
@@ -93,7 +93,7 @@ function getParamDefTypeSection<
             optional,
             valueSerializer,
             trailing,
-            default: undefined
+            default: undefined as never
           }
         })
     };

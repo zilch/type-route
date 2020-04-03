@@ -8,13 +8,13 @@ export function getPathMatch(path: string, pathDef: PathDef) {
     return { params, numExtraneousParams: 0 };
   }
 
-  if (!path.startsWith("/")) {
+  if (!startsWith(path, "/")) {
     throw new Error(
       "Unexpected condition - path should start with a forward slash."
     );
   }
 
-  const pathHasTrailingSlash = path.length > 1 && path.endsWith("/");
+  const pathHasTrailingSlash = path.length > 1 && endsWith(path, "/");
 
   if (pathHasTrailingSlash) {
     path = path.slice(0, path.length - 1);
@@ -65,7 +65,7 @@ export function getPathMatch(path: string, pathDef: PathDef) {
       pathSegment = pathSegmentList.slice(segmentIndex).join("/");
     }
 
-    if (!pathSegment.startsWith(pathSegmentDef.leading)) {
+    if (!startsWith(pathSegment, pathSegmentDef.leading)) {
       return false;
     }
 
@@ -73,7 +73,7 @@ export function getPathMatch(path: string, pathDef: PathDef) {
       pathSegmentDef.leading.length
     );
 
-    if (!pathSegmentMinusLeading.endsWith(pathSegmentDef.trailing)) {
+    if (!endsWith(pathSegmentMinusLeading, pathSegmentDef.trailing)) {
       return false;
     }
 
@@ -130,4 +130,22 @@ export function getPathMatch(path: string, pathDef: PathDef) {
   }
 
   return { params, numExtraneousParams: 0 };
+}
+
+function startsWith(value: string, start: string) {
+  for (let i = 0; i < start.length; i++) {
+    if (start[i] !== value[i]) {
+      return false;
+    }
+  }
+  return true;
+}
+
+function endsWith(value: string, end: string) {
+  for (let i = 1; i <= end.length; i++) {
+    if (end[end.length - i] !== value[value.length - i]) {
+      return false;
+    }
+  }
+  return true;
 }

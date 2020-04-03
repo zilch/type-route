@@ -217,6 +217,13 @@ export type NotFoundRoute = {
   params: {};
 };
 
+export type LocationState =
+  | {
+      navigationResolverId?: string;
+      stateParams?: Record<string, string>;
+    }
+  | undefined;
+
 export type Route<T> = T extends RouteDef<any, any>
   ? T["_internal"]["Route"]
   : T extends RouteDefGroup

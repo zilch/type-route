@@ -28,10 +28,10 @@ export function buildPathDef(
 
   namedPathParamDefs.forEach(({ paramName }) => {
     if (
-      paramName.includes("$") ||
-      paramName.includes("{") ||
-      paramName.includes("}") ||
-      paramName.includes("/")
+      paramName.indexOf("$") >= 0 ||
+      paramName.indexOf("{") >= 0 ||
+      paramName.indexOf("}") >= 0 ||
+      paramName.indexOf("/") >= 0
     ) {
       throw TypeRouteError.Path_parameter_name_must_not_include_curly_brackets_dollar_signs_or_the_forward_slash_character.create(
         routeName,
@@ -71,7 +71,7 @@ export function buildPathDef(
 
   const rawPathSegments = rawPath.split("/").slice(1);
 
-  const usedPathParams = new Set<string>();
+  const usedPathParams: Record<string, true> = {};
   const pathDef: PathDef = [];
 
   for (const rawSegment of rawPathSegments) {
@@ -84,7 +84,7 @@ export function buildPathDef(
     let includedParamDef: NamedPathParamDef<unknown> | null = null;
 
     for (const paramDef of namedPathParamDefs) {
-      if (rawSegment.includes(getParamId(paramDef.paramName))) {
+      if (rawSegment.indexOf(getParamId(paramDef.paramName)) >= 0) {
         if (includedParamDef !== null) {
           throw TypeRouteError.Path_may_have_at_most_one_parameter_per_segment.create(
             errorContext,
@@ -92,7 +92,7 @@ export function buildPathDef(
           );
         }
 
-        if (usedPathParams.has(paramDef.paramName)) {
+        if (usedPathParams[paramDef.paramName]) {
           throw TypeRouteError.Path_parameters_may_not_be_used_more_than_once_when_building_a_path.create(
             errorContext,
             paramDef.paramName
@@ -100,7 +100,7 @@ export function buildPathDef(
         }
 
         includedParamDef = paramDef;
-        usedPathParams.add(paramDef.paramName);
+        usedPathParams[paramDef.paramName] = true;
       }
     }
 
@@ -184,7 +184,7 @@ export function buildPathDef(
 
   const unusedPathParameterDefinitions = namedPathParamDefs
     .map(({ paramName: name }) => name)
-    .filter(name => !usedPathParams.has(name));
+    .filter(name => !usedPathParams[name]);
 
   if (unusedPathParameterDefinitions.length > 0) {
     throw TypeRouteError.All_path_parameters_must_be_used_in_path_construction.create(

@@ -11,7 +11,8 @@ import {
   UmbrellaRouteDefBuilder,
   UmbrellaNavigationHandler,
   UmbrellaRoute,
-  Match
+  Match,
+  LocationState
 } from "./types";
 import { buildRouteDef } from "./buildRouteDef";
 import {
@@ -22,8 +23,6 @@ import {
 } from "history";
 import { defaultQueryStringSerializer } from "./defaultQueryStringSerializer";
 
-const stateParamsKey = "stateParams";
-
 export function createRouter<TRouteDefs>(
   routeDefs: TRouteDefs,
   options?: RouterOptions
@@ -32,7 +31,7 @@ export function createRouter(
   routeDefs: Record<string, UmbrellaRouteDefBuilder>,
   options: RouterOptions = {}
 ): UmbrellaRouter {
-  let history: History;
+  let history: History<LocationState>;
   let routes: Record<string, UmbrellaRouteDef> = {};
 
   for (const routeName of Object.keys(routeDefs)) {
@@ -127,7 +126,7 @@ export function createRouter(
       const href = query ? `${path}?${query}` : path;
       history[replace ? "replace" : "push"](href, {
         navigationResolverId,
-        [stateParamsKey]: state
+        stateParams: state
       });
     });
   }
@@ -152,9 +151,9 @@ export function createRouter(
   }
 
   function removeNavigationHandler(idToRemove: number) {
-    const indexToRemove = navigationHandlers.findIndex(
-      ({ id }) => id === idToRemove
-    );
+    const indexToRemove = navigationHandlers
+      .map(({ id }) => id)
+      .indexOf(idToRemove);
     navigationHandlers.splice(indexToRemove, 1);
 
     if (unblock === undefined) {
@@ -197,7 +196,7 @@ export function createRouter(
   }
 
   function getRoute(location: Location, action: Action): UmbrellaRoute {
-    let nonExactMatch: (Match & { name: string }) | false = false;
+    let nonExactMatch: (Match & { routeName: string }) | false = false;
 
     for (const routeName in routes) {
       const match = routes[routeName]._internal.match(
@@ -221,13 +220,13 @@ export function createRouter(
         nonExactMatch === false ||
         match.numExtraneousParams < nonExactMatch.numExtraneousParams
       ) {
-        nonExactMatch = { ...match, name };
+        nonExactMatch = { ...match, routeName };
       }
     }
 
     if (nonExactMatch) {
       return {
-        name: nonExactMatch.name,
+        name: nonExactMatch.routeName,
         params: nonExactMatch.params,
         action
       };
@@ -246,13 +245,15 @@ export function createRouter(
     return { path, query, state };
   }
 
-  function getTypeRouteLocation(historyLocation: HistoryLocation): Location {
+  function getTypeRouteLocation(
+    historyLocation: HistoryLocation<LocationState>
+  ): Location {
     return {
       path: historyLocation.pathname,
       query: historyLocation.search
         ? historyLocation.search.slice(1)
         : undefined,
-      state: historyLocation.state?.[stateParamsKey] || undefined
+      state: historyLocation.state?.stateParams || undefined
     };
   }
 

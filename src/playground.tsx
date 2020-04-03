@@ -5,10 +5,11 @@ import { createRouter, defineRoute, param, Route } from "./index";
 import "./playground.css";
 
 const { routes, listen, history } = createRouter({
-  home: defineRoute({}, () => "/"),
+  home: defineRoute("/"),
   userList: defineRoute(
     {
-      page: param.query.optional.number.default(1)
+      page: param.query.optional.number.default(1),
+      page2: param.query.optional.number
     },
     () => `/users`
   ),
