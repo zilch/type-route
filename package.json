@@ -21,7 +21,6 @@
     "@types/react": "16.8.8",
     "@types/react-dom": "16.8.2",
     "@zeit/ncc": "^0.22.0",
-    "cypress": "^4.3.0",
     "history": "^4.10.1",
     "jest": "^25.2.3",
     "parcel-bundler": "^1.12.4",
