@@ -1,5 +1,11 @@
 import { noMatch } from "./noMatch";
 
+export type Compute<A extends any> = A extends Function
+  ? A
+  : {
+      [K in keyof A]: A[K];
+    } & {};
+
 export type KeysMatching<TObject, TCondition> = {
   [TKey in keyof TObject]: TObject[TKey] extends TCondition ? TKey : never;
 }[keyof TObject];
@@ -108,27 +114,31 @@ export type ParamValue<TParamDef> = TParamDef extends ParamDef<
   ? TValue
   : never;
 
-type InputRouteParams<TParamDefCollection> = {
-  [TParamName in RequiredParamNames<TParamDefCollection>]: ParamValue<
-    TParamDefCollection[TParamName]
-  >;
-} &
+type InputRouteParams<TParamDefCollection> = Compute<
   {
-    [TParamName in OptionalParamNames<TParamDefCollection>]?: ParamValue<
+    [TParamName in RequiredParamNames<TParamDefCollection>]: ParamValue<
       TParamDefCollection[TParamName]
     >;
-  };
+  } &
+    {
+      [TParamName in OptionalParamNames<TParamDefCollection>]?: ParamValue<
+        TParamDefCollection[TParamName]
+      >;
+    }
+>;
 
-type OutputRouteParams<TParamDefCollection> = {
-  [TParamName in OptionalOutputParamsNames<TParamDefCollection>]?: ParamValue<
-    TParamDefCollection[TParamName]
-  >;
-} &
+type OutputRouteParams<TParamDefCollection> = Compute<
   {
-    [TParamName in RequiredOutputParamsNames<TParamDefCollection>]: ParamValue<
+    [TParamName in OptionalOutputParamsNames<TParamDefCollection>]?: ParamValue<
       TParamDefCollection[TParamName]
     >;
-  };
+  } &
+    {
+      [TParamName in RequiredOutputParamsNames<
+        TParamDefCollection
+      >]: ParamValue<TParamDefCollection[TParamName]>;
+    }
+>;
 
 export type PathParams<TParamDefCollection> = {
   [TParamName in PathParamNames<TParamDefCollection>]: string;

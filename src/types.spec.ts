@@ -25,4 +25,34 @@ describe("types", () => {
       );
     }
   });
+
+  it("should compile with defaults", () => {
+    const { routes, history } = createRouter({
+      home: defineRoute("/"),
+      user: defineRoute(
+        {
+          o: param.query.optional.number,
+          d: param.query.optional.number.default(1)
+        },
+        () => `/user`
+      )
+    });
+
+    const route = history.getInitialRoute();
+
+    expectTypes<
+      Parameters<typeof routes.user.link>[0],
+      { o?: number; d?: number } | undefined
+    >(toBeEqual);
+
+    if (route.name === routes.user.name) {
+      expectTypes<typeof route.params, { o?: number; d: number }>(toBeEqual);
+    } else if (route.name === routes.home.name) {
+      expectTypes<typeof route.params, {}>(toBeEqual);
+    } else {
+      expectTypes<typeof route, { name: false; params: {}; action: Action }>(
+        toBeEqual
+      );
+    }
+  });
 });
