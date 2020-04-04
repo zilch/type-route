@@ -114,31 +114,39 @@ export type ParamValue<TParamDef> = TParamDef extends ParamDef<
   ? TValue
   : never;
 
-type InputRouteParams<TParamDefCollection> = Compute<
+type InputRouteParams<TParamDefCollection> = Pick<
   {
-    [TParamName in RequiredParamNames<TParamDefCollection>]: ParamValue<
+    [TParamName in keyof TParamDefCollection]: ParamValue<
       TParamDefCollection[TParamName]
     >;
-  } &
+  },
+  RequiredParamNames<TParamDefCollection>
+> &
+  Pick<
     {
-      [TParamName in OptionalParamNames<TParamDefCollection>]?: ParamValue<
+      [TParamName in keyof TParamDefCollection]?: ParamValue<
         TParamDefCollection[TParamName]
       >;
-    }
->;
+    },
+    OptionalParamNames<TParamDefCollection>
+  >;
 
-type OutputRouteParams<TParamDefCollection> = Compute<
+type OutputRouteParams<TParamDefCollection> = Pick<
   {
-    [TParamName in OptionalOutputParamsNames<TParamDefCollection>]?: ParamValue<
+    [TParamName in keyof TParamDefCollection]?: ParamValue<
       TParamDefCollection[TParamName]
     >;
-  } &
+  },
+  OptionalOutputParamsNames<TParamDefCollection>
+> &
+  Pick<
     {
-      [TParamName in RequiredOutputParamsNames<
-        TParamDefCollection
-      >]: ParamValue<TParamDefCollection[TParamName]>;
-    }
->;
+      [TParamName in keyof TParamDefCollection]: ParamValue<
+        TParamDefCollection[TParamName]
+      >;
+    },
+    RequiredOutputParamsNames<TParamDefCollection>
+  >;
 
 export type PathParams<TParamDefCollection> = {
   [TParamName in PathParamNames<TParamDefCollection>]: string;
