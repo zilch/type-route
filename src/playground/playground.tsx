@@ -1,28 +1,26 @@
 import React, { useState, useEffect } from "react";
-import ReactDOM from "react-dom";
-import { createRouter, defineRoute, param, Route } from "./index";
+import { createRouter, defineRoute, param, Route } from "../index";
+import { render } from "../test/utils/render";
 
-import "./playground.css";
-
-const { routes, listen, history } = createRouter({
+const { routes, listen, session } = createRouter({
   home: defineRoute("/"),
   userList: defineRoute(
     {
       page: param.query.optional.number.default(1),
-      page2: param.query.optional.number
+      page2: param.query.optional.number,
     },
     () => `/users`
   ),
   user: defineRoute(
     {
-      userId: param.path.string
+      userId: param.path.string,
     },
-    x => `/users/${x.userId}`
-  )
+    (x) => `/users/${x.userId}`
+  ),
 });
 
 function App() {
-  const [route, setRoute] = useState(() => history.getInitialRoute());
+  const [route, setRoute] = useState(() => session.getInitialRoute());
 
   useEffect(() => listen(setRoute), []);
 
@@ -65,14 +63,14 @@ function Navigation() {
       <a {...routes.userList.link()}>User List</a>
       <a
         {...routes.userList.link({
-          page: 2
+          page: 2,
         })}
       >
         User List Page 2
       </a>
       <a
         {...routes.user.link({
-          userId: "abc"
+          userId: "abc",
         })}
       >
         User "abc"
@@ -81,6 +79,4 @@ function Navigation() {
   );
 }
 
-const appContainer = document.createElement("div");
-document.body.appendChild(appContainer);
-ReactDOM.render(<App />, appContainer);
+render(<App />);

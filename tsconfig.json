@@ -11,7 +11,8 @@
     "noUnusedParameters": true,
     "outDir": "lib",
     "declaration": false,
-    "jsx": "react"
+    "jsx": "react",
+    "types": ["node", "jest", "jest-playwright-preset", "expect-playwright"]
   },
   "include": ["src"]
 }

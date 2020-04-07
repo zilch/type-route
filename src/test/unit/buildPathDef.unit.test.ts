@@ -1,30 +1,30 @@
-import { param } from "./param";
-import { buildPathDef } from "./buildPathDef";
-import { TypeRouteError } from "./TypeRouteError";
-import { expectTypeRouteError } from "./expectTypeRouteError";
-import { PathDef } from "./types";
+import { param } from "../../param";
+import { buildPathDef } from "../../buildPathDef";
+import { TypeRouteError } from "../../TypeRouteError";
+import { expectTypeRouteError } from "../utils/expectTypeRouteError";
+import { PathDef } from "../../types";
 
 describe("buildPathDef", () => {
   it("should work for simple example", () => {
     const actual = buildPathDef(
       "test",
       {
-        userId: param.path.string
+        userId: param.path.string,
       },
-      x => `/user/${x.userId}`
+      (x) => `/user/${x.userId}`
     );
 
     const expected: PathDef = [
       {
         leading: "user",
         trailing: "",
-        namedParamDef: null
+        namedParamDef: null,
       },
       {
         leading: "",
         trailing: "",
-        namedParamDef: { paramName: "userId", ...param.path.string }
-      }
+        namedParamDef: { paramName: "userId", ...param.path.string },
+      },
     ];
 
     expect(actual).toEqual(expected);
@@ -34,17 +34,17 @@ describe("buildPathDef", () => {
     const actual = buildPathDef(
       "test",
       {
-        userId: param.path.string
+        userId: param.path.string,
       },
-      x => `/hello-${x.userId}-there`
+      (x) => `/hello-${x.userId}-there`
     );
 
     const expected: PathDef = [
       {
         leading: "hello-",
         trailing: "-there",
-        namedParamDef: { paramName: "userId", ...param.path.string }
-      }
+        namedParamDef: { paramName: "userId", ...param.path.string },
+      },
     ];
 
     expect(actual).toEqual(expected);
@@ -85,9 +85,9 @@ describe("buildPathDef", () => {
           "test",
           {
             first: param.path.string,
-            second: param.path.number
+            second: param.path.number,
           },
-          x => `/hello/${x.first}-${x.second}/hi`
+          (x) => `/hello/${x.first}-${x.second}/hi`
         )
     );
   });
@@ -99,21 +99,21 @@ describe("buildPathDef", () => {
         buildPathDef(
           "test",
           { repeat: param.path.string },
-          x => `/${x.repeat}/${x.repeat}`
+          (x) => `/${x.repeat}/${x.repeat}`
         )
     );
   });
 
   it("should error if the $ or { or } or / character is used in a parameter name", () => {
     ["${hello/there}", "$hello", "{hello", "hello/there", "there}"].forEach(
-      paramName => {
+      (paramName) => {
         expectTypeRouteError(
           TypeRouteError.Path_parameter_name_must_not_include_curly_brackets_dollar_signs_or_the_forward_slash_character,
           () =>
             buildPathDef(
               "test",
               { hello: param.path.string, [paramName]: param.path.number },
-              x => `/${x.hello}/${x[paramName]}`
+              (x) => `/${x.hello}/${x[paramName]}`
             )
         );
       }
@@ -134,7 +134,7 @@ describe("buildPathDef", () => {
         buildPathDef(
           "test",
           { hi: param.path.string },
-          x => `/hello${x.hi}%/there`
+          (x) => `/hello${x.hi}%/there`
         )
     );
 
@@ -142,7 +142,7 @@ describe("buildPathDef", () => {
       buildPathDef(
         "test",
         { hi: param.path.string },
-        x => `/#hello${x.hi}%/there`
+        (x) => `/#hello${x.hi}%/there`
       );
     } catch (error) {
       expect(error.message).toContain(
@@ -158,7 +158,7 @@ describe("buildPathDef", () => {
         buildPathDef(
           "test",
           { hello: param.path.optional.string },
-          x => `/hi/hello-${x.hello}`
+          (x) => `/hi/hello-${x.hello}`
         )
     );
   });
@@ -170,7 +170,7 @@ describe("buildPathDef", () => {
         buildPathDef(
           "test",
           { test: param.path.optional.number, hi: param.path.trailing.string },
-          x => `/${x.test}/${x.hi}`
+          (x) => `/${x.test}/${x.hi}`
         )
     );
   });
@@ -182,7 +182,7 @@ describe("buildPathDef", () => {
         buildPathDef(
           "test",
           { test: param.path.optional.number, hi: param.path.string },
-          x => `/${x.test}/${x.hi}`
+          (x) => `/${x.test}/${x.hi}`
         )
     );
   });
@@ -195,9 +195,9 @@ describe("buildPathDef", () => {
           "test",
           {
             test: param.path.optional.number,
-            hi: param.path.string
+            hi: param.path.string,
           },
-          x => `/${x.hi}`
+          (x) => `/${x.hi}`
         )
     );
   });

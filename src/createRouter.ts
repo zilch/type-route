@@ -5,21 +5,21 @@ import {
   RouterOptions,
   QueryStringSerializer,
   SharedRouterProperties,
-  HistoryOptions,
+  RouterSessionHistoryOptions,
   UmbrellaRouteDef,
   UmbrellaRouter,
   UmbrellaRouteDefBuilder,
   UmbrellaNavigationHandler,
   UmbrellaRoute,
   Match,
-  LocationState
+  LocationState,
 } from "./types";
 import { buildRouteDef } from "./buildRouteDef";
 import {
   createBrowserHistory,
   History,
   Location as HistoryLocation,
-  createMemoryHistory
+  createMemoryHistory,
 } from "history";
 import { defaultQueryStringSerializer } from "./defaultQueryStringSerializer";
 import { assert } from "./assert";
@@ -39,7 +39,7 @@ export function createRouter(
       "routeDefBuilders",
       routeDefBuilders
     ),
-    assert.type(["undefined", "object"], "options", options)
+    assert.type(["undefined", "object"], "options", options),
   ]);
 
   let history: History<LocationState>;
@@ -74,77 +74,77 @@ export function createRouter(
   return {
     routes,
     listen,
-    history: {
+    session: {
       push(url, state) {
-        assert("[RouterHistory].push", [
+        assert("[RouterSessionHistory].push", [
           assert.numArgs([].slice.call(arguments), 1, 2),
           assert.type("string", "url", url),
-          assert.type(["object", "undefined"], "state", state)
+          assert.type(["object", "undefined"], "state", state),
         ]);
 
         return navigate(getLocation(url, state));
       },
       replace(url, state) {
-        assert("[RouterHistory].replace", [
+        assert("[RouterSessionHistory].replace", [
           assert.numArgs([].slice.call(arguments), 1, 2),
           assert.type("string", "url", url),
-          assert.type(["object", "undefined"], "state", state)
+          assert.type(["object", "undefined"], "state", state),
         ]);
 
         return navigate(getLocation(url, state), true);
       },
       back(amount = 1) {
-        assert("[RouterHistory].back", [
+        assert("[RouterSessionHistory].back", [
           assert.numArgs([].slice.call(arguments), 0, 1),
-          assert.type("number", "amount", amount)
+          assert.type("number", "amount", amount),
         ]);
 
         history.go(-amount);
       },
       forward(amount = 1) {
-        assert("[RouterHistory].forward", [
+        assert("[RouterSessionHistory].forward", [
           assert.numArgs([].slice.call(arguments), 0, 1),
-          assert.type("number", "amount", amount)
+          assert.type("number", "amount", amount),
         ]);
 
         history.go(amount);
       },
       getInitialRoute() {
-        assert("[RouterHistory].getInitialRoute", [
-          assert.numArgs([].slice.call(arguments), 0)
+        assert("[RouterSessionHistory].getInitialRoute", [
+          assert.numArgs([].slice.call(arguments), 0),
         ]);
 
         return initialRoute;
       },
-      reset(history) {
-        assert("[RouterHistory].reset", [
+      reset(session) {
+        assert("[RouterSessionHistory].reset", [
           assert.numArgs([].slice.call(arguments), 1),
-          assert.type("object", "history", history)
+          assert.type("object", "session", session),
         ]);
 
-        return initializeRouter({ history, queryStringSerializer });
-      }
-    }
+        return initializeRouter({ session, queryStringSerializer });
+      },
+    },
   };
 
   function initializeRouter(options: RouterOptions) {
-    const historyOptions: HistoryOptions = options.history ?? {
+    const sessionOptions: RouterSessionHistoryOptions = options.session ?? {
       type:
         typeof window !== "undefined" && typeof window.document !== "undefined"
           ? "browser"
-          : "memory"
+          : "memory",
     };
 
-    if (historyOptions.type === "memory") {
+    if (sessionOptions.type === "memory") {
       history = createMemoryHistory({
         getUserConfirmation,
-        initialEntries: historyOptions.initialEntries,
-        initialIndex: historyOptions.initialIndex
+        initialEntries: sessionOptions.initialEntries,
+        initialIndex: sessionOptions.initialIndex,
       });
     } else {
       history = createBrowserHistory({
         getUserConfirmation,
-        forceRefresh: historyOptions.forceRefresh
+        forceRefresh: sessionOptions.forceRefresh,
       });
     }
 
@@ -172,14 +172,14 @@ export function createRouter(
     // Necessary b/c the type declaration generation step of the build has
     // has issues with Promise for some reason
     // @ts-ignore
-    return new Promise<boolean>(resolve => {
+    return new Promise<boolean>((resolve) => {
       const navigationResolverId = getNextNavigationResolverId();
       navigationResolvers[navigationResolverId] = resolve;
 
       const href = query ? `${path}?${query}` : path;
       history[replace ? "replace" : "push"](href, {
         navigationResolverId,
-        stateParams: state
+        stateParams: state,
       });
     });
   }
@@ -189,7 +189,7 @@ export function createRouter(
 
     navigationHandlers.push({
       id,
-      handler
+      handler,
     });
 
     if (navigationHandlers.length === 1) {
@@ -225,7 +225,7 @@ export function createRouter(
           ["boolean", "undefined"],
           "navigationHandlerResult",
           navigationHandlerResult
-        )
+        ),
       ]);
 
       if (navigationHandlerResult === false) {
@@ -269,7 +269,7 @@ export function createRouter(
         return {
           name: routeName,
           action,
-          params: match.params
+          params: match.params,
         };
       }
 
@@ -285,14 +285,14 @@ export function createRouter(
       return {
         name: nonExactMatch.routeName,
         params: nonExactMatch.params,
-        action
+        action,
       };
     }
 
     return {
       name: false,
       action,
-      params: {}
+      params: {},
     };
   }
 
@@ -310,7 +310,7 @@ export function createRouter(
       query: historyLocation.search
         ? historyLocation.search.slice(1)
         : undefined,
-      state: historyLocation.state?.stateParams || undefined
+      state: historyLocation.state?.stateParams || undefined,
     };
   }
 

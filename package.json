@@ -18,17 +18,22 @@
   "devDependencies": {
     "@types/history": "^4.7.5",
     "@types/jest": "^25.1.4",
+    "@types/node": "^13.11.0",
     "@types/react": "16.8.8",
     "@types/react-dom": "16.8.2",
     "@zeit/ncc": "^0.22.0",
+    "expect-playwright": "^0.2.1",
     "history": "^4.10.1",
     "jest": "^25.2.3",
+    "jest-playwright-preset": "^0.1.1",
     "parcel-bundler": "^1.12.4",
+    "playwright": "^0.12.1",
     "prettier": "^2.0.2",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
     "ts-jest": "^25.2.1",
     "ts-toolbelt": "^6.3.11",
+    "tslib": "^1.11.1",
     "typescript": "^3.8.3"
   },
   "authors": [
@@ -49,10 +54,10 @@
     "typescript"
   ],
   "scripts": {
-    "playground": "parcel ./src/playground.html",
+    "playground": "parcel ./src/playground/playground.html",
     "build": "./build.sh",
     "lint": "echo \"TODO\"",
-    "unit-test": "jest",
-    "integration-test": "echo \"TODO\""
+    "unit-test": "jest --config jest.unit.test.config.js",
+    "integration-test": "jest --config jest.integration.test.config.js"
   }
 }

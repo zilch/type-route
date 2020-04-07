@@ -1,6 +1,6 @@
-import { createRouter, defineRoute, param } from "./index";
+import { createRouter, defineRoute, param } from "../../index";
 import { Any } from "ts-toolbelt";
-import { Action } from "./types";
+import { Action } from "../../types";
 
 function expectTypes<A, B>(_: Any.Equals<Any.Compute<A>, Any.Compute<B>>) {}
 
@@ -8,12 +8,12 @@ const toBeEqual = 1 as const;
 
 describe("types", () => {
   it("should pass", () => {
-    const { routes, history } = createRouter({
+    const { routes, session } = createRouter({
       home: defineRoute("/"),
-      user: defineRoute({ userId: param.path.string }, x => `/${x.userId}`)
+      user: defineRoute({ userId: param.path.string }, (x) => `/${x.userId}`),
     });
 
-    const route = history.getInitialRoute();
+    const route = session.getInitialRoute();
 
     if (route.name === routes.user.name) {
       expectTypes<typeof route.params, { userId: string }>(toBeEqual);
@@ -27,18 +27,18 @@ describe("types", () => {
   });
 
   it("should compile with defaults", () => {
-    const { routes, history } = createRouter({
+    const { routes, session } = createRouter({
       home: defineRoute("/"),
       user: defineRoute(
         {
           o: param.query.optional.number,
-          d: param.query.optional.number.default(1)
+          d: param.query.optional.number.default(1),
         },
         () => `/user`
-      )
+      ),
     });
 
-    const route = history.getInitialRoute();
+    const route = session.getInitialRoute();
 
     expectTypes<
       Parameters<typeof routes.user.link>[0],

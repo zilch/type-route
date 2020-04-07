@@ -255,11 +255,7 @@ export type Route<T> = T extends RouteDef<any, any>
   : T extends RouteDefGroup
   ? T["_internal"]["Route"]
   : T extends Record<string, RouteDef<any, any>>
-  ?
-      | {
-          [TRouteName in keyof T]: T[TRouteName]["_internal"]["Route"];
-        }[keyof T]
-      | NotFoundRoute
+  ? T[keyof T]["_internal"]["Route"] | NotFoundRoute
   : T extends Record<string, RouteDefBuilder<any>>
   ?
       | {
@@ -285,33 +281,35 @@ export type UmbrellaNavigationHandler = NavigationHandler<
   UmbrellaRouteDefBuilderCollection
 >;
 
-export type RouterHistory<TRouteDefBuilderCollection> = {
+export type RouterSessionHistory<TRouteDefBuilderCollection> = {
   push(url: string, state?: any): Promise<boolean>;
   replace(url: string, state?: any): Promise<boolean>;
   getInitialRoute(): Route<TRouteDefBuilderCollection>;
   back(amount?: number): void;
   forward(amount?: number): void;
-  reset(options: HistoryOptions): void;
+  reset(options: RouterSessionHistoryOptions): void;
 };
-export type UmbrellaRouterHistory = RouterHistory<
+export type UmbrellaRouterHistory = RouterSessionHistory<
   UmbrellaRouteDefBuilderCollection
 >;
 
-export type MemoryHistoryOptions = {
+export type MemorySessionHistoryOptions = {
   type: "memory";
   initialEntries?: string[];
   initialIndex?: number;
 };
 
-export type BrowserHistoryOptions = {
+export type BrowserSessionHistoryOptions = {
   type: "browser";
   forceRefresh?: boolean;
 };
 
-export type HistoryOptions = MemoryHistoryOptions | BrowserHistoryOptions;
+export type RouterSessionHistoryOptions =
+  | MemorySessionHistoryOptions
+  | BrowserSessionHistoryOptions;
 
 export type RouterOptions = {
-  history?: HistoryOptions;
+  session?: RouterSessionHistoryOptions;
   queryStringSerializer?: QueryStringSerializer;
 };
 
@@ -329,7 +327,7 @@ export type Router<
       TRouteDefBuilderCollection[TRouteName]["_internal"]["params"]
     >;
   };
-  history: RouterHistory<TRouteDefBuilderCollection>;
+  session: RouterSessionHistory<TRouteDefBuilderCollection>;
   listen: (
     handler: NavigationHandler<TRouteDefBuilderCollection>
   ) => () => void;
