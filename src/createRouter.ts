@@ -62,6 +62,7 @@ export function createRouter(
   let unblock: (() => void) | undefined = undefined;
   let nextLocation: Location;
   let nextAction: Action;
+  let nextNavigationResolverId: string | undefined;
   let navigationResolverIdCounter = 0;
   let navigationResolverIdBase = Date.now().toString();
   let navigationResolvers: {
@@ -195,6 +196,7 @@ export function createRouter(
     if (navigationHandlers.length === 1) {
       unblock = history.block((historyLocation, historyAction) => {
         nextLocation = getTypeRouteLocation(historyLocation);
+        nextNavigationResolverId = historyLocation.state?.navigationResolverId;
         nextAction = historyAction.toLowerCase() as Action;
         return "";
       });
@@ -240,13 +242,12 @@ export function createRouter(
     _: string,
     callback: (proceed: boolean) => void
   ) {
-    const navigationResolverId = nextLocation.state?.navigationResolverId;
+    const navigationResolverId = nextNavigationResolverId;
     const result = await handleNavigation(nextLocation, nextAction);
 
-    const resolve = navigationResolvers[navigationResolverId!];
-    if (resolve) {
-      resolve(result);
-      delete navigationResolvers[navigationResolverId!];
+    if (navigationResolverId) {
+      navigationResolvers[navigationResolverId]?.(result);
+      delete navigationResolvers[navigationResolverId];
     }
 
     callback(result);

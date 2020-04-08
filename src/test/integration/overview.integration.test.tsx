@@ -1,12 +1,12 @@
 import { Route } from "../../index";
 
-describe("example", () => {
+describe("overview", () => {
   beforeAll(async () => {
     await page.goto("http://localhost:1235/");
   });
 
-  it("should work", async () => {
-    const { routes } = await page.evaluate(() => {
+  it("should work with a combination of simple operations", async () => {
+    const { routes, session } = await page.evaluate(() => {
       const { render, TypeRoute, React } = window;
 
       const { createRouter, defineRoute, param } = TypeRoute;
@@ -36,7 +36,9 @@ describe("example", () => {
         return (
           <>
             <Navigation />
-            <Page route={route} />
+            <div data-route={route.name}>
+              <Page route={route} />
+            </div>
           </>
         );
       }
@@ -44,9 +46,15 @@ describe("example", () => {
       function Navigation() {
         return (
           <nav>
-            <a {...routes.home.link()}>Home</a>
-            <a {...routes.userList.link()}>User List</a>
-            <a {...routes.user.link({ userId: "abc" })}>User</a>
+            <a data-testid="home" {...routes.home.link()}>
+              Home
+            </a>
+            <a data-testid="userList" {...routes.userList.link()}>
+              User List
+            </a>
+            <a data-testid="user" {...routes.user.link({ userId: "abc" })}>
+              User
+            </a>
           </nav>
         );
       }
@@ -55,9 +63,17 @@ describe("example", () => {
         if (route.name === routes.home.name) {
           return <div>Home</div>;
         } else if (route.name === routes.user.name) {
-          return <div>User</div>;
+          return (
+            <div>
+              User <span data-testid="userId">{route.params.userId}</span>
+            </div>
+          );
         } else if (route.name === routes.userList.name) {
-          return <div>User List</div>;
+          return (
+            <div>
+              User List <span data-testid="page">{route.params.page}</span>
+            </div>
+          );
         } else {
           return <div>Not Found</div>;
         }
@@ -77,6 +93,38 @@ describe("example", () => {
 
     expect(await page.evaluate(() => document.location.pathname)).toBe(
       "/users/123"
+    );
+
+    expect(
+      await page.$eval("[data-route]", (e) => e.getAttribute("data-route"))
+    ).toBe("user");
+
+    expect(await page.$eval('[data-testid="userId"]', (e) => e.innerText)).toBe(
+      "123"
+    );
+
+    await page.$eval('[data-testid="userList"]', (e) => e.click());
+
+    expect(await page.$eval('[data-testid="page"]', (e) => e.innerText)).toBe(
+      "1"
+    );
+
+    await page.evaluate(() => {
+      routes.userList.push({
+        page: 2,
+      });
+    });
+
+    expect(await page.$eval('[data-testid="page"]', (e) => e.innerText)).toBe(
+      "2"
+    );
+
+    await page.evaluate(() => {
+      session.back();
+    });
+
+    expect(await page.$eval('[data-testid="page"]', (e) => e.innerText)).toBe(
+      "1"
     );
   });
 });

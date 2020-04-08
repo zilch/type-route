@@ -1,6 +1,5 @@
 module.exports = {
   launchBrowserApp: {
-    // headless: true,
     headless: !!process.env.CI,
   },
   server: {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { createRouter, defineRoute, param, Route } from "../index";
-import { render } from "../test/utils/render";
+import { createRouter, defineRoute, param, Route } from "./index";
+import { render } from "./test/utils/render";
 
 const { routes, listen, session } = createRouter({
   home: defineRoute("/"),

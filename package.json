@@ -54,10 +54,10 @@
     "typescript"
   ],
   "scripts": {
-    "playground": "parcel ./src/playground/playground.html",
+    "playground": "parcel ./src/playground.html",
     "build": "./build.sh",
     "lint": "echo \"TODO\"",
     "unit-test": "jest --config jest.unit.test.config.js",
-    "integration-test": "jest --config jest.integration.test.config.js"
+    "integration-test": "jest --config jest.integration.test.config.js --runInBand"
   }
 }
