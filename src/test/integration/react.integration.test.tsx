@@ -1,11 +1,11 @@
 import { Route } from "../../index";
 
-describe("overview", () => {
+describe("react", () => {
   beforeAll(async () => {
     await page.goto("http://localhost:1235/");
   });
 
-  it("should work with a combination of simple operations", async () => {
+  it("should work with react", async () => {
     const { routes, session } = await page.evaluate(() => {
       const { render, TypeRoute, React } = window;
 

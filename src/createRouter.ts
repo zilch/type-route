@@ -69,6 +69,7 @@ export function createRouter(
     [id: string]: ((result: boolean) => void) | undefined;
   } = {};
   let queryStringSerializer: QueryStringSerializer;
+  let pendingNavigationHandler: Promise<boolean> | null = null;
 
   initializeRouter(options);
 
@@ -243,7 +244,14 @@ export function createRouter(
     callback: (proceed: boolean) => void
   ) {
     const navigationResolverId = nextNavigationResolverId;
-    const result = await handleNavigation(nextLocation, nextAction);
+    const location = nextLocation;
+    const action = nextAction;
+    while (pendingNavigationHandler) {
+      await pendingNavigationHandler;
+    }
+    pendingNavigationHandler = handleNavigation(location, action);
+    const result = await pendingNavigationHandler;
+    pendingNavigationHandler = null;
 
     if (navigationResolverId) {
       navigationResolvers[navigationResolverId]?.(result);

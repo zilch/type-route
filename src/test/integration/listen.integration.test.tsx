@@ -317,5 +317,34 @@ describe("listen", () => {
         return routes.one.push();
       })
     ).toBe(false);
+
+    // Should handle the case when navigation is triggered while processing the previous navigation
+    // only one should be processed at a time
+    const { calls } = await page.evaluate(() => {
+      const start = Date.now();
+      const calls: { time: number; route: string | false }[] = [];
+      box.listen = (nextRoute) => {
+        calls.push({ time: Date.now() - start, route: nextRoute.name });
+        return new Promise((r) => setTimeout(r, 500));
+      };
+      setTimeout(() => routes.one.push(), 100);
+      setTimeout(() => routes.two.push(), 200);
+      setTimeout(() => routes.one.push(), 300);
+      Object.assign(window, { calls });
+      return { calls };
+    });
+
+    await new Promise((r) => setTimeout(r, 2000));
+
+    expect((await page.evaluate(() => calls)).length).toBe(3);
+    expect((await page.evaluate(() => calls))[0].route).toBe("one");
+    expect((await page.evaluate(() => calls))[0].time).toBeGreaterThan(100);
+    expect((await page.evaluate(() => calls))[0].time).toBeLessThan(200);
+    expect((await page.evaluate(() => calls))[1].route).toBe("two");
+    expect((await page.evaluate(() => calls))[1].time).toBeGreaterThan(600);
+    expect((await page.evaluate(() => calls))[1].time).toBeLessThan(700);
+    expect((await page.evaluate(() => calls))[2].route).toBe("one");
+    expect((await page.evaluate(() => calls))[2].time).toBeGreaterThan(1100);
+    expect((await page.evaluate(() => calls))[2].time).toBeLessThan(1200);
   });
 });
