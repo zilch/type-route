@@ -15,4 +15,4 @@ declare module \"type-route\" {
 }
 " >> lib/index.d.ts
 
-npx ncc build ./src/index.ts -m -o lib
+npx ncc build ./src/index.ts -e history -m -o lib
