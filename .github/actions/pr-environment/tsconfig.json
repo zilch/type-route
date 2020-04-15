@@ -2,6 +2,7 @@
   "extends": "../../../tsconfig.json",
   "include": ["index.ts"],
   "compilerOptions": {
-    "declaration": false
+    "declaration": false,
+    "resolveJsonModule": true
   }
 }

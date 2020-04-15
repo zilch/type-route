@@ -6,7 +6,7 @@ import packageJson from "../../../package.json";
 import tsConfig from "../../../tsconfig.json";
 import got from "got";
 
-main().catch(error => {
+main().catch((error) => {
   core.setFailed(error.message);
 });
 
@@ -31,7 +31,7 @@ async function main() {
   const files = readFiles("./src");
   const playgroundFiles: { [fileName: string]: { content: string } } = {};
 
-  Object.keys(files).forEach(fileName => {
+  Object.keys(files).forEach((fileName) => {
     const playgroundFileName = fileName.slice(process.cwd().length);
     playgroundFiles[playgroundFileName] = { content: files[fileName] };
   });
@@ -45,14 +45,14 @@ async function main() {
         files: {
           ...playgroundFiles,
           "tsconfig.json": {
-            content: tsConfig
+            content: tsConfig,
           },
           "package.json": {
             content: {
               main: "./src/playground.html",
               scripts: {
                 start: "parcel ./src/playground.html --open",
-                build: "parcel build ./src/playground/index.html"
+                build: "parcel build ./src/playground/index.html",
               },
               dependencies: {
                 ...packageJson.dependencies,
@@ -60,12 +60,13 @@ async function main() {
                 react: "=16.8.6",
                 "@types/react": "=16.8.18",
                 "react-dom": "=16.8.6",
-                "@types/react-dom": "=16.8.4"
-              }
-            }
-          }
-        }
-      }
+                "@types/react-dom": "=16.8.4",
+                typescript: "=3.8.3",
+              },
+            },
+          },
+        },
+      },
     }
   );
 
@@ -73,7 +74,7 @@ async function main() {
     owner: "type-route",
     repo: "type-route",
     issue_number: pullRequest.number,
-    body: `🚀 **PR Environment Ready** → **https://codesandbox.io/s/${response.body.sandbox_id}?module=src/playground.tsx**`
+    body: `🚀 **PR Environment Ready** → **https://codesandbox.io/s/${response.body.sandbox_id}?module=src/playground.tsx**`,
   });
 }
 
