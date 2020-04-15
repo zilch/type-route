@@ -84,7 +84,7 @@ export function createRouter(
           assert.type(["object", "undefined"], "state", state),
         ]);
 
-        return navigate(getLocation(url, state));
+        return navigate(getLocationFromUrl(url, state));
       },
       replace(url, state) {
         assert("[RouterSessionHistory].replace", [
@@ -93,7 +93,7 @@ export function createRouter(
           assert.type(["object", "undefined"], "state", state),
         ]);
 
-        return navigate(getLocation(url, state), true);
+        return navigate(getLocationFromUrl(url, state), true);
       },
       back(amount = 1) {
         assert("[RouterSessionHistory].back", [
@@ -152,7 +152,10 @@ export function createRouter(
 
     queryStringSerializer =
       options.queryStringSerializer ?? defaultQueryStringSerializer;
-    initialRoute = getRoute(getTypeRouteLocation(history.location), "initial");
+    initialRoute = getRoute(
+      getLocationFromHistoryLocation(history.location),
+      "initial"
+    );
   }
 
   function listen(handler: UmbrellaNavigationHandler) {
@@ -196,7 +199,7 @@ export function createRouter(
 
     if (navigationHandlers.length === 1) {
       unblock = history.block((historyLocation, historyAction) => {
-        nextLocation = getTypeRouteLocation(historyLocation);
+        nextLocation = getLocationFromHistoryLocation(historyLocation);
         nextNavigationResolverId = historyLocation.state?.navigationResolverId;
         nextAction = historyAction.toLowerCase() as Action;
         return "";
@@ -219,6 +222,12 @@ export function createRouter(
 
   async function handleNavigation(location: Location, action: Action) {
     const nextRoute = getRoute(location, action);
+
+    const currentLocation = getLocationFromHistoryLocation(history.location);
+
+    if (locationsEqual(location, currentLocation)) {
+      return false;
+    }
 
     for (const { handler } of navigationHandlers) {
       const navigationHandlerResult = await handler(nextRoute);
@@ -305,13 +314,13 @@ export function createRouter(
     };
   }
 
-  function getLocation(url: string, state?: any): Location {
+  function getLocationFromUrl(url: string, state?: any): Location {
     const [path, ...rest] = url.split("?");
     const query = rest.length === 0 ? undefined : rest.join("?");
     return { path, query, state };
   }
 
-  function getTypeRouteLocation(
+  function getLocationFromHistoryLocation(
     historyLocation: HistoryLocation<LocationState>
   ): Location {
     return {
@@ -325,5 +334,36 @@ export function createRouter(
 
   function getSharedRouterProperties(): SharedRouterProperties {
     return { navigate, queryStringSerializer };
+  }
+
+  function locationsEqual(locationA: Location, locationB: Location) {
+    if (
+      locationA.path !== locationB.path ||
+      locationA.query !== locationB.query
+    ) {
+      return false;
+    }
+
+    if (locationA.state === undefined || locationB.state === undefined) {
+      return locationA.state === locationB.state;
+    }
+
+    const locationAKeys = Object.keys(locationA.state ?? {});
+    const locationBKeys = Object.keys(locationB.state ?? {});
+
+    if (locationAKeys.length !== locationBKeys.length) {
+      return false;
+    }
+
+    for (const key of locationAKeys) {
+      if (
+        !locationBKeys.includes(key) ||
+        locationA.state[key] !== locationB.state[key]
+      ) {
+        return false;
+      }
+    }
+
+    return true;
   }
 }
