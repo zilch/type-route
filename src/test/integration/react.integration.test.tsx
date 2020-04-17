@@ -95,7 +95,7 @@ describe("react", () => {
       "/users/123"
     );
 
-    await page.waitForSelector("[data-route]");
+    await page.waitFor(100);
     expect(
       await page.$eval("[data-route]", (e) => e.getAttribute("data-route"))
     ).toBe("user");
