@@ -5,7 +5,7 @@ describe("listen", () => {
     await page.goto("http://localhost:1235/");
   });
 
-  it("should call listen correctly", async () => {
+  test("overview", async () => {
     const {
       routes,
       session,
@@ -219,7 +219,7 @@ describe("listen", () => {
     ]);
   });
 
-  it("should handle navigation handler returning false properly", async () => {
+  test("navigation handler returning false", async () => {
     const { routes, box } = await page.evaluate(() => {
       const { createRouter, defineRoute } = window.TypeRoute;
 
