@@ -1,10 +1,6 @@
 import { testNotImplemented } from "../utils/testNotImplemented";
 
 describe("param", () => {
-  beforeEach(async () => {
-    await page.goto("http://localhost:1235");
-  });
-
   test("param.path.string", () => {
     testNotImplemented();
   });
