@@ -37,7 +37,7 @@ export function getPathMatch(path: string, pathDef: PathDef) {
     if (pathSegment === null) {
       if (
         numRemainingPathSegmentDefs !== 0 ||
-        !pathSegmentDef.namedParamDef?._internal.optional
+        !pathSegmentDef.namedParamDef?.["~internal"].optional
       ) {
         return false;
       }
@@ -45,7 +45,7 @@ export function getPathMatch(path: string, pathDef: PathDef) {
       break;
     }
 
-    if (pathSegmentDef.namedParamDef?._internal.trailing) {
+    if (pathSegmentDef.namedParamDef?.["~internal"].trailing) {
       pathSegment = pathSegmentList.slice(segmentIndex).join("/");
     }
 
@@ -75,7 +75,7 @@ export function getPathMatch(path: string, pathDef: PathDef) {
     }
 
     if (pathSegmentMinusLeadingAndTrailing === "") {
-      if (pathSegmentDef.namedParamDef._internal.optional) {
+      if (pathSegmentDef.namedParamDef["~internal"].optional) {
         continue;
       }
 
@@ -83,10 +83,10 @@ export function getPathMatch(path: string, pathDef: PathDef) {
     }
 
     const urlEncode =
-      pathSegmentDef.namedParamDef._internal.valueSerializer.urlEncode ??
-      !pathSegmentDef.namedParamDef._internal.trailing;
+      pathSegmentDef.namedParamDef["~internal"].valueSerializer.urlEncode ??
+      !pathSegmentDef.namedParamDef["~internal"].trailing;
 
-    let value = pathSegmentDef.namedParamDef._internal.valueSerializer.parse(
+    let value = pathSegmentDef.namedParamDef["~internal"].valueSerializer.parse(
       urlEncode
         ? decodeURIComponent(pathSegmentMinusLeadingAndTrailing)
         : pathSegmentMinusLeadingAndTrailing
@@ -96,7 +96,7 @@ export function getPathMatch(path: string, pathDef: PathDef) {
       return false;
     }
 
-    if (pathSegmentDef.namedParamDef._internal.trailing) {
+    if (pathSegmentDef.namedParamDef["~internal"].trailing) {
       if (pathSegmentDef.leading === "") {
         value = `/${value}`;
       }
@@ -108,7 +108,7 @@ export function getPathMatch(path: string, pathDef: PathDef) {
 
     params[pathSegmentDef.namedParamDef.paramName] = value;
 
-    if (pathSegmentDef.namedParamDef._internal.trailing) {
+    if (pathSegmentDef.namedParamDef["~internal"].trailing) {
       break;
     }
   }

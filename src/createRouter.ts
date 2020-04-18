@@ -274,7 +274,7 @@ export function createRouter(
     let nonExactMatch: (Match & { routeName: string }) | false = false;
 
     for (const routeName in routes) {
-      const match = routes[routeName]._internal.match(
+      const match = routes[routeName]["~internal"].match(
         location,
         queryStringSerializer
       );

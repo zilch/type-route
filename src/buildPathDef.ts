@@ -5,7 +5,7 @@ import {
   BuildPathDefErrorContext,
   GetRawPath,
   PathDef,
-  ParamIdCollection
+  ParamIdCollection,
 } from "./types";
 
 export function buildPathDef(
@@ -14,10 +14,10 @@ export function buildPathDef(
   getRawPath: GetRawPath
 ): PathDef {
   const namedPathParamDefs = Object.keys(pathParamDefCollection).map(
-    paramName => {
+    (paramName) => {
       const namedPathParameterDefinition: NamedPathParamDef = {
         paramName,
-        ...pathParamDefCollection[paramName]
+        ...pathParamDefCollection[paramName],
       };
 
       return namedPathParameterDefinition;
@@ -46,7 +46,7 @@ export function buildPathDef(
 
   const errorContext: BuildPathDefErrorContext = {
     rawPath,
-    routeName
+    routeName,
   };
 
   if (rawPath.length === 0) {
@@ -118,13 +118,13 @@ export function buildPathDef(
           {
             leading,
             paramId: getParamId(includedParamDef.paramName),
-            trailing
+            trailing,
           }
         );
       }
 
       if (
-        includedParamDef._internal.optional &&
+        includedParamDef["~internal"].optional &&
         (leading !== "" || trailing !== "")
       ) {
         throw TypeRouteError.Optional_path_parameters_may_not_have_any_text_around_the_parameter.create(
@@ -138,7 +138,7 @@ export function buildPathDef(
       pathDef.push({
         leading,
         trailing,
-        namedParamDef: includedParamDef
+        namedParamDef: includedParamDef,
       });
     } else {
       if (encodeURIComponent(rawSegment) !== rawSegment) {
@@ -151,15 +151,15 @@ export function buildPathDef(
       pathDef.push({
         leading: rawSegment,
         trailing: "",
-        namedParamDef: null
+        namedParamDef: null,
       });
     }
   }
 
   const numOptionalOrTrailingParams = pathDef.filter(
-    part =>
-      part.namedParamDef?._internal.optional ||
-      part.namedParamDef?._internal.trailing
+    (part) =>
+      part.namedParamDef?.["~internal"].optional ||
+      part.namedParamDef?.["~internal"].trailing
   ).length;
 
   if (numOptionalOrTrailingParams > 1) {
@@ -174,8 +174,8 @@ export function buildPathDef(
 
   if (
     numOptionalOrTrailingParams === 1 &&
-    !lastPathSegmentParameterDefinition?._internal.optional &&
-    !lastPathSegmentParameterDefinition?._internal.trailing
+    !lastPathSegmentParameterDefinition?.["~internal"].optional &&
+    !lastPathSegmentParameterDefinition?.["~internal"].trailing
   ) {
     throw TypeRouteError.Optional_or_trailing_path_parameters_may_only_appear_in_the_last_path_segment.create(
       errorContext
@@ -184,7 +184,7 @@ export function buildPathDef(
 
   const unusedPathParameterDefinitions = namedPathParamDefs
     .map(({ paramName: name }) => name)
-    .filter(name => !usedPathParams[name]);
+    .filter((name) => !usedPathParams[name]);
 
   if (unusedPathParameterDefinitions.length > 0) {
     throw TypeRouteError.All_path_parameters_must_be_used_in_path_construction.create(

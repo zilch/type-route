@@ -37,7 +37,7 @@ export type ValueSerializer<TValue = unknown> = {
 };
 
 export type ParamDef<TParamDefKind, TValue = unknown> = {
-  _internal: {
+  ["~internal"]: {
     type: "ParamDef";
     kind: TParamDefKind;
     valueSerializer: ValueSerializer<TValue>;
@@ -86,21 +86,21 @@ export type GetRawPath = (paramIdCollection: ParamIdCollection) => string;
 
 export type PathParamNames<TParamDefCollection> = KeysMatching<
   TParamDefCollection,
-  { _internal: { kind: "path" } }
+  { ["~internal"]: { kind: "path" } }
 >;
 type OptionalParamNames<TParamDefCollection> = KeysMatching<
   TParamDefCollection,
-  { _internal: { optional: true } }
+  { ["~internal"]: { optional: true } }
 >;
 type RequiredParamNames<TParamDefCollection> = KeysMatching<
   TParamDefCollection,
-  { _internal: { optional: false } }
+  { ["~internal"]: { optional: false } }
 >;
 type RequiredOutputParamsNames<TParamDefCollection> =
   | RequiredParamNames<TParamDefCollection>
   | KeysDiffering<
       TParamDefCollection,
-      { _internal: { optional: true; default: undefined } }
+      { ["~internal"]: { optional: true; default: undefined } }
     >;
 type OptionalOutputParamsNames<TParamDefCollection> = Exclude<
   keyof TParamDefCollection,
@@ -161,7 +161,7 @@ export type PathFn<TParamDefCollection> = (
 ) => string;
 
 export type RouteDefBuilder<TParamDefCollection> = {
-  _internal: {
+  ["~internal"]: {
     type: "RouteDefBuilder";
     params: TParamDefCollection;
     path: PathFn<TParamDefCollection>;
@@ -209,7 +209,7 @@ export type RouteDef<TRouteName, TParamDefCollection> = {
   push: RouteParamsFunction<TParamDefCollection, Promise<boolean>>;
   replace: RouteParamsFunction<TParamDefCollection, Promise<boolean>>;
   link: RouteParamsFunction<TParamDefCollection, Link>;
-  _internal: {
+  ["~internal"]: {
     type: "RouteDef";
     match: (
       location: Location,
@@ -251,18 +251,18 @@ export type LocationState =
   | undefined;
 
 export type Route<T> = T extends RouteDef<any, any>
-  ? T["_internal"]["Route"]
+  ? T["~internal"]["Route"]
   : T extends RouteDefGroup
-  ? T["_internal"]["Route"]
+  ? T["~internal"]["Route"]
   : T extends Record<string, RouteDef<any, any>>
-  ? T[keyof T]["_internal"]["Route"] | NotFoundRoute
+  ? T[keyof T]["~internal"]["Route"] | NotFoundRoute
   : T extends Record<string, RouteDefBuilder<any>>
   ?
       | {
           [TRouteName in keyof T]: {
             name: TRouteName;
             action: Action;
-            params: OutputRouteParams<T[TRouteName]["_internal"]["params"]>;
+            params: OutputRouteParams<T[TRouteName]["~internal"]["params"]>;
           };
         }[keyof T]
       | NotFoundRoute
@@ -324,7 +324,7 @@ export type Router<
   routes: {
     [TRouteName in keyof TRouteDefBuilderCollection]: RouteDef<
       TRouteName,
-      TRouteDefBuilderCollection[TRouteName]["_internal"]["params"]
+      TRouteDefBuilderCollection[TRouteName]["~internal"]["params"]
     >;
   };
   session: RouterSessionHistory<TRouteDefBuilderCollection>;
@@ -335,10 +335,10 @@ export type Router<
 export type UmbrellaRouter = Router<UmbrellaRouteDefBuilderCollection>;
 
 export type RouteDefGroup<T extends any[] = any[]> = {
-  _internal: {
+  ["~internal"]: {
     type: "RouteDefGroup";
-    Route: T[number]["_internal"]["Route"];
+    Route: T[number]["~internal"]["Route"];
   };
-  routeNames: T[number]["_internal"]["Route"]["name"][];
-  has(route: Route<any>): route is T[number]["_internal"]["Route"];
+  routeNames: T[number]["~internal"]["Route"]["name"][];
+  has(route: Route<any>): route is T[number]["~internal"]["Route"];
 };

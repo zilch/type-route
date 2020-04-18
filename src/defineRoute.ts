@@ -2,7 +2,7 @@ import {
   PathFn,
   RouteDefBuilder,
   UmbrellaParamDefCollection,
-  UmbrellaRouteDefBuilder
+  UmbrellaRouteDefBuilder,
 } from "./types";
 import { TypeRouteError } from "./TypeRouteError";
 import { assert } from "./assert";
@@ -18,10 +18,10 @@ export function defineRoute(...args: any[]): UmbrellaRouteDefBuilder {
   const parent = parseArgs(args);
 
   const routeDefBuilder: UmbrellaRouteDefBuilder = {
-    _internal: {
+    ["~internal"]: {
       type: "RouteDefBuilder",
       params: parent.params,
-      path: parent.path
+      path: parent.path,
     },
     extend(...args: any[]) {
       assertDefineRouteOrExtendArgs("extend", args);
@@ -32,7 +32,7 @@ export function defineRoute(...args: any[]): UmbrellaRouteDefBuilder {
       const extensionParamNames = Object.keys(params);
 
       const duplicateParamNames = parentParamNames.filter(
-        name => extensionParamNames.indexOf(name) >= 0
+        (name) => extensionParamNames.indexOf(name) >= 0
       );
 
       if (duplicateParamNames.length > 0) {
@@ -44,9 +44,9 @@ export function defineRoute(...args: any[]): UmbrellaRouteDefBuilder {
       return defineRoute(
         {
           ...params,
-          ...parent.params
+          ...parent.params,
         },
-        x => {
+        (x) => {
           return (
             parent.path(filter(parentParamNames)) +
             path(filter(extensionParamNames))
@@ -55,7 +55,7 @@ export function defineRoute(...args: any[]): UmbrellaRouteDefBuilder {
           function filter(allowedKeys: string[]) {
             const filteredX: Record<string, string> = {};
 
-            allowedKeys.forEach(key => {
+            allowedKeys.forEach((key) => {
               filteredX[key] = (x as Record<string, string>)[key];
             });
 
@@ -63,7 +63,7 @@ export function defineRoute(...args: any[]): UmbrellaRouteDefBuilder {
           }
         }
       );
-    }
+    },
   };
 
   return routeDefBuilder;
@@ -76,7 +76,7 @@ function assertDefineRouteOrExtendArgs(functionName: string, args: any[]) {
     assert(functionName, [
       assert.numArgs(args, 1, 2),
       assert.collectionOfType("ParamDef", "params", args[0]),
-      assert.type("function", "path", args[1])
+      assert.type("function", "path", args[1]),
     ]);
   }
 }
@@ -90,10 +90,10 @@ function parseArgs(
   return args.length === 1
     ? {
         params: {},
-        path: () => args[0]
+        path: () => args[0],
       }
     : {
         params: args[0],
-        path: args[1]
+        path: args[1],
       };
 }

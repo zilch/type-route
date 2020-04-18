@@ -4,7 +4,7 @@ import { noMatch } from "./noMatch";
 export function getObjectMatch({
   object,
   paramDefs,
-  urlEncodeDefault
+  urlEncodeDefault,
 }: {
   object: Record<string, string>;
   paramDefs: UmbrellaParamDefCollection;
@@ -12,7 +12,7 @@ export function getObjectMatch({
 }) {
   const params: Record<string, unknown> = {};
 
-  const namedParamDefs = Object.keys(paramDefs).map(name => {
+  const namedParamDefs = Object.keys(paramDefs).map((name) => {
     return { name, ...paramDefs[name] };
   });
 
@@ -23,21 +23,21 @@ export function getObjectMatch({
     delete extraneousParams[paramDef.name];
 
     if (raw === undefined) {
-      if (paramDef._internal.optional) {
+      if (paramDef["~internal"].optional) {
         continue;
       }
 
       return false;
     }
 
-    const value = paramDef._internal.valueSerializer.parse(
-      paramDef._internal.valueSerializer.urlEncode ?? urlEncodeDefault
+    const value = paramDef["~internal"].valueSerializer.parse(
+      paramDef["~internal"].valueSerializer.urlEncode ?? urlEncodeDefault
         ? decodeURIComponent(raw)
         : raw
     );
 
     if (value === noMatch) {
-      if (paramDef._internal.optional) {
+      if (paramDef["~internal"].optional) {
         continue;
       }
 

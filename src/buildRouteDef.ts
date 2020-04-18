@@ -3,7 +3,7 @@ import {
   Link,
   SharedRouterProperties,
   UmbrellaRouteDefBuilder,
-  UmbrellaRouteDef
+  UmbrellaRouteDef,
 } from "./types";
 import { buildPathDef } from "./buildPathDef";
 import { getParamDefsOfType } from "./getParamDefsOfType";
@@ -18,8 +18,8 @@ export function buildRouteDef(
 ): UmbrellaRouteDef {
   const pathDef = buildPathDef(
     routeName,
-    getParamDefsOfType("path", builder._internal.params),
-    builder._internal.path
+    getParamDefsOfType("path", builder["~internal"].params),
+    builder["~internal"].path
   );
 
   return {
@@ -28,11 +28,11 @@ export function buildRouteDef(
     replace,
     push,
     link,
-    _internal: {
+    ["~internal"]: {
       type: "RouteDef",
-      match: createMatcher({ pathDef, params: builder._internal.params }),
-      Route: null as any
-    }
+      match: createMatcher({ pathDef, params: builder["~internal"].params }),
+      Route: null as any,
+    },
   };
 
   function link(params: Record<string, unknown> = {}): Link {
@@ -65,19 +65,19 @@ export function buildRouteDef(
 
           const {
             navigate,
-            queryStringSerializer
+            queryStringSerializer,
           } = getSharedRouterProperties();
 
           navigate(
             createLocation(
               params,
-              builder._internal.params,
+              builder["~internal"].params,
               pathDef,
               queryStringSerializer
             )
           );
         }
-      }
+      },
     };
   }
 
@@ -88,7 +88,7 @@ export function buildRouteDef(
 
     const location = createLocation(
       params,
-      builder._internal.params,
+      builder["~internal"].params,
       pathDef,
       queryStringSerializer
     );
@@ -104,7 +104,7 @@ export function buildRouteDef(
     return navigate(
       createLocation(
         params,
-        builder._internal.params,
+        builder["~internal"].params,
         pathDef,
         queryStringSerializer
       )
@@ -119,7 +119,7 @@ export function buildRouteDef(
     return navigate(
       createLocation(
         params,
-        builder._internal.params,
+        builder["~internal"].params,
         pathDef,
         queryStringSerializer
       ),
@@ -134,7 +134,7 @@ export function buildRouteDef(
   ) {
     assert(`routes.${routeName}.${fnName}`, [
       assert.numArgs(args, 0, 1),
-      assert.type("object", "params", params)
+      assert.type("object", "params", params),
     ]);
   }
 }

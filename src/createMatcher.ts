@@ -2,7 +2,7 @@ import {
   Location,
   PathDef,
   QueryStringSerializer,
-  UmbrellaParamDefCollection
+  UmbrellaParamDefCollection,
 } from "./types";
 import { getPathMatch } from "./getPathMatch";
 import { getStateMatch } from "./getStateMatch";
@@ -11,7 +11,7 @@ import { getParamDefsOfType } from "./getParamDefsOfType";
 
 export function createMatcher({
   pathDef,
-  params
+  params,
 }: {
   pathDef: PathDef;
   params: UmbrellaParamDefCollection;
@@ -21,12 +21,12 @@ export function createMatcher({
 
   const defaultParams: Record<string, unknown> = {};
 
-  Object.keys(params).forEach(paramName => {
+  Object.keys(params).forEach((paramName) => {
     const param = params[paramName];
-    if (param._internal.default === undefined) {
+    if (param["~internal"].default === undefined) {
       return;
     }
-    defaultParams[paramName] = param._internal.default;
+    defaultParams[paramName] = param["~internal"].default;
   });
 
   return (location: Location, queryStringSerializer: QueryStringSerializer) => {
@@ -54,12 +54,12 @@ export function createMatcher({
         ...defaultParams,
         ...pathMatch.params,
         ...queryMatch.params,
-        ...stateMatch.params
+        ...stateMatch.params,
       },
       numExtraneousParams:
         pathMatch.numExtraneousParams +
         queryMatch.numExtraneousParams +
-        stateMatch.numExtraneousParams
+        stateMatch.numExtraneousParams,
     };
   };
 }

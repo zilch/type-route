@@ -2,7 +2,7 @@ import {
   Location,
   PathDef,
   QueryStringSerializer,
-  UmbrellaParamDefCollection
+  UmbrellaParamDefCollection,
 } from "./types";
 import { assert } from "./assert";
 
@@ -15,7 +15,7 @@ export function createLocation(
   const params = {
     path: {} as Record<string, string>,
     query: {} as Record<string, string>,
-    state: {} as Record<string, string>
+    state: {} as Record<string, string>,
   };
 
   for (const paramName in paramCollection) {
@@ -26,17 +26,17 @@ export function createLocation(
     }
 
     const paramDef = paramDefCollection[paramName];
-    const result = paramDef._internal.valueSerializer.stringify(paramValue);
+    const result = paramDef["~internal"].valueSerializer.stringify(paramValue);
 
     assert("[ValueSerializer].stringify", [
-      assert.type("string", "result", result)
+      assert.type("string", "result", result),
     ]);
 
     const urlEncodeDefault =
-      paramDef._internal.kind !== "state" && !paramDef._internal.trailing;
+      paramDef["~internal"].kind !== "state" && !paramDef["~internal"].trailing;
 
-    params[paramDef._internal.kind][paramName] =
-      paramDef._internal.valueSerializer.urlEncode ?? urlEncodeDefault
+    params[paramDef["~internal"].kind][paramName] =
+      paramDef["~internal"].valueSerializer.urlEncode ?? urlEncodeDefault
         ? encodeURIComponent(result)
         : result;
   }

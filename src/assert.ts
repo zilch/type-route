@@ -4,7 +4,7 @@ export function assert(
   context: string,
   assertions: ((context: string) => void)[]
 ) {
-  assertions.forEach(assert => assert(context));
+  assertions.forEach((assert) => assert(context));
 }
 
 assert.numArgs = (args: any[], min: number, max = min) => (context: string) => {
@@ -14,7 +14,7 @@ assert.numArgs = (args: any[], min: number, max = min) => (context: string) => {
         context,
         args,
         min,
-        max
+        max,
       }
     );
   }
@@ -46,7 +46,7 @@ assert.collectionOfType = (
       Array.isArray(expectedType) ? expectedType.join(" | ") : expectedType
     }>`,
     value,
-    valueName
+    valueName,
   });
 };
 
@@ -74,7 +74,7 @@ assert.arrayOfType = (
       Array.isArray(expectedType) ? expectedType.join(" | ") : expectedType
     }>`,
     value,
-    valueName
+    valueName,
   });
 };
 
@@ -92,8 +92,8 @@ assert.type = (
     if (
       (expectsProperType &&
         typeOf(value) === "object" &&
-        typeOf(value._internal) === "object" &&
-        value._internal.type === expectedType) ||
+        typeOf(value["~internal"]) === "object" &&
+        value["~internal"].type === expectedType) ||
       (!expectsProperType && typeOf(value) === expectedType)
     ) {
       return;
@@ -105,7 +105,7 @@ assert.type = (
     actualType: typeOf(value),
     expectedType,
     value,
-    valueName
+    valueName,
   });
 };
 

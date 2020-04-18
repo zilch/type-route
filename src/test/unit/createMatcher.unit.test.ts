@@ -94,11 +94,11 @@ function expectMatch(
   const route = defineRoute(paramDefs, path);
 
   const match = createMatcher({
-    params: route._internal.params,
+    params: route["~internal"].params,
     pathDef: buildPathDef(
       "test",
-      getParamDefsOfType("path", route._internal.params),
-      route._internal.path
+      getParamDefsOfType("path", route["~internal"].params),
+      route["~internal"].path
     ),
   });
 
