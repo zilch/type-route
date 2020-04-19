@@ -7,5 +7,5 @@ module.exports = {
     host: "localhost",
     port: 1235,
   },
-  exitOnPageError: false,
+  exitOnPageError: true,
 };

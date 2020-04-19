@@ -4,5 +4,4 @@ module.exports = {
     "^.+\\.tsx?$": "ts-jest",
   },
   testMatch: ["**/*.integration.test.ts?(x)"],
-  testTimeout: 60000,
 };
