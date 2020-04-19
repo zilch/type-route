@@ -6,5 +6,5 @@ module.exports = {
     "^.+\\.tsx?$": "ts-jest",
   },
   testMatch: ["**/*.integration.test.ts?(x)"],
-  testTimeout: process.env.CI ? 60000 : MAX_32_BIT_SIGNED_INTEGER,
+  testTimeout: process.env.CI ? 60000 : 60000, //MAX_32_BIT_SIGNED_INTEGER,
 };
