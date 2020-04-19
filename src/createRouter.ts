@@ -174,6 +174,7 @@ export function createRouter(
   }
 
   function navigate({ path, query, state }: Location, replace?: boolean) {
+    console.log("navigate", path, query, state, replace);
     // Necessary b/c the type declaration generation step of the build has
     // has issues with Promise for some reason
     // @ts-ignore
