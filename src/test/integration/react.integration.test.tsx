@@ -9,7 +9,7 @@ describe("react", () => {
   test("right clicking link", testNotImplemented);
 
   test("react", async () => {
-    const { routes } = await page.evaluate(() => {
+    const { routes, session } = await page.evaluate(() => {
       const { render, TypeRoute, React } = window;
 
       const { createRouter, defineRoute, param } = TypeRoute;
@@ -88,52 +88,48 @@ describe("react", () => {
       return { routes, listen, session };
     });
 
-    console.log("here 1");
-
     expect(await page.evaluate(() => document.location.pathname)).toBe("/");
 
-    console.log("here 2");
-
-    await page.evaluate(() => routes.user.push({ userId: "123" }));
-
-    console.log("here 3");
+    await page.evaluate(() => {
+      return routes.user.push({ userId: "123" });
+    });
 
     expect(await page.evaluate(() => document.location.pathname)).toBe(
       "/users/123"
     );
 
-    console.log("here 4");
+    await page.waitFor("[data-route]");
 
-    // expect(
-    //   await page.$eval("[data-route]", (e) => e.getAttribute("data-route"))
-    // ).toBe("user");
+    expect(
+      await page.$eval("[data-route]", (e) => e.getAttribute("data-route"))
+    ).toBe("user");
 
-    // expect(await page.$eval('[data-testid="userId"]', (e) => e.innerText)).toBe(
-    //   "123"
-    // );
+    expect(await page.$eval('[data-testid="userId"]', (e) => e.innerText)).toBe(
+      "123"
+    );
 
-    // await page.$eval('[data-testid="userList"]', (e) => e.click());
+    await page.$eval('[data-testid="userList"]', (e) => e.click());
 
-    // expect(await page.$eval('[data-testid="page"]', (e) => e.innerText)).toBe(
-    //   "1"
-    // );
+    expect(await page.$eval('[data-testid="page"]', (e) => e.innerText)).toBe(
+      "1"
+    );
 
-    // await page.evaluate(() => {
-    //   routes.userList.push({
-    //     page: 2,
-    //   });
-    // });
+    await page.evaluate(() => {
+      return routes.userList.push({
+        page: 2,
+      });
+    });
 
-    // expect(await page.$eval('[data-testid="page"]', (e) => e.innerText)).toBe(
-    //   "2"
-    // );
+    expect(await page.$eval('[data-testid="page"]', (e) => e.innerText)).toBe(
+      "2"
+    );
 
-    // await page.evaluate(() => {
-    //   session.back();
-    // });
+    await page.evaluate(() => {
+      session.back();
+    });
 
-    // expect(await page.$eval('[data-testid="page"]', (e) => e.innerText)).toBe(
-    //   "1"
-    // );
+    expect(await page.$eval('[data-testid="page"]', (e) => e.innerText)).toBe(
+      "1"
+    );
   });
 });
