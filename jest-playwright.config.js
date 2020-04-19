@@ -1,6 +1,6 @@
 module.exports = {
   launchBrowserApp: {
-    headless: !!process.env.CI,
+    headless: Object.keys(process.env).includes("CI"),
   },
   server: {
     command: "npx parcel ./src/test/utils/integrationTest.html --port 1235",
