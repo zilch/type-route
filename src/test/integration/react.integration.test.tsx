@@ -94,9 +94,7 @@ describe("react", () => {
 
     console.log("here 2");
 
-    await page.evaluate(() => {
-      return routes.user.push({ userId: "123" });
-    });
+    await page.evaluate(() => routes.user.push({ userId: "123" }));
 
     console.log("here 3");
 
