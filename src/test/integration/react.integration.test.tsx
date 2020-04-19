@@ -88,13 +88,21 @@ describe("react", () => {
       return { routes, listen, session };
     });
 
+    console.log("here 1");
+
     expect(await page.evaluate(() => document.location.pathname)).toBe("/");
 
+    console.log("here 2");
+
     await page.evaluate(() => routes.user.push({ userId: "123" }));
+
+    console.log("here 3");
 
     expect(await page.evaluate(() => document.location.pathname)).toBe(
       "/users/123"
     );
+
+    console.log("here 4");
 
     // expect(
     //   await page.$eval("[data-route]", (e) => e.getAttribute("data-route"))

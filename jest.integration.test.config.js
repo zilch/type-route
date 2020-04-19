@@ -1,5 +1,7 @@
 const MAX_32_BIT_SIGNED_INTEGER = 2147483647;
 
+console.log(Object.keys(process.env));
+
 module.exports = {
   preset: "jest-playwright-preset",
   transform: {
