@@ -9,7 +9,7 @@ describe("react", () => {
   test("right clicking link", testNotImplemented);
 
   test("react", async () => {
-    const { routes } = await page.evaluate(() => {
+    const {} = await page.evaluate(() => {
       const { render, TypeRoute, React } = window;
 
       const { createRouter, defineRoute, param } = TypeRoute;
