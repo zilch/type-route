@@ -94,7 +94,10 @@ describe("react", () => {
 
     console.log("here 2");
 
-    await page.evaluate(() => routes.user.push({ userId: "123" }));
+    await page.evaluate(() => {
+      routes.user.push({ userId: "123" });
+      return new Promise((r) => setTimeout(r, 100));
+    });
 
     console.log("here 3");
 
