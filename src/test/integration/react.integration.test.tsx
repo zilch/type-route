@@ -9,7 +9,7 @@ describe("react", () => {
   test("right clicking link", testNotImplemented);
 
   test("react", async () => {
-    const {} = await page.evaluate(() => {
+    const { routes } = await page.evaluate(() => {
       const { render, TypeRoute, React } = window;
 
       const { createRouter, defineRoute, param } = TypeRoute;
@@ -90,11 +90,11 @@ describe("react", () => {
 
     expect(await page.evaluate(() => document.location.pathname)).toBe("/");
 
-    // await page.evaluate(() => routes.user.push({ userId: "123" }));
+    await page.evaluate(() => routes.user.push({ userId: "123" }));
 
-    // expect(await page.evaluate(() => document.location.pathname)).toBe(
-    //   "/users/123"
-    // );
+    expect(await page.evaluate(() => document.location.pathname)).toBe(
+      "/users/123"
+    );
 
     // expect(
     //   await page.$eval("[data-route]", (e) => e.getAttribute("data-route"))
