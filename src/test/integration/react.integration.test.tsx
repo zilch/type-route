@@ -90,25 +90,25 @@ describe("react", () => {
 
     expect(await page.evaluate(() => document.location.pathname)).toBe("/");
 
-    await page.evaluate(() => routes.user.push({ userId: "123" }));
+    // await page.evaluate(() => routes.user.push({ userId: "123" }));
 
-    expect(await page.evaluate(() => document.location.pathname)).toBe(
-      "/users/123"
-    );
+    // expect(await page.evaluate(() => document.location.pathname)).toBe(
+    //   "/users/123"
+    // );
 
-    expect(
-      await page.$eval("[data-route]", (e) => e.getAttribute("data-route"))
-    ).toBe("user");
+    // expect(
+    //   await page.$eval("[data-route]", (e) => e.getAttribute("data-route"))
+    // ).toBe("user");
 
-    expect(await page.$eval('[data-testid="userId"]', (e) => e.innerText)).toBe(
-      "123"
-    );
+    // expect(await page.$eval('[data-testid="userId"]', (e) => e.innerText)).toBe(
+    //   "123"
+    // );
 
-    await page.$eval('[data-testid="userList"]', (e) => e.click());
+    // await page.$eval('[data-testid="userList"]', (e) => e.click());
 
-    expect(await page.$eval('[data-testid="page"]', (e) => e.innerText)).toBe(
-      "1"
-    );
+    // expect(await page.$eval('[data-testid="page"]', (e) => e.innerText)).toBe(
+    //   "1"
+    // );
 
     // await page.evaluate(() => {
     //   routes.userList.push({
