@@ -100,25 +100,19 @@ describe("react", () => {
 
     await page.waitFor("[data-route]");
 
-    console.log("here 4");
     expect(
       await page.$eval("[data-route]", (e) => e.getAttribute("data-route"))
     ).toBe("user");
 
-    console.log("here 5");
     expect(await page.$eval('[data-testid="userId"]', (e) => e.innerText)).toBe(
       "123"
     );
-    console.log("here 6");
 
     await page.$eval('[data-testid="userList"]', (e) => e.click());
 
-    console.log("here 7");
     expect(await page.$eval('[data-testid="page"]', (e) => e.innerText)).toBe(
       "1"
     );
-
-    console.log("here 8");
 
     await page.evaluate(() => {
       return routes.userList.push({
@@ -130,13 +124,9 @@ describe("react", () => {
       "2"
     );
 
-    console.log("here 9");
-
     await page.evaluate(() => {
       session.back();
     });
-
-    console.log("here 10");
 
     expect(await page.$eval('[data-testid="page"]', (e) => e.innerText)).toBe(
       "1"
