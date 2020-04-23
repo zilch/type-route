@@ -7,7 +7,6 @@ const { routes, listen, session } = createRouter({
   userList: defineRoute(
     {
       page: param.query.optional.number.default(1),
-      page2: param.query.optional.number,
     },
     () => `/users`
   ),
@@ -16,6 +15,13 @@ const { routes, listen, session } = createRouter({
       userId: param.path.string,
     },
     (x) => `/users/${x.userId}`
+  ),
+  software: defineRoute(
+    {
+      name: param.path.string,
+      version: param.path.optional.string,
+    },
+    (x) => `/software/${x.name}/${x.version}`
   ),
 });
 
@@ -53,6 +59,15 @@ function Page(props: { route: Route<typeof routes> }) {
     return <div>User {route.params.userId}</div>;
   }
 
+  if (route.name === routes.software.name) {
+    return (
+      <div>
+        Software name {route.params.name} version{" "}
+        {route.params.version ?? "none"}
+      </div>
+    );
+  }
+
   return <div>Not Found</div>;
 }
 
@@ -74,6 +89,21 @@ function Navigation() {
         })}
       >
         User "abc"
+      </a>
+      <a
+        {...routes.software.link({
+          name: "Apache",
+        })}
+      >
+        Apache
+      </a>
+      <a
+        {...routes.software.link({
+          name: "Apache",
+          version: "2.1.4",
+        })}
+      >
+        Apache 2.1.4
       </a>
     </nav>
   );

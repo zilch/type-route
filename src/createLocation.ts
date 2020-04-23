@@ -44,6 +44,12 @@ export function createLocation(
   const path =
     "/" +
     pathDef
+      .filter(({ namedParamDef }) => {
+        return !(
+          namedParamDef?.["~internal"].optional &&
+          params.path[namedParamDef.paramName] === undefined
+        );
+      })
       .map(({ namedParamDef, leading, trailing }) => {
         const rawParam = namedParamDef
           ? params.path[namedParamDef.paramName]
