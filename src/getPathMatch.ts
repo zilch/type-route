@@ -1,7 +1,18 @@
 import { noMatch } from "./noMatch";
 import { PathDef } from "./types";
+import { stringUtils } from "./stringUtils";
 
-export function getPathMatch(path: string, pathDef: PathDef) {
+const { endsWith, startsWith } = stringUtils;
+
+export function getPathMatch({
+  path,
+  pathDef,
+  arraySeparator,
+}: {
+  path: string;
+  pathDef: PathDef;
+  arraySeparator: string;
+}) {
   const params: Record<string, unknown> = {};
 
   if (path === "/" && pathDef.length === 0) {
@@ -86,14 +97,30 @@ export function getPathMatch(path: string, pathDef: PathDef) {
       pathSegmentDef.namedParamDef["~internal"].valueSerializer.urlEncode ??
       !pathSegmentDef.namedParamDef["~internal"].trailing;
 
-    let value = pathSegmentDef.namedParamDef["~internal"].valueSerializer.parse(
-      urlEncode
-        ? decodeURIComponent(pathSegmentMinusLeadingAndTrailing)
-        : pathSegmentMinusLeadingAndTrailing
-    );
+    let value;
 
-    if (value === noMatch) {
-      return false;
+    if (pathSegmentDef.namedParamDef["~internal"].array) {
+      value = pathSegmentMinusLeadingAndTrailing
+        .split(arraySeparator)
+        .map((part) => {
+          return pathSegmentDef.namedParamDef?.[
+            "~internal"
+          ].valueSerializer.parse(urlEncode ? decodeURIComponent(part) : part);
+        });
+
+      if (value.some((part) => part === noMatch)) {
+        return false;
+      }
+    } else {
+      value = pathSegmentDef.namedParamDef["~internal"].valueSerializer.parse(
+        urlEncode
+          ? decodeURIComponent(pathSegmentMinusLeadingAndTrailing)
+          : pathSegmentMinusLeadingAndTrailing
+      );
+
+      if (value === noMatch) {
+        return false;
+      }
     }
 
     if (pathSegmentDef.namedParamDef["~internal"].trailing) {
@@ -114,22 +141,4 @@ export function getPathMatch(path: string, pathDef: PathDef) {
   }
 
   return { params, numExtraneousParams: 0 };
-}
-
-function startsWith(value: string, start: string) {
-  for (let i = 0; i < start.length; i++) {
-    if (start[i] !== value[i]) {
-      return false;
-    }
-  }
-  return true;
-}
-
-function endsWith(value: string, end: string) {
-  for (let i = 1; i <= end.length; i++) {
-    if (end[end.length - i] !== value[value.length - i]) {
-      return false;
-    }
-  }
-  return true;
 }

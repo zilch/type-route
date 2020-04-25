@@ -25,12 +25,18 @@ export type BuildPathDefErrorContext = {
 
 export type QueryStringSerializer = {
   parse: (raw: string) => Record<string, string>;
-  stringify: (queryParams: Record<string, string>) => string;
+  stringify: (
+    queryParams: Record<
+      string,
+      { valueSerializerId?: string; array: boolean; value: string }
+    >
+  ) => string;
 };
 
 export type ParamDefKind = "path" | "query" | "state";
 
 export type ValueSerializer<TValue = unknown> = {
+  id?: string;
   urlEncode?: boolean;
   parse(raw: string): TValue | typeof noMatch;
   stringify(value: TValue): string;
@@ -41,6 +47,7 @@ export type ParamDef<TParamDefKind, TValue = unknown> = {
     type: "ParamDef";
     kind: TParamDefKind;
     valueSerializer: ValueSerializer<TValue>;
+    array: boolean;
     optional: boolean;
     default: TValue | undefined;
     trailing?: boolean;
@@ -51,6 +58,7 @@ export type UmbrellaParamDef = ParamDef<ParamDefKind>;
 export type SharedRouterProperties = {
   queryStringSerializer: QueryStringSerializer;
   navigate: NavigateFn;
+  arraySeparator: string;
 };
 
 export type ParamDefCollection<TParamDefKind> = {
@@ -111,7 +119,9 @@ export type ParamValue<TParamDef> = TParamDef extends ParamDef<
   any,
   infer TValue
 >
-  ? TValue
+  ? TParamDef["~internal"]["array"] extends true
+    ? TValue[]
+    : TValue
   : never;
 
 type InputRouteParams<TParamDefCollection> = Compute<
@@ -211,10 +221,11 @@ export type RouteDef<TRouteName, TParamDefCollection> = {
   link: RouteParamsFunction<TParamDefCollection, Link>;
   ["~internal"]: {
     type: "RouteDef";
-    match: (
-      location: Location,
-      queryStringSerializer: QueryStringSerializer
-    ) => Match | false;
+    match: (args: {
+      location: Location;
+      queryStringSerializer: QueryStringSerializer;
+      arraySeparator: string;
+    }) => Match | false;
     Route: {
       name: TRouteName;
       action: Action;
@@ -308,9 +319,21 @@ export type RouterSessionHistoryOptions =
   | MemorySessionHistoryOptions
   | BrowserSessionHistoryOptions;
 
+export type QueryStringArrayFormat =
+  | "singleKey"
+  | "singleKeyWithBracket"
+  | "multiKey"
+  | "multiKeyWithBracket";
+
+export type ArrayFormat = {
+  separator?: string;
+  queryString?: QueryStringArrayFormat;
+};
+
 export type RouterOptions = {
   session?: RouterSessionHistoryOptions;
   queryStringSerializer?: QueryStringSerializer;
+  arrayFormat?: ArrayFormat;
 };
 
 export type UmbrellaRouteDefBuilderCollection = Record<

@@ -2,7 +2,7 @@ import { createLocation } from "../../createLocation";
 import { defineRoute } from "../../defineRoute";
 import { buildPathDef } from "../../buildPathDef";
 import { getParamDefsOfType } from "../../getParamDefsOfType";
-import { defaultQueryStringSerializer } from "../../defaultQueryStringSerializer";
+import { createQueryStringSerializer } from "../../createQueryStringSerializer";
 import { param } from "../../param";
 import { UmbrellaParamDefCollection, GetRawPath } from "../../types";
 
@@ -63,11 +63,12 @@ function expectLocation(
   );
 
   return expect(
-    createLocation(
+    createLocation({
       paramCollection,
       paramDefCollection,
       pathDef,
-      defaultQueryStringSerializer
-    )
+      queryStringSerializer: createQueryStringSerializer(),
+      arraySeparator: ",",
+    })
   );
 }

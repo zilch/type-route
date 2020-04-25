@@ -4,7 +4,7 @@ import { param } from "../../param";
 import { buildPathDef } from "../../buildPathDef";
 import { getParamDefsOfType } from "../../getParamDefsOfType";
 import { Location, PathFn, UmbrellaParamDefCollection } from "../../types";
-import { defaultQueryStringSerializer } from "../../defaultQueryStringSerializer";
+import { createQueryStringSerializer } from "../../createQueryStringSerializer";
 
 describe("createMatcher", () => {
   it("should do a simple match", () => {
@@ -102,5 +102,11 @@ function expectMatch(
     ),
   });
 
-  return expect(match(location, defaultQueryStringSerializer));
+  return expect(
+    match({
+      location,
+      queryStringSerializer: createQueryStringSerializer(),
+      arraySeparator: ",",
+    })
+  );
 }

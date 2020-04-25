@@ -2,7 +2,14 @@ import { noMatch } from "./noMatch";
 import { ValueSerializer, ParamDefKind, ParamDef, ParamValue } from "./types";
 import { assert } from "./assert";
 
+const boolean: ValueSerializer<boolean> = {
+  id: "boolean",
+  parse: (raw) => (raw === "true" ? true : raw === "false" ? false : noMatch),
+  stringify: (value) => (value ? "true" : "false"),
+};
+
 const number: ValueSerializer<number> = {
+  id: "number",
   parse: (raw) => {
     if (!isNumeric(raw)) {
       return noMatch;
@@ -18,12 +25,14 @@ function isNumeric(value: string) {
 }
 
 const string: ValueSerializer<string> = {
+  id: "string",
   parse: (raw) => raw,
   stringify: (value) => value,
 };
 
 const json = <TValue = unknown>() => {
   const valueSerializer: ValueSerializer<TValue> = {
+    id: "json",
     parse: (raw) => {
       let value: TValue;
 
@@ -55,19 +64,23 @@ function getParamDefKindSection<
   TTrailing extends boolean
 >(kind: TKind, trailing: TTrailing) {
   return {
-    ...getParamDefOptionalitySection(false),
+    ...getParamDefOptionalitySection(false, false),
+    array: getParamDefOptionalitySection(false, true),
     optional: {
-      ...getParamDefOptionalitySection(true),
+      ...getParamDefOptionalitySection(true, false),
+      array: getParamDefOptionalitySection(true, true),
     },
   };
 
-  function getParamDefOptionalitySection<TOptional extends boolean>(
-    optional: TOptional
-  ) {
+  function getParamDefOptionalitySection<
+    TOptional extends boolean,
+    TArray extends boolean
+  >(optional: TOptional, array: TArray) {
     return {
       string: getParamDef({
         ["~internal"]: {
           type: "ParamDef",
+          array,
           kind,
           optional,
           valueSerializer: string,
@@ -79,9 +92,22 @@ function getParamDefKindSection<
       number: getParamDef({
         ["~internal"]: {
           type: "ParamDef",
+          array,
           kind,
           optional,
           valueSerializer: number,
+          trailing,
+          default: undefined as never,
+        },
+      }),
+
+      boolean: getParamDef({
+        ["~internal"]: {
+          type: "ParamDef",
+          array,
+          kind,
+          optional,
+          valueSerializer: boolean,
           trailing,
           default: undefined as never,
         },
@@ -98,6 +124,7 @@ function getParamDefKindSection<
         return getParamDef({
           ["~internal"]: {
             type: "ParamDef",
+            array,
             kind,
             optional,
             valueSerializer,
@@ -120,6 +147,7 @@ function getParamDefKindSection<
           ["~internal"]: {
             type: "ParamDef";
             kind: T["~internal"]["kind"];
+            array: T["~internal"]["array"];
             valueSerializer: T["~internal"]["valueSerializer"];
             optional: T["~internal"]["optional"];
             default: ParamValue<T>;

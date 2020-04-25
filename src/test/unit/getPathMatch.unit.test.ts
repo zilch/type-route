@@ -149,6 +149,7 @@ describe("getPathMatch", () => {
     expectGetPathMatch(
       {
         json: param.path.ofType<{ hello: string; there: string }>({
+          id: "custom",
           parse: (raw) => {
             const rawParts = raw.split("-");
 
@@ -260,6 +261,10 @@ function expectGetPathMatch(
   path: string
 ) {
   return expect(
-    getPathMatch(path, buildPathDef("test", pathParamDefCollection, getRawPath))
+    getPathMatch({
+      path,
+      pathDef: buildPathDef("test", pathParamDefCollection, getRawPath),
+      arraySeparator: ",",
+    })
   );
 }

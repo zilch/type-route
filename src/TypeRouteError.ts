@@ -8,24 +8,24 @@ function getBuildPathDefRouteNameMessage(routeName: string) {
 function getBuildPathDefErrorMessage(context: BuildPathDefErrorContext) {
   return [
     getBuildPathDefRouteNameMessage(context.routeName),
-    `The path was constructed as \`${context.rawPath}\``
+    `The path was constructed as \`${context.rawPath}\``,
   ];
 }
 
 export const TypeRouteError = buildErrorCollection({
   Path_may_not_be_an_empty_string: {
     errorCode: 1000,
-    getDetails: getBuildPathDefErrorMessage
+    getDetails: getBuildPathDefErrorMessage,
   },
 
   Path_must_start_with_a_forward_slash: {
     errorCode: 1001,
-    getDetails: getBuildPathDefErrorMessage
+    getDetails: getBuildPathDefErrorMessage,
   },
 
   Path_may_not_end_with_a_forward_slash: {
     errorCode: 1002,
-    getDetails: getBuildPathDefErrorMessage
+    getDetails: getBuildPathDefErrorMessage,
   },
 
   Path_may_not_include_characters_that_must_be_URL_encoded: {
@@ -44,7 +44,7 @@ export const TypeRouteError = buildErrorCollection({
 
       const invalidCharacters = (leading + trailing)
         .split("")
-        .filter(character => character !== encodeURIComponent(character));
+        .filter((character) => character !== encodeURIComponent(character));
 
       return [
         ...getBuildPathDefErrorMessage(context),
@@ -52,9 +52,9 @@ export const TypeRouteError = buildErrorCollection({
           leading + paramId + trailing
         }\` has the following invalid characters: ${invalidCharacters.join(
           ", "
-        )}`
+        )}`,
       ];
-    }
+    },
   },
 
   Path_may_not_include_empty_segments: {
@@ -62,9 +62,9 @@ export const TypeRouteError = buildErrorCollection({
     getDetails: (context: BuildPathDefErrorContext) => {
       return [
         ...getBuildPathDefErrorMessage(context),
-        "Empty segments can be spotted by finding the place in the path with two consecutive forward slashes '//'."
+        "Empty segments can be spotted by finding the place in the path with two consecutive forward slashes '//'.",
       ];
-    }
+    },
   },
 
   Path_may_have_at_most_one_parameter_per_segment: {
@@ -75,9 +75,9 @@ export const TypeRouteError = buildErrorCollection({
     ) => {
       return [
         ...getBuildPathDefErrorMessage(context),
-        `A single segment of the path included the following parameters: ${parameterNames}`
+        `A single segment of the path included the following parameters: ${parameterNames}`,
       ];
-    }
+    },
   },
 
   Path_parameters_may_not_be_used_more_than_once_when_building_a_path: {
@@ -85,9 +85,9 @@ export const TypeRouteError = buildErrorCollection({
     getDetails: (context: BuildPathDefErrorContext, parameterName: string) => {
       return [
         ...getBuildPathDefErrorMessage(context),
-        `The parameter "${parameterName}" was used more than once.`
+        `The parameter "${parameterName}" was used more than once.`,
       ];
-    }
+    },
   },
 
   Optional_path_parameters_may_not_have_any_text_around_the_parameter: {
@@ -113,7 +113,7 @@ export const TypeRouteError = buildErrorCollection({
       }
 
       return messages;
-    }
+    },
   },
 
   Path_may_have_at_most_one_optional_or_trailing_parameter: {
@@ -124,14 +124,14 @@ export const TypeRouteError = buildErrorCollection({
     ) {
       return [
         ...getBuildPathDefErrorMessage(context),
-        `At most one optional/trailing parameter should be given but ${numOptionalTrailingParameterNames} were provided.`
+        `At most one optional/trailing parameter should be given but ${numOptionalTrailingParameterNames} were provided.`,
       ];
-    }
+    },
   },
 
   Optional_or_trailing_path_parameters_may_only_appear_in_the_last_path_segment: {
     errorCode: 1008,
-    getDetails: getBuildPathDefErrorMessage
+    getDetails: getBuildPathDefErrorMessage,
   },
 
   All_path_parameters_must_be_used_in_path_construction: {
@@ -139,9 +139,11 @@ export const TypeRouteError = buildErrorCollection({
     getDetails(context: BuildPathDefErrorContext, unusedParameters: string[]) {
       return [
         ...getBuildPathDefErrorMessage(context),
-        `The following parameters were not used: ${unusedParameters.join(", ")}`
+        `The following parameters were not used: ${unusedParameters.join(
+          ", "
+        )}`,
       ];
-    }
+    },
   },
 
   Path_parameter_name_must_not_include_curly_brackets_dollar_signs_or_the_forward_slash_character: {
@@ -149,9 +151,9 @@ export const TypeRouteError = buildErrorCollection({
     getDetails(routeName: string, paramName: string) {
       return [
         getBuildPathDefRouteNameMessage(routeName),
-        `The $ { } or / character was used in this parameter name: ${paramName}`
+        `The $ { } or / character was used in this parameter name: ${paramName}`,
       ];
-    }
+    },
   },
 
   Extension_route_definition_parameter_names_may_not_be_the_same_as_base_route_definition_parameter_names: {
@@ -160,9 +162,9 @@ export const TypeRouteError = buildErrorCollection({
       return [
         `The following parameter names were used in both the base route definition and the extension: ${duplicateParameterNames.join(
           ", "
-        )}`
+        )}`,
       ];
-    }
+    },
   },
 
   Expected_type_does_not_match_actual_type: {
@@ -172,7 +174,7 @@ export const TypeRouteError = buildErrorCollection({
       value,
       valueName,
       expectedType,
-      actualType
+      actualType,
     }: {
       context: string;
       valueName: string;
@@ -190,12 +192,12 @@ export const TypeRouteError = buildErrorCollection({
             ? "\n" +
               JSON.stringify(value, null, 2)
                 .split("\n")
-                .map(line => `  ${line}`)
+                .map((line) => `  ${line}`)
                 .join("\n")
             : "`" + value + "`"
-        }`
+        }`,
       ];
-    }
+    },
   },
 
   Expected_number_of_arguments_does_match_actual_number: {
@@ -204,7 +206,7 @@ export const TypeRouteError = buildErrorCollection({
       context,
       args,
       min,
-      max
+      max,
     }: {
       context: string;
       args: any[];
@@ -215,10 +217,19 @@ export const TypeRouteError = buildErrorCollection({
         `Problem found with your usage of \`${context}\``,
         `Expected ${min}${min === max ? "" : " - " + max} but received ${
           args.length
-        } argument${args.length === 1 ? "" : "s"}`
+        } argument${args.length === 1 ? "" : "s"}`,
       ];
-    }
-  }
+    },
+  },
+
+  Query_string_array_format_and_custom_query_string_serializer_may_not_both_be_provided: {
+    errorCode: 1014,
+    getDetails() {
+      return [
+        "You may not provide both options.arrayFormat.queryString and options.queryStringSerializer. These options are not compatible.",
+      ];
+    },
+  },
 });
 
 function buildErrorCollection<
@@ -233,7 +244,7 @@ function buildErrorCollection<
     }
   > = {};
 
-  Object.keys(definitions).forEach(key => {
+  Object.keys(definitions).forEach((key) => {
     const name = key.replace(/_/g, " ") + ".";
     const { errorCode, getDetails } = definitions[key];
     const messageTitle = `TR${errorCode} · ${name}`;
@@ -243,7 +254,7 @@ function buildErrorCollection<
       name,
       create(...args: any[]) {
         const message = (getDetails?.(...args) ?? [])
-          .map(detail => `- ${detail}`)
+          .map((detail) => `- ${detail}`)
           .join("\n");
 
         const error = new Error(
@@ -254,7 +265,7 @@ function buildErrorCollection<
         error.name = `(hopefully helpful 😄) TypeRouteError`;
 
         return error;
-      }
+      },
     };
   });
 

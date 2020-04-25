@@ -66,15 +66,17 @@ export function buildRouteDef(
           const {
             navigate,
             queryStringSerializer,
+            arraySeparator,
           } = getSharedRouterProperties();
 
           navigate(
-            createLocation(
-              params,
-              builder["~internal"].params,
+            createLocation({
+              paramCollection: params,
+              paramDefCollection: builder["~internal"].params,
               pathDef,
-              queryStringSerializer
-            )
+              queryStringSerializer,
+              arraySeparator,
+            })
           );
         }
       },
@@ -84,14 +86,18 @@ export function buildRouteDef(
   function href(params: Record<string, unknown> = {}) {
     assertRouteDefFnArgs("link", [].slice.call(arguments), params);
 
-    const { queryStringSerializer } = getSharedRouterProperties();
+    const {
+      queryStringSerializer,
+      arraySeparator,
+    } = getSharedRouterProperties();
 
-    const location = createLocation(
-      params,
-      builder["~internal"].params,
+    const location = createLocation({
+      paramCollection: params,
+      paramDefCollection: builder["~internal"].params,
       pathDef,
-      queryStringSerializer
-    );
+      queryStringSerializer,
+      arraySeparator,
+    });
 
     return location.path + (location.query ? `?${location.query}` : "");
   }
@@ -99,30 +105,40 @@ export function buildRouteDef(
   function push(params: Record<string, unknown> = {}) {
     assertRouteDefFnArgs("link", [].slice.call(arguments), params);
 
-    const { navigate, queryStringSerializer } = getSharedRouterProperties();
+    const {
+      navigate,
+      queryStringSerializer,
+      arraySeparator,
+    } = getSharedRouterProperties();
 
     return navigate(
-      createLocation(
-        params,
-        builder["~internal"].params,
+      createLocation({
+        paramCollection: params,
+        paramDefCollection: builder["~internal"].params,
         pathDef,
-        queryStringSerializer
-      )
+        queryStringSerializer,
+        arraySeparator,
+      })
     );
   }
 
   function replace(params: Record<string, unknown> = {}) {
     assertRouteDefFnArgs("link", [].slice.call(arguments), params);
 
-    const { navigate, queryStringSerializer } = getSharedRouterProperties();
+    const {
+      navigate,
+      queryStringSerializer,
+      arraySeparator,
+    } = getSharedRouterProperties();
 
     return navigate(
-      createLocation(
-        params,
-        builder["~internal"].params,
+      createLocation({
+        paramCollection: params,
+        paramDefCollection: builder["~internal"].params,
         pathDef,
-        queryStringSerializer
-      ),
+        queryStringSerializer,
+        arraySeparator,
+      }),
       true
     );
   }

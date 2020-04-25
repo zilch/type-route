@@ -29,8 +29,21 @@ export function createMatcher({
     defaultParams[paramName] = param["~internal"].default;
   });
 
-  return (location: Location, queryStringSerializer: QueryStringSerializer) => {
-    const pathMatch = getPathMatch(location.path, pathDef);
+  return ({
+    location,
+    arraySeparator,
+    queryStringSerializer,
+  }: {
+    location: Location;
+    queryStringSerializer: QueryStringSerializer;
+    arraySeparator: string;
+  }) => {
+    const pathMatch = getPathMatch({
+      path: location.path,
+      pathDef,
+      arraySeparator,
+    });
+
     if (pathMatch === false) {
       return false;
     }

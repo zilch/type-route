@@ -3,19 +3,33 @@ import {
   PathDef,
   QueryStringSerializer,
   UmbrellaParamDefCollection,
+  UmbrellaParamDef,
 } from "./types";
-import { assert } from "./assert";
+import { assert, typeOf } from "./assert";
+import { TypeRouteError } from "./TypeRouteError";
 
-export function createLocation(
-  paramCollection: Record<string, unknown>,
-  paramDefCollection: UmbrellaParamDefCollection,
-  pathDef: PathDef,
-  queryStringSerializer: QueryStringSerializer
-): Location {
+type ParamWithContextCollection = Record<
+  string,
+  { valueSerializerId?: string; array: boolean; value: string }
+>;
+
+export function createLocation({
+  paramCollection,
+  paramDefCollection,
+  pathDef,
+  queryStringSerializer,
+  arraySeparator,
+}: {
+  paramCollection: Record<string, unknown>;
+  paramDefCollection: UmbrellaParamDefCollection;
+  pathDef: PathDef;
+  queryStringSerializer: QueryStringSerializer;
+  arraySeparator: string;
+}): Location {
   const params = {
-    path: {} as Record<string, string>,
-    query: {} as Record<string, string>,
-    state: {} as Record<string, string>,
+    path: {} as ParamWithContextCollection,
+    query: {} as ParamWithContextCollection,
+    state: {} as ParamWithContextCollection,
   };
 
   for (const paramName in paramCollection) {
@@ -26,19 +40,37 @@ export function createLocation(
     }
 
     const paramDef = paramDefCollection[paramName];
-    const result = paramDef["~internal"].valueSerializer.stringify(paramValue);
-
-    assert("[ValueSerializer].stringify", [
-      assert.type("string", "result", result),
-    ]);
 
     const urlEncodeDefault =
       paramDef["~internal"].kind !== "state" && !paramDef["~internal"].trailing;
+    const urlEncode =
+      paramDef["~internal"].valueSerializer.urlEncode ?? urlEncodeDefault;
 
-    params[paramDef["~internal"].kind][paramName] =
-      paramDef["~internal"].valueSerializer.urlEncode ?? urlEncodeDefault
-        ? encodeURIComponent(result)
-        : result;
+    let value: string;
+
+    if (paramDef["~internal"].array) {
+      if (!Array.isArray(paramValue)) {
+        throw TypeRouteError.Expected_type_does_not_match_actual_type.create({
+          context: "push/replace/link/href",
+          actualType: typeOf(paramValue),
+          expectedType: "array",
+          value: paramValue,
+          valueName: paramName,
+        });
+      }
+
+      value = paramValue
+        .map((part) => stringify(paramDef, part, urlEncode))
+        .join(arraySeparator);
+    } else {
+      value = stringify(paramDef, paramValue, urlEncode);
+    }
+
+    params[paramDef["~internal"].kind][paramName] = {
+      valueSerializerId: paramDef["~internal"].valueSerializer.id,
+      array: paramDef["~internal"].array,
+      value,
+    };
   }
 
   const path =
@@ -52,7 +84,7 @@ export function createLocation(
       })
       .map(({ namedParamDef, leading, trailing }) => {
         const rawParam = namedParamDef
-          ? params.path[namedParamDef.paramName]
+          ? params.path[namedParamDef.paramName].value
           : "";
         return leading + rawParam + trailing;
       })
@@ -69,7 +101,29 @@ export function createLocation(
   }
 
   const state =
-    Object.keys(params.state).length === 0 ? undefined : params.state;
+    Object.keys(params.state).length === 0
+      ? undefined
+      : Object.keys(params.state).reduce(
+          (state, key) => ({
+            ...state,
+            [key]: params.state[key].value,
+          }),
+          {}
+        );
 
   return { path, query, state };
+}
+
+function stringify(
+  paramDef: UmbrellaParamDef,
+  value: unknown,
+  urlEncode: boolean
+) {
+  const result = paramDef["~internal"].valueSerializer.stringify(value);
+
+  assert("[ValueSerializer].stringify", [
+    assert.type("string", "result", result),
+  ]);
+
+  return urlEncode ? encodeURIComponent(result) : result;
 }

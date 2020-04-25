@@ -21,8 +21,9 @@ import {
   Location as HistoryLocation,
   createMemoryHistory,
 } from "history";
-import { defaultQueryStringSerializer } from "./defaultQueryStringSerializer";
+import { createQueryStringSerializer } from "./createQueryStringSerializer";
 import { assert } from "./assert";
+import { TypeRouteError } from "./TypeRouteError";
 
 export function createRouter<TRouteDefBuilders>(
   routeDefBuilders: TRouteDefBuilders,
@@ -41,6 +42,12 @@ export function createRouter(
     ),
     assert.type(["undefined", "object"], "options", options),
   ]);
+
+  if (options.arrayFormat?.queryString && options.queryStringSerializer) {
+    throw TypeRouteError.Query_string_array_format_and_custom_query_string_serializer_may_not_both_be_provided.create();
+  }
+
+  const arraySeparator = options.arrayFormat?.separator ?? ",";
 
   let history: History<LocationState>;
   let routes: Record<string, UmbrellaRouteDef> = {};
@@ -151,7 +158,12 @@ export function createRouter(
     }
 
     queryStringSerializer =
-      options.queryStringSerializer ?? defaultQueryStringSerializer;
+      options.queryStringSerializer ??
+      createQueryStringSerializer({
+        queryStringArrayFormat: options.arrayFormat?.queryString,
+        arraySeparator,
+      });
+
     initialRoute = getRoute(
       getLocationFromHistoryLocation(history.location),
       "initial"
@@ -274,10 +286,11 @@ export function createRouter(
     let nonExactMatch: (Match & { routeName: string }) | false = false;
 
     for (const routeName in routes) {
-      const match = routes[routeName]["~internal"].match(
+      const match = routes[routeName]["~internal"].match({
         location,
-        queryStringSerializer
-      );
+        queryStringSerializer,
+        arraySeparator,
+      });
 
       if (match === false) {
         continue;
@@ -333,7 +346,11 @@ export function createRouter(
   }
 
   function getSharedRouterProperties(): SharedRouterProperties {
-    return { navigate, queryStringSerializer };
+    return {
+      navigate,
+      queryStringSerializer,
+      arraySeparator,
+    };
   }
 
   function locationsEqual(locationA: Location, locationB: Location) {
