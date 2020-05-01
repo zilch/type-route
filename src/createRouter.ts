@@ -76,6 +76,7 @@ export function createRouter(
     [id: string]: ((result: boolean) => void) | undefined;
   } = {};
   let queryStringSerializer: QueryStringSerializer;
+  let scrollToTop: boolean;
   let pendingNavigationHandler: Promise<boolean> | null = null;
 
   initializeRouter(options);
@@ -156,6 +157,8 @@ export function createRouter(
         forceRefresh: sessionOptions.forceRefresh,
       });
     }
+
+    scrollToTop = options.scrollToTop ?? true;
 
     queryStringSerializer =
       options.queryStringSerializer ??
@@ -255,6 +258,10 @@ export function createRouter(
       if (navigationHandlerResult === false) {
         return false;
       }
+    }
+
+    if (scrollToTop && (action === "push" || action === "pop")) {
+      window?.scrollTo?.({ top: 0 });
     }
 
     return true;

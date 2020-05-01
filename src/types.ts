@@ -334,6 +334,7 @@ export type RouterOptions = {
   session?: RouterSessionHistoryOptions;
   queryStringSerializer?: QueryStringSerializer;
   arrayFormat?: ArrayFormat;
+  scrollToTop?: boolean;
 };
 
 export type UmbrellaRouteDefBuilderCollection = Record<
