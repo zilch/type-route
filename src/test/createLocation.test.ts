@@ -1,10 +1,10 @@
-import { createLocation } from "../../createLocation";
-import { defineRoute } from "../../defineRoute";
-import { buildPathDef } from "../../buildPathDef";
-import { getParamDefsOfType } from "../../getParamDefsOfType";
-import { createQueryStringSerializer } from "../../createQueryStringSerializer";
-import { param } from "../../param";
-import { UmbrellaParamDefCollection, GetRawPath } from "../../types";
+import { createLocation } from "../createLocation";
+import { defineRoute } from "../defineRoute";
+import { buildPathDef } from "../buildPathDef";
+import { getParamDefsOfType } from "../getParamDefsOfType";
+import { createQueryStringSerializer } from "../createQueryStringSerializer";
+import { param } from "../param";
+import { UmbrellaParamDefCollection, GetRawPath } from "../types";
 
 describe("createLocation", () => {
   test("exclude optional path param", () => {

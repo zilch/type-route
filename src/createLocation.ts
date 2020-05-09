@@ -1,5 +1,5 @@
 import {
-  Location,
+  RouterLocation,
   PathDef,
   QueryStringSerializer,
   UmbrellaParamDefCollection,
@@ -25,7 +25,7 @@ export function createLocation({
   pathDef: PathDef;
   queryStringSerializer: QueryStringSerializer;
   arraySeparator: string;
-}): Location {
+}): RouterLocation {
   const params = {
     path: {} as ParamWithContextCollection,
     query: {} as ParamWithContextCollection,

@@ -1,5 +1,5 @@
 import {
-  Location,
+  RouterLocation,
   PathDef,
   QueryStringSerializer,
   UmbrellaParamDefCollection,
@@ -30,16 +30,16 @@ export function createMatcher({
   });
 
   return ({
-    location,
+    routerLocation,
     arraySeparator,
     queryStringSerializer,
   }: {
-    location: Location;
+    routerLocation: RouterLocation;
     queryStringSerializer: QueryStringSerializer;
     arraySeparator: string;
   }) => {
     const pathMatch = getPathMatch({
-      path: location.path,
+      path: routerLocation.path,
       pathDef,
       arraySeparator,
     });
@@ -49,7 +49,7 @@ export function createMatcher({
     }
 
     const queryMatch = getQueryMatch(
-      location.query,
+      routerLocation.query,
       queryParamDefCollection,
       queryStringSerializer
     );
@@ -57,7 +57,10 @@ export function createMatcher({
       return false;
     }
 
-    const stateMatch = getStateMatch(location.state, stateParamDefCollection);
+    const stateMatch = getStateMatch(
+      routerLocation.state,
+      stateParamDefCollection
+    );
     if (stateMatch === false) {
       return false;
     }

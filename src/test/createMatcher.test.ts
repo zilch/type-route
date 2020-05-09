@@ -1,10 +1,10 @@
-import { createMatcher } from "../../createMatcher";
-import { defineRoute } from "../../defineRoute";
-import { param } from "../../param";
-import { buildPathDef } from "../../buildPathDef";
-import { getParamDefsOfType } from "../../getParamDefsOfType";
-import { Location, PathFn, UmbrellaParamDefCollection } from "../../types";
-import { createQueryStringSerializer } from "../../createQueryStringSerializer";
+import { createMatcher } from "../createMatcher";
+import { defineRoute } from "../defineRoute";
+import { param } from "../param";
+import { buildPathDef } from "../buildPathDef";
+import { getParamDefsOfType } from "../getParamDefsOfType";
+import { RouterLocation, PathFn, UmbrellaParamDefCollection } from "../types";
+import { createQueryStringSerializer } from "../createQueryStringSerializer";
 
 describe("createMatcher", () => {
   it("should do a simple match", () => {
@@ -89,7 +89,7 @@ describe("createMatcher", () => {
 function expectMatch(
   paramDefs: UmbrellaParamDefCollection,
   path: PathFn<UmbrellaParamDefCollection>,
-  location: Location
+  location: RouterLocation
 ) {
   const route = defineRoute(paramDefs, path);
 
@@ -104,7 +104,7 @@ function expectMatch(
 
   return expect(
     match({
-      location,
+      routerLocation: location,
       queryStringSerializer: createQueryStringSerializer(),
       arraySeparator: ",",
     })

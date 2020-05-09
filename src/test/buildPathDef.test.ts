@@ -1,8 +1,8 @@
-import { param } from "../../param";
-import { buildPathDef } from "../../buildPathDef";
-import { TypeRouteError } from "../../TypeRouteError";
-import { expectTypeRouteError } from "../utils/expectTypeRouteError";
-import { PathDef } from "../../types";
+import { param } from "../param";
+import { buildPathDef } from "../buildPathDef";
+import { TypeRouteError } from "../TypeRouteError";
+import { expectTypeRouteError } from "./expectTypeRouteError";
+import { PathDef } from "../types";
 
 describe("buildPathDef", () => {
   it("should work for simple example", () => {

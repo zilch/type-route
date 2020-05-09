@@ -76,6 +76,7 @@ export const TypeRouteError = buildErrorCollection({
       return [
         ...getBuildPathDefErrorMessage(context),
         `A single segment of the path included the following parameters: ${parameterNames}`,
+        "Consider using ofType with a customer ValueSerializer for this scenario.",
       ];
     },
   },

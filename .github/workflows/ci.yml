@@ -9,13 +9,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        action: [build, lint, unit-test, integration-test]
+        action: [build, lint, test]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
           node-version: 12.x
-      - run: sudo apt-get update && sudo apt-get install libgbm-dev xvfb
       - run: npm install
       - run: npm run ${{ matrix.action }}
   release:

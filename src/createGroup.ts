@@ -1,7 +1,13 @@
-import { RouteDefGroup, UmbrellaRoute, UmbrellaRouteDef } from "./types";
+import {
+  RouteDefInstanceGroup,
+  UmbrellaRoute,
+  UmbrellaRouteDefInstance,
+} from "./types";
 import { assert } from "./assert";
 
-export function createGroup<T extends any[]>(groupItems: T): RouteDefGroup<T> {
+export function createGroup<T extends any[]>(
+  groupItems: T
+): RouteDefInstanceGroup<T> {
   assert("createGroup", [
     assert.numArgs([].slice.call(arguments), 1),
     assert.arrayOfType(["RouteDefGroup", "RouteDef"], "groupItems", groupItems),
@@ -21,7 +27,7 @@ export function createGroup<T extends any[]>(groupItems: T): RouteDefGroup<T> {
 
   return {
     ["~internal"]: {
-      type: "RouteDefGroup",
+      type: "RouteDefInstanceGroup",
       Route: null as any,
     },
     routeNames: Object.keys(routeNames),
@@ -41,7 +47,7 @@ export function createGroup<T extends any[]>(groupItems: T): RouteDefGroup<T> {
 }
 
 function isRouteDefGroup(
-  value: RouteDefGroup | UmbrellaRouteDef
-): value is RouteDefGroup {
-  return !!(value as RouteDefGroup).routeNames;
+  value: RouteDefInstanceGroup | UmbrellaRouteDefInstance
+): value is RouteDefInstanceGroup {
+  return !!(value as RouteDefInstanceGroup).routeNames;
 }

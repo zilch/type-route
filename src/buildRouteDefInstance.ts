@@ -2,24 +2,28 @@ import {
   ClickEvent,
   Link,
   SharedRouterProperties,
-  UmbrellaRouteDefBuilder,
   UmbrellaRouteDef,
+  UmbrellaRouteDefInstance,
+  AddonContext,
 } from "./types";
 import { buildPathDef } from "./buildPathDef";
 import { getParamDefsOfType } from "./getParamDefsOfType";
 import { createLocation } from "./createLocation";
 import { createMatcher } from "./createMatcher";
 import { assert } from "./assert";
+import { preventDefaultLinkClickBehavior } from "./preventDefaultAnchorClickBehavior";
+import { mapObject } from "./mapObject";
 
-export function buildRouteDef(
+export function buildRouteDefInstance(
   routeName: string,
-  builder: UmbrellaRouteDefBuilder,
-  getSharedRouterProperties: () => SharedRouterProperties
-): UmbrellaRouteDef {
+  routeDef: UmbrellaRouteDef,
+  getSharedRouterProperties: () => SharedRouterProperties,
+  addons: Record<string, (...args: any[]) => any>
+): UmbrellaRouteDefInstance {
   const pathDef = buildPathDef(
     routeName,
-    getParamDefsOfType("path", builder["~internal"].params),
-    builder["~internal"].path
+    getParamDefsOfType("path", routeDef["~internal"].params),
+    routeDef["~internal"].path
   );
 
   return {
@@ -28,9 +32,10 @@ export function buildRouteDef(
     replace,
     push,
     link,
+    addons: buildAddons(),
     ["~internal"]: {
-      type: "RouteDef",
-      match: createMatcher({ pathDef, params: builder["~internal"].params }),
+      type: "RouteDefInstance",
+      match: createMatcher({ pathDef, params: routeDef["~internal"].params }),
       Route: null as any,
     },
   };
@@ -41,28 +46,7 @@ export function buildRouteDef(
     return {
       href: href(params),
       onClick: (event: ClickEvent = {}) => {
-        const isModifiedEvent = !!(
-          event.metaKey ||
-          event.altKey ||
-          event.ctrlKey ||
-          event.shiftKey
-        );
-
-        const isSelfTarget =
-          !event.target ||
-          !event.target.target ||
-          event.target.target === "_self";
-
-        if (
-          isSelfTarget && // Ignore everything but links with target self
-          !event.defaultPrevented && // onClick prevented default
-          event.button === 0 && // ignore everything but left clicks
-          !isModifiedEvent // ignore clicks with modifier keys
-        ) {
-          if (event && event.preventDefault) {
-            event.preventDefault();
-          }
-
+        if (preventDefaultLinkClickBehavior(event)) {
           const {
             navigate,
             queryStringSerializer,
@@ -72,7 +56,7 @@ export function buildRouteDef(
           navigate(
             createLocation({
               paramCollection: params,
-              paramDefCollection: builder["~internal"].params,
+              paramDefCollection: routeDef["~internal"].params,
               pathDef,
               queryStringSerializer,
               arraySeparator,
@@ -93,7 +77,7 @@ export function buildRouteDef(
 
     const location = createLocation({
       paramCollection: params,
-      paramDefCollection: builder["~internal"].params,
+      paramDefCollection: routeDef["~internal"].params,
       pathDef,
       queryStringSerializer,
       arraySeparator,
@@ -114,7 +98,7 @@ export function buildRouteDef(
     return navigate(
       createLocation({
         paramCollection: params,
-        paramDefCollection: builder["~internal"].params,
+        paramDefCollection: routeDef["~internal"].params,
         pathDef,
         queryStringSerializer,
         arraySeparator,
@@ -134,7 +118,7 @@ export function buildRouteDef(
     return navigate(
       createLocation({
         paramCollection: params,
-        paramDefCollection: builder["~internal"].params,
+        paramDefCollection: routeDef["~internal"].params,
         pathDef,
         queryStringSerializer,
         arraySeparator,
@@ -152,5 +136,32 @@ export function buildRouteDef(
       assert.numArgs(args, 0, 1),
       assert.type("object", "params", params),
     ]);
+  }
+
+  function buildAddons() {
+    return mapObject(addons, (addon) => {
+      return (...args: any[]) => {
+        let params: Record<string, unknown> = {};
+        if (Object.keys(routeDef["~internal"].params).length > 0) {
+          params = args[0] ?? {};
+          args = args.slice(1);
+        }
+
+        const ctx: AddonContext<any> = {
+          href,
+          link,
+          push,
+          replace,
+          route: {
+            action: "unknown",
+            params,
+            name: routeName,
+            addons: {},
+          },
+        };
+
+        return addon(ctx, ...args);
+      };
+    });
   }
 }

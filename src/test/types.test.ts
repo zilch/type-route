@@ -1,6 +1,6 @@
-import { createRouter, defineRoute, param } from "../../index";
+import { createRouter, defineRoute, param } from "../index";
 import { Any } from "ts-toolbelt";
-import { Action } from "../../types";
+import { Action } from "../types";
 
 function expectTypes<A, B>(_: Any.Equals<Any.Compute<A>, Any.Compute<B>>) {}
 

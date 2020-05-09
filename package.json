@@ -24,11 +24,8 @@
     "@types/react": "16.8.8",
     "@types/react-dom": "16.8.2",
     "@zeit/ncc": "^0.22.1",
-    "expect-playwright": "^0.2.1",
     "jest": "^25.2.3",
-    "jest-playwright-preset": "^0.1.1",
     "parcel-bundler": "^1.12.4",
-    "playwright": "^0.12.1",
     "prettier": "^2.0.2",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
@@ -58,7 +55,6 @@
     "playground": "parcel ./src/playground.html",
     "build": "./build.sh",
     "lint": "echo \"TODO\"",
-    "unit-test": "jest --config jest.unit.test.config.js",
-    "integration-test": "echo \"jest --config jest.integration.test.config.js --runInBand --forceExit --detectOpenHandles\""
+    "test": "jest --config jest.config.js"
   }
 }
