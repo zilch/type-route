@@ -12,9 +12,11 @@ export function getQueryMatch(
   if (query) {
     object = queryStringSerializer.parse(query);
 
-    assert("[QueryStringSerializer].parse", [
-      assert.collectionOfType("string", "parsedQueryString", object),
-    ]);
+    if (__DEV__) {
+      assert("[QueryStringSerializer].parse", [
+        assert.collectionOfType("string", "parsedQueryString", object),
+      ]);
+    }
   }
 
   return getObjectMatch({

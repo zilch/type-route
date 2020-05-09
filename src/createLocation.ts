@@ -51,13 +51,17 @@ export function createLocation({
 
     if (paramDef["~internal"].array) {
       if (!Array.isArray(paramValue)) {
-        throw TypeRouteError.Expected_type_does_not_match_actual_type.create({
-          context: "push/replace/link/href",
-          actualType: typeOf(paramValue),
-          expectedType: "array",
-          value: paramValue,
-          valueName: paramName,
-        });
+        if (__DEV__) {
+          throw TypeRouteError.Expected_type_does_not_match_actual_type.create({
+            context: "push/replace/link/href",
+            actualType: typeOf(paramValue),
+            expectedType: "array",
+            value: paramValue,
+            valueName: paramName,
+          });
+        } else {
+          throw new Error();
+        }
       }
 
       value = paramValue
@@ -97,8 +101,10 @@ export function createLocation({
     ? queryStringSerializer.stringify(params.query)
     : undefined;
 
-  if (hasQueryParams) {
-    assert("query", [assert.type("string", "query", query)]);
+  if (__DEV__) {
+    if (hasQueryParams) {
+      assert("query", [assert.type("string", "query", query)]);
+    }
   }
 
   const state =
@@ -122,9 +128,11 @@ function stringify(
 ) {
   const result = paramDef["~internal"].valueSerializer.stringify(value);
 
-  assert("[ValueSerializer].stringify", [
-    assert.type("string", "result", result),
-  ]);
+  if (__DEV__) {
+    assert("[ValueSerializer].stringify", [
+      assert.type("string", "result", result),
+    ]);
+  }
 
   return urlEncode ? encodeURIComponent(result) : result;
 }

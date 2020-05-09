@@ -132,10 +132,12 @@ export function buildRouteDefInstance(
     args: any[],
     params: Record<string, unknown>
   ) {
-    assert(`routes.${routeName}.${fnName}`, [
-      assert.numArgs(args, 0, 1),
-      assert.type("object", "params", params),
-    ]);
+    if (__DEV__) {
+      assert(`routes.${routeName}.${fnName}`, [
+        assert.numArgs(args, 0, 1),
+        assert.type("object", "params", params),
+      ]);
+    }
   }
 
   function buildAddons() {

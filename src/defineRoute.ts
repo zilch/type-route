@@ -35,10 +35,12 @@ export function defineRoute(...args: any[]): UmbrellaRouteDef {
         (name) => extensionParamNames.indexOf(name) >= 0
       );
 
-      if (duplicateParamNames.length > 0) {
-        throw TypeRouteError.Extension_route_definition_parameter_names_may_not_be_the_same_as_base_route_definition_parameter_names.create(
-          duplicateParamNames
-        );
+      if (__DEV__) {
+        if (duplicateParamNames.length > 0) {
+          throw TypeRouteError.Extension_route_definition_parameter_names_may_not_be_the_same_as_base_route_definition_parameter_names.create(
+            duplicateParamNames
+          );
+        }
       }
 
       return defineRoute(
@@ -70,14 +72,16 @@ export function defineRoute(...args: any[]): UmbrellaRouteDef {
 }
 
 function assertDefineRouteOrExtendArgs(functionName: string, args: any[]) {
-  if (args.length === 1) {
-    assert(functionName, [assert.type("string", "path", args[0])]);
-  } else {
-    assert(functionName, [
-      assert.numArgs(args, 1, 2),
-      assert.collectionOfType("ParamDef", "params", args[0]),
-      assert.type("function", "path", args[1]),
-    ]);
+  if (__DEV__) {
+    if (args.length === 1) {
+      assert(functionName, [assert.type("string", "path", args[0])]);
+    } else {
+      assert(functionName, [
+        assert.numArgs(args, 1, 2),
+        assert.collectionOfType("ParamDef", "params", args[0]),
+        assert.type("function", "path", args[1]),
+      ]);
+    }
   }
 }
 

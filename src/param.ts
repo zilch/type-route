@@ -116,10 +116,12 @@ function getParamDefKindSection<
       ofType<TValue = unknown>(
         valueSerializer: ValueSerializer<TValue> = json<TValue>()
       ) {
-        assert("[ParamDef].ofType", [
-          assert.numArgs([].slice.call(arguments), 0, 1),
-          assert.type("object", "valueSerializer", valueSerializer),
-        ]);
+        if (__DEV__) {
+          assert("[ParamDef].ofType", [
+            assert.numArgs([].slice.call(arguments), 0, 1),
+            assert.type("object", "valueSerializer", valueSerializer),
+          ]);
+        }
 
         return getParamDef({
           "~internal": {
@@ -167,9 +169,11 @@ function getParamDefKindSection<
     return {
       "~internal": internal,
       default(value: any) {
-        assert("[ParamDef].default", [
-          assert.numArgs([].slice.call(arguments), 1),
-        ]);
+        if (__DEV__) {
+          assert("[ParamDef].default", [
+            assert.numArgs([].slice.call(arguments), 1),
+          ]);
+        }
 
         return {
           "~internal": { ...internal, default: value },

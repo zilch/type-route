@@ -2,7 +2,7 @@
   "name": "type-route",
   "version": "0.0.0",
   "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
+  "types": "dist/index.d.ts",
   "module": "dist/type-route.esm.js",
   "description": "A flexible, type safe routing library",
   "repository": {
@@ -38,7 +38,7 @@
   ],
   "scripts": {
     "start": "parcel ./src/playground.html --out-dir parcel-dist",
-    "build": "tsdx build --tsconfig ./tsconfig.build.json",
+    "build": "tsdx build --tsconfig ./tsconfig.build.json && rollup -c rollup.dts.config.js && rm dist/*.d.ts && mv dist/index.temp dist/index.d.ts && ls -lhS dist",
     "test": "tsdx test",
     "lint": "tsc --noEmit && tsdx lint src test",
     "prepare": "npm run build"
@@ -52,6 +52,8 @@
     "prettier": "^2.0.5",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
+    "rollup": "^2.8.2",
+    "rollup-plugin-dts": "^1.4.1",
     "ts-toolbelt": "^6.3.11",
     "tsdx": "^0.13.2",
     "tslib": "^1.11.2",

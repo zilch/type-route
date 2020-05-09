@@ -8,10 +8,16 @@ import { assert } from "./assert";
 export function createGroup<T extends any[]>(
   groupItems: T
 ): RouteDefInstanceGroup<T> {
-  assert("createGroup", [
-    assert.numArgs([].slice.call(arguments), 1),
-    assert.arrayOfType(["RouteDefGroup", "RouteDef"], "groupItems", groupItems),
-  ]);
+  if (__DEV__) {
+    assert("createGroup", [
+      assert.numArgs([].slice.call(arguments), 1),
+      assert.arrayOfType(
+        ["RouteDefGroup", "RouteDef"],
+        "groupItems",
+        groupItems
+      ),
+    ]);
+  }
 
   const routeNames: Record<string, true> = {};
 
@@ -32,10 +38,12 @@ export function createGroup<T extends any[]>(
     },
     routeNames: Object.keys(routeNames),
     has(route: UmbrellaRoute): route is UmbrellaRoute {
-      assert("[RouteDefGroup].has", [
-        assert.numArgs([].slice.call(arguments), 1),
-        assert.type("Route", "groupItems", groupItems),
-      ]);
+      if (__DEV__) {
+        assert("[RouteDefGroup].has", [
+          assert.numArgs([].slice.call(arguments), 1),
+          assert.type("Route", "groupItems", groupItems),
+        ]);
+      }
 
       if (route.name === false) {
         return false;

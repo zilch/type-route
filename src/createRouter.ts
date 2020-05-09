@@ -33,14 +33,20 @@ export function createRouter<TRouteDefCollection, TAddons = {}>(
   options: RouterOptions<TRouteDefCollection, TAddons>
 ): Router<TRouteDefCollection, TAddons>;
 export function createRouter(options: UmbrellaRouterOptions): UmbrellaRouter {
-  assert("createRouter", [
-    assert.numArgs([].slice.call(arguments), 1),
-    assert.type("object", "options", options),
-    assert.collectionOfType("RouteDef", "options.routeDefs", options.routeDefs),
-  ]);
+  if (__DEV__) {
+    assert("createRouter", [
+      assert.numArgs([].slice.call(arguments), 1),
+      assert.type("object", "options", options),
+      assert.collectionOfType(
+        "RouteDef",
+        "options.routeDefs",
+        options.routeDefs
+      ),
+    ]);
 
-  if (options.arrayFormat?.queryString && options.queryStringSerializer) {
-    throw TypeRouteError.Query_string_array_format_and_custom_query_string_serializer_may_not_both_be_provided.create();
+    if (options.arrayFormat?.queryString && options.queryStringSerializer) {
+      throw TypeRouteError.Query_string_array_format_and_custom_query_string_serializer_may_not_both_be_provided.create();
+    }
   }
 
   const arraySeparator = options.arrayFormat?.separator ?? ",";
@@ -79,43 +85,53 @@ export function createRouter(options: UmbrellaRouterOptions): UmbrellaRouter {
     listen,
     session: {
       push(url, state) {
-        assert("[RouterSessionHistory].push", [
-          assert.numArgs([].slice.call(arguments), 1, 2),
-          assert.type("string", "url", url),
-          assert.type(["object", "undefined"], "state", state),
-        ]);
+        if (__DEV__) {
+          assert("[RouterSessionHistory].push", [
+            assert.numArgs([].slice.call(arguments), 1, 2),
+            assert.type("string", "url", url),
+            assert.type(["object", "undefined"], "state", state),
+          ]);
+        }
 
         return navigate(getLocationFromUrl(url, state));
       },
       replace(url, state) {
-        assert("[RouterSessionHistory].replace", [
-          assert.numArgs([].slice.call(arguments), 1, 2),
-          assert.type("string", "url", url),
-          assert.type(["object", "undefined"], "state", state),
-        ]);
+        if (__DEV__) {
+          assert("[RouterSessionHistory].replace", [
+            assert.numArgs([].slice.call(arguments), 1, 2),
+            assert.type("string", "url", url),
+            assert.type(["object", "undefined"], "state", state),
+          ]);
+        }
 
         return navigate(getLocationFromUrl(url, state), true);
       },
       back(amount = 1) {
-        assert("[RouterSessionHistory].back", [
-          assert.numArgs([].slice.call(arguments), 0, 1),
-          assert.type("number", "amount", amount),
-        ]);
+        if (__DEV__) {
+          assert("[RouterSessionHistory].back", [
+            assert.numArgs([].slice.call(arguments), 0, 1),
+            assert.type("number", "amount", amount),
+          ]);
+        }
 
         history.go(-amount);
       },
       forward(amount = 1) {
-        assert("[RouterSessionHistory].forward", [
-          assert.numArgs([].slice.call(arguments), 0, 1),
-          assert.type("number", "amount", amount),
-        ]);
+        if (__DEV__) {
+          assert("[RouterSessionHistory].forward", [
+            assert.numArgs([].slice.call(arguments), 0, 1),
+            assert.type("number", "amount", amount),
+          ]);
+        }
 
         history.go(amount);
       },
       getInitialRoute() {
-        assert("[RouterSessionHistory].getInitialRoute", [
-          assert.numArgs([].slice.call(arguments), 0),
-        ]);
+        if (__DEV__) {
+          assert("[RouterSessionHistory].getInitialRoute", [
+            assert.numArgs([].slice.call(arguments), 0),
+          ]);
+        }
 
         if (!initialRoute) {
           initialRoute = getRoute(
@@ -127,10 +143,12 @@ export function createRouter(options: UmbrellaRouterOptions): UmbrellaRouter {
         return initialRoute;
       },
       reset(session) {
-        assert("[RouterSessionHistory].reset", [
-          assert.numArgs([].slice.call(arguments), 1),
-          assert.type("object", "session", session),
-        ]);
+        if (__DEV__) {
+          assert("[RouterSessionHistory].reset", [
+            assert.numArgs([].slice.call(arguments), 1),
+            assert.type("object", "session", session),
+          ]);
+        }
 
         return initializeRouter({ session, queryStringSerializer });
       },
@@ -242,13 +260,15 @@ export function createRouter(options: UmbrellaRouterOptions): UmbrellaRouter {
     for (const { handler } of navigationHandlers) {
       const navigationHandlerResult = handler(nextRoute, prevRoute);
 
-      assert("NavigationHandler", [
-        assert.type(
-          ["boolean", "undefined"],
-          "navigationHandlerResult",
-          navigationHandlerResult
-        ),
-      ]);
+      if (__DEV__) {
+        assert("NavigationHandler", [
+          assert.type(
+            ["boolean", "undefined"],
+            "navigationHandlerResult",
+            navigationHandlerResult
+          ),
+        ]);
+      }
 
       if (navigationHandlerResult === false) {
         return false;
