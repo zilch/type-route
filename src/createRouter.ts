@@ -16,13 +16,17 @@ import {
   AddonContext,
 } from "./types";
 import { buildRouteDefInstance } from "./buildRouteDefInstance";
-import { createBrowserHistory, History, createMemoryHistory } from "history";
+import {
+  createBrowserHistory,
+  History,
+  Location as HistoryLocation,
+  createMemoryHistory,
+} from "history";
 import { createQueryStringSerializer } from "./createQueryStringSerializer";
 import { assert } from "./assert";
 import { TypeRouteError } from "./TypeRouteError";
 import { areLocationsEqual } from "./areLocationsEqual";
 import { getLocationFromUrl } from "./getLocationFromUrl";
-import { getRouterLocationFromHistoryLocation } from "./getRouterLocationFromHistoryLocation";
 import { mapObject } from "./mapObject";
 
 export function createRouter<TRouteDefCollection, TAddons = {}>(
@@ -372,4 +376,14 @@ export function createRouter(options: UmbrellaRouterOptions): UmbrellaRouter {
       return (...args: any[]) => addon(ctx, ...args);
     });
   }
+}
+
+function getRouterLocationFromHistoryLocation(
+  historyLocation: HistoryLocation<LocationState>
+): RouterLocation {
+  return {
+    path: historyLocation.pathname,
+    query: historyLocation.search ? historyLocation.search.slice(1) : undefined,
+    state: historyLocation.state?.stateParams || undefined,
+  };
 }
