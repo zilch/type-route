@@ -5,8 +5,9 @@ import {
   UmbrellaParamDefCollection,
   UmbrellaParamDef,
 } from "./types";
-import { assert, typeOf } from "./assert";
+import { assert } from "./assert";
 import { TypeRouteError } from "./TypeRouteError";
+import { typeOf } from "./typeOf";
 
 type ParamWithContextCollection = Record<
   string,

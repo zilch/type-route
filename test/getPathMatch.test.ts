@@ -1,8 +1,8 @@
-import { buildPathDef } from "../buildPathDef";
-import { getPathMatch } from "../getPathMatch";
-import { param } from "../param";
-import { noMatch } from "../noMatch";
-import { PathParamDef, GetRawPath } from "../types";
+import { buildPathDef } from "../src/buildPathDef";
+import { getPathMatch } from "../src/getPathMatch";
+import { param } from "../src/param";
+import { noMatch } from "../src/noMatch";
+import { PathParamDef, GetRawPath } from "../src/types";
 
 describe("getPathMatch", () => {
   it("should work for root", () => {

@@ -1,5 +1,5 @@
 import { ErrorDef, BuildPathDefErrorContext } from "./types";
-import { typeOf } from "./assert";
+import { typeOf } from "./typeOf";
 
 function getBuildPathDefRouteNameMessage(routeName: string) {
   return `This problem occurred when building the route definition for the "${routeName}" route.`;

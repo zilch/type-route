@@ -1,8 +1,8 @@
-import { param } from "../param";
-import { buildPathDef } from "../buildPathDef";
-import { TypeRouteError } from "../TypeRouteError";
+import { param } from "../src/param";
+import { buildPathDef } from "../src/buildPathDef";
+import { TypeRouteError } from "../src/TypeRouteError";
 import { expectTypeRouteError } from "./expectTypeRouteError";
-import { PathDef } from "../types";
+import { PathDef } from "../src/types";
 
 describe("buildPathDef", () => {
   it("should work for simple example", () => {
@@ -105,6 +105,7 @@ describe("buildPathDef", () => {
   });
 
   it("should error if the $ or { or } or / character is used in a parameter name", () => {
+    // eslint-disable-next-line no-template-curly-in-string
     ["${hello/there}", "$hello", "{hello", "hello/there", "there}"].forEach(
       (paramName) => {
         expectTypeRouteError(
@@ -146,6 +147,7 @@ describe("buildPathDef", () => {
       );
     } catch (error) {
       expect(error.message).toContain(
+        // eslint-disable-next-line no-template-curly-in-string
         "The path segment `#hello${x.hi}%` has the following invalid characters: #, %"
       );
     }

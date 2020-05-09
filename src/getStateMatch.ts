@@ -8,6 +8,6 @@ export function getStateMatch(
   return getObjectMatch({
     object: state ?? {},
     paramDefs,
-    urlEncodeDefault: false
+    urlEncodeDefault: false,
   });
 }

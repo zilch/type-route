@@ -13,13 +13,13 @@ export function getQueryMatch(
     object = queryStringSerializer.parse(query);
 
     assert("[QueryStringSerializer].parse", [
-      assert.collectionOfType("string", "parsedQueryString", object)
+      assert.collectionOfType("string", "parsedQueryString", object),
     ]);
   }
 
   return getObjectMatch({
     object,
     paramDefs,
-    urlEncodeDefault: true
+    urlEncodeDefault: true,
   });
 }

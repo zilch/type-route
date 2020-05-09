@@ -18,7 +18,7 @@ export function defineRoute(...args: any[]): UmbrellaRouteDef {
   const parent = parseArgs(args);
 
   const routeDef: UmbrellaRouteDef = {
-    ["~internal"]: {
+    "~internal": {
       type: "RouteDef",
       params: parent.params,
       path: parent.path,

@@ -33,7 +33,7 @@ export function buildRouteDefInstance(
     push,
     link,
     addons: buildAddons(),
-    ["~internal"]: {
+    "~internal": {
       type: "RouteDefInstance",
       match: createMatcher({ pathDef, params: routeDef["~internal"].params }),
       Route: null as any,

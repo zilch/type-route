@@ -21,7 +21,7 @@ const number: ValueSerializer<number> = {
 };
 
 function isNumeric(value: string) {
-  return !isNaN(parseFloat(value)) && /^\-?\d*\.?\d*$/.test(value);
+  return !isNaN(parseFloat(value)) && /^-?\d*\.?\d*$/.test(value);
 }
 
 const string: ValueSerializer<string> = {
@@ -78,7 +78,7 @@ function getParamDefKindSection<
   >(optional: TOptional, array: TArray) {
     return {
       string: getParamDef({
-        ["~internal"]: {
+        "~internal": {
           type: "ParamDef",
           array,
           kind,
@@ -90,7 +90,7 @@ function getParamDefKindSection<
       }),
 
       number: getParamDef({
-        ["~internal"]: {
+        "~internal": {
           type: "ParamDef",
           array,
           kind,
@@ -102,7 +102,7 @@ function getParamDefKindSection<
       }),
 
       boolean: getParamDef({
-        ["~internal"]: {
+        "~internal": {
           type: "ParamDef",
           array,
           kind,
@@ -122,7 +122,7 @@ function getParamDefKindSection<
         ]);
 
         return getParamDef({
-          ["~internal"]: {
+          "~internal": {
             type: "ParamDef",
             array,
             kind,
@@ -158,21 +158,21 @@ function getParamDefKindSection<
     : T;
 
   function getParamDef<T extends ParamDef<TKind>>({
-    ["~internal"]: internal,
+    "~internal": internal,
   }: T): GetParamDefResult<T> {
     if (!internal.optional) {
-      return { ["~internal"]: internal } as any;
+      return { "~internal": internal } as any;
     }
 
     return {
-      ["~internal"]: internal,
+      "~internal": internal,
       default(value: any) {
         assert("[ParamDef].default", [
           assert.numArgs([].slice.call(arguments), 1),
         ]);
 
         return {
-          ["~internal"]: { ...internal, default: value },
+          "~internal": { ...internal, default: value },
         };
       },
     } as any;

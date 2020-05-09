@@ -1,9 +1,10 @@
 {
   "name": "type-route",
   "version": "0.0.0",
-  "main": "./lib/index.js",
-  "types": "./lib/index.d.ts",
-  "description": "A flexible, type safe routing library.",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "module": "dist/type-route.esm.js",
+  "description": "A flexible, type safe routing library",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/type-route/type-route.git"
@@ -12,33 +13,17 @@
   "bugs": {
     "url": "https://github.com/type-route/type-route/issues"
   },
+  "files": [
+    "dist",
+    "src"
+  ],
   "sideEffects": false,
   "homepage": "https://type-route.org",
   "dependencies": {
     "history": "^4.10.1"
   },
-  "devDependencies": {
-    "@types/history": "^4.7.5",
-    "@types/jest": "^25.1.4",
-    "@types/node": "^13.11.0",
-    "@types/react": "16.8.8",
-    "@types/react-dom": "16.8.2",
-    "@zeit/ncc": "^0.22.1",
-    "jest": "^25.2.3",
-    "parcel-bundler": "^1.12.4",
-    "prettier": "^2.0.2",
-    "react": "^16.8.4",
-    "react-dom": "^16.8.4",
-    "ts-jest": "^25.2.1",
-    "ts-toolbelt": "^6.3.11",
-    "tslib": "^1.11.1",
-    "typescript": "^3.8.3"
-  },
   "authors": [
     "Braden Snell"
-  ],
-  "files": [
-    "lib"
   ],
   "keywords": [
     "react",
@@ -52,9 +37,24 @@
     "typescript"
   ],
   "scripts": {
-    "playground": "parcel ./src/playground.html",
-    "build": "./build.sh",
-    "lint": "echo \"TODO\"",
-    "test": "jest --config jest.config.js"
+    "start": "parcel ./src/playground.html --out-dir parcel-dist",
+    "build": "tsdx build --tsconfig ./tsconfig.build.json",
+    "test": "tsdx test",
+    "lint": "tsc --noEmit && tsdx lint src test",
+    "prepare": "npm run build"
+  },
+  "devDependencies": {
+    "@types/history": "^4.7.5",
+    "@types/jest": "^25.2.1",
+    "@types/react": "16.8.8",
+    "@types/react-dom": "16.8.2",
+    "parcel-bundler": "^1.12.4",
+    "prettier": "^2.0.5",
+    "react": "^16.8.4",
+    "react-dom": "^16.8.4",
+    "ts-toolbelt": "^6.3.11",
+    "tsdx": "^0.13.2",
+    "tslib": "^1.11.2",
+    "typescript": "^3.8.3"
   }
 }

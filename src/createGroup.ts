@@ -26,7 +26,7 @@ export function createGroup<T extends any[]>(
   });
 
   return {
-    ["~internal"]: {
+    "~internal": {
       type: "RouteDefInstanceGroup",
       Route: null as any,
     },

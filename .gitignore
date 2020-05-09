@@ -4,6 +4,7 @@
 /node_modules
 /.cache
 /dist
+/parcel-dist
 /lib
 /website/node_modules
 .DS_Store
@@ -12,3 +13,4 @@
 /website/i18n
 /.github/actions/pr-environment/node_modules
 /.github/actions/release-info/node_modules
+*.log

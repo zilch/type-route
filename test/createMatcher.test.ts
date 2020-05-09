@@ -1,10 +1,14 @@
-import { createMatcher } from "../createMatcher";
-import { defineRoute } from "../defineRoute";
-import { param } from "../param";
-import { buildPathDef } from "../buildPathDef";
-import { getParamDefsOfType } from "../getParamDefsOfType";
-import { RouterLocation, PathFn, UmbrellaParamDefCollection } from "../types";
-import { createQueryStringSerializer } from "../createQueryStringSerializer";
+import { createMatcher } from "../src/createMatcher";
+import { defineRoute } from "../src/defineRoute";
+import { param } from "../src/param";
+import { buildPathDef } from "../src/buildPathDef";
+import { getParamDefsOfType } from "../src/getParamDefsOfType";
+import {
+  RouterLocation,
+  PathFn,
+  UmbrellaParamDefCollection,
+} from "../src/types";
+import { createQueryStringSerializer } from "../src/createQueryStringSerializer";
 
 describe("createMatcher", () => {
   it("should do a simple match", () => {

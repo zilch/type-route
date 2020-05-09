@@ -1,4 +1,4 @@
-import { TypeRouteError } from "../TypeRouteError";
+import { TypeRouteError } from "../src/TypeRouteError";
 
 export function expectTypeRouteError(
   error: typeof TypeRouteError[keyof typeof TypeRouteError],

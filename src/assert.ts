@@ -1,4 +1,5 @@
 import { TypeRouteError } from "./TypeRouteError";
+import { typeOf } from "./typeOf";
 
 export function assert(
   context: string,
@@ -108,15 +109,3 @@ assert.type = (
     valueName,
   });
 };
-
-export function typeOf(value: any) {
-  if (value === null) {
-    return "null";
-  }
-
-  if (Array.isArray(value)) {
-    return "array";
-  }
-
-  return typeof value;
-}

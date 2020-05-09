@@ -1,7 +1,7 @@
-import { defineRoute } from "../defineRoute";
-import { param } from "../param";
+import { defineRoute } from "../src/defineRoute";
+import { param } from "../src/param";
 import { expectTypeRouteError } from "./expectTypeRouteError";
-import { TypeRouteError } from "../TypeRouteError";
+import { TypeRouteError } from "../src/TypeRouteError";
 
 describe("defineRoute", () => {
   it("should not allow duplicate parameter names", () => {
