@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
-import { createRouter, defineRoute, param, Route, utils } from "./index";
+import {
+  createRouter,
+  defineRoute,
+  param,
+  Route,
+  assertUnreachable,
+} from "./index";
 import { AddonContext } from "./types";
 
 const routeDefs = {
@@ -46,7 +52,7 @@ function setTitle(ctx: AddonContext<typeof routeDefs>) {
   } else if (ctx.route.name === false) {
     document.title = "Not Found";
   } else {
-    utils.assertUnreachable(ctx.route);
+    assertUnreachable(ctx.route);
   }
 }
 
