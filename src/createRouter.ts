@@ -70,8 +70,6 @@ export function createRouter(options: UmbrellaRouterOptions): UmbrellaRouter {
   let initialRoute: UmbrellaRoute;
   let prevRoute: UmbrellaRoute | undefined;
   let unblock: (() => void) | undefined = undefined;
-  let nextLocation: RouterLocation;
-  let nextAction: Action;
   let addons: Record<string, (...args: any[]) => any>;
   let navigationHandlerIdCounter = 0;
   let queryStringSerializer: QueryStringSerializer;
@@ -165,13 +163,11 @@ export function createRouter(options: UmbrellaRouterOptions): UmbrellaRouter {
 
     if (sessionOptions.type === "memory") {
       history = createMemoryHistory({
-        getUserConfirmation,
         initialEntries: sessionOptions.initialEntries,
         initialIndex: sessionOptions.initialIndex,
       });
     } else {
       history = createBrowserHistory({
-        getUserConfirmation,
         forceRefresh: sessionOptions.forceRefresh,
       });
     }
@@ -222,9 +218,19 @@ export function createRouter(options: UmbrellaRouterOptions): UmbrellaRouter {
 
     if (navigationHandlers.length === 1) {
       unblock = history.block((historyLocation, historyAction) => {
-        nextLocation = getRouterLocationFromHistoryLocation(historyLocation);
-        nextAction = historyAction.toLowerCase() as Action;
-        return "";
+        if (skipHandlingNextNavigation) {
+          skipHandlingNextNavigation = false;
+          return;
+        }
+
+        const location = getRouterLocationFromHistoryLocation(historyLocation);
+        const action = historyAction.toLowerCase() as Action;
+
+        const proceed = handleNavigation(location, action);
+
+        if (!proceed) {
+          return false;
+        }
       });
     }
 
@@ -243,11 +249,6 @@ export function createRouter(options: UmbrellaRouterOptions): UmbrellaRouter {
   }
 
   function handleNavigation(location: RouterLocation, action: Action) {
-    if (skipHandlingNextNavigation) {
-      skipHandlingNextNavigation = false;
-      return true;
-    }
-
     const nextRoute = getRoute(location, action);
     const currentLocation = getRouterLocationFromHistoryLocation(
       history.location
@@ -281,13 +282,6 @@ export function createRouter(options: UmbrellaRouterOptions): UmbrellaRouter {
 
     prevRoute = nextRoute;
     return true;
-  }
-
-  function getUserConfirmation(
-    _: string,
-    callback: (proceed: boolean) => void
-  ) {
-    callback(handleNavigation(nextLocation, nextAction));
   }
 
   function getRoute(location: RouterLocation, action: Action): UmbrellaRoute {

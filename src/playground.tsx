@@ -1,3 +1,7 @@
+/* eslint-disable import/first */
+// @ts-ignore
+window.__DEV__ = true;
+
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import {
@@ -58,8 +62,20 @@ function setTitle(ctx: AddonContext<typeof routeDefs>) {
 
 function App() {
   const [route, setRoute] = useState(() => session.getInitialRoute());
+  const [lock, setLock] = useState(false);
 
-  useEffect(() => listen((nextRoute) => setRoute(nextRoute)), []);
+  useEffect(
+    () =>
+      listen((nextRoute) => {
+        if (lock) {
+          return false;
+        }
+
+        setRoute(nextRoute);
+        return;
+      }),
+    [lock]
+  );
 
   useEffect(() => {
     route.addons.setTitle();
@@ -69,6 +85,8 @@ function App() {
     <>
       <Navigation />
       <Page route={route} />
+      {lock ? "Locked" : "Unlocked"}{" "}
+      <button onClick={() => setLock((value) => !value)}>Toggle</button>
     </>
   );
 }
