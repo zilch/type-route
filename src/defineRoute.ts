@@ -1,8 +1,8 @@
 import {
   PathFn,
-  RouteDef,
+  RouteDefBuilder,
   UmbrellaParamDefCollection,
-  UmbrellaRouteDef,
+  UmbrellaRouteDefBuilder,
 } from "./types";
 import { TypeRouteError } from "./TypeRouteError";
 import { assert } from "./assert";
@@ -10,16 +10,16 @@ import { assert } from "./assert";
 export function defineRoute<TParamDefCollection>(
   params: TParamDefCollection,
   path: PathFn<TParamDefCollection>
-): RouteDef<TParamDefCollection>;
-export function defineRoute(path: string): RouteDef<{}>;
-export function defineRoute(...args: any[]): UmbrellaRouteDef {
+): RouteDefBuilder<TParamDefCollection>;
+export function defineRoute(path: string): RouteDefBuilder<{}>;
+export function defineRoute(...args: any[]): UmbrellaRouteDefBuilder {
   assertDefineRouteOrExtendArgs("defineRoute", args);
 
   const parent = parseArgs(args);
 
-  const routeDef: UmbrellaRouteDef = {
+  const routeDefBuilder: UmbrellaRouteDefBuilder = {
     "~internal": {
-      type: "RouteDef",
+      type: "RouteDefBuilder",
       params: parent.params,
       path: parent.path,
     },
@@ -68,7 +68,7 @@ export function defineRoute(...args: any[]): UmbrellaRouteDef {
     },
   };
 
-  return routeDef;
+  return routeDefBuilder;
 }
 
 function assertDefineRouteOrExtendArgs(functionName: string, args: any[]) {

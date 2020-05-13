@@ -2,9 +2,8 @@ import {
   ClickEvent,
   Link,
   SharedRouterProperties,
-  UmbrellaRouteDef,
+  UmbrellaRouteDefBuilder,
   UmbrellaRouteDefInstance,
-  AddonContext,
 } from "./types";
 import { buildPathDef } from "./buildPathDef";
 import { getParamDefsOfType } from "./getParamDefsOfType";
@@ -12,11 +11,11 @@ import { createLocation } from "./createLocation";
 import { createMatcher } from "./createMatcher";
 import { assert } from "./assert";
 import { preventDefaultLinkClickBehavior } from "./preventDefaultAnchorClickBehavior";
-import { mapObject } from "./mapObject";
+import { buildAddons } from "./buildAddons";
 
-export function buildRouteDefInstance(
+export function buildRouteDef(
   routeName: string,
-  routeDef: UmbrellaRouteDef,
+  routeDef: UmbrellaRouteDefBuilder,
   getSharedRouterProperties: () => SharedRouterProperties,
   addons: Record<string, (...args: any[]) => any>
 ): UmbrellaRouteDefInstance {
@@ -32,9 +31,24 @@ export function buildRouteDefInstance(
     replace,
     push,
     link,
-    addons: buildAddons(),
+    addons: buildAddons({
+      routeName,
+      link,
+      href,
+      push,
+      replace,
+      addons,
+      getAddonArgsAndParams: (args: any[]) => {
+        let params: Record<string, unknown> = {};
+        if (Object.keys(routeDef["~internal"].params).length > 0) {
+          params = args[0] ?? {};
+          args = args.slice(1);
+        }
+        return { params, args };
+      },
+    }),
     "~internal": {
-      type: "RouteDefInstance",
+      type: "RouteDef",
       match: createMatcher({ pathDef, params: routeDef["~internal"].params }),
       Route: null as any,
     },
@@ -138,32 +152,5 @@ export function buildRouteDefInstance(
         assert.type("object", "params", params),
       ]);
     }
-  }
-
-  function buildAddons() {
-    return mapObject(addons, (addon) => {
-      return (...args: any[]) => {
-        let params: Record<string, unknown> = {};
-        if (Object.keys(routeDef["~internal"].params).length > 0) {
-          params = args[0] ?? {};
-          args = args.slice(1);
-        }
-
-        const ctx: AddonContext<any> = {
-          href,
-          link,
-          push,
-          replace,
-          route: {
-            action: "unknown",
-            params,
-            name: routeName,
-            addons: {},
-          },
-        };
-
-        return addon(ctx, ...args);
-      };
-    });
   }
 }

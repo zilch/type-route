@@ -1,6 +1,6 @@
 import { createRouter, defineRoute, param } from "../src/index";
 import { Any } from "ts-toolbelt";
-import { Action } from "../src/types";
+import { Link } from "../src/types";
 
 function expectTypes<A, B>(_: Any.Equals<Any.Compute<A>, Any.Compute<B>>) {}
 
@@ -9,10 +9,8 @@ const toBeEqual = 1 as const;
 describe("types", () => {
   it("should pass", () => {
     const { routes, session } = createRouter({
-      routeDefs: {
-        home: defineRoute("/"),
-        user: defineRoute({ userId: param.path.string }, (x) => `/${x.userId}`),
-      },
+      home: defineRoute("/"),
+      user: defineRoute({ userId: param.path.string }, (x) => `/${x.userId}`),
     });
 
     const route = session.getInitialRoute();
@@ -24,23 +22,29 @@ describe("types", () => {
     } else {
       expectTypes<
         typeof route,
-        { name: false; params: {}; action: Action; addons: {} }
+        {
+          name: false;
+          params: {};
+          addons: {};
+          link: () => Link;
+          href: () => string;
+          push: () => boolean;
+          replace: () => boolean;
+        }
       >(toBeEqual);
     }
   });
 
   it("should compile with defaults", () => {
     const { routes, session } = createRouter({
-      routeDefs: {
-        home: defineRoute("/"),
-        user: defineRoute(
-          {
-            o: param.query.optional.number,
-            d: param.query.optional.number.default(1),
-          },
-          () => `/user`
-        ),
-      },
+      home: defineRoute("/"),
+      user: defineRoute(
+        {
+          o: param.query.optional.number,
+          d: param.query.optional.number.default(1),
+        },
+        () => `/user`
+      ),
     });
 
     const route = session.getInitialRoute();
@@ -57,7 +61,15 @@ describe("types", () => {
     } else {
       expectTypes<
         typeof route,
-        { name: false; params: {}; action: Action; addons: {} }
+        {
+          name: false;
+          params: {};
+          addons: {};
+          link: () => Link;
+          href: () => string;
+          push: () => boolean;
+          replace: () => boolean;
+        }
       >(toBeEqual);
     }
   });

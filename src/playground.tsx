@@ -9,18 +9,24 @@ import {
   defineRoute,
   param,
   Route,
+  createConfig,
   assertUnreachable,
 } from "./index";
-import { AddonContext } from "./types";
 
-const routeDefs = {
+const config = createConfig({
+  addons: { preloadLink, setTitle, handleRouteChange },
+});
+
+export const { routes, session, listen } = createRouter(config, {
   home: defineRoute("/"),
+
   userList: defineRoute(
     {
       page: param.query.optional.number.default(1),
     },
     () => `/users`
   ),
+
   user: defineRoute(
     {
       userId: param.path.string,
@@ -28,6 +34,7 @@ const routeDefs = {
     },
     (x) => `/users/${x.userId}`
   ),
+
   software: defineRoute(
     {
       name: param.path.string,
@@ -35,28 +42,31 @@ const routeDefs = {
     },
     (x) => `/software/${x.name}/${x.version}`
   ),
-};
-
-export const { listen, routes, session } = createRouter({
-  routeDefs,
-  addons: { setTitle },
 });
 
-function setTitle(ctx: AddonContext<typeof routeDefs>) {
-  if (ctx.route.name === "home") {
+function preloadLink(route: Route<typeof routes>) {
+  return route.link();
+}
+
+function handleRouteChange(route: Route<typeof routes>) {
+  route.addons.setTitle();
+}
+
+function setTitle(route: Route<typeof routes>) {
+  if (route.name === "home") {
     document.title = "Home";
-  } else if (ctx.route.name === "software") {
-    document.title = `Software ${ctx.route.params.name} ${
-      ctx.route.params.version ?? ""
+  } else if (route.name === "software") {
+    document.title = `Software ${route.params.name} ${
+      route.params.version ?? ""
     }`;
-  } else if (ctx.route.name === "user") {
-    document.title = `User ${ctx.route.params.userId}`;
-  } else if (ctx.route.name === "userList") {
-    document.title = `Users | Page ${ctx.route.params.page}`;
-  } else if (ctx.route.name === false) {
+  } else if (route.name === "user") {
+    document.title = `User ${route.params.userId}`;
+  } else if (route.name === "userList") {
+    document.title = `Users | Page ${route.params.page}`;
+  } else if (route.name === false) {
     document.title = "Not Found";
   } else {
-    assertUnreachable(ctx.route);
+    assertUnreachable(route);
   }
 }
 
@@ -78,7 +88,7 @@ function App() {
   );
 
   useEffect(() => {
-    route.addons.setTitle();
+    route.addons.handleRouteChange();
   }, [route]);
 
   return (
@@ -127,7 +137,7 @@ function Page(props: { route: Route<typeof routes> }) {
 function Navigation() {
   return (
     <nav>
-      <a {...routes.home.link()}>Home</a>
+      <a {...routes.home.addons.preloadLink()}>Home</a>
       <a {...routes.userList.link()}>User List</a>
       <a
         {...routes.userList.link({

@@ -2,15 +2,15 @@ export { createRouter } from "./createRouter";
 export { defineRoute } from "./defineRoute";
 export { param } from "./param";
 export { createGroup } from "./createGroup";
+export { createConfig } from "./createConfig";
 export {
-  Route,
+  GetRoute as Route,
   Link,
   ValueSerializer,
-  AddonContext,
   QueryStringSerializer,
-  RouterSessionHistoryOptions,
-  BrowserSessionHistoryOptions,
-  MemorySessionHistoryOptions,
+  RouterSessionHistoryConfig as RouterSessionHistoryOptions,
+  BrowserSessionHistoryConfig as BrowserSessionHistoryOptions,
+  MemorySessionHistoryConfig as MemorySessionHistoryOptions,
 } from "./types";
 export { noMatch } from "./noMatch";
 export { preventDefaultLinkClickBehavior } from "./preventDefaultAnchorClickBehavior";

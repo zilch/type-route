@@ -2,20 +2,20 @@ import {
   Router,
   RouterLocation,
   Action,
-  RouterOptions,
+  RouterConfig,
   QueryStringSerializer,
   SharedRouterProperties,
-  RouterSessionHistoryOptions,
+  RouterSessionHistoryConfig,
   UmbrellaRouteDefInstance,
   UmbrellaRouter,
   UmbrellaNavigationHandler,
   UmbrellaRoute,
   Match,
   LocationState,
-  UmbrellaRouterOptions,
-  AddonContext,
+  UmbrellaRouterConfig,
+  UmbrellaRouteDefBuilderCollection,
 } from "./types";
-import { buildRouteDefInstance } from "./buildRouteDefInstance";
+import { buildRouteDef } from "./buildRouteDef";
 import {
   createBrowserHistory,
   History,
@@ -27,39 +27,43 @@ import { assert } from "./assert";
 import { TypeRouteError } from "./TypeRouteError";
 import { areLocationsEqual } from "./areLocationsEqual";
 import { getLocationFromUrl } from "./getLocationFromUrl";
-import { mapObject } from "./mapObject";
+import { buildAddons } from "./buildAddons";
 
+export function createRouter<TRouteDefCollection>(
+  routeDefs: TRouteDefCollection
+): Router<TRouteDefCollection, {}>;
 export function createRouter<TRouteDefCollection, TAddons = {}>(
-  options: RouterOptions<TRouteDefCollection, TAddons>
+  config: RouterConfig<TAddons>,
+  routeDefs: TRouteDefCollection
 ): Router<TRouteDefCollection, TAddons>;
-export function createRouter(options: UmbrellaRouterOptions): UmbrellaRouter {
+export function createRouter(...args: any[]): UmbrellaRouter {
+  const config: UmbrellaRouterConfig = args.length === 1 ? {} : args[0];
+  const routeDefs: UmbrellaRouteDefBuilderCollection =
+    args.length === 1 ? args[0] : args[1];
+
   if (__DEV__) {
     assert("createRouter", [
-      assert.numArgs([].slice.call(arguments), 1),
-      assert.type("object", "options", options),
-      assert.collectionOfType(
-        "RouteDef",
-        "options.routeDefs",
-        options.routeDefs
-      ),
+      assert.numArgs([].slice.call(arguments), 1, 2),
+      assert.type("object", "config", config),
+      assert.collectionOfType("RouteDefBuilder", "routeDefs", routeDefs),
     ]);
 
-    if (options.arrayFormat?.queryString && options.queryStringSerializer) {
+    if (config.arrayFormat?.queryString && config.queryStringSerializer) {
       throw TypeRouteError.Query_string_array_format_and_custom_query_string_serializer_may_not_both_be_provided.create();
     }
   }
 
-  const arraySeparator = options.arrayFormat?.separator ?? ",";
+  const arraySeparator = config.arrayFormat?.separator ?? ",";
 
   let history: History<LocationState>;
   let routes: Record<string, UmbrellaRouteDefInstance> = {};
 
-  for (const routeName of Object.keys(options.routeDefs)) {
-    routes[routeName] = buildRouteDefInstance(
+  for (const routeName of Object.keys(routeDefs)) {
+    routes[routeName] = buildRouteDef(
       routeName,
-      options.routeDefs[routeName],
+      routeDefs[routeName],
       getSharedRouterProperties,
-      options.addons ?? {}
+      config.addons ?? {}
     );
   }
 
@@ -76,7 +80,7 @@ export function createRouter(options: UmbrellaRouterOptions): UmbrellaRouter {
   let scrollToTop: boolean;
   let skipHandlingNextNavigation = false;
 
-  initializeRouter(options);
+  initializeRouter(config);
 
   return {
     routes,
@@ -133,8 +137,7 @@ export function createRouter(options: UmbrellaRouterOptions): UmbrellaRouter {
 
         if (!initialRoute) {
           initialRoute = getRoute(
-            getRouterLocationFromHistoryLocation(history.location),
-            "initial"
+            getRouterLocationFromHistoryLocation(history.location)
           );
         }
 
@@ -153,32 +156,32 @@ export function createRouter(options: UmbrellaRouterOptions): UmbrellaRouter {
     },
   };
 
-  function initializeRouter(options: Omit<UmbrellaRouterOptions, "routeDefs">) {
-    const sessionOptions: RouterSessionHistoryOptions = options.session ?? {
+  function initializeRouter(config: UmbrellaRouterConfig) {
+    const sessionConfig: RouterSessionHistoryConfig = config.session ?? {
       type:
         typeof window !== "undefined" && typeof window.document !== "undefined"
           ? "browser"
           : "memory",
     };
 
-    if (sessionOptions.type === "memory") {
+    if (sessionConfig.type === "memory") {
       history = createMemoryHistory({
-        initialEntries: sessionOptions.initialEntries,
-        initialIndex: sessionOptions.initialIndex,
+        initialEntries: sessionConfig.initialEntries,
+        initialIndex: sessionConfig.initialIndex,
       });
     } else {
       history = createBrowserHistory({
-        forceRefresh: sessionOptions.forceRefresh,
+        forceRefresh: sessionConfig.forceRefresh,
       });
     }
 
-    addons = options.addons ?? {};
-    scrollToTop = options.scrollToTop ?? true;
+    addons = config.addons ?? {};
+    scrollToTop = config.scrollToTop ?? true;
 
     queryStringSerializer =
-      options.queryStringSerializer ??
+      config.queryStringSerializer ??
       createQueryStringSerializer({
-        queryStringArrayFormat: options.arrayFormat?.queryString,
+        queryStringArrayFormat: config.arrayFormat?.queryString,
         arraySeparator,
       });
   }
@@ -249,7 +252,7 @@ export function createRouter(options: UmbrellaRouterOptions): UmbrellaRouter {
   }
 
   function handleNavigation(location: RouterLocation, action: Action) {
-    const nextRoute = getRoute(location, action);
+    const nextRoute = getRoute(location);
     const currentLocation = getRouterLocationFromHistoryLocation(
       history.location
     );
@@ -259,7 +262,9 @@ export function createRouter(options: UmbrellaRouterOptions): UmbrellaRouter {
     }
 
     for (const { handler } of navigationHandlers) {
-      const navigationHandlerResult = handler(nextRoute, prevRoute);
+      const navigationHandlerResult = handler(nextRoute, prevRoute ?? null, {
+        action,
+      });
 
       if (__DEV__) {
         assert("NavigationHandler", [
@@ -284,7 +289,7 @@ export function createRouter(options: UmbrellaRouterOptions): UmbrellaRouter {
     return true;
   }
 
-  function getRoute(location: RouterLocation, action: Action): UmbrellaRoute {
+  function getRoute(location: RouterLocation): UmbrellaRoute {
     let nonExactMatch: (Match & { routeName: string }) | false = false;
 
     for (const routeName in routes) {
@@ -299,12 +304,7 @@ export function createRouter(options: UmbrellaRouterOptions): UmbrellaRouter {
       }
 
       if (match.numExtraneousParams === 0) {
-        return {
-          name: routeName,
-          action,
-          params: match.params,
-          addons: buildAddons(routeName, match.params, action),
-        };
+        return buildRoute(routeName, match.params);
       }
 
       if (
@@ -316,24 +316,10 @@ export function createRouter(options: UmbrellaRouterOptions): UmbrellaRouter {
     }
 
     if (nonExactMatch) {
-      return {
-        name: nonExactMatch.routeName,
-        params: nonExactMatch.params,
-        action,
-        addons: buildAddons(
-          nonExactMatch.routeName,
-          nonExactMatch.params,
-          action
-        ),
-      };
+      return buildRoute(nonExactMatch.routeName, nonExactMatch.params);
     }
 
-    return {
-      name: false,
-      action,
-      params: {},
-      addons: buildAddons(false, {}, action),
-    };
+    return buildRoute(false, {});
   }
 
   function getSharedRouterProperties(): SharedRouterProperties {
@@ -344,51 +330,57 @@ export function createRouter(options: UmbrellaRouterOptions): UmbrellaRouter {
     };
   }
 
-  function buildAddons(
+  function buildRoute(
     routeName: string | false,
-    params: Record<string, unknown>,
-    action: Action
-  ) {
-    const ctx: AddonContext<any> = {
-      href: (params) => {
-        if (routeName === false) {
-          return "";
-        }
-
-        return routes[routeName].href(params);
-      },
-      link: (params) => {
-        if (routeName === false) {
-          return { href: "", onClick: () => {} };
-        }
-
-        return routes[routeName].link(params);
-      },
-      push: (params) => {
-        if (routeName === false) {
-          return false;
-        }
-
-        return routes[routeName].push(params);
-      },
-      replace: (params) => {
-        if (routeName === false) {
-          return false;
-        }
-
-        return routes[routeName].replace(params);
-      },
-      route: {
-        action,
-        params,
-        name: routeName,
-        addons: {},
-      },
+    params: Record<string, unknown>
+  ): UmbrellaRoute {
+    return {
+      name: routeName,
+      params: params,
+      href,
+      link,
+      push,
+      replace,
+      addons: buildAddons({
+        routeName,
+        href,
+        link,
+        push,
+        replace,
+        addons,
+        getAddonArgsAndParams: (args) => {
+          return { args, params };
+        },
+      }),
     };
 
-    return mapObject(addons, (addon) => {
-      return (...args: any[]) => addon(ctx, ...args);
-    });
+    function href() {
+      if (routeName === false) {
+        return "";
+      }
+      return routes[routeName].href(params);
+    }
+
+    function link() {
+      if (routeName === false) {
+        return { href: "", onClick: () => {} };
+      }
+      return routes[routeName].link(params);
+    }
+
+    function push() {
+      if (routeName === false) {
+        return false;
+      }
+      return routes[routeName].push(params);
+    }
+
+    function replace() {
+      if (routeName === false) {
+        return false;
+      }
+      return routes[routeName].replace(params);
+    }
   }
 }
 

@@ -40,7 +40,7 @@
     "start": "parcel ./src/playground.html --out-dir parcel-dist",
     "build": "tsdx build --tsconfig ./tsconfig.build.json && rollup -c rollup.dts.config.js && rm dist/*.d.ts && mv dist/index.temp dist/index.d.ts && ls -lhS dist",
     "test": "tsdx test",
-    "lint": "tsc --noEmit && tsdx lint src test",
+    "lint": "eslint --ext ts,tsx ./src ./test --max-warnings=0",
     "prepare": "npm run build"
   },
   "devDependencies": {

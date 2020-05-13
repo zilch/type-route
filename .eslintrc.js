@@ -4,6 +4,9 @@ module.exports = {
     "prettier/@typescript-eslint",
     "plugin:prettier/recommended"
   ],
+  "rules": {
+    "prettier/prettier": ["warn"]
+  },
   "settings": {
     "react": {
       "version": "detect"
