@@ -11,10 +11,10 @@ export function buildAddons({
   getAddonArgsAndParams,
 }: {
   addons: Record<string, (...args: any[]) => any>;
-  href: () => string;
-  link: () => Link;
-  replace: () => boolean;
-  push: () => boolean;
+  href: (params: Record<string, unknown>) => string;
+  link: (params: Record<string, unknown>) => Link;
+  replace: (params: Record<string, unknown>) => boolean;
+  push: (params: Record<string, unknown>) => boolean;
   routeName: string | false;
   getAddonArgsAndParams: (
     args: any[]
@@ -26,11 +26,12 @@ export function buildAddons({
   const constructedAddons = mapObject(addons, (addon) => {
     return (...inputArgs: any[]) => {
       const { args, params } = getAddonArgsAndParams(inputArgs);
+
       const route: UmbrellaRoute = {
-        href,
-        link,
-        push,
-        replace,
+        href: () => href(params),
+        link: () => link(params),
+        push: () => push(params),
+        replace: () => replace(params),
         params,
         name: routeName,
         addons: {},

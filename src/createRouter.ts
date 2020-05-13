@@ -336,7 +336,7 @@ export function createRouter(...args: any[]): UmbrellaRouter {
   ): UmbrellaRoute {
     return {
       name: routeName,
-      params: params,
+      params,
       href,
       link,
       push,
