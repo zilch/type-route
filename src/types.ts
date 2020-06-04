@@ -1,4 +1,5 @@
 import { noMatch } from "./noMatch";
+import { History } from "history";
 
 export type Compute<A extends any> = A extends Function
   ? A
@@ -60,6 +61,7 @@ export type SharedRouterProperties = {
   queryStringSerializer: QueryStringSerializer;
   navigate: NavigateFunction;
   arraySeparator: string;
+  history: History;
 };
 
 export type ParamDefCollection<TParamDefKind> = {
@@ -171,9 +173,9 @@ export type PathFn<TParamDefCollection> = (
   x: PathParams<TParamDefCollection>
 ) => string;
 
-export type RouteDefBuilder<TParamDefCollection> = {
+export type RouteDef<TParamDefCollection> = {
   ["~internal"]: {
-    type: "RouteDefBuilder";
+    type: "RouteDef";
     params: TParamDefCollection;
     path: PathFn<TParamDefCollection>;
   };
@@ -181,12 +183,10 @@ export type RouteDefBuilder<TParamDefCollection> = {
   extend<TExtensionParamDefCollection>(
     params: TExtensionParamDefCollection,
     path: PathFn<TExtensionParamDefCollection>
-  ): RouteDefBuilder<TParamDefCollection & TExtensionParamDefCollection>;
-  extend(path: string): RouteDefBuilder<TParamDefCollection>;
+  ): RouteDef<TParamDefCollection & TExtensionParamDefCollection>;
+  extend(path: string): RouteDef<TParamDefCollection>;
 };
-export type UmbrellaRouteDefBuilder = RouteDefBuilder<
-  UmbrellaParamDefCollection
->;
+export type UmbrellaRouteDef = RouteDef<UmbrellaParamDefCollection>;
 
 export type NavigateFunction = (
   routerLocation: RouterLocation,
@@ -200,73 +200,38 @@ export type Link = {
   onClick: OnClickHandler;
 };
 
-type RouteParamsFunction<
+type RouteParamsFunction<TParamDefCollection, TReturnType> = KeysMatching<
   TParamDefCollection,
-  TReturnType,
-  TAdditionalParams extends any[] = []
-> = KeysMatching<TParamDefCollection, {}> extends never
-  ? (...additionalParams: TAdditionalParams) => TReturnType
+  {}
+> extends never
+  ? () => TReturnType
   : RequiredParamNames<TParamDefCollection> extends never
-  ? (
-      params?: InputRouteParams<TParamDefCollection>,
-      ...additionalParams: TAdditionalParams
-    ) => TReturnType
-  : (
-      params: InputRouteParams<TParamDefCollection>,
-      ...additionalParams: TAdditionalParams
-    ) => TReturnType;
+  ? (params?: InputRouteParams<TParamDefCollection>) => TReturnType
+  : (params: InputRouteParams<TParamDefCollection>) => TReturnType;
 
 export type Match = {
   params: Record<string, unknown>;
   numExtraneousParams: number;
 };
 
-type RouteDefAddon<TParamDefCollection, TAddon> = TAddon extends (
-  context: any,
-  ...addonParams: infer TAddonParameters
-) => infer TAddonReturnType
-  ? RouteParamsFunction<TParamDefCollection, TAddonReturnType, TAddonParameters>
-  : never;
-
-type RouteDefAddonCollection<TParamDefCollection, TAddons> = {
-  [TAddonName in keyof TAddons]: RouteDefAddon<
-    TParamDefCollection,
-    TAddons[TAddonName]
-  >;
-};
-
-type RouteAddon<TAddon> = TAddon extends (
-  context: any,
-  ...addonParams: infer TAddonParameters
-) => infer TAddonReturnType
-  ? (...addonParams: TAddonParameters) => TAddonReturnType
-  : never;
-
-type RouteAddonCollection<TAddons> = {
-  [TAddonName in keyof TAddons]: RouteAddon<TAddons[TAddonName]>;
-};
-
-export type RouteDef<TRouteName, TParamDefCollection, TAddons> = {
-  name: TRouteName;
-  href: RouteParamsFunction<TParamDefCollection, string>;
-  push: RouteParamsFunction<TParamDefCollection, boolean>;
-  replace: RouteParamsFunction<TParamDefCollection, boolean>;
-  link: RouteParamsFunction<TParamDefCollection, Link>;
-  addons: RouteDefAddonCollection<TParamDefCollection, TAddons>;
+export type RouteBuilder<TRouteName, TParamDefCollection> = RouteParamsFunction<
+  TParamDefCollection,
+  Route<TRouteName, TParamDefCollection>
+> & {
+  routeName: TRouteName;
   ["~internal"]: {
-    type: "RouteDef";
+    type: "RouteBuilder";
     match: (args: {
       routerLocation: RouterLocation;
       queryStringSerializer: QueryStringSerializer;
       arraySeparator: string;
     }) => Match | false;
-    Route: Route<TRouteName, TParamDefCollection, TAddons>;
+    Route: Route<TRouteName, TParamDefCollection>;
   };
 };
-export type UmbrellaRouteDefInstance = RouteDef<
+export type UmbrellaRouteBuilder = RouteBuilder<
   string,
-  UmbrellaParamDefCollection,
-  unknown
+  UmbrellaParamDefCollection
 >;
 
 export type ClickEvent = {
@@ -282,8 +247,6 @@ export type ClickEvent = {
 
 export type Action = "push" | "replace" | "pop";
 
-export type NotFoundRoute<TAddons> = Route<false, {}, TAddons>;
-
 export type LocationState =
   | {
       navigationResolverId?: string;
@@ -291,103 +254,83 @@ export type LocationState =
     }
   | undefined;
 
-export type RouteDefBuilderCollectionRoute<
-  TRouteDefBuilderCollection,
-  TAddons
-> = TRouteDefBuilderCollection extends Record<string, RouteDefBuilder<any>>
+export type RouteDefCollectionRoute<
+  TRouteDefCollection
+> = TRouteDefCollection extends Record<string, RouteDef<any>>
   ?
       | {
-          [TRouteName in keyof TRouteDefBuilderCollection]: Route<
+          [TRouteName in keyof TRouteDefCollection]: Route<
             TRouteName,
-            TRouteDefBuilderCollection[TRouteName]["~internal"]["params"],
-            TAddons
+            TRouteDefCollection[TRouteName]["~internal"]["params"]
           >;
-        }[keyof TRouteDefBuilderCollection]
-      | NotFoundRoute<TAddons>
+        }[keyof TRouteDefCollection]
+      | NotFoundRoute
   : never;
 
-export type Route<TName, TParamDefCollection, TAddons> = {
+export type NotFoundRoute = Route<false, {}>;
+
+export type Route<TName, TParamDefCollection> = {
   name: TName;
   params: OutputRouteParams<TParamDefCollection>;
-  addons: RouteAddonCollection<TAddons>;
-  link: () => Link;
-  href: () => string;
+  link: Link;
+  href: string;
   push: () => boolean;
   replace: () => boolean;
 };
 
-export type GetRoute<T> = T extends RouteDef<any, any, any>
+export type GetRoute<T> = T extends { ["~internal"]: { Route: any } }
   ? T["~internal"]["Route"]
-  : T extends RouteDefGroup
-  ? T["~internal"]["Route"]
-  : T extends Record<string, RouteDef<any, any, any>>
-  ?
-      | T[keyof T]["~internal"]["Route"]
-      | NotFoundRoute<
-          T[keyof T]["~internal"]["Route"]["addons"] extends RouteAddonCollection<
-            infer TAddons
-          >
-            ? TAddons
-            : {}
-        >
+  : T extends Record<string, { ["~internal"]: { Route: any } }>
+  ? T[keyof T]["~internal"]["Route"] | NotFoundRoute
   : never;
 
-export type UmbrellaRoute = Route<
-  string | false,
-  Record<string, any>,
-  Record<string, (...args: any[]) => any>
->;
+export type UmbrellaRoute = Route<string | false, Record<string, any>>;
 
-export type NavigationEvent = {
+export type NavigationEvent<TRouteDefCollection> = {
+  nextRoute: RouteDefCollectionRoute<TRouteDefCollection>;
+  previousRoute: RouteDefCollectionRoute<TRouteDefCollection> | null;
   action: Action;
 };
 
-export type NavigationHandler<TRouteDefBuilderCollection, TAddons> = (
-  nextRoute: RouteDefBuilderCollectionRoute<
-    TRouteDefBuilderCollection,
-    TAddons
-  >,
-  prevRoute: RouteDefBuilderCollectionRoute<
-    TRouteDefBuilderCollection,
-    TAddons
-  > | null,
-  event: NavigationEvent
+export type NavigationHandler<TRouteDefCollection> = (
+  event: NavigationEvent<TRouteDefCollection>
 ) => boolean | void;
 export type UmbrellaNavigationHandler = NavigationHandler<
-  UmbrellaRouteDefBuilderCollection,
-  unknown
+  UmbrellaRouteDefCollection
 >;
 
-export type RouterSessionHistory<TRouteDefBuilderCollection, TAddons> = {
+export type RouterSessionHistory<TRouteDefCollection> = {
   push(url: string, state?: any): boolean;
   replace(url: string, state?: any): boolean;
-  getInitialRoute(): RouteDefBuilderCollectionRoute<
-    TRouteDefBuilderCollection,
-    TAddons
-  >;
+  getInitialRoute(): RouteDefCollectionRoute<TRouteDefCollection>;
   back(amount?: number): void;
   forward(amount?: number): void;
-  reset(options: RouterSessionHistoryConfig): void;
+  reset(options: SessionConfig): void;
 };
 export type UmbrellaRouterHistory = RouterSessionHistory<
-  UmbrellaRouteDefBuilderCollection,
-  unknown
+  UmbrellaRouteDefCollection
 >;
 
-export type MemorySessionHistoryConfig = {
+export type MemoryHistorySessionConfig = {
   type: "memory";
   initialEntries?: string[];
   initialIndex?: number;
 };
 
-export type BrowserSessionHistoryConfig = {
+export type HashHistorySessionConfig = {
+  type: "hash";
+  hash?: "hashbang" | "noslash" | "slash";
+};
+
+export type BrowserHistorySessionConfig = {
   type: "browser";
   forceRefresh?: boolean;
 };
 
-export type RouterSessionHistoryConfig =
-  | MemorySessionHistoryConfig
-  | BrowserSessionHistoryConfig;
+export type SessionConfig =
+  | HashHistorySessionConfig
+  | MemoryHistorySessionConfig
+  | BrowserHistorySessionConfig;
 
 export type QueryStringArrayFormat =
   | "singleKey"
@@ -400,49 +343,33 @@ export type ArrayFormat = {
   queryString?: QueryStringArrayFormat;
 };
 
-export type RouterConfig<TAddons extends { [addonName: string]: any }> = {
-  addons?: TAddons;
-  session?: RouterSessionHistoryConfig;
+export type RouterConfig = {
+  session?: SessionConfig;
   queryStringSerializer?: QueryStringSerializer;
   arrayFormat?: ArrayFormat;
   scrollToTop?: boolean;
   forceRefresh?: boolean;
 };
-export type UmbrellaRouterConfig = RouterConfig<
-  Record<string, (...args: any[]) => any>
->;
 
-export type UmbrellaRouteDefBuilderCollection = Record<
-  string,
-  UmbrellaRouteDefBuilder
->;
+export type UmbrellaRouteDefCollection = Record<string, UmbrellaRouteDef>;
 
-export type Router<
-  TRouteDefBuilderCollection extends { [routeName: string]: any },
-  TAddons
-> = {
+export type Router<TRouteDefCollection extends { [routeName: string]: any }> = {
   routes: {
-    [TRouteName in keyof TRouteDefBuilderCollection]: RouteDef<
+    [TRouteName in keyof TRouteDefCollection]: RouteBuilder<
       TRouteName,
-      TRouteDefBuilderCollection[TRouteName]["~internal"]["params"],
-      TAddons
+      TRouteDefCollection[TRouteName]["~internal"]["params"]
     >;
   };
-  session: RouterSessionHistory<TRouteDefBuilderCollection, TAddons>;
-  listen: (
-    handler: NavigationHandler<TRouteDefBuilderCollection, TAddons>
-  ) => () => void;
+  session: RouterSessionHistory<TRouteDefCollection>;
+  listen: (handler: NavigationHandler<TRouteDefCollection>) => () => void;
 };
-export type UmbrellaRouter = Router<
-  UmbrellaRouteDefBuilderCollection,
-  Record<string, any>
->;
+export type UmbrellaRouter = Router<UmbrellaRouteDefCollection>;
 
-export type RouteDefGroup<T extends any[] = any[]> = {
+export type RouteBuilderGroup<T extends any[] = any[]> = {
   ["~internal"]: {
-    type: "RouteDefGroup";
+    type: "RouteBuilderGroup";
     Route: T[number]["~internal"]["Route"];
   };
   routeNames: T[number]["~internal"]["Route"]["name"][];
-  has(route: Route<any, any, any>): route is T[number]["~internal"]["Route"];
+  has(route: Route<any, any>): route is T[number]["~internal"]["Route"];
 };

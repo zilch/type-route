@@ -2,8 +2,9 @@ import {
   ClickEvent,
   Link,
   SharedRouterProperties,
-  UmbrellaRouteDefBuilder,
-  UmbrellaRouteDefInstance,
+  UmbrellaRouteDef,
+  UmbrellaRouteBuilder,
+  UmbrellaRoute,
 } from "./types";
 import { buildPathDef } from "./buildPathDef";
 import { getParamDefsOfType } from "./getParamDefsOfType";
@@ -11,50 +12,48 @@ import { createLocation } from "./createLocation";
 import { createMatcher } from "./createMatcher";
 import { assert } from "./assert";
 import { preventDefaultLinkClickBehavior } from "./preventDefaultAnchorClickBehavior";
-import { buildAddons } from "./buildAddons";
 
-export function buildRouteDef(
+export function createRouteBuilder(
   routeName: string,
-  routeDef: UmbrellaRouteDefBuilder,
-  getSharedRouterProperties: () => SharedRouterProperties,
-  addons: Record<string, (...args: any[]) => any>
-): UmbrellaRouteDefInstance {
+  routeDef: UmbrellaRouteDef,
+  getSharedRouterProperties: () => SharedRouterProperties
+): UmbrellaRouteBuilder {
   const pathDef = buildPathDef(
     routeName,
     getParamDefsOfType("path", routeDef["~internal"].params),
     routeDef["~internal"].path
   );
 
-  return {
-    name: routeName,
-    href,
-    replace,
-    push,
-    link,
-    addons: buildAddons({
-      routeName,
-      link,
-      href,
-      push,
-      replace,
-      addons,
-      getAddonArgsAndParams: (args: any[]) => {
-        let params: Record<string, unknown> = {};
-        if (Object.keys(routeDef["~internal"].params).length > 0) {
-          params = args[0] ?? {};
-          args = args.slice(1);
-        }
-        return { params, args };
-      },
-    }),
-    "~internal": {
-      type: "RouteDef",
-      match: createMatcher({ pathDef, params: routeDef["~internal"].params }),
-      Route: null as any,
-    },
+  const build: UmbrellaRouteBuilder = function (
+    params: Record<string, unknown> = {}
+  ) {
+    assertRouteDefFnArgs("build", [].slice.call(arguments), params);
+
+    const route: UmbrellaRoute = {
+      name: routeName,
+      params,
+      href: href(params),
+      link: link(params),
+      push: () => push(params),
+      replace: () => replace(params),
+    };
+
+    return route as any;
   };
 
-  function link(params: Record<string, unknown> = {}): Link {
+  build.routeName = routeName;
+  build["~internal"] = {
+    type: "RouteBuilder",
+    match: createMatcher({
+      pathDef,
+      params: routeDef["~internal"].params,
+    }) as any,
+    Route: null as any,
+  };
+
+  return build;
+
+  function link(params: Record<string, unknown>): Link {
     assertRouteDefFnArgs("link", [].slice.call(arguments), params);
 
     return {
@@ -81,12 +80,13 @@ export function buildRouteDef(
     };
   }
 
-  function href(params: Record<string, unknown> = {}) {
+  function href(params: Record<string, unknown>) {
     assertRouteDefFnArgs("link", [].slice.call(arguments), params);
 
     const {
       queryStringSerializer,
       arraySeparator,
+      history,
     } = getSharedRouterProperties();
 
     const location = createLocation({
@@ -97,10 +97,13 @@ export function buildRouteDef(
       arraySeparator,
     });
 
-    return location.path + (location.query ? `?${location.query}` : "");
+    return history.createHref({
+      pathname: location.path,
+      search: location.query,
+    });
   }
 
-  function push(params: Record<string, unknown> = {}) {
+  function push(params: Record<string, unknown>) {
     assertRouteDefFnArgs("link", [].slice.call(arguments), params);
 
     const {
@@ -120,7 +123,7 @@ export function buildRouteDef(
     );
   }
 
-  function replace(params: Record<string, unknown> = {}) {
+  function replace(params: Record<string, unknown>) {
     assertRouteDefFnArgs("link", [].slice.call(arguments), params);
 
     const {

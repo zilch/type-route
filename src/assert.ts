@@ -92,7 +92,7 @@ assert.type = (
 
     if (
       (expectsProperType &&
-        typeOf(value) === "object" &&
+        (typeOf(value) === "object" || typeOf(value) === "function") &&
         typeOf(value["~internal"]) === "object" &&
         value["~internal"].type === expectedType) ||
       (!expectsProperType && typeOf(value) === expectedType)

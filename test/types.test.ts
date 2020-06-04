@@ -25,9 +25,8 @@ describe("types", () => {
         {
           name: false;
           params: {};
-          addons: {};
-          link: () => Link;
-          href: () => string;
+          link: Link;
+          href: string;
           push: () => boolean;
           replace: () => boolean;
         }
@@ -64,9 +63,8 @@ describe("types", () => {
         {
           name: false;
           params: {};
-          addons: {};
-          link: () => Link;
-          href: () => string;
+          link: Link;
+          href: string;
           push: () => boolean;
           replace: () => boolean;
         }

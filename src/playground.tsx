@@ -4,13 +4,23 @@ window.__DEV__ = true;
 
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
-import { createRouter, defineRoute, param, Route, createConfig } from "./index";
+import {
+  createRouter,
+  defineRoute,
+  param,
+  Route,
+  createGroup,
+  RouterConfig,
+} from "./index";
 
-const config = createConfig({
-  addons: { preloadLink },
-});
+const config: RouterConfig = {
+  session: {
+    type: "hash",
+  },
+};
 
 export const { routes, session, listen } = createRouter(config, {
+  home: defineRoute("/"),
   user: defineRoute(
     {
       userId: param.path.string,
@@ -19,51 +29,47 @@ export const { routes, session, listen } = createRouter(config, {
   ),
 });
 
-function preloadLink(route: Route<typeof routes>) {
-  return route.link();
-}
+export const groups = {
+  hi: createGroup([routes.home]),
+};
 
 function App() {
   const [route, setRoute] = useState(() => session.getInitialRoute());
-  const [lock, setLock] = useState(false);
-
-  useEffect(
-    () =>
-      listen((nextRoute) => {
-        if (lock) {
-          return false;
-        }
-
-        setRoute(nextRoute);
-        return;
-      }),
-    [lock]
-  );
+  useEffect(() => listen((event) => setRoute(event.nextRoute)), []);
 
   return (
     <>
       <Navigation />
-      <Page route={route} />
-      {lock ? "Locked" : "Unlocked"}{" "}
-      <button onClick={() => setLock((value) => !value)}>Toggle</button>
+      {route.name === "home" && <HomePage />}
+      {route.name === "user" && <UserPage route={route} />}
+      {route.name === false && <NotFoundPage />}
+      <Navigation />
     </>
   );
 }
 
-function Page(props: { route: Route<typeof routes> }) {
-  const { route } = props;
-
-  if (route.name === routes.user.name) {
-    return <div>User {route.params.userId}</div>;
-  }
-
+function NotFoundPage() {
   return <div>Not Found</div>;
+}
+
+function HomePage() {
+  return <div style={{ height: "1000px" }}>Home Page</div>;
+}
+
+function UserPage({ route }: { route: Route<typeof routes.user> }) {
+  return (
+    <>
+      <div style={{ height: "2000px" }}>User {route.params.userId}</div>
+      <div>User {route.params.userId}</div>
+    </>
+  );
 }
 
 function Navigation() {
   return (
     <nav>
-      <a {...routes.user.addons.preloadLink({ userId: "abc" })}>User "abc"</a>
+      <a {...routes.home().link}>Home</a>
+      <a {...routes.user({ userId: "abc" }).link}>User "abc"</a>
     </nav>
   );
 }
