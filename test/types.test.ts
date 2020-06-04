@@ -8,16 +8,16 @@ const toBeEqual = 1 as const;
 
 describe("types", () => {
   it("should pass", () => {
-    const { routes, session } = createRouter({
+    const { session } = createRouter({
       home: defineRoute("/"),
       user: defineRoute({ userId: param.path.string }, (x) => `/${x.userId}`),
     });
 
     const route = session.getInitialRoute();
 
-    if (route.name === routes.user.name) {
+    if (route.name === "user") {
       expectTypes<typeof route.params, { userId: string }>(toBeEqual);
-    } else if (route.name === routes.home.name) {
+    } else if (route.name === "home") {
       expectTypes<typeof route.params, {}>(toBeEqual);
     } else {
       expectTypes<
@@ -49,13 +49,13 @@ describe("types", () => {
     const route = session.getInitialRoute();
 
     expectTypes<
-      Parameters<typeof routes.user.link>[0],
+      Parameters<typeof routes.user>[0],
       { o?: number; d?: number } | undefined
     >(toBeEqual);
 
-    if (route.name === routes.user.name) {
+    if (route.name === "user") {
       expectTypes<typeof route.params, { o?: number; d: number }>(toBeEqual);
-    } else if (route.name === routes.home.name) {
+    } else if (route.name === "home") {
       expectTypes<typeof route.params, {}>(toBeEqual);
     } else {
       expectTypes<
