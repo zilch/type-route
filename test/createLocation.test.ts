@@ -1,6 +1,6 @@
 import { createLocation } from "../src/createLocation";
 import { defineRoute } from "../src/defineRoute";
-import { buildPathDef } from "../src/buildPathDef";
+import { buildPathDefs } from "../src/buildPathDefs";
 import { getParamDefsOfType } from "../src/getParamDefsOfType";
 import { createQueryStringSerializer } from "../src/createQueryStringSerializer";
 import { param } from "../src/param";
@@ -56,7 +56,7 @@ function expectLocation(
     path
   );
 
-  const pathDef = buildPathDef(
+  const pathDefs = buildPathDefs(
     "test",
     getParamDefsOfType("path", builder["~internal"].params),
     path
@@ -66,7 +66,7 @@ function expectLocation(
     createLocation({
       paramCollection,
       paramDefCollection,
-      pathDef,
+      pathDefs,
       queryStringSerializer: createQueryStringSerializer(),
       arraySeparator: ",",
     })

@@ -1,7 +1,7 @@
 import { createMatcher } from "../src/createMatcher";
 import { defineRoute } from "../src/defineRoute";
 import { param } from "../src/param";
-import { buildPathDef } from "../src/buildPathDef";
+import { buildPathDefs } from "../src/buildPathDefs";
 import { getParamDefsOfType } from "../src/getParamDefsOfType";
 import {
   RouterLocation,
@@ -22,6 +22,26 @@ describe("createMatcher", () => {
         query: "userId=hello",
       }
     ).toEqual({
+      primaryPath: true,
+      params: {
+        userId: "hello",
+      },
+      numExtraneousParams: 0,
+    });
+  });
+
+  it("should do a simple match against the secondary path", () => {
+    expectMatch(
+      {
+        userId: param.query.string,
+      },
+      () => [`/users`, `/user`],
+      {
+        path: "/user",
+        query: "userId=hello",
+      }
+    ).toEqual({
+      primaryPath: false,
       params: {
         userId: "hello",
       },
@@ -43,6 +63,7 @@ describe("createMatcher", () => {
         },
       }
     ).toEqual({
+      primaryPath: true,
       numExtraneousParams: 1,
       params: {
         userId: "hello",
@@ -64,6 +85,7 @@ describe("createMatcher", () => {
         },
       }
     ).toEqual({
+      primaryPath: true,
       numExtraneousParams: 2,
       params: {
         userId: "hello",
@@ -82,6 +104,7 @@ describe("createMatcher", () => {
         query: "page=2",
       }
     ).toEqual({
+      primaryPath: true,
       numExtraneousParams: 0,
       params: {
         page: 2,
@@ -99,7 +122,7 @@ function expectMatch(
 
   const match = createMatcher({
     params: route["~internal"].params,
-    pathDef: buildPathDef(
+    pathDefs: buildPathDefs(
       "test",
       getParamDefsOfType("path", route["~internal"].params),
       route["~internal"].path

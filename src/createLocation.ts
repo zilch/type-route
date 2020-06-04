@@ -17,13 +17,13 @@ type ParamWithContextCollection = Record<
 export function createLocation({
   paramCollection,
   paramDefCollection,
-  pathDef,
+  pathDefs,
   queryStringSerializer,
   arraySeparator,
 }: {
   paramCollection: Record<string, unknown>;
   paramDefCollection: UmbrellaParamDefCollection;
-  pathDef: PathDef;
+  pathDefs: PathDef[];
   queryStringSerializer: QueryStringSerializer;
   arraySeparator: string;
 }): RouterLocation {
@@ -80,7 +80,7 @@ export function createLocation({
 
   const path =
     "/" +
-    pathDef
+    pathDefs[0]
       .filter(({ namedParamDef }) => {
         return !(
           namedParamDef?.["~internal"].optional &&

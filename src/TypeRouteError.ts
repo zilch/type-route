@@ -231,6 +231,28 @@ export const TypeRouteError = buildErrorCollection({
       ];
     },
   },
+
+  Expected_length_of_array_does_match_actual_length: {
+    errorCode: 1015,
+    getDetails({
+      context,
+      array,
+      min,
+      max,
+    }: {
+      context: string;
+      array: any[];
+      min: number;
+      max: number;
+    }) {
+      return [
+        `Problem found with your usage of \`${context}\``,
+        `Expected array to be of length ${min}${
+          min === max ? "" : " - " + max
+        } but actual length was ${array.length}`,
+      ];
+    },
+  },
 });
 
 function buildErrorCollection<

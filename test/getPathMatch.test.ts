@@ -1,4 +1,4 @@
-import { buildPathDef } from "../src/buildPathDef";
+import { buildPathDefs } from "../src/buildPathDefs";
 import { getPathMatch } from "../src/getPathMatch";
 import { param } from "../src/param";
 import { noMatch } from "../src/noMatch";
@@ -9,6 +9,7 @@ describe("getPathMatch", () => {
     expectGetPathMatch({}, () => "/", "/").toEqual({
       params: {},
       numExtraneousParams: 0,
+      primaryPath: true,
     });
   });
 
@@ -24,6 +25,7 @@ describe("getPathMatch", () => {
         userId: "foo",
       },
       numExtraneousParams: 0,
+      primaryPath: true,
     });
   });
 
@@ -37,6 +39,7 @@ describe("getPathMatch", () => {
     ).toEqual({
       params: {},
       numExtraneousParams: 0,
+      primaryPath: true,
     });
   });
 
@@ -52,6 +55,7 @@ describe("getPathMatch", () => {
         docsPage: "/this/is/the/page",
       },
       numExtraneousParams: 0,
+      primaryPath: true,
     });
   });
 
@@ -65,6 +69,7 @@ describe("getPathMatch", () => {
     ).toEqual({
       params: {},
       numExtraneousParams: 0,
+      primaryPath: true,
     });
   });
 
@@ -90,6 +95,7 @@ describe("getPathMatch", () => {
         docsPage: "today/again",
       },
       numExtraneousParams: 0,
+      primaryPath: true,
     });
   });
 
@@ -103,6 +109,7 @@ describe("getPathMatch", () => {
     ).toEqual({
       params: { page: 1 },
       numExtraneousParams: 0,
+      primaryPath: true,
     });
   });
 
@@ -120,6 +127,7 @@ describe("getPathMatch", () => {
     expectGetPathMatch({}, () => `/page`, "/page/").toEqual({
       params: {},
       numExtraneousParams: 0,
+      primaryPath: true,
     });
   });
 
@@ -127,6 +135,7 @@ describe("getPathMatch", () => {
     expectGetPathMatch({}, () => `/docs/today`, "/docs/today").toEqual({
       params: {},
       numExtraneousParams: 0,
+      primaryPath: true,
     });
   });
 
@@ -142,6 +151,7 @@ describe("getPathMatch", () => {
         json: { hello: "there" },
       },
       numExtraneousParams: 0,
+      primaryPath: true,
     });
   });
 
@@ -175,6 +185,7 @@ describe("getPathMatch", () => {
         json: { hello: "hello", there: "there" },
       },
       numExtraneousParams: 0,
+      primaryPath: true,
     });
   });
 
@@ -188,6 +199,7 @@ describe("getPathMatch", () => {
         hi: "/there/",
       },
       numExtraneousParams: 0,
+      primaryPath: true,
     });
   });
 
@@ -201,6 +213,7 @@ describe("getPathMatch", () => {
         num: 1,
       },
       numExtraneousParams: 0,
+      primaryPath: true,
     });
 
     expectGetPathMatch(
@@ -212,6 +225,7 @@ describe("getPathMatch", () => {
         num: 1.1,
       },
       numExtraneousParams: 0,
+      primaryPath: true,
     });
 
     expectGetPathMatch(
@@ -223,6 +237,7 @@ describe("getPathMatch", () => {
         num: -1.1,
       },
       numExtraneousParams: 0,
+      primaryPath: true,
     });
 
     expectGetPathMatch(
@@ -234,6 +249,7 @@ describe("getPathMatch", () => {
         num: -0.1,
       },
       numExtraneousParams: 0,
+      primaryPath: true,
     });
 
     expectGetPathMatch(
@@ -245,6 +261,7 @@ describe("getPathMatch", () => {
         num: -0.1,
       },
       numExtraneousParams: 0,
+      primaryPath: true,
     });
 
     expectGetPathMatch(
@@ -263,7 +280,7 @@ function expectGetPathMatch(
   return expect(
     getPathMatch({
       path,
-      pathDef: buildPathDef("test", pathParamDefCollection, getRawPath),
+      pathDefs: buildPathDefs("test", pathParamDefCollection, getRawPath),
       arraySeparator: ",",
     })
   );

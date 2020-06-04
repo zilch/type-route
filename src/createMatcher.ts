@@ -10,10 +10,10 @@ import { getQueryMatch } from "./getQueryMatch";
 import { getParamDefsOfType } from "./getParamDefsOfType";
 
 export function createMatcher({
-  pathDef,
+  pathDefs,
   params,
 }: {
-  pathDef: PathDef;
+  pathDefs: PathDef[];
   params: UmbrellaParamDefCollection;
 }) {
   const queryParamDefCollection = getParamDefsOfType("query", params);
@@ -40,7 +40,7 @@ export function createMatcher({
   }) => {
     const pathMatch = getPathMatch({
       path: routerLocation.path,
-      pathDef,
+      pathDefs,
       arraySeparator,
     });
 
@@ -66,6 +66,7 @@ export function createMatcher({
     }
 
     return {
+      primaryPath: pathMatch.primaryPath,
       params: {
         ...defaultParams,
         ...pathMatch.params,

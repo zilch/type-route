@@ -8,6 +8,21 @@ export function assert(
   assertions.forEach((assert) => assert(context));
 }
 
+assert.arrayLength = (array: any[], min: number, max = min) => (
+  context: string
+) => {
+  if (array.length < min || array.length > max) {
+    throw TypeRouteError.Expected_length_of_array_does_match_actual_length.create(
+      {
+        context,
+        array,
+        min,
+        max,
+      }
+    );
+  }
+};
+
 assert.numArgs = (args: any[], min: number, max = min) => (context: string) => {
   if (args.length < min || args.length > max) {
     throw TypeRouteError.Expected_number_of_arguments_does_match_actual_number.create(

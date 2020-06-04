@@ -4,28 +4,15 @@ window.__DEV__ = true;
 
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
-import {
-  createRouter,
-  defineRoute,
-  param,
-  Route,
-  createGroup,
-  RouterConfig,
-} from "./index";
+import { createRouter, defineRoute, param, Route, createGroup } from "./index";
 
-const config: RouterConfig = {
-  session: {
-    type: "hash",
-  },
-};
-
-export const { routes, session, listen } = createRouter(config, {
-  home: defineRoute("/"),
+export const { routes, session, listen } = createRouter({
+  home: defineRoute(["/dashboard", "/"]),
   user: defineRoute(
     {
       userId: param.path.string,
     },
-    (x) => `/users/${x.userId}`
+    (x) => [`/user/${x.userId}`, `/users/${x.userId}`]
   ),
 });
 
@@ -33,9 +20,17 @@ export const groups = {
   hi: createGroup([routes.home]),
 };
 
+listen((event) => {
+  console.log("href", event.nextRoute.href);
+});
+
 function App() {
   const [route, setRoute] = useState(() => session.getInitialRoute());
   useEffect(() => listen((event) => setRoute(event.nextRoute)), []);
+
+  useEffect(() => {
+    document.title = route.href;
+  }, [route]);
 
   return (
     <>

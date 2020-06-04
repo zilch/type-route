@@ -78,6 +78,7 @@ export function createRouter(...args: any[]): UmbrellaRouter {
   let navigationHandlerIdCounter = 0;
   let queryStringSerializer: QueryStringSerializer;
   let scrollToTop: boolean;
+  let skipHandlingNextBrowserNavigation = false;
   let skipHandlingNextNavigation = false;
 
   initializeRouter(config);
@@ -136,9 +137,17 @@ export function createRouter(...args: any[]): UmbrellaRouter {
         }
 
         if (!initialRoute) {
-          initialRoute = getRoute(
+          let result = getRoute(
             getRouterLocationFromHistoryLocation(history.location)
           );
+          if (!result.primaryPath) {
+            skipHandlingNextNavigation = true;
+            result.route.replace();
+            result = getRoute(
+              getRouterLocationFromHistoryLocation(history.location)
+            );
+          }
+          initialRoute = result.route;
         }
 
         return initialRoute;
@@ -200,12 +209,18 @@ export function createRouter(...args: any[]): UmbrellaRouter {
   }
 
   function navigate(location: RouterLocation, replace?: boolean) {
-    const proceed = handleNavigation(location, replace ? "replace" : "push");
+    const proceed =
+      skipHandlingNextNavigation ||
+      handleNavigation(location, replace ? "replace" : "push");
+
+    if (skipHandlingNextNavigation) {
+      skipHandlingNextNavigation = false;
+    }
 
     if (proceed) {
       const { query, path, state } = location;
       const href = query ? `${path}?${query}` : path;
-      skipHandlingNextNavigation = true;
+      skipHandlingNextBrowserNavigation = true;
       history[replace ? "replace" : "push"](
         href,
         state === undefined
@@ -229,8 +244,8 @@ export function createRouter(...args: any[]): UmbrellaRouter {
 
     if (navigationHandlers.length === 1) {
       unblock = history.block((historyLocation, historyAction) => {
-        if (skipHandlingNextNavigation) {
-          skipHandlingNextNavigation = false;
+        if (skipHandlingNextBrowserNavigation) {
+          skipHandlingNextBrowserNavigation = false;
           return;
         }
 
@@ -260,10 +275,14 @@ export function createRouter(...args: any[]): UmbrellaRouter {
   }
 
   function handleNavigation(location: RouterLocation, action: Action) {
-    const nextRoute = getRoute(location);
+    const { route: nextRoute, primaryPath } = getRoute(location);
     const currentLocation = getRouterLocationFromHistoryLocation(
       history.location
     );
+
+    if (!primaryPath) {
+      return nextRoute.replace();
+    }
 
     if (areLocationsEqual(location, currentLocation)) {
       return false;
@@ -306,7 +325,9 @@ export function createRouter(...args: any[]): UmbrellaRouter {
     return true;
   }
 
-  function getRoute(location: RouterLocation): UmbrellaRoute {
+  function getRoute(
+    location: RouterLocation
+  ): { route: UmbrellaRoute; primaryPath: boolean } {
     let nonExactMatch: (Match & { routeName: string }) | false = false;
 
     for (const routeName in routes) {
@@ -321,7 +342,10 @@ export function createRouter(...args: any[]): UmbrellaRouter {
       }
 
       if (match.numExtraneousParams === 0) {
-        return routes[routeName](match.params);
+        return {
+          route: routes[routeName](match.params),
+          primaryPath: match.primaryPath,
+        };
       }
 
       if (
@@ -333,7 +357,10 @@ export function createRouter(...args: any[]): UmbrellaRouter {
     }
 
     if (nonExactMatch) {
-      return routes[nonExactMatch.routeName](nonExactMatch.params);
+      return {
+        route: routes[nonExactMatch.routeName](nonExactMatch.params),
+        primaryPath: nonExactMatch.primaryPath,
+      };
     }
 
     const notFoundHref =
@@ -355,7 +382,7 @@ export function createRouter(...args: any[]): UmbrellaRouter {
       replace: () => navigate(location, true),
     };
 
-    return notFoundRoute;
+    return { route: notFoundRoute, primaryPath: true };
   }
 
   function getSharedRouterProperties(): SharedRouterProperties {

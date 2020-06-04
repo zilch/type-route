@@ -93,7 +93,9 @@ export type ParamIdCollection = {
   [paramName: string]: string;
 };
 
-export type GetRawPath = (paramIdCollection: ParamIdCollection) => string;
+export type GetRawPath = (
+  paramIdCollection: ParamIdCollection
+) => string | string[];
 
 export type PathParamNames<TParamDefCollection> = KeysMatching<
   TParamDefCollection,
@@ -171,7 +173,7 @@ export type PathParams<TParamDefCollection> = {
 
 export type PathFn<TParamDefCollection> = (
   x: PathParams<TParamDefCollection>
-) => string;
+) => string | string[];
 
 export type RouteDef<TParamDefCollection> = {
   ["~internal"]: {
@@ -212,6 +214,7 @@ type RouteParamsFunction<TParamDefCollection, TReturnType> = KeysMatching<
 export type Match = {
   params: Record<string, unknown>;
   numExtraneousParams: number;
+  primaryPath: boolean;
 };
 
 export type RouteBuilder<TRouteName, TParamDefCollection> = RouteParamsFunction<

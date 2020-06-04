@@ -6,12 +6,13 @@ import {
 } from "./types";
 import { TypeRouteError } from "./TypeRouteError";
 import { assert } from "./assert";
+import { asArray } from "./asArray";
 
 export function defineRoute<TParamDefCollection>(
   params: TParamDefCollection,
   path: PathFn<TParamDefCollection>
 ): RouteDef<TParamDefCollection>;
-export function defineRoute(path: string): RouteDef<{}>;
+export function defineRoute(path: string | string[]): RouteDef<{}>;
 export function defineRoute(...args: any[]): UmbrellaRouteDef {
   assertDefineRouteOrExtendArgs("defineRoute", args);
 
@@ -49,9 +50,15 @@ export function defineRoute(...args: any[]): UmbrellaRouteDef {
           ...parent.params,
         },
         (x) => {
-          return (
-            parent.path(filter(parentParamNames)) +
-            path(filter(extensionParamNames))
+          const parentPathArray = asArray(
+            parent.path(filter(extensionParamNames))
+          );
+          const childPathArray = asArray(path(filter(extensionParamNames)));
+
+          return ([] as string[]).concat(
+            ...parentPathArray.map((parentPath) =>
+              childPathArray.map((childPath) => parentPath + childPath)
+            )
           );
 
           function filter(allowedKeys: string[]) {
@@ -74,7 +81,11 @@ export function defineRoute(...args: any[]): UmbrellaRouteDef {
 function assertDefineRouteOrExtendArgs(functionName: string, args: any[]) {
   if (__DEV__) {
     if (args.length === 1) {
-      assert(functionName, [assert.type("string", "path", args[0])]);
+      if (Array.isArray(args[0])) {
+        assert(functionName, [assert.arrayOfType("string", "path", args[0])]);
+      } else {
+        assert(functionName, [assert.type("string", "path", args[0])]);
+      }
     } else {
       assert(functionName, [
         assert.numArgs(args, 1, 2),

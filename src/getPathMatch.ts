@@ -6,139 +6,152 @@ const { endsWith, startsWith } = stringUtils;
 
 export function getPathMatch({
   path,
-  pathDef,
+  pathDefs,
   arraySeparator,
 }: {
   path: string;
-  pathDef: PathDef;
+  pathDefs: PathDef[];
   arraySeparator: string;
 }) {
-  const params: Record<string, unknown> = {};
-
-  if (path === "/" && pathDef.length === 0) {
-    return { params, numExtraneousParams: 0 };
+  for (let index = 0; index < pathDefs.length; index++) {
+    const result = match(pathDefs[index]);
+    if (result !== false) {
+      return { ...result, primaryPath: index === 0 };
+    }
   }
 
-  const pathHasTrailingSlash = path.length > 1 && endsWith(path, "/");
+  return false;
 
-  if (pathHasTrailingSlash) {
-    path = path.slice(0, path.length - 1);
-  }
+  function match(pathDef: PathDef) {
+    const params: Record<string, unknown> = {};
 
-  const pathSegmentList = path.split("/").slice(1);
-
-  for (
-    let segmentIndex = 0;
-    segmentIndex < Math.max(pathDef.length, pathSegmentList.length);
-    segmentIndex++
-  ) {
-    const pathSegmentDef =
-      segmentIndex >= pathDef.length ? null : pathDef[segmentIndex];
-    let pathSegment =
-      segmentIndex >= pathSegmentList.length
-        ? null
-        : pathSegmentList[segmentIndex];
-
-    if (pathSegmentDef === null) {
-      return false;
+    if (path === "/" && pathDef.length === 0) {
+      return { params, numExtraneousParams: 0 };
     }
 
-    const numRemainingPathSegmentDefs = pathDef.length - 1 - segmentIndex;
+    const pathHasTrailingSlash = path.length > 1 && endsWith(path, "/");
 
-    if (pathSegment === null) {
-      if (
-        numRemainingPathSegmentDefs !== 0 ||
-        !pathSegmentDef.namedParamDef?.["~internal"].optional
-      ) {
+    if (pathHasTrailingSlash) {
+      path = path.slice(0, path.length - 1);
+    }
+
+    const pathSegmentList = path.split("/").slice(1);
+
+    for (
+      let segmentIndex = 0;
+      segmentIndex < Math.max(pathDef.length, pathSegmentList.length);
+      segmentIndex++
+    ) {
+      const pathSegmentDef =
+        segmentIndex >= pathDef.length ? null : pathDef[segmentIndex];
+      let pathSegment =
+        segmentIndex >= pathSegmentList.length
+          ? null
+          : pathSegmentList[segmentIndex];
+
+      if (pathSegmentDef === null) {
         return false;
       }
 
-      break;
-    }
+      const numRemainingPathSegmentDefs = pathDef.length - 1 - segmentIndex;
 
-    if (pathSegmentDef.namedParamDef?.["~internal"].trailing) {
-      pathSegment = pathSegmentList.slice(segmentIndex).join("/");
-    }
+      if (pathSegment === null) {
+        if (
+          numRemainingPathSegmentDefs !== 0 ||
+          !pathSegmentDef.namedParamDef?.["~internal"].optional
+        ) {
+          return false;
+        }
 
-    if (!startsWith(pathSegment, pathSegmentDef.leading)) {
-      return false;
-    }
-
-    const pathSegmentMinusLeading = pathSegment.slice(
-      pathSegmentDef.leading.length
-    );
-
-    if (!endsWith(pathSegmentMinusLeading, pathSegmentDef.trailing)) {
-      return false;
-    }
-
-    const pathSegmentMinusLeadingAndTrailing = pathSegmentMinusLeading.slice(
-      0,
-      pathSegmentMinusLeading.length - pathSegmentDef.trailing.length
-    );
-
-    if (!pathSegmentDef.namedParamDef) {
-      if (pathSegmentMinusLeadingAndTrailing === "") {
-        continue;
+        break;
       }
 
-      return false;
-    }
-
-    if (pathSegmentMinusLeadingAndTrailing === "") {
-      if (pathSegmentDef.namedParamDef["~internal"].optional) {
-        continue;
+      if (pathSegmentDef.namedParamDef?.["~internal"].trailing) {
+        pathSegment = pathSegmentList.slice(segmentIndex).join("/");
       }
 
-      return false;
-    }
-
-    const urlEncode =
-      pathSegmentDef.namedParamDef["~internal"].valueSerializer.urlEncode ??
-      !pathSegmentDef.namedParamDef["~internal"].trailing;
-
-    let value;
-
-    if (pathSegmentDef.namedParamDef["~internal"].array) {
-      value = pathSegmentMinusLeadingAndTrailing
-        .split(arraySeparator)
-        .map((part) => {
-          return pathSegmentDef.namedParamDef?.[
-            "~internal"
-          ].valueSerializer.parse(urlEncode ? decodeURIComponent(part) : part);
-        });
-
-      if (value.some((part) => part === noMatch)) {
+      if (!startsWith(pathSegment, pathSegmentDef.leading)) {
         return false;
       }
-    } else {
-      value = pathSegmentDef.namedParamDef["~internal"].valueSerializer.parse(
-        urlEncode
-          ? decodeURIComponent(pathSegmentMinusLeadingAndTrailing)
-          : pathSegmentMinusLeadingAndTrailing
+
+      const pathSegmentMinusLeading = pathSegment.slice(
+        pathSegmentDef.leading.length
       );
 
-      if (value === noMatch) {
+      if (!endsWith(pathSegmentMinusLeading, pathSegmentDef.trailing)) {
         return false;
       }
-    }
 
-    if (pathSegmentDef.namedParamDef["~internal"].trailing) {
-      if (pathSegmentDef.leading === "") {
-        value = `/${value}`;
+      const pathSegmentMinusLeadingAndTrailing = pathSegmentMinusLeading.slice(
+        0,
+        pathSegmentMinusLeading.length - pathSegmentDef.trailing.length
+      );
+
+      if (!pathSegmentDef.namedParamDef) {
+        if (pathSegmentMinusLeadingAndTrailing === "") {
+          continue;
+        }
+
+        return false;
       }
 
-      if (pathHasTrailingSlash && pathSegmentDef.trailing === "") {
-        value = `${value}/`;
+      if (pathSegmentMinusLeadingAndTrailing === "") {
+        if (pathSegmentDef.namedParamDef["~internal"].optional) {
+          continue;
+        }
+
+        return false;
+      }
+
+      const urlEncode =
+        pathSegmentDef.namedParamDef["~internal"].valueSerializer.urlEncode ??
+        !pathSegmentDef.namedParamDef["~internal"].trailing;
+
+      let value;
+
+      if (pathSegmentDef.namedParamDef["~internal"].array) {
+        value = pathSegmentMinusLeadingAndTrailing
+          .split(arraySeparator)
+          .map((part) => {
+            return pathSegmentDef.namedParamDef?.[
+              "~internal"
+            ].valueSerializer.parse(
+              urlEncode ? decodeURIComponent(part) : part
+            );
+          });
+
+        if (value.some((part) => part === noMatch)) {
+          return false;
+        }
+      } else {
+        value = pathSegmentDef.namedParamDef["~internal"].valueSerializer.parse(
+          urlEncode
+            ? decodeURIComponent(pathSegmentMinusLeadingAndTrailing)
+            : pathSegmentMinusLeadingAndTrailing
+        );
+
+        if (value === noMatch) {
+          return false;
+        }
+      }
+
+      if (pathSegmentDef.namedParamDef["~internal"].trailing) {
+        if (pathSegmentDef.leading === "") {
+          value = `/${value}`;
+        }
+
+        if (pathHasTrailingSlash && pathSegmentDef.trailing === "") {
+          value = `${value}/`;
+        }
+      }
+
+      params[pathSegmentDef.namedParamDef.paramName] = value;
+
+      if (pathSegmentDef.namedParamDef["~internal"].trailing) {
+        break;
       }
     }
 
-    params[pathSegmentDef.namedParamDef.paramName] = value;
-
-    if (pathSegmentDef.namedParamDef["~internal"].trailing) {
-      break;
-    }
+    return { params, numExtraneousParams: 0 };
   }
-
-  return { params, numExtraneousParams: 0 };
 }

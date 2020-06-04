@@ -6,7 +6,7 @@ import {
   UmbrellaRouteBuilder,
   UmbrellaRoute,
 } from "./types";
-import { buildPathDef } from "./buildPathDef";
+import { buildPathDefs } from "./buildPathDefs";
 import { getParamDefsOfType } from "./getParamDefsOfType";
 import { createLocation } from "./createLocation";
 import { createMatcher } from "./createMatcher";
@@ -18,7 +18,7 @@ export function createRouteBuilder(
   routeDef: UmbrellaRouteDef,
   getSharedRouterProperties: () => SharedRouterProperties
 ): UmbrellaRouteBuilder {
-  const pathDef = buildPathDef(
+  const pathDefs = buildPathDefs(
     routeName,
     getParamDefsOfType("path", routeDef["~internal"].params),
     routeDef["~internal"].path
@@ -45,7 +45,7 @@ export function createRouteBuilder(
   build["~internal"] = {
     type: "RouteBuilder",
     match: createMatcher({
-      pathDef,
+      pathDefs,
       params: routeDef["~internal"].params,
     }) as any,
     Route: null as any,
@@ -70,7 +70,7 @@ export function createRouteBuilder(
             createLocation({
               paramCollection: params,
               paramDefCollection: routeDef["~internal"].params,
-              pathDef,
+              pathDefs,
               queryStringSerializer,
               arraySeparator,
             })
@@ -92,7 +92,7 @@ export function createRouteBuilder(
     const location = createLocation({
       paramCollection: params,
       paramDefCollection: routeDef["~internal"].params,
-      pathDef,
+      pathDefs,
       queryStringSerializer,
       arraySeparator,
     });
@@ -116,7 +116,7 @@ export function createRouteBuilder(
       createLocation({
         paramCollection: params,
         paramDefCollection: routeDef["~internal"].params,
-        pathDef,
+        pathDefs,
         queryStringSerializer,
         arraySeparator,
       })
@@ -136,7 +136,7 @@ export function createRouteBuilder(
       createLocation({
         paramCollection: params,
         paramDefCollection: routeDef["~internal"].params,
-        pathDef,
+        pathDefs,
         queryStringSerializer,
         arraySeparator,
       }),
