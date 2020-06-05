@@ -282,6 +282,7 @@ export type HiddenRouteProperties = {
 export type Route<TName, TParamDefCollection> = {
   name: TName;
   params: OutputRouteParams<TParamDefCollection>;
+  action: Action | null;
   link: Link;
   href: string;
   push: () => boolean;
@@ -296,14 +297,9 @@ export type GetRoute<T> = T extends { ["~internal"]: { Route: any } }
 
 export type UmbrellaRoute = Route<string | false, Record<string, any>>;
 
-export type NavigationEvent<TRouteDefCollection> = {
-  nextRoute: RouteDefCollectionRoute<TRouteDefCollection>;
-  previousRoute: RouteDefCollectionRoute<TRouteDefCollection> | null;
-  action: Action;
-};
-
 export type NavigationHandler<TRouteDefCollection> = (
-  event: NavigationEvent<TRouteDefCollection>
+  nextRoute: RouteDefCollectionRoute<TRouteDefCollection>,
+  previousRoute: RouteDefCollectionRoute<TRouteDefCollection> | null
 ) => boolean | void;
 export type UmbrellaNavigationHandler = NavigationHandler<
   UmbrellaRouteDefCollection
@@ -362,7 +358,6 @@ export type RouterConfig = {
   session?: SessionConfig;
   queryStringSerializer?: QueryStringSerializer;
   arrayFormat?: ArrayFormat;
-  scrollRestoration?: boolean;
 };
 
 export type UmbrellaRouteDefCollection = Record<string, UmbrellaRouteDef>;

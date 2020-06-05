@@ -189,14 +189,6 @@ export function createRouter(...args: any[]): UmbrellaRouter {
           : "memory",
     }
   ) {
-    if (
-      typeof window === "object" &&
-      typeof window?.history === "object" &&
-      window.history !== null
-    ) {
-      window.history.scrollRestoration = "manual";
-    }
-
     if (sessionConfig.type === "memory") {
       history = createMemoryHistory({
         initialEntries: sessionConfig.initialEntries,
@@ -243,20 +235,19 @@ export function createRouter(...args: any[]): UmbrellaRouter {
     primaryPath: boolean,
     action: Action
   ) {
+    const originalAction = nextRoute.action;
+    nextRoute.action = action;
+
     if (!primaryPath) {
-      return nextRoute.replace();
+      return returnResultAndRevertActionIfNecessary(nextRoute.replace());
     }
 
     if (previousRoute !== null && areRoutesEqual(previousRoute, nextRoute)) {
-      return false;
+      return returnResultAndRevertActionIfNecessary(false);
     }
 
     for (const handler of navigationHandlerManager.getHandlers()) {
-      const proceed = handler({
-        nextRoute,
-        previousRoute,
-        action,
-      });
+      const proceed = handler(nextRoute, previousRoute);
 
       if (__DEV__) {
         assert("NavigationHandler", [
@@ -269,13 +260,21 @@ export function createRouter(...args: any[]): UmbrellaRouter {
       }
 
       if (proceed === false) {
-        return false;
+        return returnResultAndRevertActionIfNecessary(false);
       }
     }
 
     previousRoute = nextRoute;
 
-    return true;
+    return returnResultAndRevertActionIfNecessary(true);
+
+    function returnResultAndRevertActionIfNecessary(proceed: boolean) {
+      if (proceed === false) {
+        nextRoute.action = originalAction;
+      }
+
+      return proceed;
+    }
   }
 
   function getRouterContext(): RouterContext {

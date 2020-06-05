@@ -22,7 +22,13 @@ export const groups = {
 
 function App() {
   const [route, setRoute] = useState(() => session.getInitialRoute());
-  useEffect(() => listen((event) => setRoute(event.nextRoute)), []);
+  useEffect(() => listen((nextRoute) => setRoute(nextRoute)), []);
+
+  useEffect(() => {
+    if (route.action === "push") {
+      window.scroll(0, 0);
+    }
+  }, [route]);
 
   useEffect(() => {
     document.title = route.href;

@@ -33,10 +33,11 @@ export function buildRoute({
       href,
       onClick: (event) => {
         if (preventDefaultLinkClickBehavior(event)) {
-          navigate(route, true, false);
+          return route.push();
         }
       },
     },
+    action: null,
     push: () => navigate(route, true, false),
     replace: () => navigate(route, true, true),
   };
@@ -49,6 +50,7 @@ export function buildRoute({
     { "~internal": hiddenRouteProperties },
     mapObject(baseRoute, (value) => ({
       enumerable: true,
+      writable: true,
       value,
     }))
   );
