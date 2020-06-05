@@ -109,15 +109,11 @@
       },
       "introduction/getting-started": {
         "title": "Getting Started"
-      },
-      "introduction/why-type-route": {
-        "title": "Why Type Route?"
       }
     },
     "links": {
       "Docs": "Docs",
-      "GitHub": "GitHub",
-      "Feedback": "Feedback"
+      "GitHub": "GitHub"
     },
     "categories": {
       "Introduction": "Introduction",

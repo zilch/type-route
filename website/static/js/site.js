@@ -1,9 +1,9 @@
 document.documentElement.lang = "en";
 
-window.onload = function() {
+window.onload = function () {
   let lastShowShadow = false;
 
-  document.addEventListener("scroll", function() {
+  document.addEventListener("scroll", function () {
     showShadow = window.scrollY > 10;
 
     if (lastShowShadow !== showShadow) {
@@ -18,18 +18,18 @@ window.onload = function() {
   });
 
   const configFactoryCollection = {
-    "codesandbox-react": code => ({
+    "codesandbox-react": (code) => ({
       files: {
         "sandbox.config.json": {
           content:
-            "{\n" + '  "template": "create-react-app-typescript"\n' + "}\n"
+            "{\n" + '  "template": "create-react-app-typescript"\n' + "}\n",
         },
         "src/index.tsx": {
-          content: code
+          content: code,
         },
         "public/index.html": {
           content:
-            '<style>a { margin-right: 10px; } nav { margin-bottom: 10px; } #root { margin: 10px; }</style><div id="root"></div>'
+            '<style>a { margin-right: 10px; } nav { margin-bottom: 10px; } #root { margin: 10px; }</style><div id="root"></div>',
         },
         "package.json": {
           content: {
@@ -38,37 +38,37 @@ window.onload = function() {
               react: "=16.8.6",
               "@types/react": "=16.8.18",
               "react-dom": "=16.8.6",
-              "@types/react-dom": "=16.8.4"
-            }
-          }
-        }
-      }
+              "@types/react-dom": "=16.8.4",
+            },
+          },
+        },
+      },
     }),
-    "codesandbox-standard": code => ({
+    "codesandbox-standard": (code) => ({
       files: {
         "sandbox.config.json": {
           content:
-            "{\n" + '  "template": "create-react-app-typescript"\n' + "}\n"
+            "{\n" + '  "template": "create-react-app-typescript"\n' + "}\n",
         },
         "public/index.html": {
           content:
-            '<style>a { margin-right: 10px; } nav { margin-bottom: 10px; } #root { margin: 10px; }</style><div id="root"></div>'
+            '<style>a { margin-right: 10px; } nav { margin-bottom: 10px; } #root { margin: 10px; }</style><div id="root"></div>',
         },
         "index.ts": {
-          content: code
+          content: code,
         },
         "package.json": {
           content: {
             dependencies: {
-              "type-route": "latest"
-            }
-          }
-        }
-      }
-    })
+              "type-route": "latest",
+            },
+          },
+        },
+      },
+    }),
   };
 
-  document.querySelectorAll("a[data-code]").forEach(function(element) {
+  document.querySelectorAll("a[data-code]").forEach(function (element) {
     const code = element.getAttribute("data-code");
     const config = configFactoryCollection["codesandbox-react"](code);
     const parameters = codesandbox.getParameters(config);
@@ -79,10 +79,10 @@ window.onload = function() {
   document
     .querySelectorAll(
       Object.keys(configFactoryCollection)
-        .map(key => "." + key)
+        .map((key) => "." + key)
         .join(",")
     )
-    .forEach(element => {
+    .forEach((element) => {
       const topLink = getSandboxLink(element, "top");
       if (topLink !== null) {
         element.parentNode.insertBefore(topLink, element);
@@ -99,7 +99,7 @@ window.onload = function() {
     });
 
   function getSandboxLink(element, position) {
-    const type = [...element.classList].find(name =>
+    const type = [...element.classList].find((name) =>
       name.startsWith("codesandbox-")
     );
 

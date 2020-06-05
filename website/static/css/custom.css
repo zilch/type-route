@@ -1,5 +1,3 @@
-/* your custom css */
-
 body {
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
@@ -9,7 +7,7 @@ body {
 .splash .header {
   background: #383751;
   padding: 40px;
-  padding-bottom: 70px;
+  padding-bottom: 100px;
   text-align: center;
 }
 
@@ -17,6 +15,14 @@ body {
   .navPusher {
     padding-top: 66px;
   }
+}
+
+body {
+  background: #20232a;
+}
+
+body > * {
+  background: white;
 }
 
 .navShadow {
@@ -56,12 +62,6 @@ body {
 .nav-footer .copyright {
   color: rgba(255, 255, 255, 0.6);
 }
-
-/*
-rgb(41,128,185) blue
-rgb(255,190,83) yellow
-rgb(255,97,56) orange
-*/
 
 .primary-button,
 .secondary-button {
@@ -136,6 +136,7 @@ blockquote {
   max-width: 1100px;
   margin-left: auto;
   margin-right: auto;
+  padding-top: 20px;
 }
 
 .headerWrapper header > a {
@@ -150,12 +151,6 @@ a {
 a:hover {
   color: rgb(36, 112, 163);
   opacity: 0.8;
-}
-
-.betaNotification a {
-  text-decoration: none;
-  color: #fff;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
 }
 
 .features > div {
@@ -191,19 +186,8 @@ a:hover {
   margin-top: 0px;
 }
 
-/* .headerWrapper header::before {
-  content: "🚧 UNDER CONSTRUCTION - CHECK BACK LATER";
-  font-weight: 900;
-  padding: 6px 20px;
-  margin-right: 20px;
-  background: white;
-  color: darkgoldenrod;
-  border-radius: 30px;
-  display: block;
-} */
-
 .headerTitleWithLogo::after {
-  content: "beta";
+  content: "Stable";
   margin-left: 10px;
   font-weight: 500;
   transform: translateY(-1px);
@@ -213,30 +197,6 @@ a:hover {
   border-radius: 10px;
   background: #484761;
   color: white;
-}
-
-.beta {
-  margin-left: 4px;
-  font-weight: 500;
-  transform: translateY(-1px);
-  position: absolute;
-  font-size: 12px;
-  padding: 2px 8px;
-  border-radius: 10px;
-  background: #484761;
-  color: white;
-}
-
-.betaNotification {
-  padding: 40px;
-  color: white;
-  background: #484761;
-}
-
-.betaNotification > div {
-  max-width: 1040px;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .seeItInAction {

@@ -16,23 +16,19 @@ const siteConfig = {
     { doc: "introduction/getting-started", label: "Docs" },
     { href: "https://github.com/type-route/type-route", label: "GitHub" },
     {
-      href: "https://github.com/type-route/type-route/issues/new",
-      label: "Feedback"
+      search: true,
     },
-    {
-      search: true
-    }
   ],
 
   /* path to images for header/footer */
-  headerIcon: "img/logo.svg",
-  footerIcon: "img/logo.svg",
+  headerIcon: "img/type-route-logo.svg",
+  footerIcon: "img/type-route-logo.svg",
   favicon: "img/favicon.ico",
 
   /* Colors for website */
   colors: {
     primaryColor: "#383751",
-    secondaryColor: "#383751"
+    secondaryColor: "#383751",
   },
 
   // This copyright info is used in /core/Footer.js and blog RSS/Atom feeds.
@@ -45,7 +41,7 @@ const siteConfig = {
 
   scrollToTop: true,
   scrollToTopOptions: {
-    backgroundColor: "#383751"
+    backgroundColor: "#383751",
   },
 
   // On page navigation for the current documentation page.
@@ -55,8 +51,8 @@ const siteConfig = {
 
   algolia: {
     apiKey: "4a2bd93ab352acbdeac847eb2563ac5e",
-    indexName: "type-route"
-  }
+    indexName: "type-route",
+  },
 };
 
 module.exports = siteConfig;

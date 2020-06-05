@@ -2,7 +2,7 @@
 <br/>
 <p align="center">
   <a href="https://github.com/type-route/type-route">
-    <img src="https://www.type-route.org/img/logo.svg" width="200" alt="type-route"/>
+    <img src="https://www.type-route.org/img/type-route-logo.svg" width="200" alt="type-route"/>
   </a>
 </p>
 <br/>
