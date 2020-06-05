@@ -69,6 +69,9 @@ function expectLocation(
       pathDefs,
       queryStringSerializer: createQueryStringSerializer(),
       arraySeparator: ",",
+      routerContext: {
+        arraySeparator: ",",
+      },
     })
   );
 }

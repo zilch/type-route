@@ -57,11 +57,13 @@ export type ParamDef<TParamDefKind, TValue = unknown> = {
 };
 export type UmbrellaParamDef = ParamDef<ParamDefKind>;
 
-export type SharedRouterProperties = {
+export type RouterContext = {
   queryStringSerializer: QueryStringSerializer;
   navigate: NavigateFunction;
   arraySeparator: string;
   history: History;
+  routeDefs: UmbrellaRouteDefCollection;
+  routes: Record<string, UmbrellaRouteBuilder>;
 };
 
 export type ParamDefCollection<TParamDefKind> = {
@@ -191,8 +193,9 @@ export type RouteDef<TParamDefCollection> = {
 export type UmbrellaRouteDef = RouteDef<UmbrellaParamDefCollection>;
 
 export type NavigateFunction = (
-  routerLocation: RouterLocation,
-  replace?: boolean
+  route: UmbrellaRoute,
+  primaryPath: boolean,
+  replace: boolean
 ) => boolean;
 
 export type OnClickHandler = (event?: any) => void;
@@ -229,6 +232,7 @@ export type RouteBuilder<TRouteName, TParamDefCollection> = RouteParamsFunction<
       queryStringSerializer: QueryStringSerializer;
       arraySeparator: string;
     }) => Match | false;
+    pathDefs: PathDef[];
     Route: Route<TRouteName, TParamDefCollection>;
   };
 };
@@ -252,8 +256,7 @@ export type Action = "push" | "replace" | "pop";
 
 export type LocationState =
   | {
-      navigationResolverId?: string;
-      stateParams?: Record<string, string>;
+      state?: Record<string, string>;
     }
   | undefined;
 
@@ -303,8 +306,8 @@ export type UmbrellaNavigationHandler = NavigationHandler<
 >;
 
 export type RouterSessionHistory<TRouteDefCollection> = {
-  push(url: string, state?: any): boolean;
-  replace(url: string, state?: any): boolean;
+  push(href: string, state?: any): boolean;
+  replace(href: string, state?: any): boolean;
   getInitialRoute(): RouteDefCollectionRoute<TRouteDefCollection>;
   back(amount?: number): void;
   forward(amount?: number): void;
@@ -346,12 +349,16 @@ export type ArrayFormat = {
   queryString?: QueryStringArrayFormat;
 };
 
+export type ScrollRestoration = {
+  capture: () => any;
+  restore: (scrollData: any) => void;
+};
+
 export type RouterConfig = {
   session?: SessionConfig;
   queryStringSerializer?: QueryStringSerializer;
   arrayFormat?: ArrayFormat;
-  scrollToTop?: boolean;
-  forceRefresh?: boolean;
+  scrollRestoration?: boolean;
 };
 
 export type UmbrellaRouteDefCollection = Record<string, UmbrellaRouteDef>;

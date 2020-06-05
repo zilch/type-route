@@ -61,9 +61,10 @@ function UserPage({ route }: { route: Route<typeof routes.user> }) {
 }
 
 function Navigation() {
+  const homeRoute = routes.home();
   return (
     <nav>
-      <a {...routes.home().link}>Home</a>
+      <a {...homeRoute.link}>Home</a>
       <a {...routes.user({ userId: "abc" }).link}>User "abc"</a>
     </nav>
   );

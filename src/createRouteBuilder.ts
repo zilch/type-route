@@ -1,10 +1,8 @@
 import {
-  ClickEvent,
-  Link,
-  SharedRouterProperties,
   UmbrellaRouteDef,
   UmbrellaRouteBuilder,
   UmbrellaRoute,
+  RouterContext,
 } from "./types";
 import { buildPathDefs } from "./buildPathDefs";
 import { getParamDefsOfType } from "./getParamDefsOfType";
@@ -16,7 +14,7 @@ import { preventDefaultLinkClickBehavior } from "./preventDefaultAnchorClickBeha
 export function createRouteBuilder(
   routeName: string,
   routeDef: UmbrellaRouteDef,
-  getSharedRouterProperties: () => SharedRouterProperties
+  getRouterContext: () => RouterContext
 ): UmbrellaRouteBuilder {
   const pathDefs = buildPathDefs(
     routeName,
@@ -27,15 +25,41 @@ export function createRouteBuilder(
   const build: UmbrellaRouteBuilder = function (
     params: Record<string, unknown> = {}
   ) {
-    assertRouteDefFnArgs("build", [].slice.call(arguments), params);
+    if (__DEV__) {
+      assert(`routes.${routeName}`, [
+        assert.numArgs([].slice.call(arguments), 0, 1),
+        assert.type("object", "params", params),
+      ]);
+    }
+
+    const routerContext = getRouterContext();
+    const { history, navigate } = routerContext;
+
+    const location = createLocation({
+      routeName,
+      paramCollection: params,
+      routerContext,
+    });
+
+    const href = history.createHref({
+      pathname: location.path,
+      search: location.query,
+    });
 
     const route: UmbrellaRoute = {
       name: routeName,
       params,
-      href: href(params),
-      link: link(params),
-      push: () => push(params),
-      replace: () => replace(params),
+      href,
+      link: {
+        href,
+        onClick: (event) => {
+          if (preventDefaultLinkClickBehavior(event)) {
+            navigate(route, true, false);
+          }
+        },
+      },
+      push: () => navigate(route, true, false),
+      replace: () => navigate(route, true, true),
     };
 
     return route as any;
@@ -48,112 +72,9 @@ export function createRouteBuilder(
       pathDefs,
       params: routeDef["~internal"].params,
     }) as any,
+    pathDefs,
     Route: null as any,
   };
 
   return build;
-
-  function link(params: Record<string, unknown>): Link {
-    assertRouteDefFnArgs("link", [].slice.call(arguments), params);
-
-    return {
-      href: href(params),
-      onClick: (event: ClickEvent = {}) => {
-        if (preventDefaultLinkClickBehavior(event)) {
-          const {
-            navigate,
-            queryStringSerializer,
-            arraySeparator,
-          } = getSharedRouterProperties();
-
-          navigate(
-            createLocation({
-              paramCollection: params,
-              paramDefCollection: routeDef["~internal"].params,
-              pathDefs,
-              queryStringSerializer,
-              arraySeparator,
-            })
-          );
-        }
-      },
-    };
-  }
-
-  function href(params: Record<string, unknown>) {
-    assertRouteDefFnArgs("link", [].slice.call(arguments), params);
-
-    const {
-      queryStringSerializer,
-      arraySeparator,
-      history,
-    } = getSharedRouterProperties();
-
-    const location = createLocation({
-      paramCollection: params,
-      paramDefCollection: routeDef["~internal"].params,
-      pathDefs,
-      queryStringSerializer,
-      arraySeparator,
-    });
-
-    return history.createHref({
-      pathname: location.path,
-      search: location.query,
-    });
-  }
-
-  function push(params: Record<string, unknown>) {
-    assertRouteDefFnArgs("link", [].slice.call(arguments), params);
-
-    const {
-      navigate,
-      queryStringSerializer,
-      arraySeparator,
-    } = getSharedRouterProperties();
-
-    return navigate(
-      createLocation({
-        paramCollection: params,
-        paramDefCollection: routeDef["~internal"].params,
-        pathDefs,
-        queryStringSerializer,
-        arraySeparator,
-      })
-    );
-  }
-
-  function replace(params: Record<string, unknown>) {
-    assertRouteDefFnArgs("link", [].slice.call(arguments), params);
-
-    const {
-      navigate,
-      queryStringSerializer,
-      arraySeparator,
-    } = getSharedRouterProperties();
-
-    return navigate(
-      createLocation({
-        paramCollection: params,
-        paramDefCollection: routeDef["~internal"].params,
-        pathDefs,
-        queryStringSerializer,
-        arraySeparator,
-      }),
-      true
-    );
-  }
-
-  function assertRouteDefFnArgs(
-    fnName: string,
-    args: any[],
-    params: Record<string, unknown>
-  ) {
-    if (__DEV__) {
-      assert(`routes.${routeName}.${fnName}`, [
-        assert.numArgs(args, 0, 1),
-        assert.type("object", "params", params),
-      ]);
-    }
-  }
 }

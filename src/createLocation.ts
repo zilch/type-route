@@ -1,10 +1,4 @@
-import {
-  RouterLocation,
-  PathDef,
-  QueryStringSerializer,
-  UmbrellaParamDefCollection,
-  UmbrellaParamDef,
-} from "./types";
+import { RouterLocation, UmbrellaParamDef, RouterContext } from "./types";
 import { assert } from "./assert";
 import { TypeRouteError } from "./TypeRouteError";
 import { typeOf } from "./typeOf";
@@ -16,17 +10,19 @@ type ParamWithContextCollection = Record<
 
 export function createLocation({
   paramCollection,
-  paramDefCollection,
-  pathDefs,
-  queryStringSerializer,
-  arraySeparator,
+  routeName,
+  routerContext,
 }: {
+  routeName: string;
   paramCollection: Record<string, unknown>;
-  paramDefCollection: UmbrellaParamDefCollection;
-  pathDefs: PathDef[];
-  queryStringSerializer: QueryStringSerializer;
-  arraySeparator: string;
+  routerContext: RouterContext;
 }): RouterLocation {
+  const paramDefCollection =
+    routerContext.routeDefs[routeName]["~internal"].params;
+  const pathDefs = routerContext.routes[routeName]["~internal"].pathDefs;
+
+  const { arraySeparator, queryStringSerializer } = routerContext;
+
   const params = {
     path: {} as ParamWithContextCollection,
     query: {} as ParamWithContextCollection,

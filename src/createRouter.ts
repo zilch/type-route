@@ -1,33 +1,31 @@
 import {
   Router,
-  RouterLocation,
   Action,
   RouterConfig,
-  QueryStringSerializer,
-  SharedRouterProperties,
   SessionConfig,
   UmbrellaRouteBuilder,
   UmbrellaRouter,
   UmbrellaNavigationHandler,
   UmbrellaRoute,
-  Match,
   LocationState,
   UmbrellaRouteDefCollection,
+  RouterContext,
 } from "./types";
 import { createRouteBuilder } from "./createRouteBuilder";
 import {
   createBrowserHistory,
   History,
-  Location as HistoryLocation,
   createMemoryHistory,
   createHashHistory,
 } from "history";
 import { createQueryStringSerializer } from "./createQueryStringSerializer";
 import { assert } from "./assert";
 import { TypeRouteError } from "./TypeRouteError";
-import { areLocationsEqual } from "./areLocationsEqual";
-import { getLocationFromUrl } from "./getLocationFromUrl";
-import { preventDefaultLinkClickBehavior } from "./preventDefaultAnchorClickBehavior";
+import { areRoutesEqual } from "./areRoutesEqual";
+import { getRoute } from "./getRoute";
+import { getRouterLocation } from "./getRouterLocation";
+import { getRouteByHref } from "./getRouteByHref";
+import { createLocation } from "./createLocation";
 
 export function createRouter<
   TRouteDefCollection extends { [routeName: string]: any }
@@ -39,75 +37,85 @@ export function createRouter<
   routeDefs: TRouteDefCollection
 ): Router<TRouteDefCollection>;
 export function createRouter(...args: any[]): UmbrellaRouter {
-  const routeDefs: UmbrellaRouteDefCollection =
-    args.length === 1 ? args[0] : args[1];
-  const config: RouterConfig = args.length === 1 ? {} : args[0];
+  const { routeDefs, config } = parseArgs(args);
+  const routes = createRouteBuilderCollection(getRouterContext);
 
-  if (__DEV__) {
-    assert("createRouter", [
-      assert.numArgs([].slice.call(arguments), 1, 2),
-      assert.collectionOfType("RouteDef", "routeDefs", routeDefs),
-      assert.type("object", "config", config),
-    ]);
+  const navigationHandlerManager = createNavigationHandlerManager({
+    startListening: () => {
+      unblock = history.block((rawLocation, rawAction) => {
+        if (skipNextEnvironmentTriggeredNavigation) {
+          skipNextEnvironmentTriggeredNavigation = false;
+          return;
+        }
 
-    if (config.arrayFormat?.queryString && config.queryStringSerializer) {
-      throw TypeRouteError.Query_string_array_format_and_custom_query_string_serializer_may_not_both_be_provided.create();
-    }
-  }
+        const location = getRouterLocation(rawLocation);
+        const action = rawAction.toLowerCase() as Action;
+        const { route, primaryPath } = getRoute(location, getRouterContext());
+
+        const proceed = handleNavigation(route, primaryPath, action);
+
+        if (!proceed) {
+          return false;
+        }
+      });
+    },
+    stopListening: () => unblock?.(),
+  });
 
   const arraySeparator = config.arrayFormat?.separator ?? ",";
+  const queryStringSerializer =
+    config.queryStringSerializer ??
+    createQueryStringSerializer({
+      queryStringArrayFormat: config.arrayFormat?.queryString,
+      arraySeparator,
+    });
 
   let history: History<LocationState>;
-  let routes: Record<string, UmbrellaRouteBuilder> = {};
+  let unblock: (() => void) | undefined;
+  let skipNextEnvironmentTriggeredNavigation = false;
+  let skipNextApplicationTriggeredNavigation = false;
+  let previousRoute: UmbrellaRoute | null = null;
+  let initialRoute: UmbrellaRoute | null = null;
 
-  for (const routeName of Object.keys(routeDefs)) {
-    routes[routeName] = createRouteBuilder(
-      routeName,
-      routeDefs[routeName],
-      getSharedRouterProperties
-    );
-  }
-
-  const navigationHandlers: {
-    id: number;
-    handler: UmbrellaNavigationHandler;
-  }[] = [];
-  let initialRoute: UmbrellaRoute;
-  let previousRoute: UmbrellaRoute | undefined;
-  let unblock: (() => void) | undefined = undefined;
-  let navigationHandlerIdCounter = 0;
-  let queryStringSerializer: QueryStringSerializer;
-  let scrollToTop: boolean;
-  let skipHandlingNextBrowserNavigation = false;
-  let skipHandlingNextNavigation = false;
-
-  initializeRouter(config);
+  applySessionConfig(config.session);
 
   return {
     routes,
-    listen,
+    listen: (handler) => navigationHandlerManager.add(handler),
     session: {
-      push(url, state) {
+      push(href, state) {
         if (__DEV__) {
           assert("[RouterSessionHistory].push", [
             assert.numArgs([].slice.call(arguments), 1, 2),
-            assert.type("string", "url", url),
+            assert.type("string", "href", href),
             assert.type(["object", "undefined"], "state", state),
           ]);
         }
 
-        return navigate(getLocationFromUrl(url, state));
+        const { route, primaryPath } = getRouteByHref(
+          href,
+          state,
+          getRouterContext()
+        );
+
+        return navigate(route, primaryPath, false);
       },
-      replace(url, state) {
+      replace(href, state) {
         if (__DEV__) {
           assert("[RouterSessionHistory].replace", [
             assert.numArgs([].slice.call(arguments), 1, 2),
-            assert.type("string", "url", url),
+            assert.type("string", "href", href),
             assert.type(["object", "undefined"], "state", state),
           ]);
         }
 
-        return navigate(getLocationFromUrl(url, state), true);
+        const { route, primaryPath } = getRouteByHref(
+          href,
+          state,
+          getRouterContext()
+        );
+
+        return navigate(route, primaryPath, true);
       },
       back(amount = 1) {
         if (__DEV__) {
@@ -138,13 +146,16 @@ export function createRouter(...args: any[]): UmbrellaRouter {
 
         if (!initialRoute) {
           let result = getRoute(
-            getRouterLocationFromHistoryLocation(history.location)
+            getRouterLocation(history.location),
+            getRouterContext()
           );
+
           if (!result.primaryPath) {
-            skipHandlingNextNavigation = true;
+            skipNextApplicationTriggeredNavigation = true;
             result.route.replace();
             result = getRoute(
-              getRouterLocationFromHistoryLocation(history.location)
+              getRouterLocation(history.location),
+              getRouterContext()
             );
           }
           initialRoute = result.route;
@@ -160,18 +171,26 @@ export function createRouter(...args: any[]): UmbrellaRouter {
           ]);
         }
 
-        return initializeRouter({ session, queryStringSerializer });
+        return applySessionConfig(session);
       },
     },
   };
 
-  function initializeRouter(config: RouterConfig) {
-    const sessionConfig: SessionConfig = config.session ?? {
+  function applySessionConfig(
+    sessionConfig: SessionConfig = {
       type:
         typeof window !== "undefined" && typeof window.document !== "undefined"
           ? "browser"
           : "memory",
-    };
+    }
+  ) {
+    if (
+      typeof window === "object" &&
+      typeof window?.history === "object" &&
+      window.history !== null
+    ) {
+      window.history.scrollRestoration = "manual";
+    }
 
     if (sessionConfig.type === "memory") {
       history = createMemoryHistory({
@@ -187,111 +206,61 @@ export function createRouter(...args: any[]): UmbrellaRouter {
         forceRefresh: sessionConfig.forceRefresh,
       });
     }
-
-    scrollToTop = config.scrollToTop ?? true;
-
-    queryStringSerializer =
-      config.queryStringSerializer ??
-      createQueryStringSerializer({
-        queryStringArrayFormat: config.arrayFormat?.queryString,
-        arraySeparator,
-      });
   }
 
-  function listen(handler: UmbrellaNavigationHandler) {
-    const id = addNavigationHandler(handler);
-
-    return removeListener;
-
-    function removeListener() {
-      removeNavigationHandler(id);
-    }
-  }
-
-  function navigate(location: RouterLocation, replace?: boolean) {
+  function navigate(
+    route: UmbrellaRoute,
+    primaryPath: boolean,
+    replace: boolean
+  ) {
     const proceed =
-      skipHandlingNextNavigation ||
-      handleNavigation(location, replace ? "replace" : "push");
+      skipNextApplicationTriggeredNavigation ||
+      handleNavigation(route, primaryPath, replace ? "replace" : "push");
 
-    if (skipHandlingNextNavigation) {
-      skipHandlingNextNavigation = false;
+    if (skipNextApplicationTriggeredNavigation) {
+      skipNextApplicationTriggeredNavigation = false;
     }
 
     if (proceed) {
-      const { query, path, state } = location;
-      const href = query ? `${path}?${query}` : path;
-      skipHandlingNextBrowserNavigation = true;
-      history[replace ? "replace" : "push"](
-        href,
-        state === undefined
+      skipNextEnvironmentTriggeredNavigation = true;
+      const state =
+        route.name === false
           ? undefined
-          : {
-              stateParams: state,
-            }
+          : createLocation({
+              routeName: route.name,
+              paramCollection: route.params,
+              routerContext: getRouterContext(),
+            }).state;
+
+      history[replace ? "replace" : "push"](
+        route.href,
+        state ? { state } : undefined
       );
     }
 
     return proceed;
   }
 
-  function addNavigationHandler(handler: UmbrellaNavigationHandler) {
-    const id = navigationHandlerIdCounter++;
-
-    navigationHandlers.push({
-      id,
-      handler,
-    });
-
-    if (navigationHandlers.length === 1) {
-      unblock = history.block((historyLocation, historyAction) => {
-        if (skipHandlingNextBrowserNavigation) {
-          skipHandlingNextBrowserNavigation = false;
-          return;
-        }
-
-        const location = getRouterLocationFromHistoryLocation(historyLocation);
-        const action = historyAction.toLowerCase() as Action;
-
-        const proceed = handleNavigation(location, action);
-
-        if (!proceed) {
-          return false;
-        }
-      });
-    }
-
-    return id;
-  }
-
-  function removeNavigationHandler(idToRemove: number) {
-    const indexToRemove = navigationHandlers
-      .map(({ id }) => id)
-      .indexOf(idToRemove);
-    navigationHandlers.splice(indexToRemove, 1);
-
-    if (navigationHandlers.length === 0) {
-      unblock?.();
-    }
-  }
-
-  function handleNavigation(location: RouterLocation, action: Action) {
-    const { route: nextRoute, primaryPath } = getRoute(location);
-    const currentLocation = getRouterLocationFromHistoryLocation(
-      history.location
-    );
-
+  function handleNavigation(
+    nextRoute: UmbrellaRoute,
+    primaryPath: boolean,
+    action: Action
+  ) {
     if (!primaryPath) {
       return nextRoute.replace();
     }
 
-    if (areLocationsEqual(location, currentLocation)) {
+    if (
+      previousRoute !== null &&
+      areRoutesEqual(previousRoute, nextRoute, getRouterContext())
+    ) {
       return false;
     }
 
-    for (const { handler } of navigationHandlers) {
-      const navigationHandlerResult = handler({
+    for (const handler of navigationHandlerManager.getHandlers()) {
+      const proceed = handler({
         nextRoute,
-        previousRoute: previousRoute ?? null,
+        previousRoute,
         action,
       });
 
@@ -300,107 +269,106 @@ export function createRouter(...args: any[]): UmbrellaRouter {
           assert.type(
             ["boolean", "undefined"],
             "navigationHandlerResult",
-            navigationHandlerResult
+            proceed
           ),
         ]);
       }
 
-      if (navigationHandlerResult === false) {
+      if (proceed === false) {
         return false;
       }
     }
 
-    if (
-      action === "push" &&
-      scrollToTop &&
-      typeof window === "object" &&
-      window !== null
-    ) {
-      setTimeout(() => {
-        window.scrollTo?.(0, 0);
-      });
-    }
-
     previousRoute = nextRoute;
+
     return true;
   }
 
-  function getRoute(
-    location: RouterLocation
-  ): { route: UmbrellaRoute; primaryPath: boolean } {
-    let nonExactMatch: (Match & { routeName: string }) | false = false;
-
-    for (const routeName in routes) {
-      const match = routes[routeName]["~internal"].match({
-        routerLocation: location,
-        queryStringSerializer,
-        arraySeparator,
-      });
-
-      if (match === false) {
-        continue;
-      }
-
-      if (match.numExtraneousParams === 0) {
-        return {
-          route: routes[routeName](match.params),
-          primaryPath: match.primaryPath,
-        };
-      }
-
-      if (
-        nonExactMatch === false ||
-        match.numExtraneousParams < nonExactMatch.numExtraneousParams
-      ) {
-        nonExactMatch = { ...match, routeName };
-      }
-    }
-
-    if (nonExactMatch) {
-      return {
-        route: routes[nonExactMatch.routeName](nonExactMatch.params),
-        primaryPath: nonExactMatch.primaryPath,
-      };
-    }
-
-    const notFoundHref =
-      location.path + (location.query ? `?${location.query}` : "");
-
-    const notFoundRoute: UmbrellaRoute = {
-      name: false,
-      params: {},
-      href: notFoundHref,
-      link: {
-        href: notFoundHref,
-        onClick: (event) => {
-          if (preventDefaultLinkClickBehavior(event)) {
-            navigate(location);
-          }
-        },
-      },
-      push: () => navigate(location),
-      replace: () => navigate(location, true),
-    };
-
-    return { route: notFoundRoute, primaryPath: true };
-  }
-
-  function getSharedRouterProperties(): SharedRouterProperties {
+  function getRouterContext(): RouterContext {
     return {
-      navigate,
       queryStringSerializer,
       arraySeparator,
+      navigate,
       history,
+      routeDefs,
+      routes,
     };
   }
 }
 
-function getRouterLocationFromHistoryLocation(
-  historyLocation: HistoryLocation<LocationState>
-): RouterLocation {
-  return {
-    path: historyLocation.pathname,
-    query: historyLocation.search ? historyLocation.search.slice(1) : undefined,
-    state: historyLocation.state?.stateParams || undefined,
-  };
+function createNavigationHandlerManager({
+  startListening,
+  stopListening,
+}: {
+  startListening: () => void;
+  stopListening: () => void;
+}) {
+  const handlerIdList: {
+    handler: UmbrellaNavigationHandler;
+    id: number;
+  }[] = [];
+  let idCounter = 0;
+
+  return { add, getHandlers };
+
+  function getHandlers() {
+    return handlerIdList.map(({ handler }) => handler);
+  }
+
+  function add(handler: UmbrellaNavigationHandler) {
+    const id = idCounter++;
+    handlerIdList.push({ id, handler });
+
+    if (handlerIdList.length === 1) {
+      startListening();
+    }
+
+    return remove;
+
+    function remove() {
+      const index = handlerIdList.map(({ id }) => id).indexOf(id);
+      if (index >= 0) {
+        handlerIdList.splice(index, 1);
+        if (handlerIdList.length === 0) {
+          stopListening();
+        }
+      }
+    }
+  }
+}
+
+function parseArgs(args: any[]) {
+  const routeDefs: UmbrellaRouteDefCollection =
+    args.length === 1 ? args[0] : args[1];
+  const config: RouterConfig = args.length === 1 ? {} : args[0];
+
+  if (__DEV__) {
+    assert("createRouter", [
+      assert.numArgs([].slice.call(arguments), 1, 2),
+      assert.collectionOfType("RouteDef", "routeDefs", routeDefs),
+      assert.type("object", "config", config),
+    ]);
+
+    if (config.arrayFormat?.queryString && config.queryStringSerializer) {
+      throw TypeRouteError.Query_string_array_format_and_custom_query_string_serializer_may_not_both_be_provided.create();
+    }
+  }
+
+  return { routeDefs, config };
+}
+
+function createRouteBuilderCollection(getRouterContext: () => RouterContext) {
+  const routes: Record<string, UmbrellaRouteBuilder> = {};
+  const { routeDefs } = getRouterContext();
+
+  for (const routeName in routeDefs) {
+    const routeDef = routeDefs[routeName];
+    routes[routeName] = createRouteBuilder(
+      routeName,
+      routeDef,
+      getRouterContext
+    );
+  }
+
+  return routes;
 }
