@@ -1,4 +1,4 @@
-export const stringUtils = { startsWith, endsWith };
+export const stringUtils = { startsWith, endsWith, splitFirst };
 
 function startsWith(value: string, start: string) {
   for (let i = 0; i < start.length; i++) {
@@ -16,4 +16,9 @@ function endsWith(value: string, end: string) {
     }
   }
   return true;
+}
+
+export function splitFirst(value: string, split: string) {
+  const [first, ...rest] = value.split(split);
+  return [first, rest.join(split)] as const;
 }

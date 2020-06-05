@@ -1,10 +1,12 @@
 import { RouterLocation, UmbrellaRoute, Match, RouterContext } from "./types";
-import { preventDefaultLinkClickBehavior } from "./preventDefaultAnchorClickBehavior";
+import { buildRoute } from "./buildRoute";
 
-export function getRoute(
+export function getMatchingRoute(
   location: RouterLocation,
-  { routes, queryStringSerializer, arraySeparator, navigate }: RouterContext
+  routerContext: RouterContext
 ): { route: UmbrellaRoute; primaryPath: boolean } {
+  const { routes, queryStringSerializer, arraySeparator } = routerContext;
+
   let nonExactMatch: (Match & { routeName: string }) | false = false;
 
   for (const routeName in routes) {
@@ -40,24 +42,13 @@ export function getRoute(
     };
   }
 
-  const notFoundHref =
-    location.path + (location.query ? `?${location.query}` : "");
-
-  const notFoundRoute: UmbrellaRoute = {
-    name: false,
-    params: {},
-    href: notFoundHref,
-    link: {
-      href: notFoundHref,
-      onClick: (event) => {
-        if (preventDefaultLinkClickBehavior(event)) {
-          navigate(notFoundRoute, true, false);
-        }
-      },
-    },
-    push: () => navigate(notFoundRoute, true, false),
-    replace: () => navigate(notFoundRoute, true, true),
+  return {
+    route: buildRoute({
+      routeName: false,
+      params: {},
+      location,
+      routerContext,
+    }),
+    primaryPath: true,
   };
-
-  return { route: notFoundRoute, primaryPath: true };
 }

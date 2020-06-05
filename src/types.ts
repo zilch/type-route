@@ -275,6 +275,10 @@ export type RouteDefCollectionRoute<
 
 export type NotFoundRoute = Route<false, {}>;
 
+export type HiddenRouteProperties = {
+  location: RouterLocation;
+};
+
 export type Route<TName, TParamDefCollection> = {
   name: TName;
   params: OutputRouteParams<TParamDefCollection>;

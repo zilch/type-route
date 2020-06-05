@@ -1,7 +1,9 @@
 import { RouterContext } from "./types";
-import { splitFirst } from "./splitFirst";
-import { getRouterLocation } from "./getRouterLocation";
-import { getRoute } from "./getRoute";
+import { convertToRouterLocationFromHistoryLocation } from "./convertToRouterLocationFromHistoryLocation";
+import { getMatchingRoute } from "./getMatchingRoute";
+import { stringUtils } from "./stringUtils";
+
+const { splitFirst } = stringUtils;
 
 export function getRouteByHref(
   href: string,
@@ -10,12 +12,12 @@ export function getRouteByHref(
 ) {
   const [pathname, search] = splitFirst(href, "?");
 
-  const location = getRouterLocation({
+  const location = convertToRouterLocationFromHistoryLocation({
     pathname,
     search,
     state,
     hash: splitFirst(href, "#")[1],
   });
 
-  return getRoute(location, routerContext);
+  return getMatchingRoute(location, routerContext);
 }

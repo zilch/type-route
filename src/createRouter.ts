@@ -5,7 +5,6 @@ import {
   SessionConfig,
   UmbrellaRouteBuilder,
   UmbrellaRouter,
-  UmbrellaNavigationHandler,
   UmbrellaRoute,
   LocationState,
   UmbrellaRouteDefCollection,
@@ -22,10 +21,11 @@ import { createQueryStringSerializer } from "./createQueryStringSerializer";
 import { assert } from "./assert";
 import { TypeRouteError } from "./TypeRouteError";
 import { areRoutesEqual } from "./areRoutesEqual";
-import { getRoute } from "./getRoute";
-import { getRouterLocation } from "./getRouterLocation";
+import { getMatchingRoute } from "./getMatchingRoute";
+import { convertToRouterLocationFromHistoryLocation } from "./convertToRouterLocationFromHistoryLocation";
 import { getRouteByHref } from "./getRouteByHref";
-import { createLocation } from "./createLocation";
+import { getHiddenRouteProperties } from "./getHiddenRouteProperties";
+import { createNavigationHandlerManager } from "./createNavigationHandlerManager";
 
 export function createRouter<
   TRouteDefCollection extends { [routeName: string]: any }
@@ -48,9 +48,14 @@ export function createRouter(...args: any[]): UmbrellaRouter {
           return;
         }
 
-        const location = getRouterLocation(rawLocation);
+        const location = convertToRouterLocationFromHistoryLocation(
+          rawLocation
+        );
         const action = rawAction.toLowerCase() as Action;
-        const { route, primaryPath } = getRoute(location, getRouterContext());
+        const { route, primaryPath } = getMatchingRoute(
+          location,
+          getRouterContext()
+        );
 
         const proceed = handleNavigation(route, primaryPath, action);
 
@@ -145,16 +150,16 @@ export function createRouter(...args: any[]): UmbrellaRouter {
         }
 
         if (!initialRoute) {
-          let result = getRoute(
-            getRouterLocation(history.location),
+          let result = getMatchingRoute(
+            convertToRouterLocationFromHistoryLocation(history.location),
             getRouterContext()
           );
 
           if (!result.primaryPath) {
             skipNextApplicationTriggeredNavigation = true;
             result.route.replace();
-            result = getRoute(
-              getRouterLocation(history.location),
+            result = getMatchingRoute(
+              convertToRouterLocationFromHistoryLocation(history.location),
               getRouterContext()
             );
           }
@@ -223,15 +228,7 @@ export function createRouter(...args: any[]): UmbrellaRouter {
 
     if (proceed) {
       skipNextEnvironmentTriggeredNavigation = true;
-      const state =
-        route.name === false
-          ? undefined
-          : createLocation({
-              routeName: route.name,
-              paramCollection: route.params,
-              routerContext: getRouterContext(),
-            }).state;
-
+      const state = getHiddenRouteProperties(route).location.state;
       history[replace ? "replace" : "push"](
         route.href,
         state ? { state } : undefined
@@ -250,10 +247,7 @@ export function createRouter(...args: any[]): UmbrellaRouter {
       return nextRoute.replace();
     }
 
-    if (
-      previousRoute !== null &&
-      areRoutesEqual(previousRoute, nextRoute, getRouterContext())
-    ) {
+    if (previousRoute !== null && areRoutesEqual(previousRoute, nextRoute)) {
       return false;
     }
 
@@ -293,47 +287,6 @@ export function createRouter(...args: any[]): UmbrellaRouter {
       routeDefs,
       routes,
     };
-  }
-}
-
-function createNavigationHandlerManager({
-  startListening,
-  stopListening,
-}: {
-  startListening: () => void;
-  stopListening: () => void;
-}) {
-  const handlerIdList: {
-    handler: UmbrellaNavigationHandler;
-    id: number;
-  }[] = [];
-  let idCounter = 0;
-
-  return { add, getHandlers };
-
-  function getHandlers() {
-    return handlerIdList.map(({ handler }) => handler);
-  }
-
-  function add(handler: UmbrellaNavigationHandler) {
-    const id = idCounter++;
-    handlerIdList.push({ id, handler });
-
-    if (handlerIdList.length === 1) {
-      startListening();
-    }
-
-    return remove;
-
-    function remove() {
-      const index = handlerIdList.map(({ id }) => id).indexOf(id);
-      if (index >= 0) {
-        handlerIdList.splice(index, 1);
-        if (handlerIdList.length === 0) {
-          stopListening();
-        }
-      }
-    }
   }
 }
 

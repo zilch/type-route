@@ -20,10 +20,6 @@ export const groups = {
   hi: createGroup([routes.home]),
 };
 
-listen((event) => {
-  console.log("href", event.nextRoute.href);
-});
-
 function App() {
   const [route, setRoute] = useState(() => session.getInitialRoute());
   useEffect(() => listen((event) => setRoute(event.nextRoute)), []);

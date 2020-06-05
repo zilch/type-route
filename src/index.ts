@@ -3,8 +3,7 @@ export { defineRoute } from "./defineRoute";
 export { param } from "./param";
 export { createGroup } from "./createGroup";
 export { noMatch } from "./noMatch";
-export { preventDefaultLinkClickBehavior } from "./preventDefaultAnchorClickBehavior";
-export { assertUnreachable } from "./assertUnreachable";
+export { preventDefaultLinkClickBehavior } from "./preventDefaultLinkClickBehavior";
 export {
   GetRoute as Route,
   Link,
@@ -14,4 +13,5 @@ export {
   RouterConfig,
   MemoryHistorySessionConfig,
   BrowserHistorySessionConfig,
+  HashHistorySessionConfig,
 } from "./types";

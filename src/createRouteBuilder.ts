@@ -1,15 +1,10 @@
-import {
-  UmbrellaRouteDef,
-  UmbrellaRouteBuilder,
-  UmbrellaRoute,
-  RouterContext,
-} from "./types";
+import { UmbrellaRouteDef, UmbrellaRouteBuilder, RouterContext } from "./types";
 import { buildPathDefs } from "./buildPathDefs";
 import { getParamDefsOfType } from "./getParamDefsOfType";
 import { createLocation } from "./createLocation";
 import { createMatcher } from "./createMatcher";
 import { assert } from "./assert";
-import { preventDefaultLinkClickBehavior } from "./preventDefaultAnchorClickBehavior";
+import { buildRoute } from "./buildRoute";
 
 export function createRouteBuilder(
   routeName: string,
@@ -33,36 +28,23 @@ export function createRouteBuilder(
     }
 
     const routerContext = getRouterContext();
-    const { history, navigate } = routerContext;
+
+    const { arraySeparator, queryStringSerializer } = routerContext;
 
     const location = createLocation({
-      routeName,
       paramCollection: params,
-      routerContext,
+      paramDefCollection: routeDef["~internal"].params,
+      arraySeparator,
+      queryStringSerializer,
+      pathDefs,
     });
 
-    const href = history.createHref({
-      pathname: location.path,
-      search: location.query,
-    });
-
-    const route: UmbrellaRoute = {
-      name: routeName,
+    return buildRoute({
+      routeName,
       params,
-      href,
-      link: {
-        href,
-        onClick: (event) => {
-          if (preventDefaultLinkClickBehavior(event)) {
-            navigate(route, true, false);
-          }
-        },
-      },
-      push: () => navigate(route, true, false),
-      replace: () => navigate(route, true, true),
-    };
-
-    return route as any;
+      location,
+      routerContext,
+    }) as any;
   };
 
   build.routeName = routeName;

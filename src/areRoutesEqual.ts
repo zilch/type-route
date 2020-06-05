@@ -1,17 +1,13 @@
-import { UmbrellaRoute, RouterContext } from "./types";
-import { createLocation } from "./createLocation";
+import { UmbrellaRoute } from "./types";
+import { getHiddenRouteProperties } from "./getHiddenRouteProperties";
 
-export function areRoutesEqual(
-  routeA: UmbrellaRoute,
-  routeB: UmbrellaRoute,
-  routerContext: RouterContext
-) {
+export function areRoutesEqual(routeA: UmbrellaRoute, routeB: UmbrellaRoute) {
   if (routeA.href !== routeB.href) {
     return false;
   }
 
-  const routeAState = getState(routeA);
-  const routeBState = getState(routeB);
+  const routeAState = getHiddenRouteProperties(routeA).location.state;
+  const routeBState = getHiddenRouteProperties(routeB).location.state;
 
   if (routeAState === undefined || routeBState === undefined) {
     return routeAState === routeBState;
@@ -31,14 +27,4 @@ export function areRoutesEqual(
   }
 
   return true;
-
-  function getState(route: UmbrellaRoute) {
-    return route.name === false
-      ? undefined
-      : createLocation({
-          routeName: route.name,
-          paramCollection: route.params,
-          routerContext,
-        }).state;
-  }
 }

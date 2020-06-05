@@ -1,7 +1,7 @@
 import { RouterLocation, LocationState } from "./types";
 import { Location as HistoryLocation } from "history";
 
-export function getRouterLocation(
+export function convertToRouterLocationFromHistoryLocation(
   rawLocation: HistoryLocation<LocationState>
 ): RouterLocation {
   return {
