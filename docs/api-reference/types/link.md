@@ -2,4 +2,9 @@
 title: Link
 ---
 
-Hello
+```ts
+type Link = {
+  href: string;
+  onClick: OnClickHandler;
+}
+```
