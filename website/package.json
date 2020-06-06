@@ -1,11 +1,12 @@
 {
   "private": true,
   "scripts": {
-    "prestart": "webpack",
-    "prebuild": "webpack",
+    "prestart": "npm run build-sidebars && webpack",
+    "prebuild": "npm run build-sidebars && webpack",
     "examples": "docusaurus-examples",
     "start": "docusaurus-start",
     "build": "docusaurus-build",
+    "build-sidebars": "node ./build-sidebars.js",
     "publish-gh-pages": "docusaurus-publish",
     "write-translations": "docusaurus-write-translations",
     "version": "docusaurus-version",

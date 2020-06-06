@@ -305,7 +305,7 @@ export type UmbrellaNavigationHandler = NavigationHandler<
   UmbrellaRouteDefCollection
 >;
 
-export type RouterSessionHistory<TRouteDefCollection> = {
+export type RouterSession<TRouteDefCollection> = {
   push(href: string, state?: any): boolean;
   replace(href: string, state?: any): boolean;
   getInitialRoute(): RouteDefCollectionRoute<TRouteDefCollection>;
@@ -313,9 +313,7 @@ export type RouterSessionHistory<TRouteDefCollection> = {
   forward(amount?: number): void;
   reset(options: SessionConfig): void;
 };
-export type UmbrellaRouterHistory = RouterSessionHistory<
-  UmbrellaRouteDefCollection
->;
+export type UmbrellaRouterSession = RouterSession<UmbrellaRouteDefCollection>;
 
 export type MemoryHistorySessionConfig = {
   type: "memory";
@@ -369,7 +367,7 @@ export type Router<TRouteDefCollection extends { [routeName: string]: any }> = {
       TRouteDefCollection[TRouteName]["~internal"]["params"]
     >;
   };
-  session: RouterSessionHistory<TRouteDefCollection>;
+  session: RouterSession<TRouteDefCollection>;
   listen: (handler: NavigationHandler<TRouteDefCollection>) => () => void;
 };
 export type UmbrellaRouter = Router<UmbrellaRouteDefCollection>;

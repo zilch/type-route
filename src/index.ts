@@ -11,7 +11,4 @@ export {
   QueryStringSerializer,
   SessionConfig,
   RouterConfig,
-  MemoryHistorySessionConfig,
-  BrowserHistorySessionConfig,
-  HashHistorySessionConfig,
 } from "./types";

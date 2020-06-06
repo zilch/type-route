@@ -1,0 +1,5 @@
+---
+title: Wildcard Routes
+---
+
+Hello

@@ -1,23 +1,23 @@
 {
   "docs": {
     "Introduction": [
-      "introduction/getting-started"
+      "Introduction/Getting-Started"
     ],
     "Guides": [
-      "guides/simple-react-example",
-      "guides/nested-similar-routes",
-      "guides/no-match-404",
-      "guides/redirects",
-      "guides/route-parameters",
-      "guides/complex-route-parameters",
-      "guides/rendering-links",
-      "guides/programmatic-navigation",
-      "guides/preventing-navigation",
-      "guides/scroll-restoration",
-      "guides/server-side-rendering",
-      "guides/page-layout",
-      "guides/route-components",
-      "guides/guide-missing"
+      "Guides/Simple-React-Example",
+      "Guides/Nested-similar-routes",
+      "Guides/No-match-404",
+      "Guides/Redirects",
+      "Guides/Route-parameters",
+      "Guides/Complex-route-parameters",
+      "Guides/Rendering-links",
+      "Guides/Programmatic-navigation",
+      "Guides/Preventing-navigation",
+      "Guides/Scroll-restoration",
+      "Guides/Server-side-rendering",
+      "Guides/Page-layout",
+      "Guides/Route-components",
+      "Guides/Guide-missing"
     ],
     "API Reference": [
       {
