@@ -1,0 +1,94 @@
+{
+  "docs": {
+    "Introduction": [
+      "introduction/getting-started"
+    ],
+    "Guides": [
+      "guides/simple-react-example",
+      "guides/code-splitting",
+      "guides/complex-route-parameters",
+      "guides/data-fetching",
+      "guides/nested-and-similar-routes",
+      "guides/no-match-404",
+      "guides/page-layout",
+      "guides/preventing-navigation",
+      "guides/programmatic-navigation",
+      "guides/redirects",
+      "guides/rendering-links",
+      "guides/route-components",
+      "guides/route-parameters",
+      "guides/scroll-restoration",
+      "guides/server-side-rendering",
+      "guides/wildcard-routes",
+      "guides/guide-missing"
+    ],
+    "API Reference": [
+      {
+        "type": "subcategory",
+        "label": "<ParameterDefinition>",
+        "ids": [
+          "api-reference/parameter-definition/param"
+        ]
+      },
+      {
+        "type": "subcategory",
+        "label": "<RouteDefinition>",
+        "ids": [
+          "api-reference/route-definition/define-route",
+          "api-reference/route-definition/extend"
+        ]
+      },
+      {
+        "type": "subcategory",
+        "label": "<RouteGroup>",
+        "ids": [
+          "api-reference/route-group/create-croup",
+          "api-reference/route-group/has"
+        ]
+      },
+      {
+        "type": "subcategory",
+        "label": "<Route>",
+        "ids": [
+          "api-reference/route/action",
+          "api-reference/route/href",
+          "api-reference/route/link",
+          "api-reference/route/name",
+          "api-reference/route/params",
+          "api-reference/route/push",
+          "api-reference/route/replace"
+        ]
+      },
+      {
+        "type": "subcategory",
+        "label": "<Router>",
+        "ids": [
+          "api-reference/router/create-router",
+          "api-reference/router/listen",
+          "api-reference/router/routes",
+          "api-reference/router/session"
+        ]
+      },
+      {
+        "type": "subcategory",
+        "label": "Types",
+        "ids": [
+          "api-reference/types/link",
+          "api-reference/types/query-string-serializer",
+          "api-reference/types/route",
+          "api-reference/types/router-config",
+          "api-reference/types/session-config",
+          "api-reference/types/value-serializer"
+        ]
+      },
+      {
+        "type": "subcategory",
+        "label": "Miscellaneous",
+        "ids": [
+          "api-reference/miscellaneous/no-match",
+          "api-reference/miscellaneous/prevent-default-link-click-behavior"
+        ]
+      }
+    ]
+  }
+}

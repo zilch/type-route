@@ -1,7 +1,7 @@
 const siteConfig = {
   title: "Type Route", // Title for your website.
   tagline: "A flexible, type safe routing library.",
-  url: "https://type-route.js.org", // Your website URL
+  url: "https://type-route.org", // Your website URL
   baseUrl: "/", // Base URL for your project */
   // For github.io type URLs, you would set the url and baseUrl like:
   //   url: 'https://facebook.github.io',

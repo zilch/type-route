@@ -7,7 +7,7 @@ import ReactDOM from "react-dom";
 import { createRouter, defineRoute, param, Route, createGroup } from "./index";
 
 export const { routes, session, listen } = createRouter({
-  home: defineRoute(["/dashboard", "/"]),
+  home: defineRoute(["/dashboarD", "/"]),
   user: defineRoute(
     {
       userId: param.path.string,
@@ -67,7 +67,7 @@ function Navigation() {
   return (
     <nav>
       <a {...homeRoute.link}>Home</a>
-      <a {...routes.user({ userId: "abc" }).link}>User "abc"</a>
+      <a {...routes.user({ userId: "Abc" }).link}>User "abc"</a>
     </nav>
   );
 }
