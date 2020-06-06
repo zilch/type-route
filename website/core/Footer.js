@@ -24,7 +24,10 @@ class Footer extends React.Component {
   render() {
     return (
       <footer className="nav-footer" id="footer">
-        <section className="copyright">{this.props.config.copyright}</section>
+        <section className="copyright">
+          Type Route is a <a href="https://typehero.org">Type Hero</a>{" "}
+          project&nbsp;&nbsp;·&nbsp;&nbsp;Copyright © 2020
+        </section>
       </footer>
     );
   }

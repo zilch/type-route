@@ -7,7 +7,7 @@ body {
 .splash .header {
   background: #383751;
   padding: 40px;
-  padding-bottom: 100px;
+  padding-bottom: 85px;
   text-align: center;
 }
 
@@ -59,8 +59,20 @@ body > * {
   text-align: center;
 }
 
+.nav-footer {
+  padding-top: 36px;
+  padding-bottom: 36px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
 .nav-footer .copyright {
   color: rgba(255, 255, 255, 0.6);
+}
+
+.nav-footer .copyright a {
+  color: rgba(255,255,255,.8);
+  border-bottom: 1px solid rgba(255,255,255,.5);
 }
 
 .primary-button,
@@ -105,10 +117,12 @@ blockquote {
 .docs-next {
   background: rgb(36, 112, 163) !important;
   border-radius: 3px;
+  font-size: 16px;
   color: white !important;
 }
 
 .docs-prev {
+  font-size: 16px;
   color: rgb(36, 112, 163) !important;
   background: white !important;
 }
@@ -182,6 +196,84 @@ a:hover {
   }
 }
 
+.headerWrapper a[href="https://typehero.org/ready-for-production-type-route-v1/01"] {
+  background: #484761 !important;
+  border-radius: 3px;
+  color: white !important;
+  margin-left: 15px !important;
+  display: inline-block !important;
+  height: 34px !important;
+  line-height: 34px !important;
+  padding: 0px 15px !important;
+}
+
+.headerWrapper a[href="https://typehero.org/ready-for-production-type-route-v1/01"]::after {
+  content: '→';
+  margin-left: 8px;
+}
+
+.navigationWrapper a {
+  font-weight: 400 !important;
+}
+
+.navigationSlider .slidingNav ul li {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.aa-dropdown-menu {
+  z-index: 99999 !important;
+}
+
+input#search_input_react {
+  background-color: rgba(0,0,0,0) !important;
+  font-size: 1em !important;
+  font-weight: 100 !important;
+  width: 101px;
+  transition: all ease .3s;
+  padding-left: 40px !important;
+  transform: translateY(1px);
+  margin-right: 0px;
+}
+
+@media only screen and (max-width: 1024px) {
+  input#search_input_react {
+    background-color: rgba(0,0,0,.15) !important;
+    padding-top: 6px;
+    padding-bottom: 6px;
+  }
+}
+
+input#search_input_react:focus {
+  background-color: rgba(0,0,0,.15) !important;
+  margin-right: 9px;
+}
+
+.headerWrapper a {
+  color: rgba(255, 255, 255, 0.8) !important;
+
+}
+
+input#search_input_react::placeholder {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.navSearchWrapper::before {
+  border-width: 1px;
+  width: 8px;
+  height: 8px;
+  top: 16px;
+  left: 26px;
+}
+
+.navSearchWrapper::after {
+  width: 1px;
+  left: 36px;
+  top: 18px;
+  transform: rotate(-45deg);
+}
+
 .features h4 {
   margin-top: 0px;
 }
@@ -227,7 +319,7 @@ a:hover {
   position: relative;
   width: 100%;
   height: 0;
-  padding-top: 68.11%;
+  padding-top: 60.11%;
   display: block;
   cursor: pointer;
   transition: all ease 0.2s;

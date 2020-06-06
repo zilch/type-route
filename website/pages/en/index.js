@@ -4,77 +4,78 @@ const MarkdownBlock = CompLibrary.MarkdownBlock; /* Used to read markdown */
 
 const code = `import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
-import { createRouter, defineRoute, Route } from "type-route";
+import { createRouter, defineRoute, param, Route } from "type-route";
 
-const { routes, listen, getCurrentRoute } = createRouter({
+const { routes, listen, session } = createRouter({
   home: defineRoute("/"),
   userList: defineRoute(
     {
-      page: "query.param.number.optional"
+      page: param.query.optional.number
     },
     () => "/user"
   ),
   user: defineRoute(
     {
-      userId: "path.param.string"
+      userId: param.path.string
     },
     p => \`/user/\${p.userId}\`
   )
 });
 
 function App() {
-  const [route, setRoute] = useState(getCurrentRoute());
+  const [route, setRoute] = useState(session.getInitialRoute());
 
-  useEffect(() => listen(setRoute), []);
+  useEffect(() => listen(nextRoute => setRoute(nextRoute)), []);
 
   return (
     <>
       <Navigation />
-      <Page route={route} />
+      {route.name === "home" && <HomePage/>}
+      {route.name === "userList" && <UserListPage route={route}/>}
+      {route.name === "user" && <UserPage route={route}/>}
+      {route.name === false && <NotFoundPage/>}
     </>
   );
 }
 
-function Page(props: { route: Route<typeof routes> }) {
-  const { route } = props;
+function HomePage() {
+  return <div>Home</div>;
+}
 
-  if (route.name === routes.home.name) {
-    return <div>Home</div>;
-  }
+function UserListPage({ route }: { route: Route<typeof routes.userList> }) {
+  return (
+    <div>
+      User List
+      <br />
+      Page: {route.params.page || "-"}
+    </div>
+  );
+}
 
-  if (route.name === routes.userList.name) {
-    return (
-      <div>
-        User List
-        <br />
-        Page: {route.params.page || "-"}
-      </div>
-    );
-  }
+function UserPage({ route }: { route: Route<typeof routes.user> }) {
+  return <div>User {route.params.userId}</div>;
+}
 
-  if (route.name === routes.user.name) {
-    return <div>User {route.params.userId}</div>;
-  }
-
+function NotFoundPage() {
   return <div>Not Found</div>;
 }
 
 function Navigation() {
   return (
     <nav>
-      <a {...routes.home.link()}>Home</a>
-      <a {...routes.userList.link()}>User List</a>
+      <a {...routes.home().link}>Home</a>
+      <a {...routes.userList().link}>User List</a>
       <a
-        {...routes.userList.link({
+        {...routes.userList({
           page: 2
-        })}
+        }).link}
       >
         User List Page 2
       </a>
       <a
-        {...routes.user.link({
+        {...routes.user({
           userId: "abc"
-        })}
+        }).link}
       >
         User "abc"
       </a>
@@ -148,7 +149,7 @@ class Index extends React.Component {
           </div>
         </div>
         <div className="seeItInAction">
-          <a style={{ width: "600px" }} target="_blank" data-code={code}>
+          <a style={{ width: "665px" }} target="_blank" data-code={code}>
             <span className="actionThumbnail">
               <img
                 src="/img/code.png"

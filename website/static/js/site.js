@@ -4,7 +4,7 @@ window.onload = function () {
   let lastShowShadow = false;
 
   document.addEventListener("scroll", function () {
-    showShadow = window.scrollY > 10;
+    let showShadow = window.scrollY > 10;
 
     if (lastShowShadow !== showShadow) {
       lastShowShadow = showShadow;
