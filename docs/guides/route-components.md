@@ -16,14 +16,14 @@ Examples throughout the documentation show this simple way of connecting Type Ro
 import React, { useState, useEffect } from "react";
 import { createRouter, defineRoute, Route } from "type-route";
 
-const { routes, listen, getCurrentRoute } = createRouter({
+const { routes, listen, session } = createRouter({
   foo: defineRoute("/foo"),
   bar: defineRoute("/bar")
 });
 
 function App() {
-  const [route, setRoute] = useState(getCurrentRoute());
-  useEffect(() => listen(setRoute), []);
+  const [route, setRoute] = useState(session.getInitialRoute());
+  useEffect(() => listen(nextRoute => setRoute(nextRoute)), []);
 
   return <>...</>;
 }
@@ -39,7 +39,7 @@ Routing decisions are typically not nested far enough down the component tree to
 import React, { useState, useEffect } from "react";
 import { createRouter, defineRoute, Route } from "type-route";
 
-const { routes, listen, getCurrentRoute } = createRouter({
+const { routes, listen, session } = createRouter({
   foo: defineRoute("/foo"),
   bar: defineRoute("/bar")
 });
@@ -59,9 +59,8 @@ const useRoute = function() {
 };
 
 function App() {
-  const [route, setRoute] = useState(getCurrentRoute());
-
-  useEffect(() => listen(setRoute), []);
+  const [route, setRoute] = useState(session.getInitialRoute());
+  useEffect(() => listen(nextRoute => setRoute(nextRoute)), []);
 
   return (
     <RouteContext.Provider value={route}>
@@ -73,13 +72,11 @@ function App() {
 function Page() {
   const route = useRoute();
 
-  if (route.name === routes.foo.name) {
-    return <div>Foo</div>;
-  } else if (route.name === routes.bar.name) {
-    return <div>Bar</div>;
-  } else {
-    return <div>Not Found</div>;
-  }
+  return <>
+    {route.name === "foo" && <div>Foo</div>}
+    {route.name === "bar" && <div>Bar</div>}
+    {route.name === false && <div>Not Found</div>}
+  </>
 }
 ```
 

@@ -26,10 +26,10 @@ Using Type Route the above would look something like this:
 
 ```tsx
 <a
-  href={routes.fooBar.href()}
+  href={routes.fooBar().href}
   onClick={event => {
     event.preventDefault();
-    routes.fooBar.push();
+    routes.fooBar().push;
   }}
 >
   Foo Bar
@@ -39,7 +39,7 @@ Using Type Route the above would look something like this:
 This pattern becomes especially repetitive when the route has parameters. To solve this problem in a framework agnostic way Type Route has the [`link`](../api-reference/route-definition/link.md) function.
 
 ```tsx
-<a {...routes.fooBar.link()}>Foo Bar</a>
+<a {...routes.fooBar().link}>Foo Bar</a>
 ```
 
 The `link` function returns an object with `href` and `onClick` properties. Then you can simply destructure these into the props of the `<a>` tag and you achieve the same functionality as above in a less verbose way. Its important to provide both the `href` and `onClick` properties to the link. `onClick` will ensure we don't trigger a page reload when clicking the link and `href` will ensure the browser still treats the link as a link.
