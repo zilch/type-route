@@ -2,7 +2,7 @@
 title: Preventing Navigation
 ---
 
-The `listen` function will create a new route listener. Anytime the application route changes this function will be called with the next matching route. Returning `false` (or a Promise which resolves to `false`) from this function will abort the url change. If, for instance, there are unsaved changes on the current page or an upload is in progress you may want to make the user confirm the navigation. You may hook into this functionality by doing something like the following:
+The `listen` function will create a new route listener. Any time the application route changes this function will be called with the next matching route. Returning `false` from this function will abort the url change. If, for instance, there are unsaved changes on the current page or an upload is in progress you may want to make the user confirm the navigation. You may hook into this functionality by doing something like the following:
 
 ```tsx
 listen(nextRoute => {

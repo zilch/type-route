@@ -21,26 +21,26 @@ npm install type-route
 `router.ts`
 
 ```typescript
-import { createRouter, defineRoute } from "type-route";
+import { createRouter, defineRoute, param } from "type-route";
 
-export const { routes, listen, getCurrentRoute } = createRouter({
+export const { routes, listen, session } = createRouter({
   home: defineRoute("/"),
   userList: defineRoute(
     {
-      page: "query.param.number.optional"
+      page: param.query.optional.number
     },
     () => "/user"
   ),
   user: defineRoute(
     {
-      userId: "path.param.string"
+      userId: param.path.string
     },
     p => `/user/${p.userId}`
   )
 });
 ```
 
-Best practice is to immediately destructure the result of [`createRouter`](../api-reference/router/create-router.md) into the properties you'll be using in your application. The [`createRouter`](../api-reference/router/create-router.md) function accepts an object with route names and route definitions created via [`defineRoute`](../api-reference/route-definition-builder/define-route.md) and returns a new router.
+Best practice is to immediately destructure the result of [`createRouter`](../api-reference/router/create-router.md) into the properties you'll be using in your application. The [`createRouter`](../api-reference/router/create-router.md) function accepts an object with route names and route definitions created via [`defineRoute`](../api-reference/route-definition/define-route.md) and returns a new router.
 
 ## Step 2: Connect to Application State
 
@@ -48,14 +48,14 @@ Best practice is to immediately destructure the result of [`createRouter`](../ap
 
 ```tsx
 import React, { useState, useEffect } from "react";
-import { listen, getCurrentRoute } from "./router";
+import { listen, session } from "./router";
 import { Page } from "./Page";
 import { Navigation } from "./Navigation";
 
 function App() {
-  const [route, setRoute] = useState(getCurrentRoute());
+  const [route, setRoute] = useState(session.getInitialRoute());
 
-  useEffect(() => listen(setRoute), []);
+  useEffect(() => listen(nextRoute => setRoute(nextRoute)), []);
 
   return (
     <>
@@ -66,7 +66,7 @@ function App() {
 }
 ```
 
-Retrieve the initial route via [`getCurrentRoute()`](../api-reference/router/get-current-route.md) then subscribe to route updates with [`listen`](../api-reference/router/listen.md).
+Retrieve the initial route via [`session.getInitialRoute()`](../api-reference/session.md) then subscribe to route updates with [`listen`](../api-reference/router/listen.md).
 
 ## Step 3: Display Current Route
 
@@ -84,11 +84,11 @@ type Props = {
 export function Page(props: Props) {
   const { route } = props;
 
-  if (route.name === routes.home.name) {
+  if (route.name === "home") {
     return <div>Home</div>;
   }
 
-  if (route.name === routes.userList.name) {
+  if (route.name === "userList") {
     return (
       <div>
         User List
@@ -98,7 +98,7 @@ export function Page(props: Props) {
     );
   }
 
-  if (route.name === routes.user.name) {
+  if (route.name === "user") {
     return <div>User {route.params.userId}</div>;
   }
 
@@ -121,19 +121,19 @@ import { routes } from "./router";
 export function Navigation() {
   return (
     <nav>
-      <a {...routes.home.link()}>Home</a>
-      <a {...routes.userList.link()}>User List</a>
+      <a {...routes.home().link}>Home</a>
+      <a {...routes.userList().link}>User List</a>
       <a
-        {...routes.userList.link({
+        {...routes.userList({
           page: 2
-        })}
+        }).link}
       >
         User List Page 2
       </a>
       <a
-        {...routes.user.link({
+        {...routes.user({
           userId: "abc"
-        })}
+        }).link}
       >
         User "abc"
       </a>
@@ -148,4 +148,4 @@ The [`link`](../api-reference/route-definition/link.md) function returns an obje
 
 Hopefully that was enough to point you in the right direction!
 
-If you need more guidance there is a full _runnable_ version of the above example on the [React](../guides/simple-react-example.md) page. The _Guides_ section of the documentation has detailed overviews and examples for most use cases. Additionally, the _API Reference_ section has descriptions and examples for each part of the API.
+If you need more guidance there is a full runnable version of the above example on the [React](../guides/simple-react-example.md) page. The Guides section of the documentation has detailed overviews and examples for most use cases. Additionally, the API Reference section has descriptions and examples for each part of the API.

@@ -74,7 +74,7 @@
       "api-reference/types/link": {
         "title": "Link"
       },
-      "api-reference/types/query-stringSerializer": {
+      "api-reference/types/query-string-serializer": {
         "title": "QueryStringSerializer"
       },
       "api-reference/types/route": {
@@ -104,7 +104,7 @@
       "guides/nested-and-similar-routes": {
         "title": "Nested and Similar Routes"
       },
-      "guides/no-match-(404)": {
+      "guides/no-match-404": {
         "title": "No Match (404)"
       },
       "guides/page-layout": {

@@ -16,26 +16,26 @@ A poor implementation of this in Type Route might look something like this:
 <summary>Bad Example</summary>
 
 ```tsx
-import { createRouter, defineRoute } from "type-route";
+import { createRouter, defineRoute, param } from "type-route";
 
-const { routes, listen, getCurrentRoute } = createRouter({
+const { routes, listen, session } = createRouter({
   home: defineRoute("/"),
   about: defineRoute("/about"),
   user: defineRoute(
     {
-      userId: "path.param.string"
+      userId: param.path.string
     },
     p => `/users/${p.userId}`
   ),
   userSettings: defineRoute(
     {
-      userId: "path.param.string"
+      userId: param.path.string
     },
     p => `/users/${p.userId}/settings`
   ),
   userActivity: defineRoute(
     {
-      userId: "path.param.string"
+      userId: param.path.string
     },
     p => `/users/${p.userId}/activity`
   )
@@ -44,22 +44,22 @@ const { routes, listen, getCurrentRoute } = createRouter({
 
 </details>
 
-While this would work it is not ideal and the problem only gets worse as the application gets bigger. Fortunately, the [`defineRoute`](../api-reference/route-definition-builder/define-route.md) function returns a `RouteDefinitionBuilder` object which has an [`extend`](../api-reference/route-definition-builder/extend.md) function to make this process easier.
+While this would work it is not ideal and the problem only gets worse as the application gets bigger. Fortunately, the [`defineRoute`](../api-reference/route-definition/define-route.md) function returns a `RouteDefinition` object which has an [`extend`](../api-reference/route-definition/extend.md) function to make this process easier.
 
 <details>
 <summary>Good Example</summary>
 
 ```tsx
-import { createRouter, defineRoute } from "type-route";
+import { createRouter, defineRoute, param } from "type-route";
 
 const user = defineRoute(
   {
-    userId: "path.param.string"
+    userId: param.path.string
   },
   p => `/users/${p.userId}`
 );
 
-const { routes, listen, getCurrentRoute } = createRouter({
+const { routes, listen, session } = createRouter({
   home: defineRoute("/"),
   about: defineRoute("/about"),
   user,
@@ -87,18 +87,18 @@ type PageProps = {
 function Page(props: UserProps) {
   const { route } = props;
 
-  if (route.name === routes.home.name) {
+  if (route.name === "home") {
     return <div>Home</div>;
   }
 
-  if (route.name === routes.about.name) {
+  if (route.name === "about") {
     return <div>About</div>;
   }
 
   if (
-    route.name === routes.user.name ||
-    route.name === routes.userSettings.name ||
-    route.name === routes.userActivity.name
+    route.name === "user" ||
+    route.name === "userSettings" ||
+    route.name === "userActivity"
   ) {
     return <UserPage route={route} />;
   }
@@ -119,11 +119,11 @@ function UserPage(props: UserPageProps) {
 
   let pageContents;
 
-  if (route.name === routes.user.name) {
+  if (route.name === "user") {
     pageContents = <div>Main</div>;
-  } else if (route.name === routes.userSettings.name) {
+  } else if (route.name === "userSettings") {
     pageContents = <div>Settings</div>;
-  } else if (route.name === routes.userActivity.name) {
+  } else if (route.name === "userActivity") {
     pageContents = <div>Activity</div>;
   }
 
@@ -138,7 +138,7 @@ function UserPage(props: UserPageProps) {
 
 </details>
 
-To help with this case Type Route has a [`createGroup`](../api-reference/route-definition-group/create-group.md) function. Here's a full example using this function:
+To help with this case Type Route has a [`createGroup`](../api-reference/route-group/create-group.md) function. Here's a full example using this function:
 
 <details>
 <summary>Good Example</summary>
@@ -149,12 +149,12 @@ import { Route } from "type-route";
 
 const user = defineRoute(
   {
-    userId: "path.param.string"
+    userId: param.path.string
   },
   p => `/users/${p.userId}`
 );
 
-const { routes, listen, getCurrentRoute } = createRouter({
+const { routes, listen, session } = createRouter({
   home: defineRoute("/"),
   about: defineRoute("/about"),
   user,
@@ -162,11 +162,13 @@ const { routes, listen, getCurrentRoute } = createRouter({
   userActivity: user.extend("/activity")
 });
 
-const userGroup = createGroup([
-  routes.user,
-  routes.userSettings,
-  routes.userActivity
-]);
+const groups = {
+  user: createGroup([
+    routes.user,
+    routes.userSettings,
+    routes.userActivity
+  ]);
+}
 
 type PageProps = {
   route: Route<typeof routes>;
@@ -175,11 +177,11 @@ type PageProps = {
 function Page(props: UserProps) {
   const { route } = props;
 
-  if (route.name === routes.home.name) {
+  if (route.name === "home") {
     return <div>Home</div>;
   }
 
-  if (route.name === routes.about.name) {
+  if (route.name === "about") {
     return <div>About</div>;
   }
 
@@ -199,11 +201,11 @@ function UserPage(props: UserPageProps) {
 
   let pageContents;
 
-  if (route.name === routes.user.name) {
+  if (route.name === "user") {
     pageContents = <div>Main</div>;
-  } else if (route.name === routes.userSettings.name) {
+  } else if (route.name === "userSettings") {
     pageContents = <div>Settings</div>;
-  } else if (route.name === routes.userActivity.name) {
+  } else if (route.name === "userActivity") {
     pageContents = <div>Activity</div>;
   }
 

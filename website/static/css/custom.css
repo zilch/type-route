@@ -15,6 +15,10 @@ body {
   .navPusher {
     padding-top: 66px;
   }
+
+  .onPageNav {
+    top: 105px;
+  }
 }
 
 body {
@@ -167,6 +171,10 @@ a:hover {
   opacity: 0.8;
 }
 
+.post a:hover, .docsNavContainer a:hover, .onPageNav a:hover {
+  text-decoration: underline;
+}
+
 .features > div {
   width: calc(100% / 3);
   margin: 30px;
@@ -250,6 +258,10 @@ input#search_input_react:focus {
   margin-right: 9px;
 }
 
+input#search_input_react:not(:focus):hover {
+  cursor: pointer;
+}
+
 .headerWrapper a {
   color: rgba(255, 255, 255, 0.8) !important;
 
@@ -257,6 +269,10 @@ input#search_input_react:focus {
 
 input#search_input_react::placeholder {
   color: rgba(255, 255, 255, 0.8) !important;
+}
+
+input#search_input_react:not(:focus):hover::placeholder {
+  color: rgba(255, 255, 255, 0.6) !important;
 }
 
 .navSearchWrapper::before {

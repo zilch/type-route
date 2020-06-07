@@ -17,33 +17,32 @@ Type Route is flexible enough to let the above pattern be accomplished in a vari
 import React, { useState, useEffect } from "react";
 import { createRouter, defineRoute } from "type-route";
 
-const { routes, listen, getCurrentRoute } = createRouter({
+const { routes, listen, session } = createRouter({
   home: defineRoute("/"),
   foo: defineRoute("/foo"),
   bar: defineRoute("/bar"),
 });
 
 function App() {
-  const [route, setRoute] = useState(getCurrentRoute());
+  const [route, setRoute] = useState(session.getInitialRoute());
 
-  useEffect(() => listen(setRoute), []);
+  useEffect(() => listen(nextRoute => setRoute(nextRoute)), []);
 
-  if (route.name === routes.home.name) {
-    return <HomePage/>
-  } else if (route.name === routes.foo.name) {
-    return <FooPage/>
-  } else if (route.name === routes.bar.name) {
-    return <BarPage/>
-  } else {
-    return <NotFoundPage/>
-  }
+  return (
+    <>
+      {route.name === "home" && <HomePage/>}
+      {route.name === "foo" && <FooPage/>}
+      {route.name === "bar" && <BarPage/>}
+      {route.name === false && <NotFoundPage/>}
+    </>
+  );
 }
 
 function Header() {
   return <nav>
-    <a {...routes.home.link()}>Home</a>
-    <a {...routes.foo.link()}>Foo</a>
-    <a {...routes.bar.link()}>Bar</a>
+    <a {...routes.home().link}>Home</a>
+    <a {...routes.foo().link}>Foo</a>
+    <a {...routes.bar().link}>Bar</a>
   </nav>
 }
 
@@ -97,41 +96,32 @@ The above example would work but, on every page change, the `Header` and `Footer
 import React, { useState, useEffect } from "react";
 import { createRouter, defineRoute } from "type-route";
 
-const { routes, listen, getCurrentRoute } = createRouter({
+const { routes, listen, session } = createRouter({
   home: defineRoute("/"),
   foo: defineRoute("/foo"),
   bar: defineRoute("/bar"),
 });
 
 function App() {
-  const [route, setRoute] = useState(getCurrentRoute());
+  const [route, setRoute] = useState(session.getInitialRoute());
 
   useEffect(() => listen(setRoute), []);
 
-  let page;
-
-  if (route.name === routes.home.name) {
-    page = <HomePage/>
-  } else if (route.name === routes.foo.name) {
-    page = <FooPage/>
-  } else if (route.name === routes.bar.name) {
-    page = <BarPage/>
-  } else {
-    page = <NotFoundPage/>
-  }
-
   return <>
     <Header />
-    {page}
+    {route.name === "home" && <HomePage/>}
+    {route.name === "foo" && <FooPage/>}
+    {route.name === "bar" && <BarPage/>}
+    {route.name === false && <NotFoundPage/>}
     <Footer />
   </>;
 }
 
 function Header() {
   return <nav>
-    <a {...routes.home.link()}>Home</a>
-    <a {...routes.foo.link()}>Foo</a>
-    <a {...routes.bar.link()}>Bar</a>
+    <a {...routes.home().link}>Home</a>
+    <a {...routes.foo().link}>Foo</a>
+    <a {...routes.bar().link}>Bar</a>
   </nav>
 }
 

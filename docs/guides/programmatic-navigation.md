@@ -2,7 +2,7 @@
 title: Programmatic Navigation
 ---
 
-It is possible to trigger navigation programmatically with the [`push`](../api-reference/route-definition/push.md) and [`replace`](../api-reference/route-definition/replace.md) functions on a route definition.
+It is possible to trigger navigation programmatically with the [`push`](../api-reference/route/push.md) and [`replace`](../api-reference/route/replace.md) functions on a route definition.
 
 - `push` will add a new entry to the application's navigation history
 - `replace` will take the place of the current entry in history
