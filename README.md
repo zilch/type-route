@@ -9,8 +9,6 @@
 <h1 align="center">Type Route</h1>
 <p align="center">
 <a href="#getting-started">Quick Start</a>&nbsp;&nbsp;·&nbsp;&nbsp;<a href="https://typehero.org/type-route">Docs</a>&nbsp;&nbsp;·&nbsp;&nbsp;<a href="https://typehero.org/ready-for-production-type-route-v1/02">Introductory Blog Post</a>
-<br/>
-Type Route is a <a href="https://typehero.org">Type Hero</a> Project
 </p>
 <br/>
 <br/>
@@ -164,3 +162,7 @@ The [`link`](../api-reference/route/link.md) property is an object with an `href
 Hopefully that was enough to point you in the right direction!
 
 If you need more guidance there is a full runnable version of the above example on the [React](../guides/simple-react-example.md) page. The "Guides" section of the [documentation](https://typehero.org/type-route/) has detailed overviews and examples for most use cases. Additionally, the "API Reference" section has descriptions and examples for each part of the API.
+
+---
+
+Type Route is a [Type Hero](https://typehero.org) Project
