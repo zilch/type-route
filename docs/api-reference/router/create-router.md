@@ -11,7 +11,7 @@ Initializes a router. By default the underlying session history instance which p
 Route will be configured according to the environment your code is running in. This
 means Type Route should work out of the box in both browser and non-browser environments
 such as React Native. You can always reconfigure the history instance you are given to
-cover other use cases (such as server-side rendering).
+cover other use cases (such as [server-side rendering](../../guides/server-side-rendering.md)).
 
 #### Example
 
