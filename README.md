@@ -7,9 +7,9 @@
 </p>
 <br/>
 <br/>
-<h1 align="center">
+<p align="center" style="font-size:30px">
 Type Route
-</h1>
+</p>
 
 ## Getting Started
 
