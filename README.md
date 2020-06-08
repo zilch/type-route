@@ -6,11 +6,11 @@
   </a>
 </p>
 <br/>
-<br/>
 <h1 align="center">Type Route</h1>
 <p align="center">
-Type Route is a <a href="https://typehero.org">Type Hero</a> Project · <a href="https://typehero.org/type-route">Documentation</a>
+Type Route is a <a href="https://typehero.org">Type Hero</a> Project&nbsp;&nbsp;·&nbsp;&nbsp;<a href="#getting-started">Quick Start</a>&nbsp;&nbsp;·&nbsp;&nbsp;<a href="https://typehero.org/type-route">Docs</a>
 </p>
+<br/>
 
 ## Getting Started
 
