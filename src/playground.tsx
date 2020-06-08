@@ -40,6 +40,7 @@ function App() {
       <Navigation />
       {route.name === "home" && <HomePage />}
       {route.name === "user" && <UserPage route={route} />}
+      {route.name === "other" && <OtherPage />}
       {route.name === false && <NotFoundPage />}
       <Navigation />
     </>
@@ -54,6 +55,10 @@ function HomePage() {
   return <div style={{ height: "1000px" }}>Home Page</div>;
 }
 
+function OtherPage() {
+  return <div style={{ height: "1000px" }}>Other Page</div>;
+}
+
 function UserPage({ route }: { route: Route<typeof routes.user> }) {
   return (
     <>
@@ -64,10 +69,9 @@ function UserPage({ route }: { route: Route<typeof routes.user> }) {
 }
 
 function Navigation() {
-  const homeRoute = routes.home();
   return (
     <nav>
-      <a {...homeRoute.link}>Home</a>
+      <a {...routes.home().link}>Home</a>
       <a {...routes.user({ userId: "Abc" }).link}>User "abc"</a>
     </nav>
   );
