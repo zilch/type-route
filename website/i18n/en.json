@@ -95,6 +95,9 @@
       "guides/complex-route-parameters": {
         "title": "Complex Route Parameters"
       },
+      "guides/custom-query-string": {
+        "title": "Custom Query String"
+      },
       "guides/data-fetching": {
         "title": "Data Fetching"
       },
@@ -149,8 +152,7 @@
     },
     "links": {
       "Docs": "Docs",
-      "GitHub": "GitHub",
-      "Read Introductory Blog Post": "Read Introductory Blog Post"
+      "GitHub": "GitHub"
     },
     "categories": {
       "Introduction": "Introduction",

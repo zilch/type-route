@@ -114,7 +114,7 @@ window.onload = function () {
 
     const sandboxLink = document.createElement("a");
     sandboxLink.className = "codesandbox-link " + position;
-    sandboxLink.innerHTML = "Run on CodeSandbox&nbsp;&nbsp;→";
+    sandboxLink.innerHTML = "Run&nbsp;&nbsp;→";
     sandboxLink.href =
       "https://codesandbox.io/api/v1/sandboxes/define?parameters=" + parameters;
     sandboxLink.target = "_blank";

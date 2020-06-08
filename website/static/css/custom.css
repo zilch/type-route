@@ -294,7 +294,7 @@ input#search_input_react:not(:focus):hover::placeholder {
   margin-top: 0px;
 }
 
-body:after {
+/* body:after {
   content: "🚧 Under Construction - Check Back Later 🚧";
   pointer-events: none;
   position: fixed;
@@ -310,7 +310,7 @@ body:after {
   color: white;
   font-size: 30px;
   font-weight: bold;
-}
+} */
 
 .headerTitleWithLogo::after {
   content: "beta";
@@ -425,29 +425,35 @@ details[open] summary {
 .codesandbox-link {
   display: inline-block;
   position: absolute;
-  right: 0px;
+  right: -9px;
   font-size: 13px;
-  background: rgba(100, 100, 100, 0.1);
+  background: #fff;
   color: #555 !important;
-  opacity: 1 !important;
   padding: 5px 15px;
+  opacity: .9 !important;
   text-align: right;
+  border-radius: 15px;
+  border: 1px solid #eee;
 }
 
 .codesandbox-link:hover {
-  color: #222 !important;
+  opacity: 1 !important;
+  text-decoration: none !important;
+  color: #111 !important;
+  border: 1px solid #ddd;
 }
 
 .codesandbox-link.top {
-  border-radius: 0px 3px 0px 6px;
+  margin-top: 8px;
 }
 
 .codesandbox-link.bottom {
-  border-radius: 6px 0px 3px 0px;
-  margin-top: -29px;
+  margin-top: -37px;
 }
 
 code.hljs {
-  background: white;
+  background: #fcfcfc;
   border: 1px solid #eee;
+  margin-left: -16px;
+  margin-right: -16px;
 }

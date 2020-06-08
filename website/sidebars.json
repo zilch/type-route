@@ -7,6 +7,7 @@
       "guides/simple-react-example",
       "guides/code-splitting",
       "guides/complex-route-parameters",
+      "guides/custom-query-string",
       "guides/data-fetching",
       "guides/nested-and-similar-routes",
       "guides/no-match-404",
