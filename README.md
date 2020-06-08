@@ -7,10 +7,9 @@
 </p>
 <br/>
 <br/>
-
-<center>
-## Type Route
-</center>
+<h1 align="center">
+Type Route
+</h1>
 
 ## Getting Started
 
