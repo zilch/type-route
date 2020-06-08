@@ -7,18 +7,18 @@
   "description": "A flexible, type safe routing library",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/type-route/type-route.git"
+    "url": "git+https://github.com/typehero/type-route.git"
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/type-route/type-route/issues"
+    "url": "https://github.com/typehero/type-route/issues"
   },
   "files": [
     "dist",
     "src"
   ],
   "sideEffects": false,
-  "homepage": "https://type-route.org",
+  "homepage": "https://typehero.org/type-route",
   "dependencies": {
     "history": "^4.10.1"
   },

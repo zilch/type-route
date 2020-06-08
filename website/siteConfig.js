@@ -1,11 +1,8 @@
 const siteConfig = {
   title: "Type Route", // Title for your website.
   tagline: "A flexible, type safe routing library.",
-  url: "https://type-route.org", // Your website URL
-  baseUrl: "/", // Base URL for your project */
-  // For github.io type URLs, you would set the url and baseUrl like:
-  //   url: 'https://facebook.github.io',
-  //   baseUrl: '/test-site/',
+  url: "https://typehero.org", // Your website URL
+  baseUrl: "/type-route/",
 
   // Used for publishing and more
   projectName: "type-route",
@@ -15,7 +12,7 @@ const siteConfig = {
   headerLinks: [
     { search: true },
     { doc: "introduction/getting-started", label: "Docs" },
-    { href: "https://github.com/type-route/type-route", label: "GitHub" },
+    { href: "https://github.com/typehero/type-route", label: "GitHub" },
     {
       href: "https://typehero.org/ready-for-production-type-route-v1/01",
       label: "Read Introductory Blog Post",

@@ -71,7 +71,7 @@ async function main() {
   );
 
   await client.issues.createComment({
-    owner: "type-route",
+    owner: "typehero",
     repo: "type-route",
     issue_number: pullRequest.number,
     body: `🚀 **PR Environment Ready** → **https://codesandbox.io/s/${response.body.sandbox_id}?module=src/playground.tsx**`,
