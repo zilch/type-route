@@ -8,14 +8,16 @@
 <br/>
 <h1 align="center">Type Route</h1>
 <p align="center">
-Type Route is a <a href="https://typehero.org">Type Hero</a> Project&nbsp;&nbsp;·&nbsp;&nbsp;<a href="#getting-started">Quick Start</a>&nbsp;&nbsp;·&nbsp;&nbsp;<a href="https://typehero.org/type-route">Documentation</a>
+<a href="#getting-started">Quick Start</a>&nbsp;&nbsp;·&nbsp;&nbsp;<a href="https://typehero.org/type-route">Docs</a>&nbsp;&nbsp;·&nbsp;&nbsp;<a href="https://typehero.org/ready-for-production-type-route-v1/02">Introductory Blog Post</a>
+<br/>
+Type Route is a <a href="https://typehero.org">Type Hero</a> Project
 </p>
 <br/>
 <br/>
 
 ## Getting Started
 
-[Type Route](https://typehero.org/type-route) is a flexible, type safe routing library built on top of the same [core library](https://github.com/ReactTraining/history) that powers React Router.
+Type Route is a flexible, type safe routing library built on top of the same [core library](https://github.com/ReactTraining/history) that powers React Router.
 
 > Type Route was designed with excellent React integration in mind but isn't coupled to a specific UI framework. Most code examples in the documentation use React, but the general principles covered apply regardless of framework.
 
