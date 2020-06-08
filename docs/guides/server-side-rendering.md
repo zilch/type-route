@@ -3,8 +3,8 @@ title: Server Side Rendering
 ---
 
 Type Route supports server side rendering. The key to making this support possible
-is the `router.history.configure` function. This function allows you to reconfigure
-the underlying history instance that powers Type Route. By setting the type of the
+is the `router.session.reset` function. This function allows you to reconfigure
+the underlying history session instance that powers Type Route. By setting the type of the
 instance to "memory" and giving it an initial entry of the current url the user is
 requesting, you can be sure that your app will render correctly. Below is an example
 of how to accomplish this using React.
@@ -15,12 +15,12 @@ of how to accomplish this using React.
 import fastify from "fastify";
 import ReactDOM from "react-dom/server";
 import React from "react";
-import { App, history } from "../client";
+import { App, session } from "../client";
 
 const app = fastify();
 
 app.get("/*", (request, response) => {
-  history.configure({
+  session.reset({
     type: "memory",
     initialEntries: request.req.url ? [request.req.url] : []
   });
@@ -43,28 +43,16 @@ import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { createRouter, defineRoute } from "type-route";
 
-export const { listen, routes, getCurrentRoute, history } = createRouter({
+export const { listen, routes, session } = createRouter({
   home: defineRoute("/"),
   one: defineRoute("/one"),
   two: defineRoute("/two")
 });
 
 export function App() {
-  const [route, setRoute] = useState(getCurrentRoute());
+  const [route, setRoute] = useState(session.getInitialRoute());
 
-  useEffect(() => listen(setRoute), []);
-
-  let page;
-
-  if (route.name === routes.home.name) {
-    page = <div>Home</div>;
-  } else if (route.name === routes.one.name) {
-    page = <div>One</div>;
-  } else if (route.name === routes.two.name) {
-    page = <div>Two</div>;
-  } else {
-    page = <div>Not Found</div>;
-  }
+  useEffect(() => listen(nextRoute => setRoute(nextRoute)), []);
 
   return (
     <div>
@@ -73,7 +61,10 @@ export function App() {
         <a {...routes.one.link()}>One</a>
         <a {...routes.two.link()}>Two</a>
       </nav>
-      {page}
+      {route.name === "home" && <div>Home</div>}
+      {route.name === "one" && <div>One</div>}
+      {route.name === "two" && <div>Two</div>}
+      {route.name === false && <div>Not Found</div>}
     </div>
   );
 }

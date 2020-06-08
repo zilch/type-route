@@ -2,4 +2,19 @@
 title: Wildcard Routes
 ---
 
-Hello
+Type Route supports defining routes which match a paths ending in an arbitrary value. This is a common requirement in applications needing to support paths created, for instance, by a marketing team optimizing the url for a search engine. Here's an example
+
+```tsx
+import { createRouter, defineRoute, param } from "type-route";
+
+const { routes, session, listen } = createRouter({
+  example: defineRoute(
+    {
+      slug: param.path.trailing.optional.string
+    },
+    p => `/static/${p.slug}`
+  )
+});
+```
+
+Trailing path parameters must come at the end of the path and will match everything follow the first part of the url including forward slashes. This ensures that any path starting with `/static` will match the example route.
