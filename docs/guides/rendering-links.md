@@ -29,7 +29,7 @@ Using Type Route the above would look something like this:
   href={routes.fooBar().href}
   onClick={event => {
     event.preventDefault();
-    routes.fooBar().push;
+    routes.fooBar().push();
   }}
 >
   Foo Bar

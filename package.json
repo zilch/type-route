@@ -57,6 +57,6 @@
     "ts-toolbelt": "^6.3.11",
     "tsdx": "^0.13.2",
     "tslib": "^1.11.2",
-    "typescript": "^3.8.3"
+    "typescript": "^3.9.5"
   }
 }

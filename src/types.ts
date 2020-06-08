@@ -372,9 +372,9 @@ export type Router<TRouteDefCollection extends { [routeName: string]: any }> = {
 };
 export type UmbrellaRouter = Router<UmbrellaRouteDefCollection>;
 
-export type RouteBuilderGroup<T extends any[] = any[]> = {
+export type RouteGroup<T extends any[] = any[]> = {
   ["~internal"]: {
-    type: "RouteBuilderGroup";
+    type: "RouteGroup";
     Route: T[number]["~internal"]["Route"];
   };
   routeNames: T[number]["~internal"]["Route"]["name"][];

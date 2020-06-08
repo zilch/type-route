@@ -1,18 +1,12 @@
-import {
-  RouteBuilderGroup,
-  UmbrellaRoute,
-  UmbrellaRouteBuilder,
-} from "./types";
+import { RouteGroup, UmbrellaRoute, UmbrellaRouteBuilder } from "./types";
 import { assert } from "./assert";
 
-export function createGroup<T extends any[]>(
-  groupItems: T
-): RouteBuilderGroup<T> {
+export function createGroup<T extends any[]>(groupItems: T): RouteGroup<T> {
   if (__DEV__) {
     assert("createGroup", [
       assert.numArgs([].slice.call(arguments), 1),
       assert.arrayOfType(
-        ["RouteBuilderGroup", "RouteBuilder"],
+        ["RouteGroup", "RouteBuilder"],
         "groupItems",
         groupItems
       ),
@@ -22,7 +16,7 @@ export function createGroup<T extends any[]>(
   const routeNames: Record<string, true> = {};
 
   groupItems.forEach((item) => {
-    if (isRouteBuilderGroup(item)) {
+    if (isRouteGroup(item)) {
       item.routeNames.forEach((name) => {
         routeNames[name] = true;
       });
@@ -33,13 +27,13 @@ export function createGroup<T extends any[]>(
 
   return {
     "~internal": {
-      type: "RouteBuilderGroup",
+      type: "RouteGroup",
       Route: null as any,
     },
     routeNames: Object.keys(routeNames),
     has(route: UmbrellaRoute): route is UmbrellaRoute {
       if (__DEV__) {
-        assert("[RouteBuilderGroup].has", [
+        assert("[RouteGroup].has", [
           assert.numArgs([].slice.call(arguments), 1),
           assert.type("Route", "groupItems", groupItems),
         ]);
@@ -54,8 +48,8 @@ export function createGroup<T extends any[]>(
   };
 }
 
-function isRouteBuilderGroup(
-  value: RouteBuilderGroup | UmbrellaRouteBuilder
-): value is RouteBuilderGroup {
-  return !!(value as RouteBuilderGroup).routeNames;
+function isRouteGroup(
+  value: RouteGroup | UmbrellaRouteBuilder
+): value is RouteGroup {
+  return !!(value as RouteGroup).routeNames;
 }

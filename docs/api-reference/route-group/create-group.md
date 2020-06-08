@@ -2,8 +2,6 @@
 title: createGroup
 ---
 
-Hello
-
 ```tsx
 createGroup(routes: (RouteBuilder | RouteGroup)[]): RouteGroup
 ```

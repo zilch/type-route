@@ -2,7 +2,7 @@
 title: Wildcard Routes
 ---
 
-Type Route supports defining routes which match a paths ending in an arbitrary value. This is a common requirement in applications needing to support paths created, for instance, by a marketing team optimizing the url for a search engine. Here's an example
+Type Route supports defining routes which match a path's ending in an arbitrary value. This is a common requirement in applications needing to support paths created, for instance, by a marketing team optimizing the url for a search engine. Here's an example:
 
 ```tsx
 import { createRouter, defineRoute, param } from "type-route";
