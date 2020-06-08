@@ -7,8 +7,9 @@
 </p>
 <br/>
 <br/>
+<h1 align="center">Type Route</h1>
 <p align="center">
-<h1 border="none">Type Route</h1>
+Type Route is a <a href="https://typehero.org">Type Hero</a> Project · <a href="https://typehero.org/type-route">Documentation</a>
 </p>
 
 ## Getting Started
