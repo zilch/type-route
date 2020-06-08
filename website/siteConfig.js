@@ -52,6 +52,8 @@ const siteConfig = {
     apiKey: "4a2bd93ab352acbdeac847eb2563ac5e",
     indexName: "type-route",
   },
+
+  editUrl: "https://github.com/typehero/type-route/edit/master/docs/",
 };
 
 module.exports = siteConfig;

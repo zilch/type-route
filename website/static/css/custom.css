@@ -437,18 +437,13 @@ nav.toc a,
 }
 
 details {
-  background: #eee;
   border-radius: 3px;
 }
 
 details summary {
+  background: #f7f7f7;
   cursor: pointer;
   padding: 15px 20px;
-  outline: none;
-}
-
-details[open] summary {
-  padding-bottom: 0px;
 }
 
 .codesandbox-link {
@@ -460,6 +455,7 @@ details[open] summary {
   color: #555 !important;
   padding: 5px 15px;
   opacity: .9 !important;
+  font-weight: 400;
   text-align: right;
   border-radius: 15px;
   border: 1px solid #eee;
@@ -485,4 +481,28 @@ code.hljs {
   border: 1px solid #eee;
   margin-left: -16px;
   margin-right: -16px;
+}
+
+.edit-page-link {
+  font-weight: 400;
+  font-size: 14px;
+  background: #fff;
+  color: #555 !important;
+  padding: 5px 15px;
+  display: inline-block;
+  opacity: .9 !important;
+  border-radius: 15px;
+  border: 1px solid #eee;
+}
+
+.edit-page-link:after {
+  content: " page";
+}
+
+.edit-page-link:hover {
+  background: #fff;
+  opacity: 1 !important;
+  text-decoration: none !important;
+  color: #111 !important;
+  border: 1px solid #ddd;
 }
