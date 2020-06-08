@@ -104,13 +104,13 @@ class Index extends React.Component {
         </div>
         <div className="getStartedContainer">
           <a
-            href="/docs/introduction/getting-started"
+            href={`${baseUrl}docs/introduction/getting-started`}
             className="primary-button"
           >
             Get Started
           </a>
           <a
-            href="/docs/guides/simple-react-example"
+            href={`${baseUrl}docs/guides/simple-react-example`}
             className="secondary-button"
           >
             See Examples <span style={{ marginLeft: "4px" }}>→</span>
@@ -152,7 +152,7 @@ class Index extends React.Component {
           <a style={{ width: "665px" }} target="_blank" data-code={code}>
             <span className="actionThumbnail">
               <img
-                src="/img/code.png"
+                src={`${baseUrl}img/code.png`}
                 alt="See it in Action. Run on CodeSandbox."
               />
             </span>
@@ -164,13 +164,13 @@ class Index extends React.Component {
         </div>
         <div className="getStartedContainer">
           <a
-            href="/docs/introduction/getting-started"
+            href={`${baseUrl}docs/introduction/getting-started`}
             className="primary-button"
           >
             Get Started
           </a>
           <a
-            href="/docs/guides/simple-react-example"
+            href={`${baseUrl}docs/guides/simple-react-example`}
             className="secondary-button"
           >
             See Examples <span style={{ marginLeft: "4px" }}>→</span>

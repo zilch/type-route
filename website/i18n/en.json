@@ -21,7 +21,7 @@
         "title": "<RouteDefinition>.extend",
         "sidebar_label": "extend"
       },
-      "api-reference/route-group/create-croup": {
+      "api-reference/route-group/create-group": {
         "title": "createGroup"
       },
       "api-reference/route-group/has": {
@@ -136,6 +136,9 @@
       },
       "guides/simple-react-example": {
         "title": "Simple React Example"
+      },
+      "guides/styling-active-route-link": {
+        "title": "Styling of Links for the Currently Active Route"
       },
       "guides/wildcard-routes": {
         "title": "Wildcard Routes"
