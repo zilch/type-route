@@ -8,7 +8,11 @@
 <br/>
 <br/>
 
-## Type Route · Getting Started
+<center>
+## Type Route
+</center>
+
+## Getting Started
 
 [Type Route](https://typehero.org/type-route) is a flexible, type safe routing library built on top of the same [core library](https://github.com/ReactTraining/history) that powers React Router.
 
