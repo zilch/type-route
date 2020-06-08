@@ -11,7 +11,6 @@
 <a href="#getting-started">Quick Start</a>&nbsp;&nbsp;·&nbsp;&nbsp;<a href="https://typehero.org/type-route">Docs</a>&nbsp;&nbsp;·&nbsp;&nbsp;<a href="https://typehero.org/ready-for-production-type-route-v1/02">Introductory Blog Post</a>
 </p>
 <br/>
-<br/>
 
 ## Getting Started
 
@@ -165,4 +164,4 @@ If you need more guidance there is a full runnable version of the above example 
 
 ---
 
-Type Route is a [Type Hero](https://typehero.org) Project
+_Type Route is a [Type Hero](https://typehero.org) project._
