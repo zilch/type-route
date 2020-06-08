@@ -7,7 +7,7 @@
 </p>
 <br/>
 <br/>
-<p align="center" style="font-size:30px">
+<p align="center" size="30">
 Type Route
 </p>
 
