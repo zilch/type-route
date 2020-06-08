@@ -294,6 +294,24 @@ input#search_input_react:not(:focus):hover::placeholder {
   margin-top: 0px;
 }
 
+body:after {
+  content: "🚧 Under Construction - Check Back Later 🚧";
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 999999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 30px;
+  font-weight: bold;
+}
+
 .headerTitleWithLogo::after {
   content: "Stable";
   margin-left: 10px;
