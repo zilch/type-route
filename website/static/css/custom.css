@@ -7,7 +7,7 @@ body {
 .splash .header {
   background: #383751;
   padding: 40px;
-  padding-bottom: 85px;
+  padding-bottom: 70px;
   text-align: center;
 }
 
@@ -49,6 +49,18 @@ body > * {
   padding-top: 30px;
   font-weight: 300;
   padding-bottom: 20px;
+}
+
+.splash .projectName:after {
+  content: "beta";
+  transform: translateY(-1px);
+  position: absolute;
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: #484761;
+  color: #fff;
+  font-weight: 500;
 }
 
 .splash .projectTagLine {
@@ -155,6 +167,23 @@ blockquote {
   margin-left: auto;
   margin-right: auto;
   padding-top: 20px;
+}
+
+.betaNotification {
+    padding: 40px;
+    color: #fff;
+    background: #484761;
+}
+
+.betaNotification a {
+    color: #fff !important;
+    border-bottom: 1px solid rgba(255,255,255,.8);
+}
+
+.betaNotification > div {
+  max-width: 1040px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .headerWrapper header > a {
