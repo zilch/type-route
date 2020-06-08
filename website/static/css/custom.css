@@ -302,7 +302,7 @@ body:after {
   bottom: 0;
   right: 0;
   left: 0;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.5);
   z-index: 999999999;
   display: flex;
   align-items: center;
@@ -313,7 +313,7 @@ body:after {
 }
 
 .headerTitleWithLogo::after {
-  content: "Stable";
+  content: "beta";
   margin-left: 10px;
   font-weight: 500;
   transform: translateY(-1px);
