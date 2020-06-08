@@ -188,7 +188,7 @@ export type RouteDef<TParamDefCollection> = {
     params: TExtensionParamDefCollection,
     path: PathFn<TExtensionParamDefCollection>
   ): RouteDef<TParamDefCollection & TExtensionParamDefCollection>;
-  extend(path: string): RouteDef<TParamDefCollection>;
+  extend(path: string | string[]): RouteDef<TParamDefCollection>;
 };
 export type UmbrellaRouteDef = RouteDef<UmbrellaParamDefCollection>;
 

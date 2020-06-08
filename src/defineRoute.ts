@@ -57,7 +57,9 @@ export function defineRoute(...args: any[]): UmbrellaRouteDef {
 
           return ([] as string[]).concat(
             ...parentPathArray.map((parentPath) =>
-              childPathArray.map((childPath) => parentPath + childPath)
+              childPathArray.map(
+                (childPath) => parentPath + (childPath === "/" ? "" : childPath)
+              )
             )
           );
 

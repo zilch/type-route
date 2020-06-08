@@ -6,15 +6,17 @@ import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { createRouter, defineRoute, param, Route, createGroup } from "./index";
 
+const account = defineRoute("/account");
+
 export const { routes, session, listen } = createRouter({
   home: defineRoute(["/dashboard", "/"]),
+  account: account.extend(["/overview", "/"]),
   user: defineRoute(
     {
       userId: param.path.string,
     },
     (x) => [`/user/${x.userId}`, `/users/${x.userId}`]
   ),
-  other: defineRoute("/other"),
 });
 
 export const groups = {
@@ -40,7 +42,7 @@ function App() {
       <Navigation />
       {route.name === "home" && <HomePage />}
       {route.name === "user" && <UserPage route={route} />}
-      {route.name === "other" && <OtherPage />}
+      {route.name === "account" && <AccountPage />}
       {route.name === false && <NotFoundPage />}
       <Navigation />
     </>
@@ -55,8 +57,8 @@ function HomePage() {
   return <div style={{ height: "1000px" }}>Home Page</div>;
 }
 
-function OtherPage() {
-  return <div style={{ height: "1000px" }}>Other Page</div>;
+function AccountPage() {
+  return <div style={{ height: "1000px" }}>Account Page</div>;
 }
 
 function UserPage({ route }: { route: Route<typeof routes.user> }) {
