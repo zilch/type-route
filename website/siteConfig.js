@@ -36,7 +36,7 @@ const siteConfig = {
   usePrism: ["tsx", "typescript", "bash"],
 
   // Add custom scripts here that would be placed in <script> tags.
-  scripts: ["/js/codesandbox.js", "/js/site.js"],
+  scripts: ["/type-route/js/codesandbox.js", "/type-route/js/site.js"],
 
   scrollToTop: true,
   scrollToTopOptions: {
