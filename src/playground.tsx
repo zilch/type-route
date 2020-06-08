@@ -7,13 +7,14 @@ import ReactDOM from "react-dom";
 import { createRouter, defineRoute, param, Route, createGroup } from "./index";
 
 export const { routes, session, listen } = createRouter({
-  home: defineRoute(["/dashboarD", "/"]),
+  home: defineRoute(["/dashboard", "/"]),
   user: defineRoute(
     {
       userId: param.path.string,
     },
     (x) => [`/user/${x.userId}`, `/users/${x.userId}`]
   ),
+  other: defineRoute("/other"),
 });
 
 export const groups = {
