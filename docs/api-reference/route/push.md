@@ -13,6 +13,6 @@ const { routes } = createRouter({
   post: defineRoute({ postId: param.path.string }, p => `/post/${p.postId}`)
 });
 
-routes.home().push; // returns boolean
-routes.post({ postId: "abc" }).push; // returns boolean
+routes.home().push(); // returns boolean
+routes.post({ postId: "abc" }).push(); // returns boolean
 ```

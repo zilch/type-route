@@ -17,4 +17,4 @@ const { routes, session, listen } = createRouter({
 });
 ```
 
-Trailing path parameters must come at the end of the path and will match everything follow the first part of the url including forward slashes. This ensures that any path starting with `/static` will match the example route.
+Trailing path parameters must come at the end of the path and will match everything following the first part of the url including forward slashes. In the above example this ensures any path starting with `/static` will match the example route.

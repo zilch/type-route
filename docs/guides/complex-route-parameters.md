@@ -73,7 +73,7 @@ function NotFoundPage() {
 ReactDOM.render(<App />, document.querySelector("#root"));
 ```
 
-The important part of the above example is the data value serializer.
+The important part of the above example is the date value serializer.
 
 ```tsx
 const date: ValueSerializer<Date> = {
@@ -101,8 +101,8 @@ type ValueSerializer<TValue = unknown> = {
 }
 ```
 
-The `urlEncode` property controls if the string should automatically be url encoded after stringify and url decoded before parse. If this value is not provided `path` and `query` params will do the encoding by default and `state` or `path.trailing` params will not do encoding by default. Setting `urlEncoded` to a value will override the default behavior for each parameter type. Url encoding ensures any string given is safe by default. It can, however, result in urls that don't look quite as nice since they'll have encoded versions of certain characters. If you're certain the values you're putting into the url will not result in ambiguities caused from inserting a stray "/" or "&" etc. it should be safe to turn url encoding off.
+The `urlEncode` property controls if the string should automatically be url encoded after stringify and url decoded before parse. If this value is not provided `path` and `query` params will do the encoding by default and `state` or `path.trailing` params will not do encoding by default. Explicitly setting `urlEncoded` to a value will override the default behavior for each parameter type. Url encoding ensures any string given is safe by default. It can, however, result in urls that don't look quite as nice since they'll have encoded versions of certain characters. If you're certain the values you're putting into the url will not result in ambiguities caused from inserting a stray "/" or "&" etc. it should be safe to turn url encoding off.
 
-The `id` property can be useful if you need to provide a custom `queryStringSerializer` to the router. This is an very advanced scenario and most users do not need to worry about setting this property.
+The `id` property can be useful if you need to provide a custom `queryStringSerializer` to the router. This is an advanced scenario and most users do not need to worry about setting this property.
 
-It is also possible to use `ofType<SomeType>()` without a value serializer. If no value serializer the default json serializer will be used. The drawback to this is that other than validating the value is parsable json the json serializer cannot guarantee the shape of the value parsed matches the type parameter provided to `ofType<SomeType>()`. Some use cases may merit this approach but it will be necessary to handle the possibility of the compile time type not matching the runtime value in application code.
+It is also possible to use `ofType<SomeType>()` without a value serializer. If no value serializer is provided the default json serializer will be used. The drawback to this is that other than validating the value is parsable json the json serializer cannot guarantee the shape of the value parsed matches the type parameter provided to `ofType<SomeType>()`. Some use cases may merit this approach but it will be necessary to handle the possibility of the compile time type not matching the runtime value in application code.

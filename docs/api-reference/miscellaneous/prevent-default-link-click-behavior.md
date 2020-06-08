@@ -18,4 +18,6 @@ function replaceLink(route: Route<typeof routes>) {
     }
   }
 }
+
+<a {...replaceLink(routes.foo())}>Foo</a>
 ```

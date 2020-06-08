@@ -108,9 +108,9 @@ function Page(props: UserProps) {
 
 type UserPageProps = {
   route: Route<
-    | typeof routes["user"]
-    | typeof routes["userSettings"]
-    | typeof routes["userActivity"]
+    | typeof routes.user
+    | typeof routes.userSettings
+    | typeof routes.userActivity
   >;
 };
 
@@ -145,7 +145,7 @@ To help with this case Type Route has a [`createGroup`](../api-reference/route-g
 
 ```tsx codesandbox-react
 import React from "react";
-import { Route } from "type-route";
+import { Route, defineRoute, createRouter } from "type-route";
 
 const user = defineRoute(
   {
@@ -174,7 +174,7 @@ type PageProps = {
   route: Route<typeof routes>;
 };
 
-function Page(props: UserProps) {
+function Page(props: PageProps) {
   const { route } = props;
 
   if (route.name === "home") {

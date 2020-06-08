@@ -11,7 +11,7 @@ Push indicates your application added a new entry to the browser's history.
 
 ### Replace
 
-Replace indicates your application replace the current browser history entry with this route.
+Replace indicates your application replaced the current browser history entry with this route.
 
 ### Pop
 

@@ -18,7 +18,7 @@ createRouter({
 });
 ```
 
-In the above example "/" will automatically redirect to "/dashboard" and the plural "/users" route will redirect to the singular "/user" route. For public facing application you may want to consider making these server side redirects with a 301 status code to ensure search engines are properly indexing your website.
+In the above example "/" will automatically redirect to "/dashboard" and the plural "/users" route will redirect to the singular "/user" route. For public facing applications you may want to consider making these server side redirects with a 301 status code to ensure search engines are properly indexing your website.
 
 Certain redirect situations may require a non-uniform mapping of parameters between routes. In those cases a more involved approach is necessary. In the below example a transformation of the parameter is necessary to ensure it matches the new route. On every route change we check to see if the route we're on is the old one. If it is we redirect to the new route and display the text "Redirecting..." for the split second the old route is still active.
 

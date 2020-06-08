@@ -2,7 +2,29 @@
 title: param
 ---
 
-The `param` object provides an ergonomic way to access the parameter definitions used to define which parameters a specific route takes. Here's a list of all parameter definitions:
+The `param` object is a collection of parameter definition objects. These parameter definition objects are used in `defineRoute` to declare which types of parameters a particular route takes.
+
+```tsx
+import { createRouter, defineRoute, param } from "type-route";
+
+export const { listen, session, routes } = createRouter({
+  user: defineRoute(
+    {
+      userId: param.path.string
+    },
+    p => `/user/${param.path.string}`
+  ),
+  userList: defineRoute({
+    {
+      page: param.query.optional.number.default(1),
+      search: param.query.optional.string
+    },
+    () => `/user`
+  })
+});
+```
+
+Here's a list of all possible parameter definitions:
 
 - `param.path.string`
 - `param.path.number`
@@ -58,11 +80,48 @@ These are organized first by parameter position (path, query, state), then by an
 
 ### Path
 
-Path parameters are found in the path of the url. Given this url `https://typehero.org/type-route/example/abc?page=1` the path would be this segment `/type-route/example/abc`. A `string` path parameter could be used to parameterize the `abc` part of this path.
+Path parameters are found in the path of the url. Given this url `https://typehero.org/type-route/example/abc?page=1` the path would be this segment `/type-route/example/abc`. A `param.path.string` parameter could be used to parameterize the `abc` part of this path. There may be at most one path parameter per path segment (a path segment being the value between forward slashes). Within these path segments the parameter may have leading or trailing text. If more than a single path parameter is needed within a single path segment the `ofType` parameter type gives you the flexibility to accommodate that scenario.
+
+```tsx
+// WORKS
+defineRoute(
+  {
+    foo: param.path.number
+  },
+  p => `/leading-text-${p.foo}-trailing-text/test`
+);
+
+// WORKS
+defineRoute(
+  {
+    foo: param.path.number,
+    bar: param.path.number,
+  },
+  p => `/leading-text-${p.foo}-trailing-text/${p.bar}/test`
+);
+
+// DOES NOT WORK
+defineRoute(
+  {
+    foo: param.path.number,
+    bar: param.path.number,
+  },
+  p => `/leading-text-${p.foo}-${p.bar}/test`
+);
+```
 
 ### Query
 
-Query parameters are found in the query string of the url. Given this url `https://typehero.org/type-route/example/abc?page=1` the query string would be this segment `?page=1`. A `number` query parameter could be used to parameterize the `page=1` part of this query string.
+Query parameters are found in the query string of the url. Given this url `https://typehero.org/type-route/example/abc?page=1` the query string would be this segment `?page=1`. A `param.query.number` parameter could be used to parameterize the `page=1` part of this query string.
+
+```tsx
+defineRoute(
+  {
+    page: param.query.number
+  },
+  () => `/user`
+)
+```
 
 ### State
 
@@ -72,20 +131,56 @@ State parameters are found in the browser's history. They are invisible to a use
 
 ### Optional
 
-The optional modifier will ensure that, even if a particular parameter has not been provided a value, the route will still be able to be successfully matched. The optional modifier may only be used for a path parameter if the parameter is at the end of the path.
+The optional modifier will ensure that, even if a particular parameter has not been provided a value, the route will still be able to be successfully matched. The optional modifier may only be used for a path parameter if that parameter is at the end of the path.
+
+```tsx
+defineRoute(
+  {
+    page: param.query.optional.number
+  },
+  () => `/users`
+)
+```
 
 ### Default
 
 Any `optional` parameter may also provide a `default` modifier. The default modifier will ensure that even if a value was not provided for a particular parameter it will
 appear to the application that a value was provided. Paginated list pages could benefit from this modifier, for example, to guarantee that a query parameter specifying the `page` has the default value 1 if not other value is provided.
 
+```tsx
+defineRoute(
+  {
+    page: param.query.optional.number.default(1)
+  },
+  () => `/users`
+)
+```
+
 ### Array
 
 The `array` modifier will take the parameter type given and modify it to be an array.
 
+```tsx
+defineRoute(
+  {
+    selectedUserIds: param.query.optional.array.number
+  },
+  () => `/users`
+)
+```
+
 ### Trailing
 
 The `trailing` modifier may only be used with path parameters. It is used to designate a parameter that is a catch all or wildcard. It may only be used as the last parameter in a path. Even if the value is unused by the application this modifier can ensure that paths will match as long as the beginning portions are the same.
+
+```tsx
+defineRoute(
+  {
+    slug: param.path.trailing.optional.string
+  },
+  p => `/foo/${p.slug}`
+)
+```
 
 ## Parameter Types
 

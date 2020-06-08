@@ -30,6 +30,12 @@ function App() {
 
   useEffect(() => listen(nextRoute => setRoute(nextRoute)), []);
 
+  useEffect(() => {
+    if (route.action === "push") {
+      window.scrollTo(0, 0);
+    }
+  }, [route]);
+
   return (
     <>
       <Navigation />

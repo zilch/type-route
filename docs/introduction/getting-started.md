@@ -66,7 +66,7 @@ function App() {
 }
 ```
 
-Retrieve the initial route via [`session.getInitialRoute()`](../api-reference/session.md) then subscribe to route updates with [`listen`](../api-reference/router/listen.md).
+Retrieve the initial route via [`session.getInitialRoute()`](../api-reference/router/session.md) then subscribe to route updates with [`listen`](../api-reference/router/listen.md).
 
 ## Step 3: Display Current Route
 
@@ -142,7 +142,7 @@ export function Navigation() {
 }
 ```
 
-The [`link`](../api-reference/route-definition/link.md) function returns an object with an `href` property and an `onClick` function. You need both to [properly render](../guides/rendering-links.md) a link for a single page application. Immediately destructing these into the properties of the `<a>` tag allows for ergonomic use. [Programmatic navigation](../guides/programmatic-navigation.md) is possible with the [`push`](../api-reference/route-definition/push.md) and [`replace`](../api-reference/route-definition/replace.md) functions of a specific route.
+The [`link`](../api-reference/route/link.md) property is an object with an `href` property and an `onClick` function. You need both to [properly render](../guides/rendering-links.md) a link for a single page application. Immediately destructing these into the properties of the `<a>` tag allows for ergonomic use. [Programmatic navigation](../guides/programmatic-navigation.md) is possible with the [`push`](../api-reference/route/push.md) and [`replace`](../api-reference/route/replace.md) functions of a specific route.
 
 ## Next Steps
 

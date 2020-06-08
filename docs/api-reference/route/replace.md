@@ -13,6 +13,6 @@ const { routes } = createRouter({
   post: defineRoute({ postId: param.path.string }, p => `/post/${p.postId}`)
 });
 
-routes.home.replace(); // returns Promise<boolean>
-routes.post.replace({ postId: "abc" }); // returns Promise<boolean>
+routes.home().replace(); // returns boolean
+routes.post({ postId: "abc" }).replace(); // returns boolean
 ```
