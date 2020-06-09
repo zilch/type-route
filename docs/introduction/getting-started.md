@@ -4,9 +4,11 @@ title: Getting Started
 
 Type Route is a flexible, type safe routing library built on top of the same [core library](https://github.com/ReactTraining/history) that powers React Router.
 
-> Type Route was designed with excellent React integration in mind but isn't coupled to a specific UI framework. Most code examples in the documentation use React, but the general principles covered apply regardless of framework.
+> **Type Route was designed with excellent React integration in mind** but isn't coupled to a specific UI framework. Most code examples in the documentation use React, but the general principles covered apply regardless of framework.
 
-Continue reading this introduction for a quick overview of how to start using Type Route in your project. Find a full runnable version of the below examples on the [Simple React Example](https://typehero.org/type-route/docs/guides/simple-react-example) page.
+Continue reading this introduction for a quick overview of how to start using Type Route in your project. Find a full <b>runnable</b> version of the below guide in your framework of choice on any of the following pages:
+
+[Simple React Example](https://typehero.org/type-route/docs/guides/simple-react-example) · [Simple Vue Example](https://typehero.org/type-route/docs/guides/simple-vue-example) · [Simple Svelte Example](https://typehero.org/type-route/docs/guides/simple-svelte-example) · [Simple Angular Example](https://typehero.org/type-route/docs/guides/simple-angular-example)
 
 ## Install
 
@@ -152,4 +154,4 @@ The [`link`](https://typehero.org/type-route/docs/api-reference/route/link) prop
 
 Hopefully that was enough to point you in the right direction!
 
-If you need more guidance there is a full runnable version of the above example on the [React](https://typehero.org/type-route/docs/guides/simple-react-example) page. The "Guides" section of the documentation has detailed overviews and examples for most use cases. Additionally, the "API Reference" section has descriptions and examples for each part of the API.
+If you need more direction there is a full runnable version of the above guide on the [Simple React Example](https://typehero.org/type-route/docs/guides/simple-react-example) page. The "Guides" section of the documentation has detailed overviews and examples for most use cases. Additionally, the "API Reference" section has descriptions and examples for each part of the API.
