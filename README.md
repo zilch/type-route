@@ -171,15 +171,13 @@ If you need more direction there is a full runnable version of the above guide o
 <br/>
 <br/>
 <br/>
-<br/>
+<p align="center">
+Type Route is a <a href="https://typehero.org">Type Hero</a> project.
+</p>
 <p align="center">
   <a href="https://typehero.org">
     <img src="https://typehero.org/type-route/img/type-hero-logo.svg" width="225" alt="Type Hero"/>
   </a>
-</p>
-<br/>
-<p align="center">
-Type Route is a <a href="https://typehero.org">Type Hero</a> project.
 </p>
 <br/>
 <br/>
