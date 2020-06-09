@@ -1,8 +1,8 @@
 <br/>
 <br/>
 <p align="center">
-  <a href="https://github.com/typehero/type-route">
-    <img src="https://www.typehero.org/type-route/img/type-route-logo.svg" width="200" alt="type-route"/>
+  <a href="https://typehero.org/type-route">
+    <img src="https://typehero.org/type-route/img/type-route-logo.svg" width="200" alt="Type Route"/>
   </a>
 </p>
 <br/>
@@ -170,4 +170,17 @@ If you need more direction there is a full runnable version of the above guide o
 
 ---
 
-_Type Route is a [Type Hero](https://typehero.org) project._
+<br/>
+<br/>
+<p align="center">
+  <a href="https://typehero.org">
+    <img src="https://typehero.org/type-route/img/type-hero-logo.svg" width="200" alt="Type Hero"/>
+  </a>
+</p>
+<br/>
+<h1 align="center">Type Hero</h1>
+<p align="center">
+Type Route is a <a href="https://typehero.org">Type Hero</a> project.
+<a href="#getting-started">Quick Start</a>&nbsp;&nbsp;·&nbsp;&nbsp;<a href="https://typehero.org/type-route">Docs</a>
+</p>
+<br/>
