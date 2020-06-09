@@ -119,14 +119,14 @@
       "guides/programmatic-navigation": {
         "title": "Programmatic Navigation"
       },
+      "guides/react-components": {
+        "title": "React Components"
+      },
       "guides/redirects": {
         "title": "Redirects"
       },
       "guides/rendering-links": {
         "title": "Rendering Links"
-      },
-      "guides/route-components": {
-        "title": "Route Components"
       },
       "guides/route-parameters": {
         "title": "Route Parameters"

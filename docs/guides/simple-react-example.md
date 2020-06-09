@@ -2,6 +2,8 @@
 title: Simple React Example
 ---
 
+> New Type Route users often wonder why no React components are provided by Type Route. Read the [React Components](./react-components.md) guide for more information on this topic.
+
 Here's a basic example of how to use Type Route with React. Click the **Run** button to try it out on CodeSandbox. Other guides cover more complex use cases.
 
 ```tsx codesandbox-react
