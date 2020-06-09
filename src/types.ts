@@ -224,7 +224,7 @@ export type RouteBuilder<TRouteName, TParamDefCollection> = RouteParamsFunction<
   TParamDefCollection,
   Route<TRouteName, TParamDefCollection>
 > & {
-  routeName: TRouteName;
+  name: TRouteName;
   ["~internal"]: {
     type: "RouteBuilder";
     match: (args: {

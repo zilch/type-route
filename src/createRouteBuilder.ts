@@ -47,7 +47,8 @@ export function createRouteBuilder(
     }) as any;
   };
 
-  build.routeName = routeName;
+  Object.defineProperty(build, "name", { value: routeName });
+
   build["~internal"] = {
     type: "RouteBuilder",
     match: createMatcher({
