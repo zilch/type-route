@@ -181,6 +181,5 @@ If you need more direction there is a full runnable version of the above guide o
 <h1 align="center">Type Hero</h1>
 <p align="center">
 Type Route is a <a href="https://typehero.org">Type Hero</a> project.
-<a href="#getting-started">Quick Start</a>&nbsp;&nbsp;·&nbsp;&nbsp;<a href="https://typehero.org/type-route">Docs</a>
 </p>
 <br/>
