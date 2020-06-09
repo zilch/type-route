@@ -7,16 +7,16 @@ const { routes, listen, getCurrentRoute } = createRouter({
   home: defineRoute("/"),
   userList: defineRoute(
     {
-      page: "query.param.number.optional"
+      page: "query.param.number.optional",
     },
     () => "/user"
   ),
   user: defineRoute(
     {
-      userId: "path.param.string"
+      userId: "path.param.string",
     },
-    p => `/user/${p.userId}`
-  )
+    (p) => `/user/${p.userId}`
+  ),
 });
 
 function App() {
@@ -63,14 +63,14 @@ function Navigation() {
       <a {...routes.userList.link()}>User List</a>
       <a
         {...routes.userList.link({
-          page: 2
+          page: 2,
         })}
       >
         User List Page 2
       </a>
       <a
         {...routes.user.link({
-          userId: "abc"
+          userId: "abc",
         })}
       >
         User "abc"

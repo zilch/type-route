@@ -33,10 +33,10 @@ export type ParameterDefinition =
 
 export type QueryParameterDefinitionCollection = {
   [parameterName: string]:
-  | QueryParamNumber
-  | QueryParamString
-  | QueryParamNumberOptional
-  | QueryParamStringOptional;
+    | QueryParamNumber
+    | QueryParamString
+    | QueryParamNumberOptional
+    | QueryParamStringOptional;
 };
 
 export type ParameterDefinitionCollection = {
@@ -147,13 +147,11 @@ export type HistoryConfig =
   | BrowserHistoryRouterConfig
   | MemoryHistoryRouterConfig;
 
-export type RouteDefinitionToRoute<
-  T extends RouteDefinition<string, ParameterDefinitionCollection>
-  > = {
-    name: T["name"];
-    action: Action;
-    params: RouteParameters<T[".builder"]["params"]>;
-  };
+export type RouteDefinitionToRoute<T extends RouteDefinition<any, any>> = {
+  name: T["name"];
+  action: Action;
+  params: RouteParameters<T[".builder"]["params"]>;
+};
 
 export type NotFoundRoute = {
   name: false;
@@ -161,13 +159,7 @@ export type NotFoundRoute = {
   params: {};
 };
 
-export type RouteDefinitionGroup<T extends {
-  [key: number]: {
-    '.type': {
-      name: any[],
-    }
-  }
-}> = {
+export type RouteDefinitionGroup<T extends any[]> = {
   [".type"]: T[number][".type"];
   routeNames: T[number][".type"]["name"][];
   has(route: Route<any>): route is T[number][".type"];
@@ -178,18 +170,18 @@ export type Route<T> = T extends RouteDefinition<any, any>
   : T extends RouteDefinitionGroup<any>
   ? T[".type"]
   :
-  | {
-    [K in keyof T]: {
-      name: K;
-      action: Action;
-      params: T[K] extends RouteDefinition<any, any>
-      ? RouteParameters<T[K][".builder"]["params"]>
-      : T[K] extends RouteDefinitionBuilder<any>
-      ? RouteParameters<T[K]["params"]>
-      : never;
-    };
-  }[keyof T]
-  | NotFoundRoute;
+      | {
+          [K in keyof T]: {
+            name: K;
+            action: Action;
+            params: T[K] extends RouteDefinition<any, any>
+              ? RouteParameters<T[K][".builder"]["params"]>
+              : T[K] extends RouteDefinitionBuilder<any>
+              ? RouteParameters<T[K]["params"]>
+              : never;
+          };
+        }[keyof T]
+      | NotFoundRoute;
 
 export type NavigationHandler<T> = (
   nextRoute: Route<T>

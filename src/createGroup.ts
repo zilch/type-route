@@ -2,11 +2,11 @@ import {
   Route,
   RouteDefinition,
   ParameterDefinitionCollection,
-  RouteDefinitionGroup
+  RouteDefinitionGroup,
 } from "./types";
 import { validate } from "./validate";
 
-export function createGroup<T extends { [key: string]: any }>(
+export function createGroup<T extends any[]>(
   groupItems: T
 ): RouteDefinitionGroup<T> {
   validate["createGroup"](Array.from(arguments));
@@ -24,7 +24,7 @@ export function createGroup<T extends { [key: string]: any }>(
           >
     ) => {
       if (isRouteDefinitionGroup(item)) {
-        item.routeNames.forEach(name => {
+        item.routeNames.forEach((name) => {
           routeDefinitionNames[name] = true;
         });
       } else {
@@ -46,7 +46,7 @@ export function createGroup<T extends { [key: string]: any }>(
       const value = routeDefinitionNames[route.name];
 
       return value === true ? true : false;
-    }
+    },
   };
 }
 
