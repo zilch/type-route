@@ -168,18 +168,14 @@ Hopefully that was enough to point you in the right direction!
 
 If you need more direction there is a full runnable version of the above guide on the [Simple React Example](https://typehero.org/type-route/docs/guides/simple-react-example) page. The "Guides" section of the documentation has detailed overviews and examples for most use cases. Additionally, the "API Reference" section has descriptions and examples for each part of the API.
 
----
-
 <br/>
 <br/>
 <p align="center">
   <a href="https://typehero.org">
-    <img src="https://typehero.org/type-route/img/type-hero-logo.svg" width="200" alt="Type Hero"/>
+    <img src="https://typehero.org/type-route/img/type-hero-logo.svg" width="250" alt="Type Hero"/>
   </a>
 </p>
 <br/>
-<h1 align="center">Type Hero</h1>
 <p align="center">
 Type Route is a <a href="https://typehero.org">Type Hero</a> project.
 </p>
-<br/>
