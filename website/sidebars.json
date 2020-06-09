@@ -21,8 +21,8 @@
       "guides/route-parameters",
       "guides/scroll-restoration",
       "guides/server-side-rendering",
-      "guides/wildcard-routes",
       "guides/styling-active-route-link",
+      "guides/wildcard-routes",
       "guides/guide-missing"
     ],
     "API Reference": [

@@ -3,7 +3,14 @@ title: <Route>.link
 sidebar_label: link
 ---
 
-The `link` property is an object containing both an `href` property and an `onClick` function. When called, the `onClick` function calls `preventDefault` on the event object passed to it and triggers that particular route's `push` function.
+```tsx
+link: {
+  href: string;
+  onClick: OnClickHandler;
+}
+```
+
+The `link` property is an object containing both an `href` property and an `onClick` function. When called, the `onClick` function calls `preventDefault` (see [preventDefaultLinkClickBehavior](../miscellaneous/prevent-default-link-click-behavior.md)) on the event object passed to it and triggers that particular route's `push` function.
 
 #### Example
 

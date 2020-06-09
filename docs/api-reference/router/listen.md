@@ -7,7 +7,7 @@ sidebar_label: listen
 <Router>.listen(navigationHandler: (nextRoute: Route, previousRoute: Route | null) => false | void): () => void;
 ```
 
-The `listen` function will create a new route listener. Any time the application route changes this function will be called with the next matching route. If the given url does not match any route in that router an object with a `false` value for the `name` property and an empty object for the `params` property will be returned.
+The `listen` function will create a new route change listener. Whenever the application route changes this function will be called with the next matching route. If the given url does not match any route in that router an object with a `false` value for the `name` property and an empty object for the `params` property will be returned.
 
 Returning `false` from the navigation handler function will abort the url change. Read the [Preventing Navigation](../../guides/preventing-navigation.md) guide for more information on how this works.
 

@@ -2,7 +2,7 @@
 title: param
 ---
 
-The `param` object is a collection of parameter definition objects. These parameter definition objects are used in `defineRoute` to declare which types of parameters a particular route takes.
+The `param` object is a collection of parameter definitions. These parameter definitions are used in `defineRoute` to declare which types of parameters a particular route takes.
 
 ```tsx
 import { createRouter, defineRoute, param } from "type-route";
@@ -74,13 +74,13 @@ Here's a list of all possible parameter definitions:
 - `param.state.optional.ofType(valueSerializer)`
 - `param.state.optional.ofType(valueSerializer).default(value)`
 
-These are organized first by parameter position (path, query, state), then by any parameter modifiers (optional, default, array, trailing), and finally by the parameter type (string, number, boolean, ofType).
+These are organized first by parameter position ([path](#path), [query](#query), [state](#state)), then by any parameter modifiers ([optional](#optional), [default](#default), [array](#array), [trailing](#trailing)), and finally by the parameter type ([string](#string), [number](#number), [boolean](#boolean), [ofType](#oftype)).
 
 ## Parameter Position
 
 ### Path
 
-Path parameters are found in the path of the url. Given this url `https://typehero.org/type-route/example/abc?page=1` the path would be this segment `/type-route/example/abc`. A `param.path.string` parameter could be used to parameterize the `abc` part of this path. There may be at most one path parameter per path segment (a path segment being the value between forward slashes). Within these path segments the parameter may have leading or trailing text. If more than a single path parameter is needed within a single path segment the `ofType` parameter type gives you the flexibility to accommodate that scenario.
+Path parameters are found in the path of the url. Given this url `https://typehero.org/type-route/example/abc?page=1` the path would be this section `/type-route/example/abc`. A `param.path.string` parameter could be used to parameterize the `abc` part of this path. There may be at most one path parameter per path segment (a path segment being the value between forward slashes). Within these path segments the parameter may have leading or trailing text. If more than a single path parameter is needed within a single path segment the [`ofType`](#oftype) parameter type gives you the flexibility to accommodate that scenario.
 
 ```tsx
 // WORKS
@@ -223,9 +223,11 @@ defineRoute(
 )
 ```
 
-It is also possible to not specify a value serializer for the `ofType` function and only provide a generic type parameter. In this case Type Route will use the default json serializer with the object you provided. In most cases this is not recommended because you have no guarantees that the json parsed will be of the shape you expect. Where this is used there should be application code in place to gracefully handle conditions where data is not of the expected type.
+It is also possible to not specify a value serializer for the `ofType` function and only provide a generic type parameter. In this case Type Route will use the default JSON serializer with the object you provided. In most cases this is not recommended because you have no guarantees that the JSON parsed will be of the shape you expect. Where this is used there should be application code in place to gracefully handle conditions where data is not of the expected type.
 
 ```tsx
 type SomeSuperComplexJsonYouDoNotWantToWriteASerializerFor = { ... };
 param.query.ofType<SomeSuperComplexJsonYouDoNotWantToWriteASerializerFor>();
 ```
+
+See the [Complex Route Parameters](../../guides/complex-route-parameters.md) for more information on `ofType`.

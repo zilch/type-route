@@ -3,6 +3,10 @@ title: <Route>.name
 sidebar_label: name
 ---
 
+```tsx
+name: string
+```
+
 The `name` field is a constant value used for narrowing the type of a specific `Route`. This value will be `false` if a match to any of the routes you provided was unable to be made. As shown in the example this allows you to determine which route you're dealing with.
 
 #### Example

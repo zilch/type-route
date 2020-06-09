@@ -6,7 +6,7 @@ title: createGroup
 createGroup(routes: (RouteBuilder | RouteGroup)[]): RouteGroup
 ```
 
-The `createGroup` function takes an array of `RouteBuilder` objects and returns a `RouteGroup`. The `createGroup` function is useful for composing groups of routes to make checking against them easier elsewhere in the application with the [`has`](./has.md) function. It takes an array composed of both `RouteBuilder` and `RouteGroup` objects. Read the [Nested/Similar Routes](../../guides/nested-and-similar-routes.md) guide for more information.
+The `createGroup` function takes an array of `RouteBuilder` and `RouteGroup` objects and returns a `RouteGroup`. The `createGroup` function is useful for composing groups of routes to make checking against them easier elsewhere in the application with the [`has`](./has.md) function. It takes an array composed of both `RouteBuilder` and `RouteGroup` objects. Read the [Nested/Similar Routes](../../guides/nested-and-similar-routes.md) guide for more information.
 
 #### Example
 
@@ -33,14 +33,16 @@ const { routes, session } = createRouter({
   )
 });
 
+const postGroup = createGroup([routes.userPostList, routes.userPost]);
+
 const groups = {
-  post: createGroup([routes.userPostList, routes.userPost]),
+  post: postGroup,
   user: createGroup([
     routes.userSummary,
     routes.userSettings,
-    userPostGroup
+    postGroup
   ])
-}
+};
 
 const route = session.getInitialRoute();
 

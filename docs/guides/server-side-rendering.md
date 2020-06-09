@@ -6,7 +6,7 @@ Type Route supports server side rendering. The key to making this support possib
 is the `router.session.reset` function. This function allows you to reconfigure
 the underlying history session instance that powers Type Route. By setting the type of the
 instance to "memory" and giving it an initial entry of the current url the user is
-requesting, you can be sure that your app will render correctly. Below is an example
+requesting, you can be sure that your app will server-side render correctly. Below is an example
 of how to accomplish this using React.
 
 ### Server Code
@@ -22,7 +22,7 @@ const app = fastify();
 app.get("/*", (request, response) => {
   session.reset({
     type: "memory",
-    initialEntries: request.req.url ? [request.req.url] : []
+    initialEntries: [request.req.url]
   });
 
   const appHtml = ReactDOM.renderToString(<App />);

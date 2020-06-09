@@ -7,7 +7,7 @@ sidebar_label: has
 <RouteGroup>.has(route: Route): boolean
 ```
 
-The `has` function is the one and only function on the `RouteGroup` object returned by the `createGroup` function. It takes a `route` and returns a `boolean`.
+The `has` function is the only property on the `RouteGroup` object returned by the `createGroup` function. It takes a `route` and returns a `boolean`.
 
 #### Example
 
@@ -41,7 +41,7 @@ if (groups.user.has(route)) {
 }
 ```
 
-In addition to taking a route and returning a boolean, `has` works with TypeScript's control flow analysis to properly narrow type of the given `route` in the appropriate code blocks. In the above example this mean you can be sure `route.params.userId` exists within this code block:
+In addition to taking a route and returning a boolean, `has` works with TypeScript's control flow analysis to properly narrow type of the given `route` in the appropriate code blocks. In the above example this means you can be sure `route.params.userId` exists within this code block:
 
 ```tsx
 if (groups.user.has(route)) {

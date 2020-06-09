@@ -2,7 +2,7 @@
 title: Scroll Restoration
 ---
 
-Anytime you navigate to a new page the usual expectation is that the new page starts scrolled to the top. The browser should handle restoring scroll position as you navigate through history. It will not however ensure new pages are scrolled to the top by default. To ensure this happens in your application you may want to include the following code:
+Any time you navigate to a new page the usual expectation is that the new page starts scrolled to the top. The browser should handle restoring scroll position as you navigate through history. It will not, however, ensure new pages are scrolled to the top by default. To ensure this happens in your application you may want to include the following code:
 
 ```tsx
 useEffect(() => {
@@ -12,7 +12,7 @@ useEffect(() => {
 }, [route]);
 ```
  
-This will ensure that once a new route renders the page will start scrolled to the top. Here's a full example:
+This will ensure that when a new route renders the page will start scrolled to the top. Here's a full example:
 
 ```tsx codesandbox-react
 import React, { useState, useEffect } from "react";

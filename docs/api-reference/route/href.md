@@ -3,6 +3,10 @@ title: <Route>.href
 sidebar_label: href
 ---
 
+```tsx
+href: string
+```
+
 Use the `href` property of a `Route` object to retrieve that route's corresponding href. In most cases instead of using this property you would use the [link](./link.md) property to generate both an `href` and `onClick` handler for your view or would use the [push](./push.md) or [replace](./replace.md) functions for navigating programmatically.
 
 #### Example

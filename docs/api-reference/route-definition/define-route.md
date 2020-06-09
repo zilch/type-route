@@ -10,7 +10,7 @@ defineRoute(
 ): RouteDefinition;
 ```
 
-This method will create a route definition object to be consumed by `createRouter`. The simplified version of the call is an alias for `defineRoute({}, () => path)`. The parameters object passed to `defineRoute` is a map of variable names to a `param.*` object.
+This method will create a route definition object to be consumed by `createRouter`. The simplified version of the call is an alias for `defineRoute({}, () => path)`. The parameters object passed to `defineRoute` is a map of variable names to a [`param.*`](../parameter-definition/param.md) object.
 
 **Examples**
 
@@ -33,7 +33,9 @@ defineRoute(
 
 Defines a route matching: `"/user/some-id/posts?page=1&search=hello"` or `"/user/some-id/posts?page=1"`
 
-It is possible to provide more than a single path to `defineRoute`. The first path provided is the primary path which is used when navigating to this route from your application. The other routes are additional paths that should go to the same place. A route matching one of these secondary paths will immediately and transparently redirect to the primary path.
+### Path Aliases
+
+It is possible to provide more than a single path to `defineRoute` by passing an array of strings. The first path provided is the primary path of the route. The primary path is used when navigating to this route with `push`, `replace` etc. Subsequent paths are aliases to the primary path. When an alias is matched the url will immediately be changed to the primary path.
 
 **Examples**
 
@@ -52,4 +54,4 @@ defineRoute(
 );
 ```
 
-Defines a route matching: `"/user/some-id"` or `"/users/some-id"`. If the plural users route is matched the url (when using a browser history router) will immediately be changed to the singular version.
+Defines a route matching: `"/user/some-id"` or `"/users/some-id"`. If the plural users route is matched, the url (when using a browser history router) will immediately be changed to the singular version.
