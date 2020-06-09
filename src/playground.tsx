@@ -11,6 +11,7 @@ const account = defineRoute("/account");
 export const { routes, session, listen } = createRouter({
   home: defineRoute(["/dashboard", "/"]),
   account: account.extend(["/overview", "/"]),
+
   user: defineRoute(
     {
       userId: param.path.string,
