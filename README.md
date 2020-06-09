@@ -12,8 +12,6 @@
 </p>
 <br/>
 
-_🚨 **This is a beta release.** 🚨 The Type Route API has been vetted with production code but the library has not yet reached version **1.0**. More community feedback is needed to validate the project's maturity. Use the [issue tracker](https://github.com/typehero/type-route/issues) to communicate this feedback in the form of bugs, questions, or suggestions._
-
 ## Getting Started
 
 Type Route is a flexible, type safe routing library built on top of the same [core library](https://github.com/ReactTraining/history) that powers React Router.
@@ -23,6 +21,8 @@ Type Route is a flexible, type safe routing library built on top of the same [co
 Continue reading this introduction for a quick overview of how to start using Type Route in your project. Find a full runnable version of the below examples on the [Simple React Example](https://typehero.org/type-route/docs/guides/simple-react-example) page.
 
 ## Install
+
+> 🚨 **This is a beta release.** 🚨 The Type Route API has been vetted with production code but the library has not yet reached version **1.0**. More community feedback is needed to validate the project's maturity. Use the [issue tracker](https://github.com/typehero/type-route/issues) to communicate this feedback in the form of bugs, questions, or suggestions.
 
 Type Route's primary distribution channel is the [NPM registry](https://www.npmjs.com/package/type-route).
 
@@ -82,7 +82,7 @@ function App() {
 
 Retrieve the initial route via [`session.getInitialRoute()`](https://typehero.org/type-route/docs/api-reference/router/session) then subscribe to route updates with [`listen`](https://typehero.org/type-route/docs/api-reference/router/listen).
 
-> New Type Route users often wonder why no React components are provided by Type Route. Read the [React Components](https://typehero.org/type-route/docs/guides/react-components) guide for more information on this topic.
+> New Type Route users often wonder why React components such as `<Route/>` or `<Link/>` aren't provided by the library. Read the [React Components](https://typehero.org/type-route/docs/guides/react-components) guide for more information on this topic.
 
 ## Step 3: Display Current Route
 
@@ -158,13 +158,13 @@ export function Navigation() {
 }
 ```
 
-The [`link`](https://typehero.org/type-route/docs/api-reference/route/link) property is an object with an `href` property and an `onClick` function. You need both to [properly render](https://typehero.org/type-route/docs/guides/rendering-links) a link for a single page application. Immediately destructing these into the properties of the `<a>` tag allows for ergonomic use. [Programmatic navigation](https://typehero.org/type-route/docs/guides/programmatic-navigation) is possible with the [`push`](https://typehero.org/type-route/docs/api-reference/route/push) and [`replace`](https://typehero.org/type-route/docs/api-reference/route/replace) functions of a specific route.
+The [`link`](https://typehero.org/type-route/docs/api-reference/route/link) property is an object with an `href` property and an `onClick` function. You need both to [properly render](https://typehero.org/type-route/docs/guides/rendering-links) a link for a single page application. Immediately destructing `link` into the properties of an `<a>` tag makes usage simple. [Programmatic navigation](https://typehero.org/type-route/docs/guides/programmatic-navigation) is possible with the [`push`](https://typehero.org/type-route/docs/api-reference/route/push) and [`replace`](https://typehero.org/type-route/docs/api-reference/route/replace) functions of a specific route.
 
 ## Next Steps
 
 Hopefully that was enough to point you in the right direction!
 
-If you need more guidance there is a full runnable version of the above example on the [React](https://typehero.org/type-route/docs/guides/simple-react-example) page. The Guides section of the documentation has detailed overviews and examples for most use cases. Additionally, the API Reference section has descriptions and examples for each part of the API.
+If you need more guidance there is a full runnable version of the above example on the [React](https://typehero.org/type-route/docs/guides/simple-react-example) page. The "Guides" section of the documentation has detailed overviews and examples for most use cases. Additionally, the "API Reference" section has descriptions and examples for each part of the API.
 
 ---
 

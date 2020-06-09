@@ -46,3 +46,10 @@ function Navigation({ route }: NavigationProps) {
   </nav>
 }
 ```
+
+**Related pages:**
+
+- [React Components](./react-components.md)
+- [Rendering Links](./rendering-links.md)
+- [Custom Link Behavior](./custom-link-behavior.md)
+- [preventDefaultLinkClickBehavior](../api-reference/miscellaneous/prevent-default-link-click-behavior.md)

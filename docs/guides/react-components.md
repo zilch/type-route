@@ -2,7 +2,7 @@
 title: React Components
 ---
 
-Those new to Type Route often notice the library lacks a `Route` or `Link` component. Developers familiar with projects such as React Router will also notice there is no `Router` component which provides (via React context) the current route to the rest of the application. An API including these components helps developers avoid tedious [prop drilling](https://kentcdodds.com/blog/prop-drilling). Type Route, however, doesn't ship with these components because they are easy to implement in user land. In user land these components will evolve more easily with the unique needs of a particular application. Fortunately, React provides a simple context API to help developers avoid prop drilling. Creating a context object and custom hook for Type Route can be done with just two lines of code:
+Those new to Type Route often notice the library lacks a `Route` or `Link` component. Developers familiar with projects such as React Router will also notice there is no `Router` component which provides (via React context) the current route to the rest of the application. An API including these components helps developers avoid tedious [prop drilling](https://kentcdodds.com/blog/prop-drilling). Type Route doesn't ship with these components because they are easy to implement in user land. In user land these components will evolve more easily with the unique needs of a particular application. Fortunately, React provides a simple context API to help developers avoid prop drilling. Creating a context object and custom hook for Type Route can be done with just two lines of code:
 
 ```tsx
 const RouteContext = React.createContext(session.getInitialRoute());
@@ -16,6 +16,7 @@ const useRoute = () => React.useContext(RouteContext);
 Some light abstractions on top of the Type Route API which take advantage React context may look something like this in practice: 
 
 ```tsx codesandbox-react
+import ReactDOM from "react-dom";
 import React, { useState, useEffect, createContext, useContext } from "react";
 import { createRouter, defineRoute, Route, param } from "type-route";
 
@@ -23,7 +24,7 @@ const { routes, listen, session } = createRouter({
   foo: defineRoute(
     {
       baz: param.path.string
-    }
+    },
     p => `/foo/${p.baz}`
   ),
   bar: defineRoute("/bar")
@@ -83,7 +84,7 @@ function FooPage(props: { route: Route<typeof routes.foo> }) {
   const { route } = props;
 
   return (
-    <div>Foo {route.param.baz}</div>
+    <div>Foo {route.params.baz}</div>
   );
 }
 
@@ -98,8 +99,15 @@ function NotFoundPage() {
     <div>Not Found</div>
   );
 }
+
+ReactDOM.render(<App />, document.querySelector("#root"));
 ```
 
 ## TypeScript
 
-Its worth noting that a disadvantage of a context dependent solution is that any narrowing of the type of the `route` variable on its way down the component tree is lost when the route is reintroduced via the `useRoute` hook in a child component. It will typically only make sense to use the `useRoute` hook in a place you truly expect the route to be anything. When you start narrowing the type of the route to access its `params` with confidence you'll likely want to pass that route down the component tree explicitly via props instead of context. This, of course, is general guidance. Specific needs of different applications will vary.
+Its worth noting that a disadvantage of a context dependent solution is that any [narrowing of the type](https://2ality.com/2020/06/type-guards-assertion-functions-typescript.html) of the `route` variable on its way down the component tree is lost when the route is reintroduced via the `useRoute` hook in a child component. It will typically only make sense to use the `useRoute` hook in a place you truly expect the route to be anything. When you start narrowing the type of the route to access its `params` with confidence you'll likely want to pass that route down the component tree explicitly via props instead of context. This, of course, is general guidance. Specific needs of different applications will vary.
+
+**Related pages:**
+
+- [Custom Link Behavior](./custom-link-behavior.md)
+- [Styling of Links for the Currently Active Route](./styling-active-route-link.md)

@@ -2,7 +2,7 @@
 title: Simple React Example
 ---
 
-> New Type Route users often wonder why no React components are provided by Type Route. Read the [React Components](./react-components.md) guide for more information on this topic.
+> New Type Route users often wonder why React components such as `<Route/>` or `<Link/>` aren't provided by the library. Read the [React Components](https://typehero.org/type-route/docs/guides/react-components) guide for more information on this topic.
 
 Here's a basic example of how to use Type Route with React. Click the **Run** button to try it out on CodeSandbox. Other guides cover more complex use cases.
 

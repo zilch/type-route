@@ -7,6 +7,7 @@
       "guides/simple-react-example",
       "guides/code-splitting",
       "guides/complex-route-parameters",
+      "guides/custom-link-behavior",
       "guides/custom-query-string",
       "guides/data-fetching",
       "guides/nested-and-similar-routes",
@@ -44,7 +45,7 @@
         "type": "subcategory",
         "label": "<RouteGroup>",
         "ids": [
-          "api-reference/route-group/create-croup",
+          "api-reference/route-group/create-group",
           "api-reference/route-group/has"
         ]
       },

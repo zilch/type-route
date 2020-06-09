@@ -87,7 +87,7 @@ function NotFoundPage() {
 
 </details>
 
-The above example would work but, on every page change, the `Header` and `Footer` components would be unmounted and remounted unnecessarily. Consider the follow approach instead:
+The above example would work but, on every page change, the `Header` and `Footer` components would be unmounted and remounted unnecessarily. Consider the following approach instead:
 
 <details>
 <summary>Good Example</summary>

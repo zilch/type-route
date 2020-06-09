@@ -145,7 +145,7 @@ To help with this case Type Route has a [`createGroup`](../api-reference/route-g
 
 ```tsx codesandbox-react
 import React from "react";
-import { Route, defineRoute, createRouter } from "type-route";
+import { Route, defineRoute, createRouter, param } from "type-route";
 
 const user = defineRoute(
   {

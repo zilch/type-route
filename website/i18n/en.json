@@ -95,6 +95,9 @@
       "guides/complex-route-parameters": {
         "title": "Complex Route Parameters"
       },
+      "guides/custom-link-behavior": {
+        "title": "Custom Link Behavior"
+      },
       "guides/custom-query-string": {
         "title": "Custom Query String"
       },

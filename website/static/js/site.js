@@ -29,12 +29,12 @@ window.onload = function () {
         },
         "public/index.html": {
           content:
-            '<style>a { margin-right: 10px; } nav { margin-bottom: 10px; } #root { margin: 10px; }</style><div id="root"></div>',
+            '<style>a { margin-right: 10px; } nav { margin-bottom: 10px; } #root { margin: 10px; } .active { font-weight: bold; }</style><div id="root"></div>',
         },
         "package.json": {
           content: {
             dependencies: {
-              "type-route": "latest",
+              "type-route": "next",
               react: "=16.8.6",
               "@types/react": "=16.8.18",
               "react-dom": "=16.8.6",
@@ -52,7 +52,7 @@ window.onload = function () {
         },
         "public/index.html": {
           content:
-            '<style>a { margin-right: 10px; } nav { margin-bottom: 10px; } #root { margin: 10px; }</style><div id="root"></div>',
+            '<style>a { margin-right: 10px; } nav { margin-bottom: 10px; } #root { margin: 10px; } .active { font-weight: bold; }</style><div id="root"></div>',
         },
         "index.ts": {
           content: code,
@@ -60,7 +60,7 @@ window.onload = function () {
         "package.json": {
           content: {
             dependencies: {
-              "type-route": "latest",
+              "type-route": "next",
             },
           },
         },

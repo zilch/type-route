@@ -36,7 +36,7 @@ Using Type Route the above would look something like this:
 </a>
 ```
 
-This pattern becomes especially repetitive when the route has parameters. To solve this problem in a framework agnostic way Type Route has the [`link`](../api-reference/route-definition/link.md) function.
+This pattern becomes especially repetitive when the route has parameters. To solve this problem in a framework agnostic way Type Route has the [`link`](../api-reference/route/link.md) function.
 
 ```tsx
 <a {...routes.fooBar().link}>Foo Bar</a>

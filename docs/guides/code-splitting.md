@@ -2,7 +2,7 @@
 title: Code Splitting
 ---
 
-The file where you create your router should typically be kept in the main bundle of your application. Since a Type Route route is just a piece of application state the strategies you'll need to ensure code splitting works properly while rendering your application will not change. In React applications React provides the [`lazy`](https://reactjs.org/docs/code-splitting.html#reactlazy) utility for dynamically imported components. Which components specifically should be used in conjunction with the [`lazy`](https://reactjs.org/docs/code-splitting.html#reactlazy) utility will vary from application to application. In many cases it will be appropriate to wrap the top level page components that correspond to each route in this helper.
+The file where you create your router should typically be kept in the main bundle of your application. Since a Type Route route is just a piece of application state the strategies you'll need to ensure code splitting works properly while rendering your application will not change. In React applications React provides the [`lazy`](https://reactjs.org/docs/code-splitting.html#reactlazy) utility for dynamically imported components. Which components specifically should be used in conjunction with the [`lazy`](https://reactjs.org/docs/code-splitting.html#reactlazy) utility will vary from application to application. In many cases it will be appropriate to wrap the top level page components that correspond to each route with this helper.
 
 `router.ts`
 
