@@ -253,6 +253,45 @@ export const TypeRouteError = buildErrorCollection({
       ];
     },
   },
+
+  Encountered_unexpected_parameter_when_building_route: {
+    errorCode: 1016,
+    getDetails({
+      routeName,
+      unexpectedParameterName,
+      allowedParameterNames,
+    }: {
+      routeName: string;
+      unexpectedParameterName: string;
+      allowedParameterNames: string[];
+    }) {
+      return [
+        `Problem found with your usage of routes.${routeName}( ... )`,
+        `Unexpected parameter passed to route builder named "${unexpectedParameterName}"`,
+        allowedParameterNames.length === 0
+          ? "The route does not take any parameters"
+          : `This route takes the following parameters: ${allowedParameterNames
+              .map((name) => `"${name}"`)
+              .join(", ")}`,
+      ];
+    },
+  },
+
+  Missing_required_parameter_when_building_route: {
+    errorCode: 1017,
+    getDetails({
+      routeName,
+      missingParameterName,
+    }: {
+      routeName: string;
+      missingParameterName: string;
+    }) {
+      return [
+        `Problem found with your usage of routes.${routeName}( ... )`,
+        `The parameter "${missingParameterName}" is required but was not provided.`,
+      ];
+    },
+  },
 });
 
 function buildErrorCollection<

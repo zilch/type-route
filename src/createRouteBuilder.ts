@@ -5,6 +5,7 @@ import { createLocation } from "./createLocation";
 import { createMatcher } from "./createMatcher";
 import { assert } from "./assert";
 import { buildRoute } from "./buildRoute";
+import { TypeRouteError } from "./TypeRouteError";
 
 export function createRouteBuilder(
   routeName: string,
@@ -25,6 +26,36 @@ export function createRouteBuilder(
         assert.numArgs([].slice.call(arguments), 0, 1),
         assert.type("object", "params", params),
       ]);
+
+      for (const paramKey in params) {
+        if (!(paramKey in routeDef["~internal"].params)) {
+          throw TypeRouteError.Encountered_unexpected_parameter_when_building_route.create(
+            {
+              routeName,
+              unexpectedParameterName: paramKey,
+              allowedParameterNames: Object.keys(routeDef["~internal"].params),
+            }
+          );
+        }
+      }
+
+      for (const paramKey in routeDef["~internal"].params) {
+        const value = params[paramKey];
+        const paramDef = routeDef["~internal"].params[paramKey]["~internal"];
+
+        if (value === undefined) {
+          if (!paramDef.optional) {
+            throw TypeRouteError.Missing_required_parameter_when_building_route.create(
+              {
+                routeName,
+                missingParameterName: paramKey,
+              }
+            );
+          }
+
+          continue;
+        }
+      }
     }
 
     const routerContext = getRouterContext();
