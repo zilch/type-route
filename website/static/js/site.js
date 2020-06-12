@@ -129,7 +129,7 @@ window.onload = function () {
 
     element.innerHTML = element.innerHTML
       .split("\n")
-      .map((code, index) => {
+      .map(function (code, index) {
         if (highlightedLines.indexOf(index + 1) === -1) {
           return code;
         }
@@ -137,6 +137,22 @@ window.onload = function () {
         return `<div class="line-highlight"></div><span>${code}</span>`;
       })
       .join("<br/>");
+
+    element.querySelectorAll("*").forEach(function (element) {
+      element.childNodes.forEach(function (node) {
+        if (node.nodeName === "#text") {
+          const span = document.createElement("span");
+          span.innerHTML = node.nodeValue;
+          element.replaceChild(span, node);
+        }
+      });
+    });
+
+    element.querySelectorAll("*").forEach(function (element) {
+      if (element.children.length === 0 && element.innerHTML.length > 0) {
+        element.className += " above-highlight";
+      }
+    });
   });
 
   function getSandboxLink(element, position) {

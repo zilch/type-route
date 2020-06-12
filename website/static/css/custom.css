@@ -509,7 +509,7 @@ code.hljs {
   border: 1px solid #ddd;
 }
 
-code > * {
+code .above-highlight {
   position: relative;
   z-index: 2;
 }
