@@ -75,7 +75,7 @@ function Navigation() {
   return (
     <nav>
       <a {...routes.home().link}>Home</a>
-      <a {...routes.user({ userId: "Abc" }).link}>User "abc"</a>
+      <a {...routes.user({ userId: "abc" }).link}>User "abc"</a>
     </nav>
   );
 }

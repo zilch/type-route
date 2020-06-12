@@ -98,6 +98,47 @@ window.onload = function () {
       }
     });
 
+  document.querySelectorAll("pre code").forEach((element) => {
+    const highlight = element.className
+      .split(/\s+/)
+      .find((className) => className[0] === "{");
+
+    if (!highlight) {
+      return;
+    }
+
+    const highlightedLines = [].concat.apply(
+      [],
+      highlight
+        .slice(1, -1)
+        .split(",")
+        .map((section) => {
+          if (section.indexOf("-") === -1) {
+            return [parseInt(section, 10)];
+          }
+          const range = section.split("-");
+          const rangeStart = parseInt(range[0], 10);
+          const rangeEnd = parseInt(range[1], 10);
+          const rangeLines = [];
+          for (let line = rangeStart; line <= rangeEnd; line++) {
+            rangeLines.push(line);
+          }
+          return rangeLines;
+        })
+    );
+
+    element.innerHTML = element.innerHTML
+      .split("\n")
+      .map((code, index) => {
+        if (highlightedLines.indexOf(index + 1) === -1) {
+          return code;
+        }
+
+        return `<div class="line-highlight"></div><span>${code}</span>`;
+      })
+      .join("<br/>");
+  });
+
   function getSandboxLink(element, position) {
     const type = [...element.classList].find((name) =>
       name.startsWith("codesandbox-")

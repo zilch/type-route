@@ -481,6 +481,8 @@ code.hljs {
   border: 1px solid #eee;
   margin-left: -16px;
   margin-right: -16px;
+  font-size: 14px;
+  line-height: 22px;
 }
 
 .edit-page-link {
@@ -505,4 +507,21 @@ code.hljs {
   text-decoration: none !important;
   color: #111 !important;
   border: 1px solid #ddd;
+}
+
+code > * {
+  position: relative;
+  z-index: 2;
+}
+
+.line-highlight {
+  position: absolute;
+  height: 22px;
+  pointer-events: none;
+  background: #edf3fa;
+  border-left: 3px solid #cddffe;
+  border-right: 3px solid #cddffe;
+  z-index: 1;
+  left: -17px;
+  right: -17px;
 }

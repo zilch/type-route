@@ -50,7 +50,7 @@ Best practice is to immediately destructure the result of [`createRouter`](https
 
 `App.tsx`
 
-```tsx
+```tsx {7-8}
 import React, { useState, useEffect } from "react";
 import { listen, session } from "./router";
 import { Page } from "./Page";
@@ -58,7 +58,6 @@ import { Navigation } from "./Navigation";
 
 function App() {
   const [route, setRoute] = useState(session.getInitialRoute());
-
   useEffect(() => listen(nextRoute => setRoute(nextRoute)), []);
 
   return (
