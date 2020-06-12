@@ -10,7 +10,7 @@ The standard way to create links in Type Route looks something like this:
 
 This works great for the majority of scenarios. But what if you want to integrate this link with React's `useTransition` hook when running in concurrent mode or want to log an analytics event when someone clicks on the link? Type Route handles the default case well but also gives you the flexibility to handle these more complex requirements. In order to fullfil these requirements you may want to consider creating a `Link` component specific to your application.
 
-```tsx {15-20}
+```tsx {2,6,15-20}
 import React from "react";
 import { Route, preventDefaultClickBehavior } from "type-route";
 import { routes } from "./router";
