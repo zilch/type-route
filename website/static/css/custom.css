@@ -451,6 +451,7 @@ details summary {
   position: absolute;
   right: -9px;
   font-size: 13px;
+  z-index: 3;
   background: #fff;
   color: #555 !important;
   padding: 5px 15px;
