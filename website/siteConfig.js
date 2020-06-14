@@ -49,11 +49,6 @@ const siteConfig = {
   onPageNav: "separate",
   // No .html extensions for paths.
   cleanUrl: true,
-
-  algolia: {
-    apiKey: "4a2bd93ab352acbdeac847eb2563ac5e",
-    indexName: "type-route",
-  },
 };
 
 module.exports = siteConfig;
