@@ -104,15 +104,10 @@ class Index extends React.Component {
         </div>
         <div className="betaNotification">
           <div>
-            <b>This is a beta release.</b> The Type Route API has been vetted
-            with production code but the library has not yet reached version{" "}
-            <b>1.0</b>. More community feedback is needed to validate the
-            project's maturity. Use the{" "}
-            <a href="https://github.com/typehero/type-route/issues">
-              issue tracker
-            </a>{" "}
-            to communicate this feedback in the form of bugs, questions, or
-            suggestions.
+            <b>These are the docs for the `@next` release</b> which includes
+            some major differences from the current release. Go to{" "}
+            <a href="https://www.type-route.org">type-route.org</a> to view the
+            docs for the current release.
           </div>
         </div>
         <div className="getStartedContainer">

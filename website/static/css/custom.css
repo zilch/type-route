@@ -52,7 +52,7 @@ body > * {
 }
 
 .splash .projectName:after {
-  content: "beta";
+  content: "next";
   transform: translateY(-1px);
   position: absolute;
   font-size: 12px;
@@ -342,7 +342,7 @@ input#search_input_react:not(:focus):hover::placeholder {
 } */
 
 .headerTitleWithLogo::after {
-  content: "beta";
+  content: "next";
   margin-left: 10px;
   font-weight: 500;
   transform: translateY(-1px);

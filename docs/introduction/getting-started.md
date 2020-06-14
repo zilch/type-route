@@ -2,6 +2,12 @@
 title: Getting Started
 ---
 
+> ## @next
+>
+> These are the docs for the `@next` release which includes some major differences from the current release. Go to [type-route.org](https://www.type-route.org) to view the docs for the current release.
+
+## Getting Started
+
 Type Route is a flexible, type safe routing library built on top of the same [core library](https://github.com/ReactTraining/history) that powers React Router.
 
 > **Type Route was designed with excellent React integration in mind** but isn't coupled to a specific UI framework. Most code examples in the documentation use React, but the general principles covered apply regardless of framework.
@@ -17,7 +23,7 @@ Continue reading this introduction for a quick overview of how to start using Ty
 Type Route's primary distribution channel is the [NPM registry](https://www.npmjs.com/package/type-route).
 
 ```bash
-npm install type-route
+npm install type-route@next
 ```
 
 ## Step 1: Create a Router
@@ -50,7 +56,7 @@ Best practice is to immediately destructure the result of [`createRouter`](https
 
 `App.tsx`
 
-```tsx {7-8}
+```tsx
 import React, { useState, useEffect } from "react";
 import { listen, session } from "./router";
 import { Page } from "./Page";
@@ -58,6 +64,7 @@ import { Navigation } from "./Navigation";
 
 function App() {
   const [route, setRoute] = useState(session.getInitialRoute());
+
   useEffect(() => listen(nextRoute => setRoute(nextRoute)), []);
 
   return (
