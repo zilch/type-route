@@ -25,8 +25,29 @@ export type BuildPathDefErrorContext = {
   rawPath: string;
 };
 
+/**
+ * Object for configuring a custom query string serializer. You likely
+ * do not need this level of customization for your application.
+ *
+ * @see https://typehero.org/type-route/docs/api-reference/types/query-string-serializer
+ */
 export type QueryStringSerializer = {
+  /**
+   * Accepts the query string (without the leading ?) and returns
+   * a mapping of parameter names to unserialized parameter values.
+   * Individual parameter value serializer take care of the parsing
+   * parameter values.
+   *
+   * @see https://typehero.org/type-route/docs/api-reference/types/query-string-serializer
+   */
   parse: (raw: string) => Record<string, string>;
+
+  /**
+   * Accepts an object keyed by query parameter names and generates
+   * a stringified version of the object.
+   *
+   * @see https://typehero.org/type-route/docs/api-reference/types/query-string-serializer
+   */
   stringify: (
     queryParams: Record<
       string,
@@ -37,6 +58,11 @@ export type QueryStringSerializer = {
 
 export type ParamDefKind = "path" | "query" | "state";
 
+/**
+ * Object for configuring a custom parameter value serializer.
+ *
+ * @see https://typehero.org/type-route/docs/api-reference/types/value-serializer
+ */
 export type ValueSerializer<TValue = unknown> = {
   id?: string;
   urlEncode?: boolean;
@@ -184,19 +210,29 @@ export type RouteDef<TParamDefCollection> = {
     path: PathFn<TParamDefCollection>;
   };
 
+  /**
+   * Create a new route definition by extending the current one.
+   *
+   * @see https://typehero.org/type-route/docs/api-reference/route-definition/extend
+   */
   extend<TExtensionParamDefCollection>(
     params: TExtensionParamDefCollection,
     path: PathFn<TExtensionParamDefCollection>
   ): RouteDef<TParamDefCollection & TExtensionParamDefCollection>;
+
+  /**
+   * Create a new route definition by extending the current one.
+   *
+   * @see https://typehero.org/type-route/docs/api-reference/route-definition/extend
+   */
   extend(path: string | string[]): RouteDef<TParamDefCollection>;
 };
 export type UmbrellaRouteDef = RouteDef<UmbrellaParamDefCollection>;
 
 export type NavigateFunction = (
   route: UmbrellaRoute,
-  primaryPath: boolean,
-  replace: boolean
-) => boolean;
+  primaryPath: boolean
+) => void;
 
 export type OnClickHandler = (event?: any) => void;
 
@@ -224,6 +260,9 @@ export type RouteBuilder<TRouteName, TParamDefCollection> = RouteParamsFunction<
   TParamDefCollection,
   Route<TRouteName, TParamDefCollection>
 > & {
+  /**
+   * Name of the route
+   */
   name: TRouteName;
   ["~internal"]: {
     type: "RouteBuilder";
@@ -254,11 +293,9 @@ export type ClickEvent = {
 
 export type Action = "push" | "replace" | "pop";
 
-export type LocationState =
-  | {
-      state?: Record<string, string>;
-    }
-  | undefined;
+export type LocationState = {
+  state?: Record<string, string>;
+} | null;
 
 export type RouteDefCollectionRoute<
   TRouteDefCollection
@@ -275,20 +312,60 @@ export type RouteDefCollectionRoute<
 
 export type NotFoundRoute = Route<false, {}>;
 
-export type HiddenRouteProperties = {
-  location: RouterLocation;
-};
-
 export type Route<TName, TParamDefCollection> = {
+  /**
+   * Name of the route.
+   */
   name: TName;
+
+  /**
+   * Route parameters.
+   */
   params: OutputRouteParams<TParamDefCollection>;
+
+  /**
+   * How the current route was navigated to.
+   * - "push" indicates your application added this route.
+   * - "replace" also indicates your application added this route.
+   * - "pop" indicates the browser navigated to this route (think
+   *    back/forward buttons)
+   * - null indicates the route has not yet been navigated to or
+   *   its action was not able to be determined (as is the case with
+   *   session.getInitialRoute() )
+   */
   action: Action | null;
+
+  /**
+   * Helper for constructing links
+   *
+   * @see https://typehero.org/type-route/docs/guides/rendering-links
+   */
   link: Link;
+
+  /**
+   * The href of the current route without domain but including
+   * path, query string, and hash.
+   */
   href: string;
-  push: () => boolean;
-  replace: () => boolean;
+
+  /**
+   * Pushes a new route onto the history stack, increasing its length by one.
+   * If there were any entries in the stack after the current one, they are
+   * lost.
+   */
+  push: () => void;
+
+  /**
+   * Replaces the current route in the history stack with this one.
+   */
+  replace: () => void;
 };
 
+/**
+ * Helper to retrieve a Route type.
+ *
+ * @see https://typehero.org/type-route/docs/api-reference/types/route
+ */
 export type GetRoute<T> = T extends { ["~internal"]: { Route: any } }
   ? T["~internal"]["Route"]
   : T extends Record<string, { ["~internal"]: { Route: any } }>
@@ -298,20 +375,73 @@ export type GetRoute<T> = T extends { ["~internal"]: { Route: any } }
 export type UmbrellaRoute = Route<string | false, Record<string, any>>;
 
 export type NavigationHandler<TRouteDefCollection> = (
-  nextRoute: RouteDefCollectionRoute<TRouteDefCollection>,
-  previousRoute: RouteDefCollectionRoute<TRouteDefCollection> | null
-) => boolean | void;
+  route: RouteDefCollectionRoute<TRouteDefCollection>
+) => void;
 export type UmbrellaNavigationHandler = NavigationHandler<
   UmbrellaRouteDefCollection
 >;
 
+type Unblock = () => void;
+
+export type Blocker<TRouteDefCollection> = (update: {
+  /**
+   * The route that would have been navigated to had navigation
+   * not been blocked.
+   */
+  route: RouteDefCollectionRoute<TRouteDefCollection>;
+
+  /**
+   * Retry the navigation attempt. Typically is used after getting
+   * user confirmation to leave and then unblocking navigation.
+   */
+  retry: () => void;
+}) => void;
+export type UmbrellaBlocker = Blocker<UmbrellaRouteDefCollection>;
+
+/**
+ * Functions for interacting with the current history session.
+ */
 export type RouterSession<TRouteDefCollection> = {
-  push(href: string, state?: any): boolean;
-  replace(href: string, state?: any): boolean;
+  /**
+   * Manually add a new item to the history stack.
+   */
+  push(href: string, state?: any): void;
+
+  /**
+   * Replace the currently active item in the history stack.
+   */
+  replace(href: string, state?: any): void;
+
+  /**
+   * Get the initial route. Useful for bootstrapping your application.
+   */
   getInitialRoute(): RouteDefCollectionRoute<TRouteDefCollection>;
+
+  /**
+   * Move back in history the specified amount.
+   */
   back(amount?: number): void;
+
+  /**
+   * Move forward in history the specified amount.
+   */
   forward(amount?: number): void;
+
+  /**
+   * Reconfigures the underlying history instance. Can be useful
+   * when using server-side rendering.
+   *
+   * @see https://typehero.org/type-route/docs/guides/server-side-rendering
+   */
   reset(options: SessionConfig): void;
+
+  /**
+   * Blocks navigation and registers a listener that is called when
+   * navigation is blocked. Returns a function to unblock navigation.
+   *
+   * @see https://typehero.org/type-route/docs/guides/preventing-navigation
+   */
+  block(blocker: Blocker<TRouteDefCollection>): Unblock;
 };
 export type UmbrellaRouterSession = RouterSession<UmbrellaRouteDefCollection>;
 
@@ -323,12 +453,22 @@ export type MemoryHistorySessionConfig = {
 
 export type HashHistorySessionConfig = {
   type: "hash";
-  hash?: "hashbang" | "noslash" | "slash";
+
+  /**
+   * Provide a custom window function to operate on. Can be useful when
+   * using the route in an iframe.
+   */
+  window?: Window;
 };
 
 export type BrowserHistorySessionConfig = {
   type: "browser";
-  forceRefresh?: boolean;
+
+  /**
+   * Provide a custom window function to operate on. Can be useful when
+   * using the route in an iframe.
+   */
+  window?: Window;
 };
 
 export type SessionConfig =
@@ -343,13 +483,17 @@ export type QueryStringArrayFormat =
   | "multiKeyWithBracket";
 
 export type ArrayFormat = {
+  /**
+   * Separator to use for array parameter types. By default ","
+   */
   separator?: string;
-  queryString?: QueryStringArrayFormat;
-};
 
-export type ScrollRestoration = {
-  capture: () => any;
-  restore: (scrollData: any) => void;
+  /**
+   * Query string serialization method.
+   *
+   * @see https://typehero.org/type-route/docs/guides/custom-query-string
+   */
+  queryString?: QueryStringArrayFormat;
 };
 
 export type RouterConfig = {
@@ -358,17 +502,33 @@ export type RouterConfig = {
   arrayFormat?: ArrayFormat;
 };
 
+export type Unlisten = {
+  (): void;
+};
+
 export type UmbrellaRouteDefCollection = Record<string, UmbrellaRouteDef>;
 
 export type Router<TRouteDefCollection extends { [routeName: string]: any }> = {
+  /**
+   * Collection of route builders.
+   */
   routes: {
+    /**
+     * Call routes.[routeName](params) to construct a route object.
+     */
     [TRouteName in keyof TRouteDefCollection]: RouteBuilder<
       TRouteName,
       TRouteDefCollection[TRouteName]["~internal"]["params"]
     >;
   };
+
   session: RouterSession<TRouteDefCollection>;
-  listen: (handler: NavigationHandler<TRouteDefCollection>) => () => void;
+
+  /**
+   * Registers a listener that is called when navigation occurs.
+   * Returns a function to remove the navigation listener.
+   */
+  listen(handler: NavigationHandler<TRouteDefCollection>): Unlisten;
 };
 export type UmbrellaRouter = Router<UmbrellaRouteDefCollection>;
 
@@ -378,5 +538,11 @@ export type RouteGroup<T extends any[] = any[]> = {
     Route: T[number]["~internal"]["Route"];
   };
   routeNames: T[number]["~internal"]["Route"]["name"][];
+  /**
+   * Accepts a route and returns whether or not it is part
+   * of this group.
+   *
+   * @see https://typehero.org/type-route/docs/api-reference/route-group/has
+   */
   has(route: Route<any, any>): route is T[number]["~internal"]["Route"];
 };

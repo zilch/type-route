@@ -16,7 +16,6 @@ export function getRouteByHref(
     pathname,
     search,
     state,
-    hash: splitFirst(href, "#")[1],
   });
 
   return getMatchingRoute(location, routerContext);

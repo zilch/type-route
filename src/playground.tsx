@@ -25,8 +25,8 @@ export const groups = {
 };
 
 function App() {
-  const [route, setRoute] = useState(() => session.getInitialRoute());
-  useEffect(() => listen((nextRoute) => setRoute(nextRoute)), []);
+  const [route, setRoute] = useState(session.getInitialRoute());
+  useEffect(() => listen(setRoute), []);
 
   useEffect(() => {
     if (route.action === "push") {
@@ -36,6 +36,17 @@ function App() {
 
   useEffect(() => {
     document.title = route.href;
+  }, [route]);
+
+  useEffect(() => {
+    if (route.name === "home") {
+      const unblock = session.block((update) => {
+        if (window.confirm("Are you sure?")) {
+          unblock();
+          update.retry();
+        }
+      });
+    }
   }, [route]);
 
   return (

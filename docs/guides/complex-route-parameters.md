@@ -41,7 +41,7 @@ function App() {
   const [minDate] = useState(new Date("3/3/3"));
   const [maxDate] = useState(new Date("12/12/12"));
 
-  useEffect(() => listen(nextRoute => setRoute(nextRoute)), []);
+  useEffect(() => listen(setRoute), []);
 
   return (
     <>

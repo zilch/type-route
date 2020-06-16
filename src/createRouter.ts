@@ -9,6 +9,7 @@ import {
   LocationState,
   UmbrellaRouteDefCollection,
   RouterContext,
+  UmbrellaBlocker,
 } from "./types";
 import { createRouteBuilder } from "./createRouteBuilder";
 import {
@@ -20,11 +21,9 @@ import {
 import { createQueryStringSerializer } from "./createQueryStringSerializer";
 import { assert } from "./assert";
 import { TypeRouteError } from "./TypeRouteError";
-import { areRoutesEqual } from "./areRoutesEqual";
 import { getMatchingRoute } from "./getMatchingRoute";
 import { convertToRouterLocationFromHistoryLocation } from "./convertToRouterLocationFromHistoryLocation";
 import { getRouteByHref } from "./getRouteByHref";
-import { getHiddenRouteProperties } from "./getHiddenRouteProperties";
 import { createNavigationHandlerManager } from "./createNavigationHandlerManager";
 
 export function createRouter<
@@ -42,29 +41,25 @@ export function createRouter(...args: any[]): UmbrellaRouter {
 
   const navigationHandlerManager = createNavigationHandlerManager({
     startListening: () => {
-      unblock = history.block((rawLocation, rawAction) => {
+      unlisten = history.listen((update) => {
         if (skipNextEnvironmentTriggeredNavigation) {
           skipNextEnvironmentTriggeredNavigation = false;
           return;
         }
 
         const location = convertToRouterLocationFromHistoryLocation(
-          rawLocation
+          update.location
         );
-        const action = rawAction.toLowerCase() as Action;
+        const action = update.action.toLowerCase() as Action;
         const { route, primaryPath } = getMatchingRoute(
           location,
           getRouterContext()
         );
 
-        const proceed = handleNavigation(route, primaryPath, action);
-
-        if (!proceed) {
-          return false;
-        }
+        handleNavigation({ ...route, action }, primaryPath);
       });
     },
-    stopListening: () => unblock?.(),
+    stopListening: () => unlisten?.(),
   });
 
   const arraySeparator = config.arrayFormat?.separator ?? ",";
@@ -76,11 +71,11 @@ export function createRouter(...args: any[]): UmbrellaRouter {
     });
 
   let history: History<LocationState>;
-  let unblock: (() => void) | undefined;
+  let unlisten: (() => void) | undefined;
   let skipNextEnvironmentTriggeredNavigation = false;
-  let skipNextApplicationTriggeredNavigation = false;
-  let previousRoute: UmbrellaRoute | null = null;
+  let skipHandlingNextApplicationTriggeredNavigation = false;
   let initialRoute: UmbrellaRoute | null = null;
+  let blockerCollection: UmbrellaBlocker[] = [];
 
   applySessionConfig(config.session);
 
@@ -103,7 +98,7 @@ export function createRouter(...args: any[]): UmbrellaRouter {
           getRouterContext()
         );
 
-        return navigate(route, primaryPath, false);
+        return navigate({ ...route, action: "push" }, primaryPath);
       },
       replace(href, state) {
         if (__DEV__) {
@@ -120,7 +115,7 @@ export function createRouter(...args: any[]): UmbrellaRouter {
           getRouterContext()
         );
 
-        return navigate(route, primaryPath, true);
+        return navigate({ ...route, action: "replace" }, primaryPath);
       },
       back(amount = 1) {
         if (__DEV__) {
@@ -156,7 +151,7 @@ export function createRouter(...args: any[]): UmbrellaRouter {
           );
 
           if (!result.primaryPath) {
-            skipNextApplicationTriggeredNavigation = true;
+            skipHandlingNextApplicationTriggeredNavigation = true;
             result.route.replace();
             result = getMatchingRoute(
               convertToRouterLocationFromHistoryLocation(history.location),
@@ -178,6 +173,29 @@ export function createRouter(...args: any[]): UmbrellaRouter {
 
         return applySessionConfig(session);
       },
+      block(blocker) {
+        blockerCollection.push(blocker);
+
+        const unblock = history.block((update) => {
+          const { route } = getMatchingRoute(
+            convertToRouterLocationFromHistoryLocation(update.location),
+            getRouterContext()
+          );
+
+          const action = update.action.toLowerCase() as Action;
+
+          blocker({ route: { ...route, action }, retry: update.retry });
+        });
+
+        return () => {
+          blockerCollection.splice(
+            blockerCollection.findIndex((item) => item === blocker),
+            1
+          );
+
+          unblock();
+        };
+      },
     },
   };
 
@@ -196,84 +214,65 @@ export function createRouter(...args: any[]): UmbrellaRouter {
       });
     } else if (sessionConfig.type === "hash") {
       history = createHashHistory({
-        hashType: sessionConfig.hash,
+        window: sessionConfig.window,
       });
     } else {
       history = createBrowserHistory({
-        forceRefresh: sessionConfig.forceRefresh,
+        window: sessionConfig.window,
       });
     }
   }
 
-  function navigate(
-    route: UmbrellaRoute,
-    primaryPath: boolean,
-    replace: boolean
-  ) {
-    const proceed =
-      skipNextApplicationTriggeredNavigation ||
-      handleNavigation(route, primaryPath, replace ? "replace" : "push");
+  function navigate(route: UmbrellaRoute, primaryPath: boolean) {
+    if (blockerCollection.length > 0) {
+      blockerCollection.forEach((blocker) => {
+        blocker({
+          route,
+          retry: () => {
+            route[route.action === "push" ? "push" : "replace"]();
+          },
+        });
+      });
 
-    if (skipNextApplicationTriggeredNavigation) {
-      skipNextApplicationTriggeredNavigation = false;
+      return;
     }
 
-    if (proceed) {
-      skipNextEnvironmentTriggeredNavigation = true;
-      const state = getHiddenRouteProperties(route).location.state;
-      history[replace ? "replace" : "push"](
-        route.href,
-        state ? { state } : undefined
-      );
+    if (skipHandlingNextApplicationTriggeredNavigation) {
+      skipHandlingNextApplicationTriggeredNavigation = false;
+    } else {
+      handleNavigation(route, primaryPath);
     }
 
-    return proceed;
+    skipNextEnvironmentTriggeredNavigation = true;
+
+    const state: Record<string, string> = {};
+
+    if (route.name) {
+      for (const paramName in route.params) {
+        const paramDef =
+          routeDefs[route.name]["~internal"].params[paramName]["~internal"];
+
+        if (paramDef.kind === "state") {
+          const value = route.params[paramName];
+          state[paramName] = paramDef.valueSerializer.stringify(value);
+        }
+      }
+    }
+
+    history[route.action === "replace" ? "replace" : "push"](
+      route.href,
+      state ? { state } : undefined
+    );
   }
 
-  function handleNavigation(
-    nextRoute: UmbrellaRoute,
-    primaryPath: boolean,
-    action: Action
-  ) {
-    const originalAction = nextRoute.action;
-    nextRoute.action = action;
-
+  function handleNavigation(route: UmbrellaRoute, primaryPath: boolean) {
     if (!primaryPath) {
-      return returnResultAndRevertActionIfNecessary(nextRoute.replace());
-    }
-
-    if (previousRoute !== null && areRoutesEqual(previousRoute, nextRoute)) {
-      return returnResultAndRevertActionIfNecessary(false);
+      route.replace();
+      return;
     }
 
     for (const handler of navigationHandlerManager.getHandlers()) {
-      const proceed = handler(nextRoute, previousRoute);
-
-      if (__DEV__) {
-        assert("NavigationHandler", [
-          assert.type(
-            ["boolean", "undefined"],
-            "navigationHandlerResult",
-            proceed
-          ),
-        ]);
-      }
-
-      if (proceed === false) {
-        return returnResultAndRevertActionIfNecessary(false);
-      }
-    }
-
-    previousRoute = nextRoute;
-
-    return returnResultAndRevertActionIfNecessary(true);
-
-    function returnResultAndRevertActionIfNecessary(proceed: boolean) {
-      if (proceed === false) {
-        nextRoute.action = originalAction;
-      }
-
-      return proceed;
+      handler(route);
     }
   }
 

@@ -11,7 +11,7 @@ describe("buildPathDef", () => {
       {
         userId: param.path.string,
       },
-      (x) => `/user/${x.userId}`
+      (p) => `/user/${p.userId}`
     );
 
     const expected: PathDef[] = [
@@ -38,7 +38,7 @@ describe("buildPathDef", () => {
       {
         userId: param.path.string,
       },
-      (x) => `/hello-${x.userId}-there`
+      (p) => `/hello-${p.userId}-there`
     );
 
     const expected: PathDef[] = [
@@ -91,7 +91,7 @@ describe("buildPathDef", () => {
             first: param.path.string,
             second: param.path.number,
           },
-          (x) => `/hello/${x.first}-${x.second}/hi`
+          (p) => `/hello/${p.first}-${p.second}/hi`
         )
     );
   });
@@ -103,7 +103,7 @@ describe("buildPathDef", () => {
         buildPathDefs(
           "test",
           { repeat: param.path.string },
-          (x) => `/${x.repeat}/${x.repeat}`
+          (p) => `/${p.repeat}/${p.repeat}`
         )
     );
   });
@@ -118,7 +118,7 @@ describe("buildPathDef", () => {
             buildPathDefs(
               "test",
               { hello: param.path.string, [paramName]: param.path.number },
-              (x) => `/${x.hello}/${x[paramName]}`
+              (p) => `/${p.hello}/${p[paramName]}`
             )
         );
       }
@@ -139,7 +139,7 @@ describe("buildPathDef", () => {
         buildPathDefs(
           "test",
           { hi: param.path.string },
-          (x) => `/hello${x.hi}%/there`
+          (p) => `/hello${p.hi}%/there`
         )
     );
 
@@ -147,12 +147,12 @@ describe("buildPathDef", () => {
       buildPathDefs(
         "test",
         { hi: param.path.string },
-        (x) => `/#hello${x.hi}%/there`
+        (p) => `/#hello${p.hi}%/there`
       );
     } catch (error) {
       expect(error.message).toContain(
         // eslint-disable-next-line no-template-curly-in-string
-        "The path segment `#hello${x.hi}%` has the following invalid characters: #, %"
+        "The path segment `#hello${p.hi}%` has the following invalid characters: #, %"
       );
     }
   });
@@ -164,7 +164,7 @@ describe("buildPathDef", () => {
         buildPathDefs(
           "test",
           { hello: param.path.optional.string },
-          (x) => `/hi/hello-${x.hello}`
+          (p) => `/hi/hello-${p.hello}`
         )
     );
   });
@@ -176,7 +176,7 @@ describe("buildPathDef", () => {
         buildPathDefs(
           "test",
           { test: param.path.optional.number, hi: param.path.trailing.string },
-          (x) => `/${x.test}/${x.hi}`
+          (p) => `/${p.test}/${p.hi}`
         )
     );
   });
@@ -188,7 +188,7 @@ describe("buildPathDef", () => {
         buildPathDefs(
           "test",
           { test: param.path.optional.number, hi: param.path.string },
-          (x) => `/${x.test}/${x.hi}`
+          (p) => `/${p.test}/${p.hi}`
         )
     );
   });
@@ -203,7 +203,7 @@ describe("buildPathDef", () => {
             test: param.path.optional.number,
             hi: param.path.string,
           },
-          (x) => `/${x.hi}`
+          (p) => `/${p.hi}`
         )
     );
   });

@@ -3,8 +3,6 @@ title: <RouteDefinition>.extend
 sidebar_label: extend
 ---
 
-Hello
-
 ```tsx
 <RouteDefinition>.extend(path: string | string[]): RouteDefinition;
 <RouteDefinition>.extend(

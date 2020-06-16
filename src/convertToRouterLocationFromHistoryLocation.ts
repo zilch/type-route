@@ -2,7 +2,10 @@ import { RouterLocation, LocationState } from "./types";
 import { Location as HistoryLocation } from "history";
 
 export function convertToRouterLocationFromHistoryLocation(
-  rawLocation: HistoryLocation<LocationState>
+  rawLocation: Pick<
+    HistoryLocation<LocationState>,
+    "pathname" | "search" | "state"
+  >
 ): RouterLocation {
   return {
     path: rawLocation.pathname,

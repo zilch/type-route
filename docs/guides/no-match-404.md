@@ -35,7 +35,7 @@ const { routes, listen, session } = createRouter({
 function App() {
   const [route, setRoute] = useState(session.getInitialRoute());
 
-  useEffect(() => listen(nextRoute => setRoute(nextRoute)), []);
+  useEffect(() => listen(setRoute), []);
 
   return (
     <>

@@ -236,5 +236,5 @@ export function buildPathDefs(
 }
 
 function getParamId(parameterName: string) {
-  return "${x." + parameterName + "}";
+  return "${p." + parameterName + "}";
 }

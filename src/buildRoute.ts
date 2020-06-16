@@ -1,10 +1,4 @@
-import {
-  UmbrellaRoute,
-  RouterLocation,
-  RouterContext,
-  HiddenRouteProperties,
-} from "./types";
-import { mapObject } from "./mapObject";
+import { UmbrellaRoute, RouterLocation, RouterContext } from "./types";
 import { preventDefaultLinkClickBehavior } from "./preventDefaultLinkClickBehavior";
 
 export function buildRoute({
@@ -25,7 +19,7 @@ export function buildRoute({
     search: location.query,
   });
 
-  const baseRoute: UmbrellaRoute = {
+  const route: UmbrellaRoute = {
     name: routeName,
     params,
     href,
@@ -38,22 +32,9 @@ export function buildRoute({
       },
     },
     action: null,
-    push: () => navigate(route, true, false),
-    replace: () => navigate(route, true, true),
+    push: () => navigate({ ...route, action: "push" }, true),
+    replace: () => navigate({ ...route, action: "replace" }, true),
   };
-
-  const hiddenRouteProperties: HiddenRouteProperties = {
-    location,
-  };
-
-  const route: UmbrellaRoute = Object.create(
-    { "~internal": hiddenRouteProperties },
-    mapObject(baseRoute, (value) => ({
-      enumerable: true,
-      writable: true,
-      value,
-    }))
-  );
 
   return route;
 }

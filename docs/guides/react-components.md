@@ -35,7 +35,7 @@ const useRoute = () => useContext(RouteContext);
 
 function App() {
   const [route, setRoute] = useState(session.getInitialRoute());
-  useEffect(() => listen(nextRoute => setRoute(nextRoute)), []);
+  useEffect(() => listen(setRoute), []);
 
   return (
     <RouteContext.Provider value={route}>

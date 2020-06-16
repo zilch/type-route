@@ -66,7 +66,7 @@ Best practice is to immediately destructure the result of [`createRouter`](https
 
 `App.tsx`
 
-```tsx
+```tsx {7-8}
 import React, { useState, useEffect } from "react";
 import { listen, session } from "./router";
 import { Page } from "./Page";
@@ -74,8 +74,7 @@ import { Navigation } from "./Navigation";
 
 function App() {
   const [route, setRoute] = useState(session.getInitialRoute());
-
-  useEffect(() => listen(nextRoute => setRoute(nextRoute)), []);
+  useEffect(() => listen(setRoute), []);
 
   return (
     <>
@@ -143,20 +142,16 @@ import { routes } from "./router";
 export function Navigation() {
   return (
     <nav>
-      <a {...routes.home().link}>Home</a>
-      <a {...routes.userList().link}>User List</a>
-      <a
-        {...routes.userList({
-          page: 2
-        }).link}
-      >
+      <a {...routes.home().link}>
+        Home
+      </a>
+      <a {...routes.userList().link}>
+        User List
+      </a>
+      <a {...routes.userList({ page: 2 }).link}>
         User List Page 2
       </a>
-      <a
-        {...routes.user({
-          userId: "abc"
-        }).link}
-      >
+      <a {...routes.user({ userId: "abc" }).link}>
         User "abc"
       </a>
     </nav>
@@ -164,7 +159,7 @@ export function Navigation() {
 }
 ```
 
-The [`link`](https://typehero.org/type-route/docs/api-reference/route/link) property is an object with an `href` property and an `onClick` function. You need both to [properly render](https://typehero.org/type-route/docs/guides/rendering-links) a link for a single page application. Immediately destructing `link` into the properties of an `<a>` tag makes usage simple. [Programmatic navigation](https://typehero.org/type-route/docs/guides/programmatic-navigation) is possible with the [`push`](https://typehero.org/type-route/docs/api-reference/route/push) and [`replace`](https://typehero.org/type-route/docs/api-reference/route/replace) functions of a specific route.
+The [`link`](https://typehero.org/type-route/docs/api-reference/route/link) property is an object with an `href` property and an `onClick` function. You need both to [properly render](https://typehero.org/type-route/docs/guides/rendering-links) a link for a single page application. Immediately spreading the `link` object into the properties of an `<a>` tag makes usage simple. [Programmatic navigation](https://typehero.org/type-route/docs/guides/programmatic-navigation) is possible with the [`push`](https://typehero.org/type-route/docs/api-reference/route/push) and [`replace`](https://typehero.org/type-route/docs/api-reference/route/replace) functions of a specific route.
 
 ## Next Steps
 

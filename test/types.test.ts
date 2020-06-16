@@ -27,8 +27,8 @@ describe("types", () => {
           params: {};
           link: Link;
           href: string;
-          push: () => boolean;
-          replace: () => boolean;
+          push: () => void;
+          replace: () => void;
           action: Action | null;
         }
       >(toBeEqual);
@@ -66,8 +66,8 @@ describe("types", () => {
           params: {};
           link: Link;
           href: string;
-          push: () => boolean;
-          replace: () => boolean;
+          push: () => void;
+          replace: () => void;
           action: Action | null;
         }
       >(toBeEqual);
