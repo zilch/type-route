@@ -35,7 +35,7 @@ export function createGroup<T extends any[]>(groupItems: T): RouteGroup<T> {
       if (__DEV__) {
         assert("[RouteGroup].has", [
           assert.numArgs([].slice.call(arguments), 1),
-          assert.type("Route", "groupItems", groupItems),
+          assert.type("object", "route", route),
         ]);
       }
 

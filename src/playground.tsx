@@ -52,6 +52,7 @@ function App() {
   return (
     <>
       <Navigation />
+      {groups.hi.has(route) && <div>Hi</div>}
       {route.name === "home" && <HomePage />}
       {route.name === "user" && <UserPage route={route} />}
       {route.name === "account" && <AccountPage />}
