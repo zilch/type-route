@@ -14,9 +14,8 @@ async function main() {
   const pullRequest = github.context.payload.pull_request;
 
   if (pullRequest === undefined) {
-    throw new Error(
-      "Expected github.context.payload.pull_request to be defined"
-    );
+    core.info("This doesn't appear to be a pull_request. Skipping.")
+    return;
   }
 
   // Token for the type-route-bot. This bot has no special permissions and
