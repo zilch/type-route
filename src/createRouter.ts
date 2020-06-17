@@ -25,6 +25,7 @@ import { getMatchingRoute } from "./getMatchingRoute";
 import { convertToRouterLocationFromHistoryLocation } from "./convertToRouterLocationFromHistoryLocation";
 import { getRouteByHref } from "./getRouteByHref";
 import { createNavigationHandlerManager } from "./createNavigationHandlerManager";
+import { splitFirst } from "./stringUtils";
 
 export function createRouter<
   TRouteDefCollection extends { [routeName: string]: any }
@@ -259,8 +260,14 @@ export function createRouter(...args: any[]): UmbrellaRouter {
       }
     }
 
+    const [pathname, search] = splitFirst(route.href, "?");
+
     history[route.action === "replace" ? "replace" : "push"](
-      route.href,
+      {
+        pathname,
+        search: search ? `?${search}` : "",
+        hash: "",
+      },
       state ? { state } : undefined
     );
   }

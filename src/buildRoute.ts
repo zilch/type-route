@@ -16,7 +16,7 @@ export function buildRoute({
 
   const href = history.createHref({
     pathname: location.path,
-    search: location.query ? "?" + location.query : undefined,
+    search: location.query ? "?" + location.query : "",
   });
 
   const route: UmbrellaRoute = {
