@@ -24,6 +24,24 @@ describe("createLocation", () => {
     });
   });
 
+  test("include optional query param", () => {
+    expectLocation(
+      {
+        name: param.path.string,
+        version: param.query.optional.string,
+      },
+      (x) => `/software/${x.name}`,
+      {
+        name: "apache",
+        version: "2.1.4",
+      }
+    ).toEqual({
+      path: "/software/apache",
+      query: "version=2.1.4",
+      state: undefined,
+    });
+  });
+
   test("include optional path param", () => {
     expectLocation(
       {
@@ -48,13 +66,7 @@ function expectLocation(
   path: GetRawPath,
   paramCollection: Record<string, unknown>
 ) {
-  const builder = defineRoute(
-    {
-      name: param.path.string,
-      version: param.path.optional.string,
-    },
-    path
-  );
+  const builder = defineRoute(paramDefCollection, path);
 
   const pathDefs = buildPathDefs(
     "test",
