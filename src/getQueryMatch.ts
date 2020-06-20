@@ -5,7 +5,8 @@ import { assert } from "./assert";
 export function getQueryMatch(
   query: string | undefined,
   paramDefs: ParamDefCollection<"query">,
-  queryStringSerializer: QueryStringSerializer
+  queryStringSerializer: QueryStringSerializer,
+  arraySeparator: string
 ) {
   let object = {};
 
@@ -23,5 +24,6 @@ export function getQueryMatch(
     object,
     paramDefs,
     urlEncodeDefault: true,
+    arraySeparator,
   });
 }

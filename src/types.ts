@@ -90,6 +90,7 @@ export type RouterContext = {
   history: History;
   routeDefs: UmbrellaRouteDefCollection;
   routes: Record<string, UmbrellaRouteBuilder>;
+  baseUrl: string;
 };
 
 export type ParamDefCollection<TParamDefKind> = {
@@ -104,7 +105,8 @@ export type NamedPathParamDef<TValue = unknown> = PathParamDef<TValue> & {
 };
 
 export type RouterLocation = {
-  path: string;
+  fullPath: string;
+  path?: string;
   query?: string;
   state?: Record<string, string>;
 };
@@ -500,6 +502,7 @@ export type RouterConfig = {
   session?: SessionConfig;
   queryStringSerializer?: QueryStringSerializer;
   arrayFormat?: ArrayFormat;
+  baseUrl?: string;
 };
 
 export type Unlisten = {

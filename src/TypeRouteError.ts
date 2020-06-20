@@ -292,6 +292,31 @@ export const TypeRouteError = buildErrorCollection({
       ];
     },
   },
+
+  Base_url_must_start_with_a_forward_slash: {
+    errorCode: 1018,
+    getDetails(baseUrl: string) {
+      return [
+        'Base URL must start with a forward slash "/"',
+        `The value you provided "${baseUrl}" does not start with a forward slash.`,
+      ];
+    },
+  },
+
+  Base_url_must_not_contain_any_characters_that_must_be_url_encoded: {
+    errorCode: 1019,
+    getDetails(baseUrl: string) {
+      const invalidCharacters = baseUrl
+        .replace(/\//g, "")
+        .split("")
+        .filter((character) => character !== encodeURIComponent(character));
+      return [
+        `The following characters are invalid: ${invalidCharacters.join(
+          ", "
+        )}.`,
+      ];
+    },
+  },
 });
 
 function buildErrorCollection<

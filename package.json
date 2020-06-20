@@ -39,7 +39,7 @@
   "scripts": {
     "start": "parcel ./src/playground.html --out-dir parcel-dist",
     "build": "tsdx build --tsconfig ./tsconfig.build.json && rollup -c rollup.dts.config.js && rm dist/*.d.ts && mv dist/index.temp dist/index.d.ts && ls -lhS dist",
-    "test": "tsdx test",
+    "test": "tsdx test --coverage --collectCoverageFrom=src/**/*.ts --collectCoverageFrom=!src/global.d.ts",
     "lint": "eslint --ext ts,tsx ./src ./test --max-warnings=0"
   },
   "devDependencies": {

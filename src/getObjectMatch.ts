@@ -5,10 +5,12 @@ export function getObjectMatch({
   object,
   paramDefs,
   urlEncodeDefault,
+  arraySeparator,
 }: {
   object: Record<string, string>;
   paramDefs: UmbrellaParamDefCollection;
   urlEncodeDefault: boolean;
+  arraySeparator: string;
 }) {
   const params: Record<string, unknown> = {};
 
@@ -30,18 +32,38 @@ export function getObjectMatch({
       return false;
     }
 
-    const value = paramDef["~internal"].valueSerializer.parse(
-      paramDef["~internal"].valueSerializer.urlEncode ?? urlEncodeDefault
-        ? decodeURIComponent(raw)
-        : raw
-    );
+    let value;
 
-    if (value === noMatch) {
-      if (paramDef["~internal"].optional) {
-        continue;
+    if (paramDef["~internal"].array) {
+      value = raw.split(arraySeparator).map((part) => {
+        return paramDef["~internal"].valueSerializer.parse(
+          paramDef["~internal"].valueSerializer.urlEncode ?? urlEncodeDefault
+            ? decodeURIComponent(part)
+            : part
+        );
+      });
+
+      if (value.some((part) => part === noMatch)) {
+        if (paramDef["~internal"].optional) {
+          continue;
+        }
+
+        return false;
       }
+    } else {
+      value = paramDef["~internal"].valueSerializer.parse(
+        paramDef["~internal"].valueSerializer.urlEncode ?? urlEncodeDefault
+          ? decodeURIComponent(raw)
+          : raw
+      );
 
-      return false;
+      if (value === noMatch) {
+        if (paramDef["~internal"].optional) {
+          continue;
+        }
+
+        return false;
+      }
     }
 
     params[paramDef.name] = value;

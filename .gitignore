@@ -4,6 +4,7 @@
 /node_modules
 /.cache
 /dist
+/coverage
 /parcel-dist
 /lib
 /website/node_modules

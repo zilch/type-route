@@ -18,6 +18,7 @@ describe("createLocation", () => {
         name: "apache",
       }
     ).toEqual({
+      fullPath: "/software/apache",
       path: "/software/apache",
       query: undefined,
       state: undefined,
@@ -36,6 +37,7 @@ describe("createLocation", () => {
         version: "2.1.4",
       }
     ).toEqual({
+      fullPath: "/software/apache",
       path: "/software/apache",
       query: "version=2.1.4",
       state: undefined,
@@ -54,8 +56,43 @@ describe("createLocation", () => {
         version: "2.1.4",
       }
     ).toEqual({
+      fullPath: "/software/apache/2.1.4",
       path: "/software/apache/2.1.4",
       query: undefined,
+      state: undefined,
+    });
+  });
+
+  test("state param", () => {
+    expectLocation(
+      {
+        name: param.state.string,
+      },
+      () => `/foo`,
+      {
+        name: "apache",
+      }
+    ).toEqual({
+      fullPath: "/foo",
+      path: "/foo",
+      query: undefined,
+      state: { name: "apache" },
+    });
+  });
+
+  test("array param", () => {
+    expectLocation(
+      {
+        name: param.query.array.string,
+      },
+      () => `/foo`,
+      {
+        name: ["one", "two"],
+      }
+    ).toEqual({
+      fullPath: "/foo",
+      path: "/foo",
+      query: "name[]=one,two",
       state: undefined,
     });
   });
@@ -81,6 +118,7 @@ function expectLocation(
       pathDefs,
       queryStringSerializer: createQueryStringSerializer(),
       arraySeparator: ",",
+      baseUrl: "/",
     })
   );
 }

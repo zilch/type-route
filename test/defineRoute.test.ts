@@ -19,4 +19,18 @@ describe("defineRoute", () => {
       }
     );
   });
+
+  it("extending routes should work", () => {
+    const fooRoute = defineRoute({ a: param.query.string }, () => "/foo");
+    const fooBarRoute = fooRoute.extend(
+      { b: param.query.string },
+      () => "/bar"
+    );
+
+    expect(fooBarRoute["~internal"].path({})).toEqual(["/foo/bar"]);
+    expect(Object.keys(fooBarRoute["~internal"].params).sort()).toEqual([
+      "a",
+      "b",
+    ]);
+  });
 });

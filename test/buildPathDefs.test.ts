@@ -167,6 +167,16 @@ describe("buildPathDef", () => {
           (p) => `/hi/hello-${p.hello}`
         )
     );
+
+    expectTypeRouteError(
+      TypeRouteError.Optional_path_parameters_may_not_have_any_text_around_the_parameter,
+      () =>
+        buildPathDefs(
+          "test",
+          { hello: param.path.optional.string },
+          (p) => `/hi/${p.hello}-hello`
+        )
+    );
   });
 
   it("should error if there is more than one optional/trailing paramter", () => {

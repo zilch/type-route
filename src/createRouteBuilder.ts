@@ -60,7 +60,7 @@ export function createRouteBuilder(
 
     const routerContext = getRouterContext();
 
-    const { arraySeparator, queryStringSerializer } = routerContext;
+    const { arraySeparator, queryStringSerializer, baseUrl } = routerContext;
 
     const location = createLocation({
       paramCollection: params,
@@ -68,6 +68,7 @@ export function createRouteBuilder(
       arraySeparator,
       queryStringSerializer,
       pathDefs,
+      baseUrl,
     });
 
     return buildRoute({

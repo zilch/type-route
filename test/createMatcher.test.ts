@@ -18,6 +18,7 @@ describe("createMatcher", () => {
       },
       () => `/user`,
       {
+        fullPath: "/user",
         path: "/user",
         query: "userId=hello",
       }
@@ -37,6 +38,7 @@ describe("createMatcher", () => {
       },
       () => [`/users`, `/user`],
       {
+        fullPath: "/user",
         path: "/user",
         query: "userId=hello",
       }
@@ -56,6 +58,7 @@ describe("createMatcher", () => {
       },
       () => `/user`,
       {
+        fullPath: "/user",
         path: "/user",
         query: "userId=hello",
         state: {
@@ -78,6 +81,7 @@ describe("createMatcher", () => {
       },
       () => `/user`,
       {
+        fullPath: "/user",
         path: "/user",
         query: "userId=hello&nice=day",
         state: {
@@ -93,6 +97,39 @@ describe("createMatcher", () => {
     });
   });
 
+  it("should return false if query prevents match", () => {
+    expectMatch(
+      {
+        userId: param.query.number,
+      },
+      () => `/user`,
+      {
+        fullPath: "/user",
+        path: "/user",
+        query: "userId=hello",
+        state: {
+          hello: "test",
+        },
+      }
+    ).toEqual(false);
+  });
+
+  it("should return false if state prevents match", () => {
+    expectMatch(
+      {
+        userId: param.state.number,
+      },
+      () => `/user`,
+      {
+        fullPath: "/user",
+        path: "/user",
+        state: {
+          hello: "test",
+        },
+      }
+    ).toEqual(false);
+  });
+
   it("should work with path with query", () => {
     expectMatch(
       {
@@ -100,6 +137,7 @@ describe("createMatcher", () => {
       },
       () => `/users`,
       {
+        fullPath: "/users",
         path: "/users",
         query: "page=2",
       }
@@ -108,6 +146,26 @@ describe("createMatcher", () => {
       numExtraneousParams: 0,
       params: {
         page: 2,
+      },
+    });
+  });
+
+  it("should work with boolean params", () => {
+    expectMatch(
+      {
+        test: param.query.boolean,
+      },
+      () => `/users`,
+      {
+        fullPath: "/users",
+        path: "/users",
+        query: "test=true",
+      }
+    ).toEqual({
+      primaryPath: true,
+      numExtraneousParams: 0,
+      params: {
+        test: true,
       },
     });
   });

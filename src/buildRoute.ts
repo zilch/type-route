@@ -1,5 +1,8 @@
 import { UmbrellaRoute, RouterLocation, RouterContext } from "./types";
 import { preventDefaultLinkClickBehavior } from "./preventDefaultLinkClickBehavior";
+import { stringUtils } from "./stringUtils";
+
+const { startsWith } = stringUtils;
 
 export function buildRoute({
   routeName,
@@ -14,10 +17,18 @@ export function buildRoute({
 }): UmbrellaRoute {
   const { navigate, history } = routerContext;
 
-  const href = history.createHref({
-    pathname: location.path,
+  let href = history.createHref({
+    pathname: routeName === false ? location.fullPath : location.path,
     search: location.query ? "?" + location.query : "",
   });
+
+  if (startsWith(href, "#")) {
+    href = "/" + href;
+  }
+
+  if (routeName !== false && routerContext.baseUrl !== "/") {
+    href = routerContext.baseUrl + href;
+  }
 
   const route: UmbrellaRoute = {
     name: routeName,

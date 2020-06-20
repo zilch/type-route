@@ -203,6 +203,30 @@ describe("getPathMatch", () => {
     });
   });
 
+  it("should not match when some part of the param is not a match", () => {
+    expectGetPathMatch(
+      { hi: param.path.array.number },
+      (x) => `/hello-${x.hi}`,
+      "/hello-1,2,a"
+    ).toEqual(false);
+  });
+
+  it("should not match an empty string", () => {
+    expectGetPathMatch(
+      { hi: param.path.string },
+      (x) => `/hello-${x.hi}-there`,
+      "/hello--there"
+    ).toEqual(false);
+  });
+
+  it("should not match an value where the leading part matches but the trailing part does not", () => {
+    expectGetPathMatch(
+      { hi: param.path.string },
+      (x) => `/hello-${x.hi}-there`,
+      "/hello-hi-the"
+    ).toEqual(false);
+  });
+
   it("should match numbers", () => {
     expectGetPathMatch(
       { num: param.path.number },

@@ -12,11 +12,14 @@ export function getRouteByHref(
 ) {
   const [pathname, search] = splitFirst(href, "?");
 
-  const location = convertToRouterLocationFromHistoryLocation({
-    pathname,
-    search,
-    state,
-  });
+  const location = convertToRouterLocationFromHistoryLocation(
+    {
+      pathname,
+      search,
+      state,
+    },
+    routerContext.baseUrl
+  );
 
   return getMatchingRoute(location, routerContext);
 }

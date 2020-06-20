@@ -25,7 +25,9 @@ import { getMatchingRoute } from "./getMatchingRoute";
 import { convertToRouterLocationFromHistoryLocation } from "./convertToRouterLocationFromHistoryLocation";
 import { getRouteByHref } from "./getRouteByHref";
 import { createNavigationHandlerManager } from "./createNavigationHandlerManager";
-import { splitFirst } from "./stringUtils";
+import { stringUtils } from "./stringUtils";
+
+const { startsWith, splitFirst } = stringUtils;
 
 export function createRouter<
   TRouteDefCollection extends { [routeName: string]: any }
@@ -49,7 +51,8 @@ export function createRouter(...args: any[]): UmbrellaRouter {
         }
 
         const location = convertToRouterLocationFromHistoryLocation(
-          update.location
+          update.location,
+          baseUrl
         );
         const action = update.action.toLowerCase() as Action;
         const { route, primaryPath } = getMatchingRoute(
@@ -63,6 +66,7 @@ export function createRouter(...args: any[]): UmbrellaRouter {
     stopListening: () => unlisten?.(),
   });
 
+  const baseUrl = config.baseUrl ?? "/";
   const arraySeparator = config.arrayFormat?.separator ?? ",";
   const queryStringSerializer =
     config.queryStringSerializer ??
@@ -147,7 +151,10 @@ export function createRouter(...args: any[]): UmbrellaRouter {
 
         if (!initialRoute) {
           let result = getMatchingRoute(
-            convertToRouterLocationFromHistoryLocation(history.location),
+            convertToRouterLocationFromHistoryLocation(
+              history.location,
+              baseUrl
+            ),
             getRouterContext()
           );
 
@@ -155,7 +162,10 @@ export function createRouter(...args: any[]): UmbrellaRouter {
             skipHandlingNextApplicationTriggeredNavigation = true;
             result.route.replace();
             result = getMatchingRoute(
-              convertToRouterLocationFromHistoryLocation(history.location),
+              convertToRouterLocationFromHistoryLocation(
+                history.location,
+                baseUrl
+              ),
               getRouterContext()
             );
           }
@@ -179,7 +189,10 @@ export function createRouter(...args: any[]): UmbrellaRouter {
 
         const unblock = history.block((update) => {
           const { route } = getMatchingRoute(
-            convertToRouterLocationFromHistoryLocation(update.location),
+            convertToRouterLocationFromHistoryLocation(
+              update.location,
+              baseUrl
+            ),
             getRouterContext()
           );
 
@@ -208,6 +221,7 @@ export function createRouter(...args: any[]): UmbrellaRouter {
           : "memory",
     }
   ) {
+    initialRoute = null;
     if (sessionConfig.type === "memory") {
       history = createMemoryHistory({
         initialEntries: sessionConfig.initialEntries,
@@ -291,6 +305,7 @@ export function createRouter(...args: any[]): UmbrellaRouter {
       history,
       routeDefs,
       routes,
+      baseUrl,
     };
   }
 }
@@ -302,13 +317,31 @@ function parseArgs(args: any[]) {
 
   if (__DEV__) {
     assert("createRouter", [
-      assert.numArgs([].slice.call(arguments), 1, 2),
+      assert.numArgs(args, 1, 2),
       assert.collectionOfType("RouteDef", "routeDefs", routeDefs),
       assert.type("object", "config", config),
     ]);
 
     if (config.arrayFormat?.queryString && config.queryStringSerializer) {
       throw TypeRouteError.Query_string_array_format_and_custom_query_string_serializer_may_not_both_be_provided.create();
+    }
+
+    if (typeof config.baseUrl === "string") {
+      if (!startsWith(config.baseUrl, "/")) {
+        throw TypeRouteError.Base_url_must_start_with_a_forward_slash.create(
+          config.baseUrl
+        );
+      }
+
+      if (
+        config.baseUrl
+          .split("/")
+          .some((part) => encodeURIComponent(part) !== part)
+      ) {
+        throw TypeRouteError.Base_url_must_not_contain_any_characters_that_must_be_url_encoded.create(
+          config.baseUrl
+        );
+      }
     }
   }
 

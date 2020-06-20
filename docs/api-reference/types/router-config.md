@@ -7,6 +7,7 @@ type RouterConfig = {
   session?: SessionConfig;
   queryStringSerializer?: QueryStringSerializer;
   arrayFormat?: ArrayFormat;
+  baseUrl?: string;
 }
 
 type ArrayFormat = {

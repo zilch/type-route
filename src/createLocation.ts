@@ -20,12 +20,14 @@ export function createLocation({
   arraySeparator,
   queryStringSerializer,
   pathDefs,
+  baseUrl,
 }: {
   paramCollection: Record<string, unknown>;
   paramDefCollection: UmbrellaParamDefCollection;
   arraySeparator: string;
   queryStringSerializer: QueryStringSerializer;
   pathDefs: PathDef[];
+  baseUrl: string;
 }): RouterLocation {
   const params = {
     path: {} as ParamWithContextCollection,
@@ -53,18 +55,16 @@ export function createLocation({
       if (!Array.isArray(paramValue)) {
         if (__DEV__) {
           throw TypeRouteError.Expected_type_does_not_match_actual_type.create({
-            context: "push/replace/link/href",
+            context: "routes[routeName](...)",
             actualType: typeOf(paramValue),
             expectedType: "array",
             value: paramValue,
             valueName: paramName,
           });
-        } else {
-          throw new Error();
         }
       }
 
-      value = paramValue
+      value = (paramValue as unknown[])
         .map((part) => stringify(paramDef, part, urlEncode))
         .join(arraySeparator);
     } else {
@@ -118,7 +118,12 @@ export function createLocation({
           {}
         );
 
-  return { path, query, state };
+  return {
+    fullPath: (baseUrl === "/" ? "" : baseUrl) + path,
+    path,
+    query,
+    state,
+  };
 }
 
 function stringify(

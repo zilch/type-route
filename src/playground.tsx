@@ -9,6 +9,12 @@ import { createRouter, defineRoute, param, Route, createGroup } from "./index";
 const account = defineRoute("/account");
 
 export const { routes, session, listen } = createRouter({
+  foo: defineRoute(
+    {
+      bar: param.query.array.string,
+    },
+    () => "/foo"
+  ),
   home: defineRoute(["/dashboard", "/"]),
   account: account.extend(["/overview", "/"]),
 

@@ -38,6 +38,10 @@ export function createMatcher({
     queryStringSerializer: QueryStringSerializer;
     arraySeparator: string;
   }) => {
+    if (routerLocation.path === undefined) {
+      return false;
+    }
+
     const pathMatch = getPathMatch({
       path: routerLocation.path,
       pathDefs,
@@ -51,7 +55,8 @@ export function createMatcher({
     const queryMatch = getQueryMatch(
       routerLocation.query,
       queryParamDefCollection,
-      queryStringSerializer
+      queryStringSerializer,
+      arraySeparator
     );
     if (queryMatch === false) {
       return false;
@@ -59,7 +64,8 @@ export function createMatcher({
 
     const stateMatch = getStateMatch(
       routerLocation.state,
-      stateParamDefCollection
+      stateParamDefCollection,
+      arraySeparator
     );
     if (stateMatch === false) {
       return false;
