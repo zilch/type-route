@@ -4,22 +4,27 @@ sidebar_label: routes
 ---
 
 ```tsx
-<Router>.routes: { [routeName: string]: RouteDefinition }
+<Router>.routes: { [routeName: string]: RouteBuilder }
 ```
 
-The `routes` property of a `Router` object is a map of route names to a `RouteDefinition` object (not to be confused with the `RouteDefinitionBuilder` object that `defineRoute` creates). The `RouteDefinition` object contains properties and functions for interacting with that specific route in your application.
+The `routes` property of a `Router` object is a map of route names to a `RouteBuilder` object. The `RouteBuilder` object is used to construct a specific route which can be interacted with update your application.
 
 #### Example
 
 ```tsx
 const { routes } = createRouter({
-  home: defineRoute("/")
+  user: defineRoute(
+    {
+      userId: param.path.string
+    },
+    p => `/user/${p.userId}`
+  )
 });
 
-routes.home.name; // "home"
-routes.home.push();
-routes.home.replace();
-routes.home.href();
-routes.home.link();
-routes.home.match();
+routes.user({ userId: "abc" }).name; // "user"
+routes.user({ userId: "abc" }).params; // { userId: "abc" }
+routes.user({ userId: "abc" }).href; // "/user/abc"
+routes.user({ userId: "abc" }).link;
+routes.user({ userId: "abc" }).push();
+routes.user({ userId: "abc" }).replace();
 ```

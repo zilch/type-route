@@ -1,32 +1,69 @@
 {
   "docs": {
     "Introduction": [
-      "introduction/getting-started",
-      "introduction/why-type-route"
+      "introduction/getting-started"
     ],
     "Guides": [
       "guides/simple-react-example",
-      "guides/nested-similar-routes",
-      "guides/no-match-404",
-      "guides/redirects",
-      "guides/route-parameters",
+      "guides/simple-vue-example",
+      "guides/simple-svelte-example",
+      "guides/simple-angular-example",
+      "guides/code-splitting",
       "guides/complex-route-parameters",
-      "guides/rendering-links",
-      "guides/programmatic-navigation",
+      "guides/custom-link-behavior",
+      "guides/custom-query-string",
+      "guides/data-fetching",
+      "guides/nested-and-similar-routes",
+      "guides/no-match-404",
+      "guides/page-layout",
       "guides/preventing-navigation",
+      "guides/programmatic-navigation",
+      "guides/react-components",
+      "guides/redirects",
+      "guides/rendering-links",
+      "guides/route-parameters",
       "guides/scroll-restoration",
       "guides/server-side-rendering",
-      "guides/page-layout",
-      "guides/route-components",
-      "guides/guide-missing"
+      "guides/styling-active-route-link",
+      "guides/wildcard-routes",
+      "guides/guide-missing",
+      "guides/previous-release-docs"
     ],
     "API Reference": [
       {
         "type": "subcategory",
-        "label": "<RouteDefinitionBuilder>",
+        "label": "<ParameterDefinition>",
         "ids": [
-          "api-reference/route-definition-builder/define-route",
-          "api-reference/route-definition-builder/extend"
+          "api-reference/parameter-definition/param"
+        ]
+      },
+      {
+        "type": "subcategory",
+        "label": "<RouteDefinition>",
+        "ids": [
+          "api-reference/route-definition/define-route",
+          "api-reference/route-definition/extend"
+        ]
+      },
+      {
+        "type": "subcategory",
+        "label": "<RouteGroup>",
+        "ids": [
+          "api-reference/route-group/create-group",
+          "api-reference/route-group/has"
+        ]
+      },
+      {
+        "type": "subcategory",
+        "label": "<Route>",
+        "ids": [
+          "api-reference/route/action",
+          "api-reference/route/href",
+          "api-reference/route/link",
+          "api-reference/route/name",
+          "api-reference/route/params",
+          "api-reference/route/push",
+          "api-reference/route/replace"
         ]
       },
       {
@@ -35,35 +72,29 @@
         "ids": [
           "api-reference/router/create-router",
           "api-reference/router/listen",
-          "api-reference/router/get-current-route",
-          "api-reference/router/history",
-          "api-reference/router/routes"
+          "api-reference/router/routes",
+          "api-reference/router/session"
         ]
       },
       {
         "type": "subcategory",
-        "label": "<RouteDefinition>",
+        "label": "Types",
         "ids": [
-          "api-reference/route-definition/name",
-          "api-reference/route-definition/push",
-          "api-reference/route-definition/replace",
-          "api-reference/route-definition/href",
-          "api-reference/route-definition/link",
-          "api-reference/route-definition/match"
+          "api-reference/types/link",
+          "api-reference/types/query-string-serializer",
+          "api-reference/types/route",
+          "api-reference/types/router-config",
+          "api-reference/types/session-config",
+          "api-reference/types/value-serializer"
         ]
       },
       {
         "type": "subcategory",
-        "label": "<RouteDefinitionGroup>",
+        "label": "Miscellaneous",
         "ids": [
-          "api-reference/route-definition-group/create-group",
-          "api-reference/route-definition-group/has"
+          "api-reference/miscellaneous/no-match",
+          "api-reference/miscellaneous/prevent-default-link-click-behavior"
         ]
-      },
-      {
-        "type": "subcategory",
-        "label": "TypeScript",
-        "ids": ["api-reference/typescript/route"]
       }
     ]
   }

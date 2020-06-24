@@ -4,28 +4,29 @@ title: createRouter
 
 ```tsx
 createRouter(routeDefinitions: RouteDefinitionBuilderCollection): Router
+createRouter(routerConfig: RouterConfig, routeDefinitions: RouteDefinitionBuilderCollection): Router
 ```
 
-Initializes a router. By default the underlying history instance which powers Type
+Initializes a router. By default the underlying session history instance which powers Type
 Route will be configured according to the environment your code is running in. This
 means Type Route should work out of the box in both browser and non-browser environments
-such as React Native. You can always reconfigure the history instance you are given to
-cover other use cases (such as server-side rendering).
+such as React Native. You can always reconfigure the session history instance to
+cover other use cases (such as [server-side rendering](../../guides/server-side-rendering.md)).
 
 #### Example
 
 ```tsx
-const { routes, listen, getCurrentRoute, history } = createRouter({
+const { routes, listen, session } = createRouter({
   home: defineRoute("/"),
   postList: defineRoute(
     {
-      page: "query.param.number.optional"
+      page: param.query.optional.number
     },
     p => `/post`
   ),
   post: defineRoute(
     {
-      postId: "path.param.string"
+      postId: param.path.string
     },
     p => `/post/${p.postId}`
   )

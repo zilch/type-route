@@ -1,67 +1,55 @@
-import {
-  Route,
-  RouteDefinition,
-  ParameterDefinitionCollection,
-  RouteDefinitionGroup,
-} from "./types";
-import { validate } from "./validate";
+import { RouteGroup, UmbrellaRoute, UmbrellaRouteBuilder } from "./types";
+import { assert } from "./assert";
 
-export function createGroup<T extends any[]>(
-  groupItems: T
-): RouteDefinitionGroup<T> {
-  validate["createGroup"](Array.from(arguments));
+export function createGroup<T extends any[]>(groupItems: T): RouteGroup<T> {
+  if (__DEV__) {
+    assert("createGroup", [
+      assert.numArgs([].slice.call(arguments), 1),
+      assert.arrayOfType(
+        ["RouteGroup", "RouteBuilder"],
+        "groupItems",
+        groupItems
+      ),
+    ]);
+  }
 
-  const routeDefinitionNames: {
-    [key: string]: true;
-  } = {};
+  const routeNames: Record<string, true> = {};
 
-  groupItems.forEach(
-    (
-      item:
-        | RouteDefinition<string, ParameterDefinitionCollection>
-        | RouteDefinitionGroup<
-            RouteDefinition<string, ParameterDefinitionCollection>[]
-          >
-    ) => {
-      if (isRouteDefinitionGroup(item)) {
-        item.routeNames.forEach((name) => {
-          routeDefinitionNames[name] = true;
-        });
-      } else {
-        routeDefinitionNames[item.name] = true;
-      }
+  groupItems.forEach((item) => {
+    if (isRouteGroup(item)) {
+      item.routeNames.forEach((name) => {
+        routeNames[name] = true;
+      });
+    } else {
+      routeNames[item.name] = true;
     }
-  );
+  });
 
   return {
-    [".type"]: null as any,
-    routeNames: Object.keys(routeDefinitionNames),
-    has(route: Route<any>): route is any {
-      validate["[group].has"](Array.from(arguments));
+    "~internal": {
+      type: "RouteGroup",
+      Route: null as any,
+    },
+    routeNames: Object.keys(routeNames),
+    has(route: UmbrellaRoute): route is UmbrellaRoute {
+      if (__DEV__) {
+        assert("[RouteGroup].has", [
+          assert.numArgs([].slice.call(arguments), 1),
+          assert.type("object", "route", route),
+        ]);
+      }
 
       if (route.name === false) {
         return false;
       }
 
-      const value = routeDefinitionNames[route.name];
-
-      return value === true ? true : false;
+      return !!routeNames[route.name];
     },
   };
 }
 
-function isRouteDefinitionGroup(
-  groupItem:
-    | RouteDefinition<string, ParameterDefinitionCollection>
-    | RouteDefinitionGroup<
-        RouteDefinition<string, ParameterDefinitionCollection>[]
-      >
-): groupItem is RouteDefinitionGroup<
-  RouteDefinition<string, ParameterDefinitionCollection>[]
-> {
-  return Array.isArray(
-    (groupItem as RouteDefinitionGroup<
-      RouteDefinition<string, ParameterDefinitionCollection>[]
-    >).routeNames
-  );
+function isRouteGroup(
+  value: RouteGroup | UmbrellaRouteBuilder
+): value is RouteGroup {
+  return !!(value as RouteGroup).routeNames;
 }

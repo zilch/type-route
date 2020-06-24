@@ -4,11 +4,15 @@ title: Getting Started
 
 Type Route is a flexible, type safe routing library built on top of the same [core library](https://github.com/ReactTraining/history) that powers React Router.
 
-> Type Route was designed with excellent React integration in mind but isn't coupled to a specific UI framework. Most code examples in the documentation use React, but the general principles covered apply regardless of framework.
+> **Type Route was designed with excellent React integration in mind** but isn't coupled to a specific UI framework. Most code examples in the documentation use React, but the general principles covered apply regardless of framework.
 
-Continue reading this page for a quick overview of how to start using Type Route in your project. Read the [Why Type Route?](./why-type-route.md) page for a more detailed introduction. Find a full runnable version of the below examples on the [Simple React Example](../guides/simple-react-example.md) page.
+Continue reading this introduction for a quick overview of how to start using Type Route in your project. Find a full <b>runnable</b> version of the below guide in your framework of choice on any of the following pages:
+
+[Simple React Example](https://typehero.org/type-route/docs/guides/simple-react-example) · [Simple Vue Example](https://typehero.org/type-route/docs/guides/simple-vue-example) · [Simple Svelte Example](https://typehero.org/type-route/docs/guides/simple-svelte-example) · [Simple Angular Example](https://typehero.org/type-route/docs/guides/simple-angular-example)
 
 ## Install
+
+> 🚨 **This is a beta release.** 🚨 The Type Route API has been vetted with production code but the library has not yet reached version **1.0**. More community feedback is needed to validate the project's maturity. Use the [issue tracker](https://github.com/typehero/type-route/issues) to communicate this feedback in the form of bugs, questions, or suggestions.
 
 Type Route's primary distribution channel is the [NPM registry](https://www.npmjs.com/package/type-route).
 
@@ -21,40 +25,39 @@ npm install type-route
 `router.ts`
 
 ```typescript
-import { createRouter, defineRoute } from "type-route";
+import { createRouter, defineRoute, param } from "type-route";
 
-export const { routes, listen, getCurrentRoute } = createRouter({
+export const { routes, listen, session } = createRouter({
   home: defineRoute("/"),
   userList: defineRoute(
     {
-      page: "query.param.number.optional"
+      page: param.query.optional.number
     },
     () => "/user"
   ),
   user: defineRoute(
     {
-      userId: "path.param.string"
+      userId: param.path.string
     },
     p => `/user/${p.userId}`
   )
 });
 ```
 
-Best practice is to immediately destructure the result of [`createRouter`](../api-reference/router/create-router.md) into the properties you'll be using in your application. The [`createRouter`](../api-reference/router/create-router.md) function accepts an object with route names and route definitions created via [`defineRoute`](../api-reference/route-definition-builder/define-route.md) and returns a new router.
+Best practice is to immediately destructure the result of [`createRouter`](https://typehero.org/type-route/docs/api-reference/router/create-router) into the properties you'll be using in your application. The [`createRouter`](https://typehero.org/type-route/docs/api-reference/router/create-router) function accepts an object with route names and route definitions created via [`defineRoute`](https://typehero.org/type-route/docs/api-reference/route-definition/define-route) and returns a new router.
 
 ## Step 2: Connect to Application State
 
 `App.tsx`
 
-```tsx
+```tsx {7-8}
 import React, { useState, useEffect } from "react";
-import { listen, getCurrentRoute } from "./router";
+import { listen, session } from "./router";
 import { Page } from "./Page";
 import { Navigation } from "./Navigation";
 
 function App() {
-  const [route, setRoute] = useState(getCurrentRoute());
-
+  const [route, setRoute] = useState(session.getInitialRoute());
   useEffect(() => listen(setRoute), []);
 
   return (
@@ -66,7 +69,9 @@ function App() {
 }
 ```
 
-Retrieve the initial route via [`getCurrentRoute()`](../api-reference/router/get-current-route.md) then subscribe to route updates with [`listen`](../api-reference/router/listen.md).
+Retrieve the initial route via [`session.getInitialRoute()`](https://typehero.org/type-route/docs/api-reference/router/session) then subscribe to route updates with [`listen`](https://typehero.org/type-route/docs/api-reference/router/listen).
+
+> New Type Route users often wonder why React components such as `<Route/>` or `<Link/>` aren't provided by the library. Read the [React Components](https://typehero.org/type-route/docs/guides/react-components) guide for more information on this topic.
 
 ## Step 3: Display Current Route
 
@@ -84,11 +89,11 @@ type Props = {
 export function Page(props: Props) {
   const { route } = props;
 
-  if (route.name === routes.home.name) {
+  if (route.name === "home") {
     return <div>Home</div>;
   }
 
-  if (route.name === routes.userList.name) {
+  if (route.name === "userList") {
     return (
       <div>
         User List
@@ -98,7 +103,7 @@ export function Page(props: Props) {
     );
   }
 
-  if (route.name === routes.user.name) {
+  if (route.name === "user") {
     return <div>User {route.params.userId}</div>;
   }
 
@@ -121,20 +126,16 @@ import { routes } from "./router";
 export function Navigation() {
   return (
     <nav>
-      <a {...routes.home.link()}>Home</a>
-      <a {...routes.userList.link()}>User List</a>
-      <a
-        {...routes.userList.link({
-          page: 2
-        })}
-      >
+      <a {...routes.home().link}>
+        Home
+      </a>
+      <a {...routes.userList().link}>
+        User List
+      </a>
+      <a {...routes.userList({ page: 2 }).link}>
         User List Page 2
       </a>
-      <a
-        {...routes.user.link({
-          userId: "abc"
-        })}
-      >
+      <a {...routes.user({ userId: "abc" }).link}>
         User "abc"
       </a>
     </nav>
@@ -142,10 +143,10 @@ export function Navigation() {
 }
 ```
 
-The [`link`](../api-reference/route-definition/link.md) function returns an object with an `href` property and an `onClick` function. You need both to [properly render](../guides/rendering-links.md) a link for a single page application. Immediately destructing these into the properties of the `<a>` tag allows for ergonomic use. [Programmatic navigation](../guides/programmatic-navigation.md) is possible with the [`push`](../api-reference/route-definition/push.md) and [`replace`](../api-reference/route-definition/replace.md) functions of a specific route.
+The [`link`](https://typehero.org/type-route/docs/api-reference/route/link) property is an object with an `href` property and an `onClick` function. You need both to [properly render](https://typehero.org/type-route/docs/guides/rendering-links) a link for a single page application. Immediately spreading the `link` object into the properties of an `<a>` tag makes usage simple. [Programmatic navigation](https://typehero.org/type-route/docs/guides/programmatic-navigation) is possible with the [`push`](https://typehero.org/type-route/docs/api-reference/route/push) and [`replace`](https://typehero.org/type-route/docs/api-reference/route/replace) functions of a specific route.
 
 ## Next Steps
 
 Hopefully that was enough to point you in the right direction!
 
-If you need more guidance there is a full _runnable_ version of the above example on the [React](../guides/simple-react-example.md) page. The _Guides_ section of the documentation has detailed overviews and examples for most use cases. Additionally, the _API Reference_ section has descriptions and examples for each part of the API.
+If you need more direction there is a full runnable version of the above guide on the [Simple React Example](https://typehero.org/type-route/docs/guides/simple-react-example) page. The "Guides" section of the documentation has detailed overviews and examples for most use cases. Additionally, the "API Reference" section has descriptions and examples for each part of the API.

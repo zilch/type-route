@@ -1,18 +1,18 @@
 {
+  "include": ["src", "test"],
   "compilerOptions": {
-    "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "esModuleInterop": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "module": "commonjs",
-    "noUnusedLocals": true,
-    "sourceMap": false,
-    "resolveJsonModule": true,
-    "noUnusedParameters": true,
-    "outDir": "lib",
+    "module": "esnext",
+    "lib": ["dom", "esnext"],
+    "importHelpers": true,
     "declaration": true,
-    "jsx": "react"
-  },
-  "include": ["src"]
+    "sourceMap": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "moduleResolution": "node",
+    "jsx": "react",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true
+  }
 }

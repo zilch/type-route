@@ -1,84 +1,103 @@
+/* eslint-disable import/first */
+// @ts-ignore
+window.__DEV__ = true;
+
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
-import { createRouter, defineRoute, Route } from "./index";
-import "./playground.css";
+import { createRouter, defineRoute, param, Route, createGroup } from "./index";
 
-const { routes, listen, getCurrentRoute } = createRouter({
-  home: defineRoute("/"),
-  userList: defineRoute(
+const account = defineRoute("/account");
+
+export const { routes, session, listen } = createRouter({
+  foo: defineRoute(
     {
-      page: "query.param.number.optional",
+      bar: param.query.array.string,
     },
-    () => "/user"
+    () => "/foo"
   ),
+  home: defineRoute(["/dashboard", "/"]),
+  account: account.extend(["/overview", "/"]),
+
   user: defineRoute(
     {
-      userId: "path.param.string",
+      userId: param.path.string,
     },
-    (p) => `/user/${p.userId}`
+    (x) => [`/user/${x.userId}`, `/users/${x.userId}`]
   ),
 });
 
-function App() {
-  const [route, setRoute] = useState(getCurrentRoute());
+export const groups = {
+  hi: createGroup([routes.home]),
+};
 
+function App() {
+  const [route, setRoute] = useState(session.getInitialRoute());
   useEffect(() => listen(setRoute), []);
+
+  useEffect(() => {
+    if (route.action === "push") {
+      window.scroll(0, 0);
+    }
+  }, [route]);
+
+  useEffect(() => {
+    document.title = route.href;
+  }, [route]);
+
+  useEffect(() => {
+    if (route.name === "home") {
+      const unblock = session.block((update) => {
+        if (window.confirm("Are you sure?")) {
+          unblock();
+          update.retry();
+        }
+      });
+    }
+  }, [route]);
 
   return (
     <>
       <Navigation />
-      <Page route={route} />
+      {groups.hi.has(route) && <div>Hi</div>}
+      {route.name === "home" && <HomePage />}
+      {route.name === "user" && <UserPage route={route} />}
+      {route.name === "account" && <AccountPage />}
+      {route.name === false && <NotFoundPage />}
+      <Navigation />
     </>
   );
 }
 
-function Page(props: { route: Route<typeof routes> }) {
-  const { route } = props;
-
-  if (route.name === routes.home.name) {
-    return <div>Home Page</div>;
-  }
-
-  if (route.name === routes.userList.name) {
-    return (
-      <div>
-        User List
-        <br />
-        Page: {route.params.page || "-"}
-      </div>
-    );
-  }
-
-  if (route.name === routes.user.name) {
-    return <div>User {route.params.userId}</div>;
-  }
-
+function NotFoundPage() {
   return <div>Not Found</div>;
+}
+
+function HomePage() {
+  return <div style={{ height: "1000px" }}>Home Page</div>;
+}
+
+function AccountPage() {
+  return <div style={{ height: "1000px" }}>Account Page</div>;
+}
+
+function UserPage({ route }: { route: Route<typeof routes.user> }) {
+  return (
+    <>
+      <div style={{ height: "2000px" }}>User {route.params.userId}</div>
+      <div>User {route.params.userId}</div>
+    </>
+  );
 }
 
 function Navigation() {
   return (
     <nav>
-      <a {...routes.home.link()}>Home</a>
-      <a {...routes.userList.link()}>User List</a>
-      <a
-        {...routes.userList.link({
-          page: 2,
-        })}
-      >
-        User List Page 2
-      </a>
-      <a
-        {...routes.user.link({
-          userId: "abc",
-        })}
-      >
-        User "abc"
-      </a>
+      <a {...routes.home().link}>Home</a>
+      <a {...routes.user({ userId: "abc" }).link}>User "abc"</a>
     </nav>
   );
 }
 
-const appContainer = document.createElement("div");
-document.body.appendChild(appContainer);
-ReactDOM.render(<App />, appContainer);
+const container = document.createElement("div");
+document.body.appendChild(container);
+ReactDOM.render(<App />, container);

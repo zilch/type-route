@@ -5,54 +5,59 @@
     "previous": "Previous",
     "tagline": "A flexible, type safe routing library.",
     "docs": {
-      "api-reference/route-definition-builder/define-route": {
+      "api-reference/miscellaneous/no-match": {
+        "title": "noMatch"
+      },
+      "api-reference/miscellaneous/prevent-default-link-click-behavior": {
+        "title": "preventDefaultLinkClickBehavior"
+      },
+      "api-reference/parameter-definition/param": {
+        "title": "param"
+      },
+      "api-reference/route-definition/define-route": {
         "title": "defineRoute"
       },
-      "api-reference/route-definition-builder/extend": {
-        "title": "<RouteDefinitionBuilder>.extend",
+      "api-reference/route-definition/extend": {
+        "title": "<RouteDefinition>.extend",
         "sidebar_label": "extend"
       },
-      "api-reference/route-definition-group/create-group": {
+      "api-reference/route-group/create-group": {
         "title": "createGroup"
       },
-      "api-reference/route-definition-group/has": {
-        "title": "<RouteDefinitionGroup>.has",
+      "api-reference/route-group/has": {
+        "title": "<RouteGroup>.has",
         "sidebar_label": "has"
       },
-      "api-reference/route-definition/href": {
-        "title": "<RouteDefinition>.href",
+      "api-reference/route/action": {
+        "title": "<Route>.action",
+        "sidebar_label": "action"
+      },
+      "api-reference/route/href": {
+        "title": "<Route>.href",
         "sidebar_label": "href"
       },
-      "api-reference/route-definition/link": {
-        "title": "<RouteDefinition>.link",
+      "api-reference/route/link": {
+        "title": "<Route>.link",
         "sidebar_label": "link"
       },
-      "api-reference/route-definition/match": {
-        "title": "<RouteDefinition>.match",
-        "sidebar_label": "match"
-      },
-      "api-reference/route-definition/name": {
-        "title": "<RouteDefinition>.name",
+      "api-reference/route/name": {
+        "title": "<Route>.name",
         "sidebar_label": "name"
       },
-      "api-reference/route-definition/push": {
-        "title": "<RouteDefinition>.push",
+      "api-reference/route/params": {
+        "title": "<Route>.params",
+        "sidebar_label": "params"
+      },
+      "api-reference/route/push": {
+        "title": "<Route>.push",
         "sidebar_label": "push"
       },
-      "api-reference/route-definition/replace": {
-        "title": "<RouteDefinition>.replace",
+      "api-reference/route/replace": {
+        "title": "<Route>.replace",
         "sidebar_label": "replace"
       },
       "api-reference/router/create-router": {
         "title": "createRouter"
-      },
-      "api-reference/router/get-current-route": {
-        "title": "<Router>.getCurrentRoute",
-        "sidebar_label": "getCurrentRoute"
-      },
-      "api-reference/router/history": {
-        "title": "<Router>.history",
-        "sidebar_label": "history"
       },
       "api-reference/router/listen": {
         "title": "<Router>.listen",
@@ -62,17 +67,48 @@
         "title": "<Router>.routes",
         "sidebar_label": "routes"
       },
-      "api-reference/typescript/route": {
+      "api-reference/router/session": {
+        "title": "<RouteDefinition>.session",
+        "sidebar_label": "session"
+      },
+      "api-reference/types/link": {
+        "title": "Link"
+      },
+      "api-reference/types/query-string-serializer": {
+        "title": "QueryStringSerializer"
+      },
+      "api-reference/types/route": {
         "title": "Route"
+      },
+      "api-reference/types/router-config": {
+        "title": "RouterConfig"
+      },
+      "api-reference/types/session-config": {
+        "title": "SessionConfig"
+      },
+      "api-reference/types/value-serializer": {
+        "title": "ValueSerializer"
+      },
+      "guides/code-splitting": {
+        "title": "Code Splitting"
       },
       "guides/complex-route-parameters": {
         "title": "Complex Route Parameters"
       },
+      "guides/custom-link-behavior": {
+        "title": "Custom Link Behavior"
+      },
+      "guides/custom-query-string": {
+        "title": "Custom Query String"
+      },
+      "guides/data-fetching": {
+        "title": "Data Fetching"
+      },
       "guides/guide-missing": {
         "title": "Guide Missing?"
       },
-      "guides/nested-similar-routes": {
-        "title": "Nested/Similar Routes"
+      "guides/nested-and-similar-routes": {
+        "title": "Nested and Similar Routes"
       },
       "guides/no-match-404": {
         "title": "No Match (404)"
@@ -83,17 +119,20 @@
       "guides/preventing-navigation": {
         "title": "Preventing Navigation"
       },
+      "guides/previous-release-docs": {
+        "title": "Previous Release Docs"
+      },
       "guides/programmatic-navigation": {
         "title": "Programmatic Navigation"
+      },
+      "guides/react-components": {
+        "title": "React Components"
       },
       "guides/redirects": {
         "title": "Redirects"
       },
       "guides/rendering-links": {
         "title": "Rendering Links"
-      },
-      "guides/route-components": {
-        "title": "Route Components"
       },
       "guides/route-parameters": {
         "title": "Route Parameters"
@@ -104,20 +143,32 @@
       "guides/server-side-rendering": {
         "title": "Server Side Rendering"
       },
+      "guides/simple-angular-example": {
+        "title": "Simple Angular Example"
+      },
       "guides/simple-react-example": {
         "title": "Simple React Example"
       },
+      "guides/simple-svelte-example": {
+        "title": "Simple Svelte Example"
+      },
+      "guides/simple-vue-example": {
+        "title": "Simple Vue Example"
+      },
+      "guides/styling-active-route-link": {
+        "title": "Styling of Links for the Currently Active Route"
+      },
+      "guides/wildcard-routes": {
+        "title": "Wildcard Routes"
+      },
       "introduction/getting-started": {
         "title": "Getting Started"
-      },
-      "introduction/why-type-route": {
-        "title": "Why Type Route?"
       }
     },
     "links": {
       "Docs": "Docs",
       "GitHub": "GitHub",
-      "Feedback": "Feedback"
+      "v0.4.0": "v0.4.0"
     },
     "categories": {
       "Introduction": "Introduction",

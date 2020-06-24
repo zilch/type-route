@@ -5,27 +5,28 @@ on: [push, pull_request]
 jobs:
   check:
     name: Check
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     strategy:
       fail-fast: false
       matrix:
-        action: [build, lint, unit-test, integration-test]
+        action: [build, lint, test]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
-          node-version: 12.x
+          node-version: 11.x
       - run: npm install
       - run: npm run ${{ matrix.action }}
   release:
     name: Release
     needs: check
-    runs-on: ubuntu-latest
+    if: github.event_name	== 'push'
+    runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
-          node-version: 12.x
+          node-version: 11.x
           registry-url: https://registry.npmjs.org
       - name: Determine Release Information
         id: release-info
@@ -52,7 +53,7 @@ jobs:
   pr-environment:
     name: Create PR Environment
     if: github.event_name	== 'pull_request'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
       - uses: ./.github/actions/pr-environment

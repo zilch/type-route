@@ -1,10 +1,10 @@
 document.documentElement.lang = "en";
 
-window.onload = function() {
+window.onload = function () {
   let lastShowShadow = false;
 
-  document.addEventListener("scroll", function() {
-    showShadow = window.scrollY > 10;
+  document.addEventListener("scroll", function () {
+    let showShadow = window.scrollY > 10;
 
     if (lastShowShadow !== showShadow) {
       lastShowShadow = showShadow;
@@ -18,18 +18,18 @@ window.onload = function() {
   });
 
   const configFactoryCollection = {
-    "codesandbox-react": code => ({
+    "codesandbox-react": (code) => ({
       files: {
         "sandbox.config.json": {
           content:
-            "{\n" + '  "template": "create-react-app-typescript"\n' + "}\n"
+            "{\n" + '  "template": "create-react-app-typescript"\n' + "}\n",
         },
         "src/index.tsx": {
-          content: code
+          content: code,
         },
         "public/index.html": {
           content:
-            '<style>a { margin-right: 10px; } nav { margin-bottom: 10px; } #root { margin: 10px; }</style><div id="root"></div>'
+            '<style>a { margin-right: 10px; } nav { margin-bottom: 10px; } #root { margin: 10px; } .active { font-weight: bold; }</style><div id="root"></div>',
         },
         "package.json": {
           content: {
@@ -38,37 +38,37 @@ window.onload = function() {
               react: "=16.8.6",
               "@types/react": "=16.8.18",
               "react-dom": "=16.8.6",
-              "@types/react-dom": "=16.8.4"
-            }
-          }
-        }
-      }
+              "@types/react-dom": "=16.8.4",
+            },
+          },
+        },
+      },
     }),
-    "codesandbox-standard": code => ({
+    "codesandbox-standard": (code) => ({
       files: {
         "sandbox.config.json": {
           content:
-            "{\n" + '  "template": "create-react-app-typescript"\n' + "}\n"
+            "{\n" + '  "template": "create-react-app-typescript"\n' + "}\n",
         },
         "public/index.html": {
           content:
-            '<style>a { margin-right: 10px; } nav { margin-bottom: 10px; } #root { margin: 10px; }</style><div id="root"></div>'
+            '<style>a { margin-right: 10px; } nav { margin-bottom: 10px; } #root { margin: 10px; } .active { font-weight: bold; }</style><div id="root"></div>',
         },
         "index.ts": {
-          content: code
+          content: code,
         },
         "package.json": {
           content: {
             dependencies: {
-              "type-route": "latest"
-            }
-          }
-        }
-      }
-    })
+              "type-route": "latest",
+            },
+          },
+        },
+      },
+    }),
   };
 
-  document.querySelectorAll("a[data-code]").forEach(function(element) {
+  document.querySelectorAll("a[data-code]").forEach(function (element) {
     const code = element.getAttribute("data-code");
     const config = configFactoryCollection["codesandbox-react"](code);
     const parameters = codesandbox.getParameters(config);
@@ -79,10 +79,10 @@ window.onload = function() {
   document
     .querySelectorAll(
       Object.keys(configFactoryCollection)
-        .map(key => "." + key)
+        .map((key) => "." + key)
         .join(",")
     )
-    .forEach(element => {
+    .forEach((element) => {
       const topLink = getSandboxLink(element, "top");
       if (topLink !== null) {
         element.parentNode.insertBefore(topLink, element);
@@ -98,8 +98,65 @@ window.onload = function() {
       }
     });
 
+  document.querySelectorAll("pre code").forEach((element) => {
+    const highlight = element.className
+      .split(/\s+/)
+      .find((className) => className[0] === "{");
+
+    if (!highlight) {
+      return;
+    }
+
+    const highlightedLines = [].concat.apply(
+      [],
+      highlight
+        .slice(1, -1)
+        .split(",")
+        .map((section) => {
+          if (section.indexOf("-") === -1) {
+            return [parseInt(section, 10)];
+          }
+          const range = section.split("-");
+          const rangeStart = parseInt(range[0], 10);
+          const rangeEnd = parseInt(range[1], 10);
+          const rangeLines = [];
+          for (let line = rangeStart; line <= rangeEnd; line++) {
+            rangeLines.push(line);
+          }
+          return rangeLines;
+        })
+    );
+
+    element.innerHTML = element.innerHTML
+      .split("\n")
+      .map(function (code, index) {
+        if (highlightedLines.indexOf(index + 1) === -1) {
+          return code;
+        }
+
+        return `<div class="line-highlight"></div><span>${code}</span>`;
+      })
+      .join("<br/>");
+
+    element.querySelectorAll("*").forEach(function (element) {
+      element.childNodes.forEach(function (node) {
+        if (node.nodeName === "#text") {
+          const span = document.createElement("span");
+          span.innerHTML = node.nodeValue;
+          element.replaceChild(span, node);
+        }
+      });
+    });
+
+    element.querySelectorAll("*").forEach(function (element) {
+      if (element.children.length === 0 && element.innerHTML.length > 0) {
+        element.className += " above-highlight";
+      }
+    });
+  });
+
   function getSandboxLink(element, position) {
-    const type = [...element.classList].find(name =>
+    const type = [...element.classList].find((name) =>
       name.startsWith("codesandbox-")
     );
 
@@ -114,7 +171,7 @@ window.onload = function() {
 
     const sandboxLink = document.createElement("a");
     sandboxLink.className = "codesandbox-link " + position;
-    sandboxLink.innerHTML = "Run on CodeSandbox&nbsp;&nbsp;&nbsp;▶";
+    sandboxLink.innerHTML = "Run&nbsp;&nbsp;→";
     sandboxLink.href =
       "https://codesandbox.io/api/v1/sandboxes/define?parameters=" + parameters;
     sandboxLink.target = "_blank";

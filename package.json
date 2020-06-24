@@ -1,41 +1,29 @@
 {
   "name": "type-route",
   "version": "0.0.0",
-  "main": "./lib/index.js",
-  "types": "./lib/index.d.ts",
-  "description": "A flexible, type safe routing library.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "module": "dist/type-route.esm.js",
+  "description": "A flexible, type safe routing library",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/type-route/type-route.git"
+    "url": "git+https://github.com/typehero/type-route.git"
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/type-route/type-route/issues"
+    "url": "https://github.com/typehero/type-route/issues"
   },
+  "files": [
+    "dist",
+    "src"
+  ],
   "sideEffects": false,
-  "homepage": "https://type-route.org",
+  "homepage": "https://typehero.org/type-route",
   "dependencies": {
-    "@types/history": "^4.7.2",
-    "history": "^4.9.0",
-    "querystringify": "^2.1.1"
-  },
-  "devDependencies": {
-    "@types/jest": "^24.0.11",
-    "@types/querystringify": "^2.0.0",
-    "@types/react": "16.8.8",
-    "@types/react-dom": "16.8.2",
-    "jest": "^24.5.0",
-    "parcel-bundler": "^1.12.4",
-    "react": "^16.8.4",
-    "react-dom": "^16.8.4",
-    "ts-jest": "^24.0.0",
-    "typescript": "^3.9.5"
+    "history": "^5.0.0"
   },
   "authors": [
     "Braden Snell"
-  ],
-  "files": [
-    "lib"
   ],
   "keywords": [
     "react",
@@ -49,10 +37,24 @@
     "typescript"
   ],
   "scripts": {
-    "playground": "parcel ./src/playground.html",
-    "build": "rm -rf ./lib && tsc",
-    "lint": "echo \"TODO\"",
-    "unit-test": "jest",
-    "integration-test": "echo \"TODO\""
+    "start": "parcel ./src/playground.html --out-dir parcel-dist",
+    "build": "tsdx build --tsconfig ./tsconfig.build.json && rollup -c rollup.dts.config.js && rm dist/*.d.ts && mv dist/index.temp dist/index.d.ts && ls -lhS dist",
+    "test": "tsdx test --coverage --collectCoverageFrom=src/**/*.ts --collectCoverageFrom=!src/global.d.ts",
+    "lint": "eslint --ext ts,tsx ./src ./test --max-warnings=0"
+  },
+  "devDependencies": {
+    "@types/jest": "^25.2.1",
+    "@types/react": "16.8.8",
+    "@types/react-dom": "16.8.2",
+    "parcel-bundler": "^1.12.4",
+    "prettier": "^2.0.5",
+    "react": "^16.8.4",
+    "react-dom": "^16.8.4",
+    "rollup": "^2.8.2",
+    "rollup-plugin-dts": "^1.4.1",
+    "ts-toolbelt": "^6.3.11",
+    "tsdx": "^0.13.2",
+    "tslib": "^2.0.0",
+    "typescript": "^3.9.5"
   }
 }

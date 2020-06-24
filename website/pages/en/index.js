@@ -4,77 +4,78 @@ const MarkdownBlock = CompLibrary.MarkdownBlock; /* Used to read markdown */
 
 const code = `import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
-import { createRouter, defineRoute, Route } from "type-route";
+import { createRouter, defineRoute, param, Route } from "type-route";
 
-const { routes, listen, getCurrentRoute } = createRouter({
+const { routes, listen, session } = createRouter({
   home: defineRoute("/"),
   userList: defineRoute(
     {
-      page: "query.param.number.optional"
+      page: param.query.optional.number
     },
     () => "/user"
   ),
   user: defineRoute(
     {
-      userId: "path.param.string"
+      userId: param.path.string
     },
     p => \`/user/\${p.userId}\`
   )
 });
 
 function App() {
-  const [route, setRoute] = useState(getCurrentRoute());
+  const [route, setRoute] = useState(session.getInitialRoute());
 
-  useEffect(() => listen(setRoute), []);
+  useEffect(() => listen(nextRoute => setRoute(nextRoute)), []);
 
   return (
     <>
       <Navigation />
-      <Page route={route} />
+      {route.name === "home" && <HomePage/>}
+      {route.name === "userList" && <UserListPage route={route}/>}
+      {route.name === "user" && <UserPage route={route}/>}
+      {route.name === false && <NotFoundPage/>}
     </>
   );
 }
 
-function Page(props: { route: Route<typeof routes> }) {
-  const { route } = props;
+function HomePage() {
+  return <div>Home</div>;
+}
 
-  if (route.name === routes.home.name) {
-    return <div>Home</div>;
-  }
+function UserListPage({ route }: { route: Route<typeof routes.userList> }) {
+  return (
+    <div>
+      User List
+      <br />
+      Page: {route.params.page || "-"}
+    </div>
+  );
+}
 
-  if (route.name === routes.userList.name) {
-    return (
-      <div>
-        User List
-        <br />
-        Page: {route.params.page || "-"}
-      </div>
-    );
-  }
+function UserPage({ route }: { route: Route<typeof routes.user> }) {
+  return <div>User {route.params.userId}</div>;
+}
 
-  if (route.name === routes.user.name) {
-    return <div>User {route.params.userId}</div>;
-  }
-
+function NotFoundPage() {
   return <div>Not Found</div>;
 }
 
 function Navigation() {
   return (
     <nav>
-      <a {...routes.home.link()}>Home</a>
-      <a {...routes.userList.link()}>User List</a>
+      <a {...routes.home().link}>Home</a>
+      <a {...routes.userList().link}>User List</a>
       <a
-        {...routes.userList.link({
+        {...routes.userList({
           page: 2
-        })}
+        }).link}
       >
         User List Page 2
       </a>
       <a
-        {...routes.user.link({
+        {...routes.user({
           userId: "abc"
-        })}
+        }).link}
       >
         User "abc"
       </a>
@@ -93,12 +94,10 @@ class Index extends React.Component {
         <div className="header">
           <img
             className="logo"
-            src={`${baseUrl}img/logo.svg`}
+            src={`${baseUrl}img/type-route-logo.svg`}
             alt="Type Route"
           />
-          <div className="projectName">
-            Type Route <span className="beta">beta</span>
-          </div>
+          <div className="projectName">Type Route</div>
           <div className="projectTagLine">
             A flexible, type safe routing library.
           </div>
@@ -109,7 +108,7 @@ class Index extends React.Component {
             with production code but the library has not yet reached version{" "}
             <b>1.0</b>. More community feedback is needed to validate the
             project's maturity. Use the{" "}
-            <a href="https://github.com/type-route/type-route/issues">
+            <a href="https://github.com/typehero/type-route/issues/new">
               issue tracker
             </a>{" "}
             to communicate this feedback in the form of bugs, questions, or
@@ -118,13 +117,13 @@ class Index extends React.Component {
         </div>
         <div className="getStartedContainer">
           <a
-            href="/docs/introduction/getting-started"
+            href={`${baseUrl}docs/introduction/getting-started`}
             className="primary-button"
           >
             Get Started
           </a>
           <a
-            href="/docs/guides/simple-react-example"
+            href={`${baseUrl}docs/guides/simple-react-example`}
             className="secondary-button"
           >
             See Examples <span style={{ marginLeft: "4px" }}>→</span>
@@ -144,9 +143,13 @@ class Index extends React.Component {
             <h4>Flexible</h4>
             <MarkdownBlock>
               Type Route was designed with excellent React integration in mind
-              but isn't coupled to a specific UI framework. Use it with React,
-              Angular, Vue or anything else. There's even support for
-              non-browser environments such as React Native.
+              but isn't coupled to a specific UI framework. Use it with
+              [React](/type-route/docs/guides/simple-react-example),
+              [Vue](/type-route/docs/guides/simple-vue-example),
+              [Svelte](/type-route/docs/guides/simple-svelte-example),
+              [Angular](/type-route/docs/guides/simple-angular-example) or
+              anything else. There's even support for non-browser environments
+              like React Native.
             </MarkdownBlock>
           </div>
           <div>
@@ -163,10 +166,10 @@ class Index extends React.Component {
           </div>
         </div>
         <div className="seeItInAction">
-          <a style={{ width: "600px" }} target="_blank" data-code={code}>
+          <a style={{ width: "665px" }} target="_blank" data-code={code}>
             <span className="actionThumbnail">
               <img
-                src="/img/code.png"
+                src={`${baseUrl}img/code.png`}
                 alt="See it in Action. Run on CodeSandbox."
               />
             </span>
@@ -178,13 +181,13 @@ class Index extends React.Component {
         </div>
         <div className="getStartedContainer">
           <a
-            href="/docs/introduction/getting-started"
+            href={`${baseUrl}docs/introduction/getting-started`}
             className="primary-button"
           >
             Get Started
           </a>
           <a
-            href="/docs/guides/simple-react-example"
+            href={`${baseUrl}docs/guides/simple-react-example`}
             className="secondary-button"
           >
             See Examples <span style={{ marginLeft: "4px" }}>→</span>

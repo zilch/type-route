@@ -2,57 +2,67 @@
 title: Redirects
 ---
 
-Inside the [`listen`](../api-reference/router/listen.md) function you can check what the next route is and choose whether or not to opt out of that update. Simple return `false` in your `listen` callback and the route update will not be applied. In this case we check if the next route was the "old" route and replace it with the "new" route. We make sure to return `false` from the listen callback so the change doesn't propagate to the url. Keep in mind however, that the `listen` callback is only called when the route _changes_ - not on initial page load. To handle initial page load we'll use a separate `useEffect` hook that runs when the components is mounted and calls the same `handleRedirects` function. Since its possible for the "old" route to be rendered for a split second we still need to make sure we handle that case when rendering the view.
+Simple redirects mapping one path to another with the same parameters is built into the `defineRoute` function. Instead of providing a single string you may provide an array of strings. The first item in the array is the primary path for that route. Any route properties handling location will use that primary path. If a secondary path is matched it will be immediately replaced by the primary path.
+
+```tsx
+import { createRouter, defineRoute, param } from "type-route";
+
+createRouter({
+  dashboard: defineRoute(["/dashboard", "/"]),
+  user: defineRoute(
+    {
+      userId: param.path.string
+    },
+    p => [`/user/${p.userId}`, `/users/${p.userId}`]
+  )
+});
+```
+
+In the above example "/" will automatically redirect to "/dashboard" and the plural "/users" route will redirect to the singular "/user" route. For public facing applications you may want to consider making these server side redirects with a `301` status code to ensure search engines are properly indexing your website.
+
+Certain redirect situations may require a non-uniform mapping of parameters between routes. In those cases a more involved approach is necessary. In the below example a transformation of the parameter is necessary to ensure it matches the new route. On every route change we check to see if the route we're on is the old one. If it is we redirect to the new route and display the text "Redirecting..." for the split second the old route is still active.
 
 ```tsx codesandbox-react
-import { createRouter, defineRoute, Route } from "type-route";
+import { createRouter, defineRoute, Route, param } from "type-route";
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 
-const { routes, listen, getCurrentRoute } = createRouter({
-  new: defineRoute("/new"),
-  old: defineRoute("/old")
+const { routes, listen, session } = createRouter({
+  new: defineRoute(
+    {
+      yearOfBirth: param.query.number
+    },
+    p => "/new"
+  ),
+  old: defineRoute(
+    {
+      ageInYears: param.query.number
+    },
+    p => "/old"
+  )
 });
 
 function App() {
-  const [route, setRoute] = useState(getCurrentRoute());
+  const [route, setRoute] = useState(session.getInitialRoute());
+  useEffect(() => listen(setRoute), []);
 
   useEffect(() => {
-    const removeListener = listen(nextRoute => {
-      const didRedirect = handleRedirects(nextRoute);
+    if (route.name === "old") {
+      routes.new.replace({
+        yearOfBirth: new Date().getFullYear() - route.params.ageInYears
+      });
+    }
+  }, [route]);
 
-      if (didRedirect) {
-        return false;
-      }
-
-      setRoute(nextRoute);
-    });
-
-    return removeListener;
-  }, []);
-
-  useEffect(() => {
-    handleRedirects(route);
-  }, []);
-
-  if (route.name === routes.old.name) {
+  if (route.name === "old") {
     return <div>Redirecting...</div>;
   }
 
-  if (route.name === routes.new.name) {
-    return <div>New Page</div>;
+  if (route.name === "new") {
+    return <div>New Page {route.params.yearOfBirth}</div>;
   }
 
   return <div>Not Found</div>;
-}
-
-function handleRedirects(route: Route<typeof routes>) {
-  if (route.name === routes.old.name) {
-    routes.new.replace();
-    return true;
-  }
-
-  return false;
 }
 
 ReactDOM.render(<App />, document.querySelector("#root"));

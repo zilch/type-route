@@ -7,13 +7,13 @@ When the URL of the page does not match a route in the application you'll likely
 ```tsx codesandbox-standard
 import { createRouter, defineRoute } from "type-route";
 
-const { getCurrentRoute } = createRouter({
+const { session } = createRouter({
   home: defineRoute("/"),
   foo: defineRoute("/foo"),
   bar: defineRoute("/bar")
 });
 
-const route = getCurrentRoute();
+const route = session.getInitialRoute();
 console.log(route.name);
 // This will log either "home", "foo", "bar", or (if the url
 // doesn't match one of these routes) the boolean false.
@@ -26,40 +26,29 @@ import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { createRouter, defineRoute } from "type-route";
 
-const { routes, listen, getCurrentRoute } = createRouter({
+const { routes, listen, session } = createRouter({
   home: defineRoute("/"),
   foo: defineRoute("/foo"),
   bar: defineRoute("/bar")
 });
 
 function App() {
-  const [route, setRoute] = useState(getCurrentRoute());
+  const [route, setRoute] = useState(session.getInitialRoute());
 
   useEffect(() => listen(setRoute), []);
-
-  let pageContents;
-
-  if (route.name === routes.home.name) {
-    pageContents = <div>Home</div>;
-  } else if (route.name === routes.foo.name) {
-    pageContents = <div>Foo</div>;
-  } else if (route.name === routes.bar.name) {
-    pageContents = <div>Bar</div>;
-  } else {
-    // route.name will be false here but no need to check it since we've
-    // already checked all the other possibilities.
-    pageContents = <div>Not Found</div>;
-  }
 
   return (
     <>
       <nav>
-        <a {...routes.home.link()}>Home</a>
-        <a {...routes.foo.link()}>Foo</a>
-        <a {...routes.bar.link()}>Bar</a>
+        <a {...routes.home().link}>Home</a>
+        <a {...routes.foo().link}>Foo</a>
+        <a {...routes.bar().link}>Bar</a>
         <a href="/path-that-does-not-match-a-defined-route">Not Found</a>
       </nav>
-      {pageContents}
+      {route.name === "home" && <div>Home</div>}
+      {route.name === "foo" && <div>Foo</div>}
+      {route.name === "bar" && <div>Bar</div>}
+      {route.name === false && <div>Not Found</div>}
     </>
   );
 }

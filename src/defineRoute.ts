@@ -1,128 +1,116 @@
 import {
-  RouteDefinitionBuilder,
-  ParameterDefinitionCollection,
   PathFn,
-  PathParams
+  UmbrellaParamDefCollection,
+  RouteDef,
+  UmbrellaRouteDef,
 } from "./types";
-import { validate, error } from "./validate";
+import { TypeRouteError } from "./TypeRouteError";
+import { assert } from "./assert";
+import { asArray } from "./asArray";
 
-export function defineRoute<T extends ParameterDefinitionCollection>(
-  params: T,
-  path: PathFn<T>
-): RouteDefinitionBuilder<T>;
-export function defineRoute(path: string): RouteDefinitionBuilder<{}>;
-export function defineRoute(...args: any[]) {
-  validate["defineRoute"](Array.from(arguments));
+export function defineRoute<TParamDefCollection>(
+  params: TParamDefCollection,
+  path: PathFn<TParamDefCollection>
+): RouteDef<TParamDefCollection>;
+export function defineRoute(path: string | string[]): RouteDef<{}>;
+export function defineRoute(...args: any[]): UmbrellaRouteDef {
+  assertDefineRouteOrExtendArgs("defineRoute", args);
 
-  return createRouteDefinitionBuilder({
-    child: parseArgs(args),
-    parent: {
-      parameterDefinitions: {},
-      buildPath: () => "/"
-    }
-  });
-}
+  const parent = parseArgs(args);
 
-function createRouteDefinitionBuilder<T extends ParameterDefinitionCollection>({
-  child,
-  parent
-}: {
-  child: {
-    parameterDefinitions: T;
-    buildPath: PathFn<T>;
-  };
-  parent: {
-    parameterDefinitions: T;
-    buildPath: PathFn<T>;
-  };
-}): RouteDefinitionBuilder<T> {
-  const parameterDefinitions = {
-    ...child.parameterDefinitions,
-    ...parent.parameterDefinitions
-  };
-
-  const buildPath: PathFn<T> = pathParams => {
-    let parentPath = parent.buildPath(
-      filterParams(pathParams, parent.parameterDefinitions)
-    );
-
-    let childPath = child.buildPath(
-      filterParams(pathParams, child.parameterDefinitions)
-    );
-
-    if (typeof parentPath !== "string" || typeof childPath !== "string") {
-      throw error(
-        `\n\nError while building route definition.\nReturn type of \`path\` function should be \`string\`.\n`
-      );
-    }
-
-    if (!childPath.startsWith("/")) {
-      throw error(
-        `\n\nAll paths must start with "/"\nYou provided "${childPath}"\n`
-      );
-    }
-
-    if (childPath.trim() === "/") {
-      childPath = "";
-    }
-
-    if (parentPath.endsWith("/")) {
-      parentPath = parentPath.slice(0, -1);
-    }
-
-    return parentPath + childPath || "/";
-  };
-
-  const routeDefinitionBuilder: RouteDefinitionBuilder<T> = {
-    params: parameterDefinitions,
-    path: buildPath,
+  const routeDef: UmbrellaRouteDef = {
+    "~internal": {
+      type: "RouteDef",
+      params: parent.params,
+      path: parent.path,
+    },
     extend(...args: any[]) {
-      validate["[routeDefinitionBuilder].extend"](
-        Array.from(arguments),
-        parameterDefinitions
+      assertDefineRouteOrExtendArgs("extend", args);
+
+      const { params, path } = parseArgs(args);
+
+      const parentParamNames = Object.keys(parent.params);
+      const extensionParamNames = Object.keys(params);
+
+      const duplicateParamNames = parentParamNames.filter(
+        (name) => extensionParamNames.indexOf(name) >= 0
       );
 
-      return createRouteDefinitionBuilder<T>({
-        child: parseArgs<T>(args),
-        parent: {
-          parameterDefinitions,
-          buildPath
+      if (__DEV__) {
+        if (duplicateParamNames.length > 0) {
+          throw TypeRouteError.Extension_route_definition_parameter_names_may_not_be_the_same_as_base_route_definition_parameter_names.create(
+            duplicateParamNames
+          );
         }
-      });
-    }
+      }
+
+      return defineRoute(
+        {
+          ...params,
+          ...parent.params,
+        },
+        (x) => {
+          const parentPathArray = asArray(
+            parent.path(filter(extensionParamNames))
+          );
+          const childPathArray = asArray(path(filter(extensionParamNames)));
+
+          return ([] as string[]).concat(
+            ...parentPathArray.map((parentPath) =>
+              childPathArray.map(
+                (childPath) => parentPath + (childPath === "/" ? "" : childPath)
+              )
+            )
+          );
+
+          function filter(allowedKeys: string[]) {
+            const filteredX: Record<string, string> = {};
+
+            allowedKeys.forEach((key) => {
+              filteredX[key] = (x as Record<string, string>)[key];
+            });
+
+            return filteredX;
+          }
+        }
+      );
+    },
   };
 
-  return routeDefinitionBuilder;
+  return routeDef;
 }
 
-function parseArgs<T extends ParameterDefinitionCollection>(args: any[]) {
-  let parameterDefinitions: T;
-  let buildPath: PathFn<T>;
-
-  if (args.length === 1) {
-    parameterDefinitions = {} as T;
-    buildPath = () => args[0];
-  } else {
-    parameterDefinitions = args[0];
-    buildPath = args[1];
-  }
-
-  return { parameterDefinitions, buildPath };
-}
-
-function filterParams<T extends ParameterDefinitionCollection>(
-  pathParams: Record<string, string>,
-  parameterDefinitions: ParameterDefinitionCollection
-) {
-  const allowedKeys = Object.keys(parameterDefinitions);
-
-  const filteredParams: Record<string, string> = {};
-
-  allowedKeys.forEach(key => {
-    if (pathParams[key]) {
-      filteredParams[key] = pathParams[key];
+function assertDefineRouteOrExtendArgs(functionName: string, args: any[]) {
+  if (__DEV__) {
+    if (args.length === 1) {
+      if (Array.isArray(args[0])) {
+        assert(functionName, [assert.arrayOfType("string", "path", args[0])]);
+      } else {
+        assert(functionName, [assert.type("string", "path", args[0])]);
+      }
+    } else {
+      assert(functionName, [
+        assert.numArgs(args, 1, 2),
+        assert.collectionOfType("ParamDef", "params", args[0]),
+        assert.type("function", "path", args[1]),
+      ]);
     }
-  });
+  }
+}
 
-  return filteredParams as PathParams<T>;
+function parseArgs(
+  args: any[]
+): {
+  params: UmbrellaParamDefCollection;
+  path: PathFn<UmbrellaParamDefCollection>;
+} {
+  return args.length === 1
+    ? {
+        params: {},
+        path: () => args[0],
+      }
+    : {
+        params: args[0],
+        path: args[1],
+      };
 }

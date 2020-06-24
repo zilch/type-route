@@ -1,201 +1,365 @@
 import {
-  RouteDefinitionBuilderCollection,
   Router,
-  NavigationHandler,
   Action,
-  HistoryConfig,
-  Route
+  RouterConfig,
+  SessionConfig,
+  UmbrellaRouteBuilder,
+  UmbrellaRouter,
+  UmbrellaRoute,
+  LocationState,
+  UmbrellaRouteDefCollection,
+  RouterContext,
+  UmbrellaBlocker,
 } from "./types";
+import { createRouteBuilder } from "./createRouteBuilder";
 import {
-  History,
   createBrowserHistory,
+  History,
   createMemoryHistory,
-  Location,
-  MemoryHistory
+  createHashHistory,
 } from "history";
-import { mapObject } from "./mapObject";
-import { buildRouteDefinition } from "./buildRouteDefinition";
-import { getRoute } from "./getRoute";
-import { error, validate } from "./validate";
+import { createQueryStringSerializer } from "./createQueryStringSerializer";
+import { assert } from "./assert";
+import { TypeRouteError } from "./TypeRouteError";
+import { getMatchingRoute } from "./getMatchingRoute";
+import { convertToRouterLocationFromHistoryLocation } from "./convertToRouterLocationFromHistoryLocation";
+import { getRouteByHref } from "./getRouteByHref";
+import { createNavigationHandlerManager } from "./createNavigationHandlerManager";
+import { stringUtils } from "./stringUtils";
 
-export function createRouter<T>(routeDefinitions: T): Router<T>;
-export function createRouter(...args: any[]) {
-  validate["createRouter"](Array.from(arguments));
+const { startsWith, splitFirst } = stringUtils;
 
-  let routeDefinitionBuilderCollection: RouteDefinitionBuilderCollection =
-    args[0];
+export function createRouter<
+  TRouteDefCollection extends { [routeName: string]: any }
+>(routeDefs: TRouteDefCollection): Router<TRouteDefCollection>;
+export function createRouter<
+  TRouteDefCollection extends { [routeName: string]: any }
+>(
+  config: RouterConfig,
+  routeDefs: TRouteDefCollection
+): Router<TRouteDefCollection>;
+export function createRouter(...args: any[]): UmbrellaRouter {
+  const { routeDefs, config } = parseArgs(args);
+  const routes = createRouteBuilderCollection(getRouterContext);
 
-  let history:
-    | (History & { type: "browser" })
-    | (MemoryHistory & { type: "memory" });
+  const navigationHandlerManager = createNavigationHandlerManager({
+    startListening: () => {
+      unlisten = history.listen((update) => {
+        if (skipNextEnvironmentTriggeredNavigation) {
+          skipNextEnvironmentTriggeredNavigation = false;
+          return;
+        }
 
-  const routes = mapObject(routeDefinitionBuilderCollection, (builder, name) =>
-    buildRouteDefinition(navigate, builder, name as string)
-  );
+        const location = convertToRouterLocationFromHistoryLocation(
+          update.location,
+          baseUrl
+        );
+        const action = update.action.toLowerCase() as Action;
+        const { route, primaryPath } = getMatchingRoute(
+          location,
+          getRouterContext()
+        );
 
-  const navigationHandlers: {
-    id: number;
-    handler: NavigationHandler<any>;
-  }[] = [];
-  let currentRoute: Route<any>;
-  let navigationHandlerIdCounter = 0;
-  let unblock: (() => void) | undefined = undefined;
-  let nextLocation: Location;
-  let nextAction: "pop" | "push" | "replace";
-  let navigationResolverIdCounter = 0;
-  let navigationResolverIdBase = Date.now().toString();
-  let navigationResolvers: { [id: string]: (result: boolean) => void } = {};
-
-  if (typeof window !== "undefined" && typeof window.document !== "undefined") {
-    configure({ type: "browser" });
-  } else {
-    configure({ type: "memory" });
-  }
-
-  const router: Router<any> = {
-    routes,
-    listen,
-    getCurrentRoute() {
-      validate["[router].getCurrentRoute"](Array.from(arguments));
-      return currentRoute;
+        handleNavigation({ ...route, action }, primaryPath);
+      });
     },
-    history: {
-      configure,
-      getActiveInstance() {
-        validate["[router].history.getActiveInstance"](Array.from(arguments));
-        return history;
-      }
-    }
+    stopListening: () => unlisten?.(),
+  });
+
+  const baseUrl = config.baseUrl ?? "/";
+  const arraySeparator = config.arrayFormat?.separator ?? ",";
+  const queryStringSerializer =
+    config.queryStringSerializer ??
+    createQueryStringSerializer({
+      queryStringArrayFormat: config.arrayFormat?.queryString,
+      arraySeparator,
+    });
+
+  let history: History<LocationState>;
+  let unlisten: (() => void) | undefined;
+  let skipNextEnvironmentTriggeredNavigation = false;
+  let skipHandlingNextApplicationTriggeredNavigation = false;
+  let initialRoute: UmbrellaRoute | null = null;
+  let blockerCollection: UmbrellaBlocker[] = [];
+
+  applySessionConfig(config.session);
+
+  return {
+    routes,
+    listen: (handler) => navigationHandlerManager.add(handler),
+    session: {
+      push(href, state) {
+        if (__DEV__) {
+          assert("[RouterSessionHistory].push", [
+            assert.numArgs([].slice.call(arguments), 1, 2),
+            assert.type("string", "href", href),
+            assert.type(["object", "undefined"], "state", state),
+          ]);
+        }
+
+        const { route, primaryPath } = getRouteByHref(
+          href,
+          state,
+          getRouterContext()
+        );
+
+        return navigate({ ...route, action: "push" }, primaryPath);
+      },
+      replace(href, state) {
+        if (__DEV__) {
+          assert("[RouterSessionHistory].replace", [
+            assert.numArgs([].slice.call(arguments), 1, 2),
+            assert.type("string", "href", href),
+            assert.type(["object", "undefined"], "state", state),
+          ]);
+        }
+
+        const { route, primaryPath } = getRouteByHref(
+          href,
+          state,
+          getRouterContext()
+        );
+
+        return navigate({ ...route, action: "replace" }, primaryPath);
+      },
+      back(amount = 1) {
+        if (__DEV__) {
+          assert("[RouterSessionHistory].back", [
+            assert.numArgs([].slice.call(arguments), 0, 1),
+            assert.type("number", "amount", amount),
+          ]);
+        }
+
+        history.go(-amount);
+      },
+      forward(amount = 1) {
+        if (__DEV__) {
+          assert("[RouterSessionHistory].forward", [
+            assert.numArgs([].slice.call(arguments), 0, 1),
+            assert.type("number", "amount", amount),
+          ]);
+        }
+
+        history.go(amount);
+      },
+      getInitialRoute() {
+        if (__DEV__) {
+          assert("[RouterSessionHistory].getInitialRoute", [
+            assert.numArgs([].slice.call(arguments), 0),
+          ]);
+        }
+
+        if (!initialRoute) {
+          let result = getMatchingRoute(
+            convertToRouterLocationFromHistoryLocation(
+              history.location,
+              baseUrl
+            ),
+            getRouterContext()
+          );
+
+          if (!result.primaryPath) {
+            skipHandlingNextApplicationTriggeredNavigation = true;
+            result.route.replace();
+            result = getMatchingRoute(
+              convertToRouterLocationFromHistoryLocation(
+                history.location,
+                baseUrl
+              ),
+              getRouterContext()
+            );
+          }
+          initialRoute = result.route;
+        }
+
+        return initialRoute;
+      },
+      reset(session) {
+        if (__DEV__) {
+          assert("[RouterSessionHistory].reset", [
+            assert.numArgs([].slice.call(arguments), 1),
+            assert.type("object", "session", session),
+          ]);
+        }
+
+        return applySessionConfig(session);
+      },
+      block(blocker) {
+        blockerCollection.push(blocker);
+
+        const unblock = history.block((update) => {
+          const { route } = getMatchingRoute(
+            convertToRouterLocationFromHistoryLocation(
+              update.location,
+              baseUrl
+            ),
+            getRouterContext()
+          );
+
+          const action = update.action.toLowerCase() as Action;
+
+          blocker({ route: { ...route, action }, retry: update.retry });
+        });
+
+        return () => {
+          blockerCollection.splice(
+            blockerCollection.findIndex((item) => item === blocker),
+            1
+          );
+
+          unblock();
+        };
+      },
+    },
   };
 
-  return router;
-
-  function configure(config: HistoryConfig) {
-    validate["[router].history.configure"](Array.from(arguments));
-
-    if (config.type === "browser") {
-      history = createBrowserHistory({
-        ...config,
-        getUserConfirmation
-      }) as any;
-      history.type = "browser";
-    } else {
+  function applySessionConfig(
+    sessionConfig: SessionConfig = {
+      type:
+        typeof window !== "undefined" && typeof window.document !== "undefined"
+          ? "browser"
+          : "memory",
+    }
+  ) {
+    initialRoute = null;
+    if (sessionConfig.type === "memory") {
       history = createMemoryHistory({
-        ...config,
-        getUserConfirmation
-      }) as any;
-      history.type = "memory";
-    }
-
-    currentRoute = getRoute(routes, history.location, "initial");
-  }
-
-  function listen(handler: NavigationHandler<any>) {
-    validate["[router].listen"](Array.from(arguments));
-
-    const id = addNavigationHandler(handler);
-
-    return removeListener;
-
-    function removeListener() {
-      validate["[router].listen.removeListener"](Array.from(arguments));
-
-      removeNavigationHandler(id);
-    }
-  }
-
-  function getNextNavigationResolverId() {
-    navigationResolverIdCounter++;
-    return `${navigationResolverIdBase}-${navigationResolverIdCounter}`;
-  }
-
-  function navigate(href: string, replace?: boolean) {
-    return new Promise<boolean>(resolve => {
-      const navigationResolverId = getNextNavigationResolverId();
-      navigationResolvers[navigationResolverId] = resolve;
-
-      if (replace) {
-        history.replace(href, { navigationResolverId });
-      } else {
-        history.push(href, { navigationResolverId });
-      }
-    });
-  }
-
-  function addNavigationHandler(handler: NavigationHandler<{}>) {
-    const id = navigationHandlerIdCounter++;
-
-    navigationHandlers.push({
-      id,
-      handler
-    });
-
-    if (navigationHandlers.length === 1) {
-      unblock = history.block((location, action) => {
-        nextLocation = location;
-        nextAction = {
-          POP: "pop" as "pop",
-          PUSH: "push" as "push",
-          REPLACE: "replace" as "replace"
-        }[action];
-        return "";
+        initialEntries: sessionConfig.initialEntries,
+        initialIndex: sessionConfig.initialIndex,
+      });
+    } else if (sessionConfig.type === "hash") {
+      history = createHashHistory({
+        window: sessionConfig.window,
+      });
+    } else {
+      history = createBrowserHistory({
+        window: sessionConfig.window,
       });
     }
-
-    return id;
   }
 
-  function removeNavigationHandler(idToRemove: number) {
-    const indexToRemove = navigationHandlers.findIndex(
-      ({ id }) => id === idToRemove
-    );
-    navigationHandlers.splice(indexToRemove, 1);
+  function navigate(route: UmbrellaRoute, primaryPath: boolean) {
+    if (blockerCollection.length > 0) {
+      blockerCollection.forEach((blocker) => {
+        blocker({
+          route,
+          retry: () => {
+            route[route.action === "push" ? "push" : "replace"]();
+          },
+        });
+      });
 
-    if (unblock === undefined) {
-      throw error(`\n\nUnexpected error "unblock" should be defined\n`);
+      return;
     }
 
-    if (navigationHandlers.length === 0) {
-      unblock();
-    }
-  }
-
-  async function handleNavigation(location: Location, action: Action) {
-    if (
-      location.pathname === history.location.pathname &&
-      location.search === history.location.search
-    ) {
-      return false;
+    if (skipHandlingNextApplicationTriggeredNavigation) {
+      skipHandlingNextApplicationTriggeredNavigation = false;
+    } else {
+      handleNavigation(route, primaryPath);
     }
 
-    const nextRoute = getRoute(routes, location, action);
+    skipNextEnvironmentTriggeredNavigation = true;
 
-    for (const { handler } of navigationHandlers) {
-      const proceed = await handler(nextRoute);
+    const state: Record<string, string> = {};
 
-      if (proceed === false) {
-        return false;
+    if (route.name) {
+      for (const paramName in route.params) {
+        const paramDef =
+          routeDefs[route.name]["~internal"].params[paramName]["~internal"];
+
+        if (paramDef.kind === "state") {
+          const value = route.params[paramName];
+          state[paramName] = paramDef.valueSerializer.stringify(value);
+        }
       }
     }
 
-    currentRoute = nextRoute;
-    return true;
+    const [pathname, search] = splitFirst(route.href, "?");
+
+    history[route.action === "replace" ? "replace" : "push"](
+      {
+        pathname,
+        search: search ? `?${search}` : "",
+        hash: "",
+      },
+      state ? { state } : undefined
+    );
   }
 
-  async function getUserConfirmation(
-    _: string,
-    callback: (proceed: boolean) => void
-  ) {
-    const navigationResolverId = (nextLocation.state || {})
-      .navigationResolverId;
-    const result = await handleNavigation(nextLocation, nextAction);
-
-    const resolve = navigationResolvers[navigationResolverId];
-    if (resolve) {
-      resolve(result);
-      delete navigationResolvers[navigationResolverId];
+  function handleNavigation(route: UmbrellaRoute, primaryPath: boolean) {
+    if (!primaryPath) {
+      route.replace();
+      return;
     }
 
-    callback(result);
+    for (const handler of navigationHandlerManager.getHandlers()) {
+      handler(route);
+    }
   }
+
+  function getRouterContext(): RouterContext {
+    return {
+      queryStringSerializer,
+      arraySeparator,
+      navigate,
+      history,
+      routeDefs,
+      routes,
+      baseUrl,
+    };
+  }
+}
+
+function parseArgs(args: any[]) {
+  const routeDefs: UmbrellaRouteDefCollection =
+    args.length === 1 ? args[0] : args[1];
+  const config: RouterConfig = args.length === 1 ? {} : args[0];
+
+  if (__DEV__) {
+    assert("createRouter", [
+      assert.numArgs(args, 1, 2),
+      assert.collectionOfType("RouteDef", "routeDefs", routeDefs),
+      assert.type("object", "config", config),
+    ]);
+
+    if (config.arrayFormat?.queryString && config.queryStringSerializer) {
+      throw TypeRouteError.Query_string_array_format_and_custom_query_string_serializer_may_not_both_be_provided.create();
+    }
+
+    if (typeof config.baseUrl === "string") {
+      if (!startsWith(config.baseUrl, "/")) {
+        throw TypeRouteError.Base_url_must_start_with_a_forward_slash.create(
+          config.baseUrl
+        );
+      }
+
+      if (
+        config.baseUrl
+          .split("/")
+          .some((part) => encodeURIComponent(part) !== part)
+      ) {
+        throw TypeRouteError.Base_url_must_not_contain_any_characters_that_must_be_url_encoded.create(
+          config.baseUrl
+        );
+      }
+    }
+  }
+
+  return { routeDefs, config };
+}
+
+function createRouteBuilderCollection(getRouterContext: () => RouterContext) {
+  const routes: Record<string, UmbrellaRouteBuilder> = {};
+  const { routeDefs } = getRouterContext();
+
+  for (const routeName in routeDefs) {
+    const routeDef = routeDefs[routeName];
+    routes[routeName] = createRouteBuilder(
+      routeName,
+      routeDef,
+      getRouterContext
+    );
+  }
+
+  return routes;
 }

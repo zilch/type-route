@@ -1,11 +1,8 @@
 const siteConfig = {
   title: "Type Route", // Title for your website.
   tagline: "A flexible, type safe routing library.",
-  url: "https://type-route.js.org", // Your website URL
-  baseUrl: "/", // Base URL for your project */
-  // For github.io type URLs, you would set the url and baseUrl like:
-  //   url: 'https://facebook.github.io',
-  //   baseUrl: '/test-site/',
+  url: "https://typehero.org", // Your website URL
+  baseUrl: "/type-route/",
 
   // Used for publishing and more
   projectName: "type-route",
@@ -13,17 +10,19 @@ const siteConfig = {
 
   // For no header links in the top nav bar -> headerLinks: [],
   headerLinks: [
+    { search: true },
     { doc: "introduction/getting-started", label: "Docs" },
-    { href: "https://github.com/type-route/type-route", label: "GitHub" },
-    {
-      href: "https://github.com/type-route/type-route/issues/new",
-      label: "Feedback",
-    },
+    { href: "https://github.com/typehero/type-route", label: "GitHub" },
+    { doc: "guides/previous-release-docs", label: "v0.4.0" },
+    // {
+    //   href: "https://typehero.org/ready-for-production-type-route-v1/01",
+    //   label: "Read Introductory Blog Post",
+    // },
   ],
 
   /* path to images for header/footer */
-  headerIcon: "img/logo.svg",
-  footerIcon: "img/logo.svg",
+  headerIcon: "img/type-route-logo.svg",
+  footerIcon: "img/type-route-logo.svg",
   favicon: "img/favicon.ico",
 
   /* Colors for website */
@@ -38,7 +37,7 @@ const siteConfig = {
   usePrism: ["tsx", "typescript", "bash"],
 
   // Add custom scripts here that would be placed in <script> tags.
-  scripts: ["/js/codesandbox.js", "/js/site.js"],
+  scripts: ["/type-route/js/codesandbox.js", "/type-route/js/site.js"],
 
   scrollToTop: true,
   scrollToTopOptions: {
@@ -49,6 +48,13 @@ const siteConfig = {
   onPageNav: "separate",
   // No .html extensions for paths.
   cleanUrl: true,
+
+  algolia: {
+    apiKey: "4a2bd93ab352acbdeac847eb2563ac5e",
+    indexName: "type-route",
+  },
+
+  editUrl: "https://github.com/typehero/type-route/edit/master/docs/",
 };
 
 module.exports = siteConfig;
