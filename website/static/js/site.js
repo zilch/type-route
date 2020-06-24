@@ -33,6 +33,7 @@ window.onload = function () {
         },
         "package.json": {
           content: {
+            private: true,
             dependencies: {
               "type-route": "latest",
               react: "=16.8.6",
@@ -59,6 +60,7 @@ window.onload = function () {
         },
         "package.json": {
           content: {
+            private: true,
             dependencies: {
               "type-route": "latest",
             },
