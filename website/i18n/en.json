@@ -119,6 +119,9 @@
       "guides/preventing-navigation": {
         "title": "Preventing Navigation"
       },
+      "guides/previous-release-docs": {
+        "title": "Previous Release Docs"
+      },
       "guides/programmatic-navigation": {
         "title": "Programmatic Navigation"
       },
@@ -164,7 +167,8 @@
     },
     "links": {
       "Docs": "Docs",
-      "GitHub": "GitHub"
+      "GitHub": "GitHub",
+      "v0.4.0": "v0.4.0"
     },
     "categories": {
       "Introduction": "Introduction",

@@ -26,7 +26,8 @@
       "guides/server-side-rendering",
       "guides/styling-active-route-link",
       "guides/wildcard-routes",
-      "guides/guide-missing"
+      "guides/guide-missing",
+      "guides/previous-release-docs"
     ],
     "API Reference": [
       {

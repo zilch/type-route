@@ -449,7 +449,18 @@ export type UmbrellaRouterSession = RouterSession<UmbrellaRouteDefCollection>;
 
 export type MemoryHistorySessionConfig = {
   type: "memory";
+
+  /**
+   * An array of urls representing the what items should
+   * start in history when the router is created. This can be useful
+   * in a variety of scenarios including server-side rendering
+   * (https://typehero.org/type-route/docs/guides/server-side-rendering).
+   */
   initialEntries?: string[];
+
+  /**
+   * The index of the current url entry when the router is created.
+   */
   initialIndex?: number;
 };
 
@@ -499,9 +510,30 @@ export type ArrayFormat = {
 };
 
 export type RouterConfig = {
+  /**
+   * Options for what variety of browser history session you're using.
+   * There are three types with additional options depending on the
+   * session type: "browser", "hash", and "memory".
+   */
   session?: SessionConfig;
+
+  /**
+   * A custom serializer/deserializer for the query string. This is an
+   * advanced feature your application likely does not need.
+   *
+   * @see https://typehero.org/type-route/docs/guides/custom-query-string
+   */
   queryStringSerializer?: QueryStringSerializer;
+
+  /**
+   * Object used to configure how arrays are serialized to the url.
+   */
   arrayFormat?: ArrayFormat;
+
+  /**
+   * A path segment that precedes every route in your application. When using a "hash"
+   * router this segment will come before the "#" symbol.
+   */
   baseUrl?: string;
 };
 
