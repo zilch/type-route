@@ -5,7 +5,7 @@ title: Rendering Links
 Links in single page applications are unique for the fact that they do not trigger a page load. Typically all a link would require is an `href` property:
 
 ```tsx
-<a href="/foo/bar">Foo Bar</a>
+<a href="/foo/bar">FooBar</a>
 ```
 
 This works as expected but causes the entire page to reload whenever the link is clicked. If we're building a single page application we'd like to avoid that. To do so we need to capture link clicks and prevent the default behavior.
