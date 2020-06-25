@@ -54,6 +54,9 @@ const siteConfig = {
     indexName: "type-route",
   },
 
+  gaTrackingId: "UA-170799500-1",
+  gaGtag: true,
+
   editUrl: "https://github.com/typehero/type-route/edit/master/docs/",
 };
 
