@@ -2,13 +2,13 @@
 // @ts-ignore
 window.__DEV__ = true;
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import ReactDOM from "react-dom";
 import { createRouter, defineRoute, param, Route, createGroup } from "./index";
 
 const account = defineRoute("/account");
 
-export const { routes, session, listen } = createRouter({
+export const { Router, useRoute, routes, session } = createRouter({
   foo: defineRoute(
     {
       bar: param.query.array.string,
@@ -31,18 +31,7 @@ export const groups = {
 };
 
 function App() {
-  const [route, setRoute] = useState(session.getInitialRoute());
-  useEffect(() => listen(setRoute), []);
-
-  useEffect(() => {
-    if (route.action === "push") {
-      window.scroll(0, 0);
-    }
-  }, [route]);
-
-  useEffect(() => {
-    document.title = route.href;
-  }, [route]);
+  const route = useRoute();
 
   useEffect(() => {
     if (route.name === "home") {
@@ -100,4 +89,9 @@ function Navigation() {
 
 const container = document.createElement("div");
 document.body.appendChild(container);
-ReactDOM.render(<App />, container);
+ReactDOM.render(
+  <Router>
+    <App />
+  </Router>,
+  container
+);

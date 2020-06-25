@@ -444,6 +444,12 @@ export type RouterSession<TRouteDefCollection> = {
    * @see https://typehero.org/type-route/docs/guides/preventing-navigation
    */
   block(blocker: Blocker<TRouteDefCollection>): Unblock;
+
+  /**
+   * Registers a listener that is called when navigation occurs.
+   * Returns a function to remove the navigation listener.
+   */
+  listen(handler: NavigationHandler<TRouteDefCollection>): Unlisten;
 };
 export type UmbrellaRouterSession = RouterSession<UmbrellaRouteDefCollection>;
 
@@ -535,6 +541,13 @@ export type RouterConfig = {
    * router this segment will come before the "#" symbol.
    */
   baseUrl?: string;
+
+  /**
+   * If the application should scroll to the top of the page when a new route
+   * is pushed onto the history stack. Defaults to true for applications running
+   * in a web browser.
+   */
+  scrollToTop?: boolean;
 };
 
 export type Unlisten = {
@@ -559,12 +572,11 @@ export type Router<TRouteDefCollection extends { [routeName: string]: any }> = {
 
   session: RouterSession<TRouteDefCollection>;
 
-  /**
-   * Registers a listener that is called when navigation occurs.
-   * Returns a function to remove the navigation listener.
-   */
-  listen(handler: NavigationHandler<TRouteDefCollection>): Unlisten;
+  useRoute: () => RouteDefCollectionRoute<TRouteDefCollection>;
+
+  Router: (props: { children?: any }) => any;
 };
+
 export type UmbrellaRouter = Router<UmbrellaRouteDefCollection>;
 
 export type RouteGroup<T extends any[] = any[]> = {

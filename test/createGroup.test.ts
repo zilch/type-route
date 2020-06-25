@@ -4,7 +4,7 @@ import { TypeRouteError } from "../src/TypeRouteError";
 
 describe("createGroup", () => {
   it("work", () => {
-    const { routes, listen, session } = createRouter({
+    const { routes, session } = createRouter({
       one: defineRoute("/one"),
       two: defineRoute("/two"),
       a: defineRoute("/a"),
@@ -14,7 +14,7 @@ describe("createGroup", () => {
 
     let route = session.getInitialRoute();
 
-    listen((nextRoute) => {
+    session.listen((nextRoute) => {
       route = nextRoute;
     });
 

@@ -26,6 +26,7 @@ import { convertToRouterLocationFromHistoryLocation } from "./convertToRouterLoc
 import { getRouteByHref } from "./getRouteByHref";
 import { createNavigationHandlerManager } from "./createNavigationHandlerManager";
 import { stringUtils } from "./stringUtils";
+import React, { useContext, useState, useEffect } from "react";
 
 const { startsWith, splitFirst } = stringUtils;
 
@@ -84,9 +85,10 @@ export function createRouter(...args: any[]): UmbrellaRouter {
 
   applySessionConfig(config.session);
 
-  return {
+  const router: UmbrellaRouter = {
+    useRoute,
+    Router,
     routes,
-    listen: (handler) => navigationHandlerManager.add(handler),
     session: {
       push(href, state) {
         if (__DEV__) {
@@ -210,8 +212,46 @@ export function createRouter(...args: any[]): UmbrellaRouter {
           unblock();
         };
       },
+      listen: (handler) => navigationHandlerManager.add(handler),
     },
   };
+
+  const routeContext = React.createContext<UmbrellaRoute | null>(null);
+
+  return router;
+
+  function Router(props: { children?: any }) {
+    const [route, setRoute] = useState(router.session.getInitialRoute());
+    useEffect(() => router.session.listen(setRoute), []);
+
+    useEffect(() => {
+      if (
+        route.action === "push" &&
+        typeof window === "object" &&
+        window !== null &&
+        typeof window.scroll === "function" &&
+        config.scrollToTop !== false
+      ) {
+        window.scroll(0, 0);
+      }
+    }, [route]);
+
+    return (
+      <routeContext.Provider value={route}>
+        {props.children}
+      </routeContext.Provider>
+    );
+  }
+
+  function useRoute() {
+    const route = useContext(routeContext);
+
+    if (route === null) {
+      throw TypeRouteError.App_should_be_wrapped_in_a_Router_component.create();
+    }
+
+    return route;
+  }
 
   function applySessionConfig(
     sessionConfig: SessionConfig = {

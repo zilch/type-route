@@ -317,6 +317,15 @@ export const TypeRouteError = buildErrorCollection({
       ];
     },
   },
+
+  App_should_be_wrapped_in_a_Router_component: {
+    errorCode: 1020,
+    getDetails() {
+      return [
+        "Your application must be wrapped in the `Router` component returned by `createRouter` in order to use the `useRoute` hook.",
+      ];
+    },
+  },
 });
 
 function buildErrorCollection<

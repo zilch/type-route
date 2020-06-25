@@ -22,6 +22,9 @@
   "dependencies": {
     "history": "^5.0.0"
   },
+  "peerDependencies": {
+    "react": ">=16.8"
+  },
   "authors": [
     "Braden Snell"
   ],
