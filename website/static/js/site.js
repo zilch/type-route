@@ -39,6 +39,7 @@ window.onload = function () {
               "react-dom": "=16.8.6",
               "@types/react-dom": "=16.8.4",
               "type-route": "=0.4.0",
+              tslib: "2.0.0",
             },
           },
         },

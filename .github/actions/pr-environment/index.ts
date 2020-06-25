@@ -61,6 +61,7 @@ async function main() {
                 "react-dom": "=16.8.6",
                 "@types/react-dom": "=16.8.4",
                 typescript: "=3.8.3",
+                "tslib": "2.0.0",
               },
             },
           },
