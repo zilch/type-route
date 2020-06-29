@@ -8,6 +8,7 @@
       "guides/simple-vue-example",
       "guides/simple-svelte-example",
       "guides/simple-angular-example",
+      "guides/simple-javascript-example",
       "guides/code-splitting",
       "guides/complex-route-parameters",
       "guides/custom-link-behavior",

@@ -146,6 +146,9 @@
       "guides/simple-angular-example": {
         "title": "Simple Angular Example"
       },
+      "guides/simple-javascript-example": {
+        "title": "Simple Javascript Example"
+      },
       "guides/simple-react-example": {
         "title": "Simple React Example"
       },
