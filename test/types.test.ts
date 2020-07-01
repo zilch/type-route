@@ -1,4 +1,4 @@
-import { createRouter, defineRoute, param } from "../src/index";
+import { createRouter, defineRoute, param } from "../src/core";
 import { Any } from "ts-toolbelt";
 import { Link, Action } from "../src/types";
 

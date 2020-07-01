@@ -1,4 +1,4 @@
-import { createRouter, defineRoute, param, RouterOpts } from "../src";
+import { createRouter, defineRoute, param, RouterOpts } from "../src/core";
 import { expectTypeRouteError } from "./expectTypeRouteError";
 import { TypeRouteError } from "../src/TypeRouteError";
 import { QueryStringArrayFormat } from "../src/types";
