@@ -8,6 +8,7 @@ import {
 import { createRouter as coreCreateRouter, parseArgs } from "./createRouter";
 import { TypeRouteError } from "./TypeRouteError";
 import React from "react";
+import { attemptScrollToTop } from "./attemptScrollToTop";
 
 if (__DEV__) {
   const [major, minor] = React.version
@@ -66,15 +67,7 @@ export function createRouter(...args: any[]): UmbrellaRouter {
     React.useEffect(() => router.session.listen(setRoute), []);
 
     React.useEffect(() => {
-      if (
-        route.action === "push" &&
-        typeof window === "object" &&
-        window !== null &&
-        typeof window.scroll === "function" &&
-        opts.scrollToTop !== false
-      ) {
-        window.scroll(0, 0);
-      }
+      attemptScrollToTop(route, opts.scrollToTop);
     }, [route]);
 
     return React.createElement(

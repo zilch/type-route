@@ -26,6 +26,7 @@ import { convertToRouterLocationFromHistoryLocation } from "./convertToRouterLoc
 import { getRouteByHref } from "./getRouteByHref";
 import { createNavigationHandlerManager } from "./createNavigationHandlerManager";
 import { stringUtils } from "./stringUtils";
+import { attemptScrollToTop } from "./attemptScrollToTop";
 
 const { startsWith, splitFirst } = stringUtils;
 
@@ -298,15 +299,7 @@ export function createRouter(...args: any[]): UmbrellaCoreRouter {
       handler(route);
     }
 
-    if (
-      route.action === "push" &&
-      typeof window === "object" &&
-      window !== null &&
-      typeof window.scroll === "function" &&
-      opts.scrollToTop !== false
-    ) {
-      window.scroll(0, 0);
-    }
+    attemptScrollToTop(route, opts.scrollToTop);
   }
 
   function getRouterContext(): RouterContext {
