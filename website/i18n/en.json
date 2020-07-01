@@ -59,9 +59,8 @@
       "api-reference/router/create-router": {
         "title": "createRouter"
       },
-      "api-reference/router/listen": {
-        "title": "<Router>.listen",
-        "sidebar_label": "listen"
+      "api-reference/router/route-provider": {
+        "title": "Route Provider"
       },
       "api-reference/router/routes": {
         "title": "<Router>.routes",
@@ -70,6 +69,9 @@
       "api-reference/router/session": {
         "title": "<RouteDefinition>.session",
         "sidebar_label": "session"
+      },
+      "api-reference/router/use-route": {
+        "title": "useRoute"
       },
       "api-reference/types/link": {
         "title": "Link"
@@ -80,8 +82,8 @@
       "api-reference/types/route": {
         "title": "Route"
       },
-      "api-reference/types/router-config": {
-        "title": "RouterConfig"
+      "api-reference/types/router-opts": {
+        "title": "RouterOpts"
       },
       "api-reference/types/session-config": {
         "title": "SessionConfig"
@@ -125,9 +127,6 @@
       "guides/programmatic-navigation": {
         "title": "Programmatic Navigation"
       },
-      "guides/react-components": {
-        "title": "React Components"
-      },
       "guides/redirects": {
         "title": "Redirects"
       },
@@ -143,20 +142,14 @@
       "guides/server-side-rendering": {
         "title": "Server Side Rendering"
       },
-      "guides/simple-angular-example": {
-        "title": "Simple Angular Example"
-      },
       "guides/simple-react-example": {
         "title": "Simple React Example"
       },
-      "guides/simple-svelte-example": {
-        "title": "Simple Svelte Example"
-      },
-      "guides/simple-vue-example": {
-        "title": "Simple Vue Example"
-      },
       "guides/styling-active-route-link": {
         "title": "Styling of Links for the Currently Active Route"
+      },
+      "guides/type-route-without-react": {
+        "title": "Type Route without React"
       },
       "guides/wildcard-routes": {
         "title": "Wildcard Routes"

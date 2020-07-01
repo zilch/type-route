@@ -27,7 +27,7 @@ import { createRouter, defineRoute, Route, param } from "type-route";
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 
-const { routes, listen, session } = createRouter({
+const { routes, useRoute, RouteProvider } = createRouter({
   new: defineRoute(
     {
       yearOfBirth: param.query.number
@@ -43,8 +43,7 @@ const { routes, listen, session } = createRouter({
 });
 
 function App() {
-  const [route, setRoute] = useState(session.getInitialRoute());
-  useEffect(() => listen(setRoute), []);
+  const route = useRoute();
 
   useEffect(() => {
     if (route.name === "old") {
@@ -65,5 +64,5 @@ function App() {
   return <div>Not Found</div>;
 }
 
-ReactDOM.render(<App />, document.querySelector("#root"));
+ReactDOM.render(<RouteProvider><App /></RouteProvider>, document.querySelector("#root"));
 ```

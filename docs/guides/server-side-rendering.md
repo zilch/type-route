@@ -15,7 +15,7 @@ of how to accomplish this using React.
 import fastify from "fastify";
 import ReactDOM from "react-dom/server";
 import React from "react";
-import { App, session } from "../client";
+import { App, session, RouteProvider } from "../client";
 
 const app = fastify();
 
@@ -25,7 +25,7 @@ app.get("/*", (request, response) => {
     initialEntries: [request.req.url]
   });
 
-  const appHtml = ReactDOM.renderToString(<App />);
+  const appHtml = ReactDOM.renderToString(<RouteProvider><App /></RouteProvider>);
 
   response.type("text/html");
   response.send(
@@ -43,23 +43,21 @@ import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { createRouter, defineRoute } from "type-route";
 
-export const { listen, routes, session } = createRouter({
+export const { RouteProvider, useRoute, routes, session } = createRouter({
   home: defineRoute("/"),
   one: defineRoute("/one"),
   two: defineRoute("/two")
 });
 
 export function App() {
-  const [route, setRoute] = useState(session.getInitialRoute());
-
-  useEffect(() => listen(nextRoute => setRoute(nextRoute)), []);
+  const route = useRoute();
 
   return (
     <div>
       <nav>
-        <a {...routes.home.link()}>Home</a>
-        <a {...routes.one.link()}>One</a>
-        <a {...routes.two.link()}>Two</a>
+        <a {...routes.home().link}>Home</a>
+        <a {...routes.one().link}>One</a>
+        <a {...routes.two().link}>Two</a>
       </nav>
       {route.name === "home" && <div>Home</div>}
       {route.name === "one" && <div>One</div>}
@@ -70,6 +68,6 @@ export function App() {
 }
 
 if (!process.env.SERVER) {
-  ReactDOM.hydrate(<App />, document.querySelector("#app"));
+  ReactDOM.hydrate(<RouteProvider><App /></RouteProvider>, document.querySelector("#app"));
 }
 ```

@@ -435,7 +435,7 @@ export type RouterSession<TRouteDefCollection> = {
    *
    * @see https://typehero.org/type-route/docs/guides/server-side-rendering
    */
-  reset(options: SessionConfig): void;
+  reset(options: SessionOpts): void;
 
   /**
    * Blocks navigation and registers a listener that is called when
@@ -453,7 +453,7 @@ export type RouterSession<TRouteDefCollection> = {
 };
 export type UmbrellaRouterSession = RouterSession<UmbrellaRouteDefCollection>;
 
-export type MemoryHistorySessionConfig = {
+export type MemoryHistorySessionOpts = {
   type: "memory";
 
   /**
@@ -470,7 +470,7 @@ export type MemoryHistorySessionConfig = {
   initialIndex?: number;
 };
 
-export type HashHistorySessionConfig = {
+export type HashHistorySessionOpts = {
   type: "hash";
 
   /**
@@ -480,7 +480,7 @@ export type HashHistorySessionConfig = {
   window?: Window;
 };
 
-export type BrowserHistorySessionConfig = {
+export type BrowserHistorySessionOpts = {
   type: "browser";
 
   /**
@@ -490,10 +490,10 @@ export type BrowserHistorySessionConfig = {
   window?: Window;
 };
 
-export type SessionConfig =
-  | HashHistorySessionConfig
-  | MemoryHistorySessionConfig
-  | BrowserHistorySessionConfig;
+export type SessionOpts =
+  | HashHistorySessionOpts
+  | MemoryHistorySessionOpts
+  | BrowserHistorySessionOpts;
 
 export type QueryStringArrayFormat =
   | "singleKey"
@@ -515,13 +515,13 @@ export type ArrayFormat = {
   queryString?: QueryStringArrayFormat;
 };
 
-export type RouterConfig = {
+export type RouterOpts = {
   /**
    * Options for what variety of browser history session you're using.
    * There are three types with additional options depending on the
    * session type: "browser", "hash", and "memory".
    */
-  session?: SessionConfig;
+  session?: SessionOpts;
 
   /**
    * A custom serializer/deserializer for the query string. This is an
@@ -556,7 +556,9 @@ export type Unlisten = {
 
 export type UmbrellaRouteDefCollection = Record<string, UmbrellaRouteDef>;
 
-export type Router<TRouteDefCollection extends { [routeName: string]: any }> = {
+export type CoreRouter<
+  TRouteDefCollection extends { [routeName: string]: any }
+> = {
   /**
    * Collection of route builders.
    */
@@ -571,13 +573,9 @@ export type Router<TRouteDefCollection extends { [routeName: string]: any }> = {
   };
 
   session: RouterSession<TRouteDefCollection>;
-
-  useRoute: () => RouteDefCollectionRoute<TRouteDefCollection>;
-
-  Router: (props: { children?: any }) => any;
 };
 
-export type UmbrellaRouter = Router<UmbrellaRouteDefCollection>;
+export type UmbrellaCoreRouter = CoreRouter<UmbrellaRouteDefCollection>;
 
 export type RouteGroup<T extends any[] = any[]> = {
   ["~internal"]: {

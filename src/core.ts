@@ -9,6 +9,6 @@ export {
   Link,
   ValueSerializer,
   QueryStringSerializer,
-  SessionConfig,
-  RouterConfig,
+  SessionOpts,
+  RouterOpts,
 } from "./types";

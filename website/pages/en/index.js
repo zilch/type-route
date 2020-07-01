@@ -143,13 +143,9 @@ class Index extends React.Component {
             <h4>Flexible</h4>
             <MarkdownBlock>
               Type Route was designed with excellent React integration in mind
-              but isn't coupled to a specific UI framework. Use it with
-              [React](/type-route/docs/guides/simple-react-example),
-              [Vue](/type-route/docs/guides/simple-vue-example),
-              [Svelte](/type-route/docs/guides/simple-svelte-example),
-              [Angular](/type-route/docs/guides/simple-angular-example) or
-              anything else. There's even support for non-browser environments
-              like React Native.
+              but isn't coupled to a specific UI framework. Use it with React,
+              Vue, Svelte, Angular or anything else. There's even support for
+              non-browser environments like React Native.
             </MarkdownBlock>
           </div>
           <div>

@@ -318,11 +318,22 @@ export const TypeRouteError = buildErrorCollection({
     },
   },
 
-  App_should_be_wrapped_in_a_Router_component: {
+  App_should_be_wrapped_in_a_RouteProvider_component: {
     errorCode: 1020,
     getDetails() {
       return [
-        "Your application must be wrapped in the `Router` component returned by `createRouter` in order to use the `useRoute` hook.",
+        "Your application must be wrapped in the `RouteProvider` component returned by `createRouter` in order to use the `useRoute` hook.",
+      ];
+    },
+  },
+
+  Invalid_React_version: {
+    errorCode: 1021,
+    getDetails(version: string) {
+      return [
+        "React version must be 16.8 or greater.",
+        `You have version ${version} installed.`,
+        "If you cannot upgrade the React version try using `type-route/core`.",
       ];
     },
   },

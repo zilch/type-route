@@ -26,7 +26,7 @@ const date: ValueSerializer<Date> = {
   }
 }
 
-const { listen, routes, session } = createRouter({
+const { useRoute, routes } = createRouter({
   example: defineRoute(
     {
       minDate: param.query.ofType(date),
@@ -37,11 +37,9 @@ const { listen, routes, session } = createRouter({
 });
 
 function App() {
-  const [route, setRoute] = useState(session.getInitialRoute());
+  const route = useRoute();
   const [minDate] = useState(new Date("3/3/3"));
   const [maxDate] = useState(new Date("12/12/12"));
-
-  useEffect(() => listen(setRoute), []);
 
   return (
     <>

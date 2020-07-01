@@ -1,9 +1,9 @@
 ---
-title: RouterConfig
+title: RouterOpts
 ---
 
 ```tsx
-type RouterConfig = {
+type RouterOpts = {
   /**
    * Options for what variety of browser history session you're using.
    * There are three types with additional options depending on the

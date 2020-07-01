@@ -2,22 +2,20 @@
 title: Getting Started
 ---
 
-Type Route is a flexible, type safe routing library built on top of the same [core library](https://github.com/ReactTraining/history) that powers React Router.
+Type Route is a flexible, type safe routing library built on top of the same [core library](https://github.com/ReactTraining/history) that powers React Router. 
 
 > **Type Route was designed with excellent React integration in mind** but isn't coupled to a specific UI framework. Most code examples in the documentation use React, but the general principles covered apply regardless of framework.
 
-Continue reading this introduction for a quick overview of how to start using Type Route in your project. Find a full <b>runnable</b> version of the below guide in your framework of choice on any of the following pages:
-
-[Simple React Example](https://typehero.org/type-route/docs/guides/simple-react-example) · [Simple Vue Example](https://typehero.org/type-route/docs/guides/simple-vue-example) · [Simple Svelte Example](https://typehero.org/type-route/docs/guides/simple-svelte-example) · [Simple Angular Example](https://typehero.org/type-route/docs/guides/simple-angular-example)
+Continue reading this introduction for a quick overview of how to start using Type Route in your React project. Find a full <b>runnable</b> version of the below guide on the [Simple React Example](https://typehero.org/type-route/docs/guides/simple-react-example) page or see the [Type Route without React](https://typehero.org/type-route/docs/guides/type-route-without-react) guide to learn how to use Type Route without React.
 
 ## Install
 
 > 🚨 **This is a beta release.** 🚨 The Type Route API has been vetted with production code but the library has not yet reached version **1.0**. More community feedback is needed to validate the project's maturity. Use the [issue tracker](https://github.com/typehero/type-route/issues) to communicate this feedback in the form of bugs, questions, or suggestions.
 
-Type Route's primary distribution channel is the [NPM registry](https://www.npmjs.com/package/type-route).
+Type Route's primary distribution channel is the [NPM registry](https://www.npmjs.com/package/type-route). React `16.8` (or any subsequent version of React) is a peer dependency of Type Route so you'll need to ensure that's installed as well.
 
 ```bash
-npm install type-route
+npm install type-route react
 ```
 
 ## Step 1: Create a Router
@@ -27,7 +25,7 @@ npm install type-route
 ```typescript
 import { createRouter, defineRoute, param } from "type-route";
 
-export const { routes, listen, session } = createRouter({
+export const { RouteProvider, useRoute, routes } = createRouter({
   home: defineRoute("/"),
   userList: defineRoute(
     {
@@ -46,32 +44,35 @@ export const { routes, listen, session } = createRouter({
 
 Best practice is to immediately destructure the result of [`createRouter`](https://typehero.org/type-route/docs/api-reference/router/create-router) into the properties you'll be using in your application. The [`createRouter`](https://typehero.org/type-route/docs/api-reference/router/create-router) function accepts an object with route names and route definitions created via [`defineRoute`](https://typehero.org/type-route/docs/api-reference/route-definition/define-route) and returns a new router.
 
-## Step 2: Connect to Application State
+## Step 2: Connect Router to Application
 
 `App.tsx`
 
-```tsx {7-8}
+```tsx {8,19-21}
 import React, { useState, useEffect } from "react";
-import { listen, session } from "./router";
+import ReactDOM from "react-dom";
+import { Router } from "./router";
 import { Page } from "./Page";
 import { Navigation } from "./Navigation";
 
 function App() {
-  const [route, setRoute] = useState(session.getInitialRoute());
-  useEffect(() => listen(setRoute), []);
-
   return (
     <>
       <Navigation />
-      <Page route={route} />
+      <Page />
     </>
   );
 }
+
+ReactDOM.render(
+  <RouteProvider>
+    <App/>
+  </RouteProvider>,
+  document.querySelector("#root")
+);
 ```
 
-Retrieve the initial route via [`session.getInitialRoute()`](https://typehero.org/type-route/docs/api-reference/router/session) then subscribe to route updates with [`listen`](https://typehero.org/type-route/docs/api-reference/router/listen).
-
-> New Type Route users often wonder why React components such as `<Route/>` or `<Link/>` aren't provided by the library. Read the [React Components](https://typehero.org/type-route/docs/guides/react-components) guide for more information on this topic.
+Wrap your entire application in the `<RouteProvider>` component returned by `createRouter`.
 
 ## Step 3: Display Current Route
 
@@ -79,39 +80,38 @@ Retrieve the initial route via [`session.getInitialRoute()`](https://typehero.or
 
 ```tsx
 import React from "react";
-import { Route } from "type-route";
-import { routes } from "./router";
+import { useRoute } from "./router";
+import { HomePage } from "./HomePage";
+import { UserListPage } from "./UserListPage";
+import { UserPage } from "./UserPage";
 
-type Props = {
-  route: Route<typeof routes>;
-};
+export function Page() {
+  const route = useRoute();
 
-export function Page(props: Props) {
-  const { route } = props;
+  return (
+    <>
+      {route.name === "home" && <HomePage/>}
+      {route.name === "userList" && <UserListPage route={route}/>}
+      {route.name === "user" && <UserPage route={route}/>}
+      {route.name === false && "Not Found"}
+    </>
+  );
+}
 
-  if (route.name === "home") {
-    return <div>Home</div>;
-  }
+function HomePage() {
+  return <div>Home Page</div>;
+}
 
-  if (route.name === "userList") {
-    return (
-      <div>
-        User List
-        <br />
-        Page: {route.params.page || "-"}
-      </div>
-    );
-  }
+function UserListPage({ route }: { route: Route<typeof routes.user> }) {
+  return <div>UserList Page: {route.params.page}</div>
+}
 
-  if (route.name === "user") {
-    return <div>User {route.params.userId}</div>;
-  }
-
-  return <div>Not Found</div>;
+function UserPage({ route }: { route: Route<typeof routes.user> }) {
+  return <div>User: {route.params.userId}</div>
 }
 ```
 
-Pass the `route` object from your application's state to your view and check the route's name to determine which component to display. Inside the code blocks above the TypeScript compiler (and your editor) should be able to correctly infer the type of `route.params`. This allows you, for instance, to access the `userId` param with confidence in code blocks where it will definitely exist and warn you when accessing it in code blocks where it may not exist.
+Inside the code blocks above the TypeScript compiler (and your editor) will be able to correctly infer the type of `route`. This allows you, for instance, to pass the `user` route to the `UserPage` component and access the `userId` param with confidence in code blocks where it will definitely exist.
 
 > Type Route is written in TypeScript and designed for TypeScript users. Any editor, however, whose JavaScript experience is powered by TypeScript (VSCode for instance) will provide many of the same benefits described here when using regular JavaScript.
 
@@ -143,10 +143,10 @@ export function Navigation() {
 }
 ```
 
-The [`link`](https://typehero.org/type-route/docs/api-reference/route/link) property is an object with an `href` property and an `onClick` function. You need both to [properly render](https://typehero.org/type-route/docs/guides/rendering-links) a link for a single page application. Immediately spreading the `link` object into the properties of an `<a>` tag makes usage simple. [Programmatic navigation](https://typehero.org/type-route/docs/guides/programmatic-navigation) is possible with the [`push`](https://typehero.org/type-route/docs/api-reference/route/push) and [`replace`](https://typehero.org/type-route/docs/api-reference/route/replace) functions of a specific route.
+The [`link`](https://typehero.org/type-route/docs/api-reference/route/link) property is an object with an `href` attribute and an `onClick` function. You need both to [properly render](https://typehero.org/type-route/docs/guides/rendering-links) a link in a single page application. Immediately spreading the `link` object into the properties of an `<a>` tag makes usage simple. [Programmatic navigation](https://typehero.org/type-route/docs/guides/programmatic-navigation) is possible with the [`push`](https://typehero.org/type-route/docs/api-reference/route/push) and [`replace`](https://typehero.org/type-route/docs/api-reference/route/replace) functions of a specific route. Type Route also supports [extending the behavior of a link](https://type-route/docs/guides/custom-link-behavior) to cover more complex scenarios.
 
 ## Next Steps
 
 Hopefully that was enough to point you in the right direction!
 
-If you need more direction there is a full runnable version of the above guide on the [Simple React Example](https://typehero.org/type-route/docs/guides/simple-react-example) page. The "Guides" section of the documentation has detailed overviews and examples for most use cases. Additionally, the "API Reference" section has descriptions and examples for each part of the API.
+If you need more guidance there is a full runnable version of the above code on the [Simple React Example](https://typehero.org/type-route/docs/guides/simple-react-example) page. The "Guides" section of the documentation has detailed overviews and examples for most use cases. Additionally, the "API Reference" section has descriptions and examples for each part of the API.

@@ -7,7 +7,7 @@ The `param` object is a collection of parameter definitions. These parameter def
 ```tsx
 import { createRouter, defineRoute, param } from "type-route";
 
-export const { listen, session, routes } = createRouter({
+export const { routes } = createRouter({
   user: defineRoute(
     {
       userId: param.path.string

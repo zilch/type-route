@@ -2,8 +2,6 @@
 title: Simple React Example
 ---
 
-> New Type Route users often wonder why React components such as `<Route/>` or `<Link/>` aren't provided by the library. Read the [React Components](https://typehero.org/type-route/docs/guides/react-components) guide for more information on this topic.
-
 Here's a basic example of how to use Type Route with React. Click the **Run** button to try it out on CodeSandbox. Other guides cover more complex use cases.
 
 ```tsx codesandbox-react
@@ -11,7 +9,7 @@ import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { createRouter, defineRoute, Route, param } from "type-route";
 
-const { routes, listen, session } = createRouter({
+const { RouteProvider, userRoute, routes } = createRouter({
   home: defineRoute("/"),
   userList: defineRoute(
     {
@@ -28,15 +26,7 @@ const { routes, listen, session } = createRouter({
 });
 
 function App() {
-  const [route, setRoute] = useState(session.getInitialRoute());
-
-  useEffect(() => listen(nextRoute => setRoute(nextRoute)), []);
-
-  useEffect(() => {
-    if (route.action === "push") {
-      window.scrollTo(0, 0);
-    }
-  }, [route]);
+  const route = useRoute();
 
   return (
     <>
@@ -44,7 +34,7 @@ function App() {
       {route.name === "home" && <HomePage/>}
       {route.name === "userList" && <UserListPage route={route}/>}
       {route.name === "user" && <UserPage route={route}/>}
-      {route.name === false && <NotFoundPage/>}
+      {route.name === false && <>Not Found</>}
     </>
   );
 }
@@ -96,10 +86,6 @@ function UserPage(props: { route: Route<typeof routes.user> }) {
       User {route.params.userId}
     </div>
   );
-}
-
-function NotFoundPage() {
-  return <div>Not Found</div>;
 }
 
 ReactDOM.render(<App />, document.querySelector("#root"));

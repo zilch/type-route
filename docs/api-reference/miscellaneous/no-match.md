@@ -22,7 +22,7 @@ const date: ValueSerializer<Date> = {
   }
 };
 
-const config: RouterConfig = {
+const opts: RouterOpts = {
   session: {
     type: "memory",
     initialEntries: [
@@ -31,7 +31,7 @@ const config: RouterConfig = {
   }
 }
 
-const { routes, session } = createRouter(config, {
+const { routes, session } = createRouter(opts, {
   dateTest: defineRoute(
     {
       date: param.path.ofType(date)

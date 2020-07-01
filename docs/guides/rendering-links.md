@@ -47,7 +47,6 @@ The `link` property is an object with `href` and `onClick` properties. Destructu
 **Related Pages**
 
 - [Custom Link Behavior](./custom-link-behavior.md)
-- [React Components](./react-components.md)
 - [Styling of Links for the Currently Active Route](./styling-active-route-link.md)
 - [preventDefaultLinkClickBehavior](../api-reference/miscellaneous/prevent-default-link-click-behavior.md)
 

@@ -4,7 +4,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "module": "dist/type-route.esm.js",
-  "description": "A flexible, type safe routing library",
+  "description": "A flexible, type safe routing library.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/typehero/type-route.git"
@@ -22,9 +22,6 @@
   "dependencies": {
     "history": "^5.0.0"
   },
-  "peerDependencies": {
-    "react": ">=16.8"
-  },
   "authors": [
     "Braden Snell"
   ],
@@ -41,7 +38,7 @@
   ],
   "scripts": {
     "start": "parcel ./src/playground.html --out-dir parcel-dist",
-    "build": "tsdx build --tsconfig ./tsconfig.build.json && rollup -c rollup.dts.config.js && rm dist/*.d.ts && mv dist/index.temp dist/index.d.ts && ls -lhS dist",
+    "build": "./build.sh",
     "test": "tsdx test --coverage --collectCoverageFrom=src/**/*.ts --collectCoverageFrom=!src/global.d.ts",
     "lint": "eslint --ext ts,tsx ./src ./test --max-warnings=0"
   },

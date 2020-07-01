@@ -1,15 +1,15 @@
 import {
-  Router,
+  CoreRouter,
   Action,
-  RouterConfig,
-  SessionConfig,
+  SessionOpts,
   UmbrellaRouteBuilder,
-  UmbrellaRouter,
+  UmbrellaCoreRouter,
   UmbrellaRoute,
   LocationState,
   UmbrellaRouteDefCollection,
   RouterContext,
   UmbrellaBlocker,
+  RouterOpts,
 } from "./types";
 import { createRouteBuilder } from "./createRouteBuilder";
 import {
@@ -26,21 +26,20 @@ import { convertToRouterLocationFromHistoryLocation } from "./convertToRouterLoc
 import { getRouteByHref } from "./getRouteByHref";
 import { createNavigationHandlerManager } from "./createNavigationHandlerManager";
 import { stringUtils } from "./stringUtils";
-import React, { useContext, useState, useEffect } from "react";
 
 const { startsWith, splitFirst } = stringUtils;
 
 export function createRouter<
   TRouteDefCollection extends { [routeName: string]: any }
->(routeDefs: TRouteDefCollection): Router<TRouteDefCollection>;
+>(routeDefs: TRouteDefCollection): CoreRouter<TRouteDefCollection>;
 export function createRouter<
   TRouteDefCollection extends { [routeName: string]: any }
 >(
-  config: RouterConfig,
+  opts: RouterOpts,
   routeDefs: TRouteDefCollection
-): Router<TRouteDefCollection>;
-export function createRouter(...args: any[]): UmbrellaRouter {
-  const { routeDefs, config } = parseArgs(args);
+): CoreRouter<TRouteDefCollection>;
+export function createRouter(...args: any[]): UmbrellaCoreRouter {
+  const { routeDefs, opts } = parseArgs(args);
   const routes = createRouteBuilderCollection(getRouterContext);
 
   const navigationHandlerManager = createNavigationHandlerManager({
@@ -67,12 +66,12 @@ export function createRouter(...args: any[]): UmbrellaRouter {
     stopListening: () => unlisten?.(),
   });
 
-  const baseUrl = config.baseUrl ?? "/";
-  const arraySeparator = config.arrayFormat?.separator ?? ",";
+  const baseUrl = opts.baseUrl ?? "/";
+  const arraySeparator = opts.arrayFormat?.separator ?? ",";
   const queryStringSerializer =
-    config.queryStringSerializer ??
+    opts.queryStringSerializer ??
     createQueryStringSerializer({
-      queryStringArrayFormat: config.arrayFormat?.queryString,
+      queryStringArrayFormat: opts.arrayFormat?.queryString,
       arraySeparator,
     });
 
@@ -83,11 +82,9 @@ export function createRouter(...args: any[]): UmbrellaRouter {
   let initialRoute: UmbrellaRoute | null = null;
   let blockerCollection: UmbrellaBlocker[] = [];
 
-  applySessionConfig(config.session);
+  applySessionOpts(opts.session);
 
-  const router: UmbrellaRouter = {
-    useRoute,
-    Router,
+  const router: UmbrellaCoreRouter = {
     routes,
     session: {
       push(href, state) {
@@ -184,7 +181,7 @@ export function createRouter(...args: any[]): UmbrellaRouter {
           ]);
         }
 
-        return applySessionConfig(session);
+        return applySessionOpts(session);
       },
       block(blocker) {
         blockerCollection.push(blocker);
@@ -216,45 +213,10 @@ export function createRouter(...args: any[]): UmbrellaRouter {
     },
   };
 
-  const routeContext = React.createContext<UmbrellaRoute | null>(null);
-
   return router;
 
-  function Router(props: { children?: any }) {
-    const [route, setRoute] = useState(router.session.getInitialRoute());
-    useEffect(() => router.session.listen(setRoute), []);
-
-    useEffect(() => {
-      if (
-        route.action === "push" &&
-        typeof window === "object" &&
-        window !== null &&
-        typeof window.scroll === "function" &&
-        config.scrollToTop !== false
-      ) {
-        window.scroll(0, 0);
-      }
-    }, [route]);
-
-    return (
-      <routeContext.Provider value={route}>
-        {props.children}
-      </routeContext.Provider>
-    );
-  }
-
-  function useRoute() {
-    const route = useContext(routeContext);
-
-    if (route === null) {
-      throw TypeRouteError.App_should_be_wrapped_in_a_Router_component.create();
-    }
-
-    return route;
-  }
-
-  function applySessionConfig(
-    sessionConfig: SessionConfig = {
+  function applySessionOpts(
+    sessionOpts: SessionOpts = {
       type:
         typeof window !== "undefined" && typeof window.document !== "undefined"
           ? "browser"
@@ -262,18 +224,18 @@ export function createRouter(...args: any[]): UmbrellaRouter {
     }
   ) {
     initialRoute = null;
-    if (sessionConfig.type === "memory") {
+    if (sessionOpts.type === "memory") {
       history = createMemoryHistory({
-        initialEntries: sessionConfig.initialEntries,
-        initialIndex: sessionConfig.initialIndex,
+        initialEntries: sessionOpts.initialEntries,
+        initialIndex: sessionOpts.initialIndex,
       });
-    } else if (sessionConfig.type === "hash") {
+    } else if (sessionOpts.type === "hash") {
       history = createHashHistory({
-        window: sessionConfig.window,
+        window: sessionOpts.window,
       });
     } else {
       history = createBrowserHistory({
-        window: sessionConfig.window,
+        window: sessionOpts.window,
       });
     }
   }
@@ -335,6 +297,16 @@ export function createRouter(...args: any[]): UmbrellaRouter {
     for (const handler of navigationHandlerManager.getHandlers()) {
       handler(route);
     }
+
+    if (
+      route.action === "push" &&
+      typeof window === "object" &&
+      window !== null &&
+      typeof window.scroll === "function" &&
+      opts.scrollToTop !== false
+    ) {
+      window.scroll(0, 0);
+    }
   }
 
   function getRouterContext(): RouterContext {
@@ -350,42 +322,42 @@ export function createRouter(...args: any[]): UmbrellaRouter {
   }
 }
 
-function parseArgs(args: any[]) {
+export function parseArgs(args: any[]) {
   const routeDefs: UmbrellaRouteDefCollection =
     args.length === 1 ? args[0] : args[1];
-  const config: RouterConfig = args.length === 1 ? {} : args[0];
+  const opts: RouterOpts = args.length === 1 ? {} : args[0];
 
   if (__DEV__) {
     assert("createRouter", [
       assert.numArgs(args, 1, 2),
       assert.collectionOfType("RouteDef", "routeDefs", routeDefs),
-      assert.type("object", "config", config),
+      assert.type("object", "opts", opts),
     ]);
 
-    if (config.arrayFormat?.queryString && config.queryStringSerializer) {
+    if (opts.arrayFormat?.queryString && opts.queryStringSerializer) {
       throw TypeRouteError.Query_string_array_format_and_custom_query_string_serializer_may_not_both_be_provided.create();
     }
 
-    if (typeof config.baseUrl === "string") {
-      if (!startsWith(config.baseUrl, "/")) {
+    if (typeof opts.baseUrl === "string") {
+      if (!startsWith(opts.baseUrl, "/")) {
         throw TypeRouteError.Base_url_must_start_with_a_forward_slash.create(
-          config.baseUrl
+          opts.baseUrl
         );
       }
 
       if (
-        config.baseUrl
+        opts.baseUrl
           .split("/")
           .some((part) => encodeURIComponent(part) !== part)
       ) {
         throw TypeRouteError.Base_url_must_not_contain_any_characters_that_must_be_url_encoded.create(
-          config.baseUrl
+          opts.baseUrl
         );
       }
     }
   }
 
-  return { routeDefs, config };
+  return { routeDefs, opts };
 }
 
 function createRouteBuilderCollection(getRouterContext: () => RouterContext) {

@@ -8,7 +8,31 @@ The standard way to create links in Type Route looks something like this:
 <a {...routes.foo({ bar: "abc" }).link}>Foo</a>
 ```
 
-This works great for the majority of scenarios. But what if you want to integrate this link with React's `useTransition` hook when running in concurrent mode or want to log an analytics event when someone clicks on the link? Type Route handles the default case well but also gives you the flexibility to handle these more complex requirements. In order to fullfil these requirements you may want to consider creating a `Link` component specific to your application.
+This works great for the majority of scenarios. But what if you want to integrate this link with React's `useTransition` hook when running in concurrent mode or want to log an analytics event when someone clicks on the link? Type Route handles the default case well but also gives you the flexibility to handle these more complex requirements. In order to fullfil these requirements you may want to consider creating a `getLink` function or `Link` component specific to your application.
+
+**Function**
+
+```tsx
+import { Route, preventDefaultClickBehavior } from "type-route";
+import { routes } from "./router";
+
+function link(to: Route<typeof routes>) {
+  return {
+    href: to.href,
+    onClick: (e: React.MouseEvent) => {
+      if (preventDefaultClickBehavior(e)) {
+        to.push();
+      }
+    }
+  }
+}
+```
+
+```tsx
+<a {...link(routes.foo({ bar: "abc" }))}>Foo</a>
+```
+
+**Component**
 
 ```tsx {2,6,15-20}
 import React from "react";
@@ -38,17 +62,16 @@ function Link(props: Props) {
 }
 ```
 
-**Usage:**
-
 ```tsx
 <Link to={routes.foo({ bar: "abc" })}>Foo</Link>
 ```
 
-From this starting point you could modify this `Link` component to do any number of things tailored to your particular needs.
+---
+
+From this starting point you could modify the code to do any number of things tailored to your particular needs.
 
 **Related pages:**
 
-- [React Components](./react-components.md)
 - [Rendering Links](./rendering-links.md)
 - [Styling of Links for the Currently Active Route](./styling-active-route-link.md)
 - [preventDefaultLinkClickBehavior](../api-reference/miscellaneous/prevent-default-link-click-behavior.md)

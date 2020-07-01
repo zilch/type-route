@@ -1,4 +1,4 @@
-import { createRouter, defineRoute, param, RouterConfig } from "../src";
+import { createRouter, defineRoute, param, RouterOpts } from "../src";
 import { expectTypeRouteError } from "./expectTypeRouteError";
 import { TypeRouteError } from "../src/TypeRouteError";
 import { QueryStringArrayFormat } from "../src/types";
@@ -21,7 +21,7 @@ describe("createRouter", () => {
   });
 
   it("should work with memory router", () => {
-    const config: RouterConfig = {
+    const config: RouterOpts = {
       session: {
         type: "memory",
       },
@@ -46,7 +46,7 @@ describe("createRouter", () => {
   });
 
   it("link should work", () => {
-    const config: RouterConfig = {
+    const config: RouterOpts = {
       session: {
         type: "memory",
       },
@@ -118,7 +118,7 @@ describe("createRouter", () => {
   });
 
   it("should throw runtime error when creating router with incompatible options", () => {
-    const config: RouterConfig = {
+    const config: RouterOpts = {
       arrayFormat: {
         queryString: "multiKey",
       },
@@ -234,7 +234,7 @@ describe("createRouter", () => {
     (global as any).window.location = new URL(
       "http://localhost/foo?bar=a&bar=b"
     );
-    const config: RouterConfig = {
+    const config: RouterOpts = {
       arrayFormat: {
         queryString: "multiKeyWithBracket",
       },
@@ -260,7 +260,7 @@ describe("createRouter", () => {
       "http://localhost/foo?bar=a=d&bar=b"
     );
 
-    const config: RouterConfig = {
+    const config: RouterOpts = {
       arrayFormat: {
         queryString: "multiKeyWithBracket",
       },
@@ -560,7 +560,7 @@ describe("createRouter", () => {
     delete (global as any).window.location;
     (global as any).window.location = new URL("http://localhost");
 
-    const config: RouterConfig = {
+    const config: RouterOpts = {
       session: { type: "hash" },
     };
 
@@ -585,7 +585,7 @@ describe("createRouter", () => {
     delete (global as any).window.location;
     (global as any).window.location = new URL("http://localhost");
 
-    const config: RouterConfig = {
+    const config: RouterOpts = {
       baseUrl: "/hello",
     };
 
@@ -610,7 +610,7 @@ describe("createRouter", () => {
     delete (global as any).window.location;
     (global as any).window.location = new URL("http://localhost");
 
-    const config: RouterConfig = {
+    const config: RouterOpts = {
       baseUrl: "/hello",
       session: { type: "hash" },
     };
@@ -649,7 +649,7 @@ function arrayFormatTest(
   queryStringArrayFormat: QueryStringArrayFormat,
   href: string
 ) {
-  const config: RouterConfig = {
+  const config: RouterOpts = {
     arrayFormat: {
       queryString: queryStringArrayFormat,
     },

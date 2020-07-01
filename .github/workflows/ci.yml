@@ -44,6 +44,7 @@ jobs:
             echo "Auth token not found. Executing dry run publish."
             args+=( --dry-run )
           fi;
+          mv dist/core core;
           npm publish "${args[@]}"
           if [ -z "${NODE_AUTH_TOKEN}" ]; then
             echo "Dry run publish complete."

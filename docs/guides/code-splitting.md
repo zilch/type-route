@@ -9,7 +9,7 @@ The file where you create your router should typically be kept in the main bundl
 ```tsx
 import { createRouter, defineRoute, param } from "type-route";
 
-export const { listen, routes, session } = createRouter({
+export const { useRoute, routes } = createRouter({
   home: defineRoute("/"),
   user: defineRoute(
     {
@@ -52,14 +52,12 @@ export default function UserPage(props: Props) {
 
 ```tsx
 import React, { useEffect } from "react";
-import { listen, session } from "./router";
 
 const HomePage = React.lazy(() => import("./HomePage"));
 const UserPage = React.lazy(() => import("./UserPage"));
 
 function App() {
-  const [route, setRoute] = useState(session.getInitialRoute());
-  useEffect(() => listen(setRoute), []);
+  const route = useRoute();
 
   return (
     <>
