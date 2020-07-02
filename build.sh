@@ -16,7 +16,7 @@ mv dist .temp-dist/core
 echo "\n===CREATING REACT BUNDLE===\n"
 
 tsdx build --entry ./src/react.ts --tsconfig ./tsconfig.build.json
-mv dist/core.d.ts dist/index.d.ts
+mv dist/react.d.ts dist/index.d.ts
 rollup -c rollup.dts.config.js
 rm dist/*.d.ts
 mv dist/index.temp dist/index.d.ts
