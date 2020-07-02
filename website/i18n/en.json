@@ -143,21 +143,6 @@
       "guides/server-side-rendering": {
         "title": "Server Side Rendering"
       },
-      "guides/simple-angular-example": {
-        "title": "Simple Angular Example"
-      },
-      "guides/simple-javascript-example": {
-        "title": "Simple Javascript Example"
-      },
-      "guides/simple-react-example": {
-        "title": "Simple React Example"
-      },
-      "guides/simple-svelte-example": {
-        "title": "Simple Svelte Example"
-      },
-      "guides/simple-vue-example": {
-        "title": "Simple Vue Example"
-      },
       "guides/styling-active-route-link": {
         "title": "Styling of Links for the Currently Active Route"
       },
