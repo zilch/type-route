@@ -6,7 +6,7 @@ title: Type Route without React
 
 Its possible to use Type Route without React and instead integrate it with your favorite JavaScript framework or use it without a framework at all. Here's an example of using Type Route without any of its React-specific components.
 
-```tsx {1,25-29} codesandbox-standard
+```tsx {1,25-29}
 import { createRouter, defineRoute, param, Route } from "type-route/core";
 
 const { routes, session } = createRouter({
