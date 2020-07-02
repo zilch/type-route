@@ -17,16 +17,14 @@ Type Route is flexible enough to let the above pattern be accomplished in a vari
 import React, { useState, useEffect } from "react";
 import { createRouter, defineRoute } from "type-route";
 
-const { routes, listen, session } = createRouter({
+const { routes, useRoute } = createRouter({
   home: defineRoute("/"),
   foo: defineRoute("/foo"),
   bar: defineRoute("/bar"),
 });
 
 function App() {
-  const [route, setRoute] = useState(session.getInitialRoute());
-
-  useEffect(() => listen(setRoute), []);
+  const route = useRoute();
 
   return (
     <>
@@ -96,16 +94,14 @@ The above example would work but, on every page change, the `Header` and `Footer
 import React, { useState, useEffect } from "react";
 import { createRouter, defineRoute } from "type-route";
 
-const { routes, listen, session } = createRouter({
+const { routes, useRoute } = createRouter({
   home: defineRoute("/"),
   foo: defineRoute("/foo"),
   bar: defineRoute("/bar"),
 });
 
 function App() {
-  const [route, setRoute] = useState(session.getInitialRoute());
-
-  useEffect(() => listen(setRoute), []);
+  const route = useRoute();
 
   return <>
     <Header />

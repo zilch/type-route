@@ -1,4 +1,4 @@
-import { createRouter, defineRoute, param, RouterConfig } from "../src";
+import { createRouter, defineRoute, param, RouterOpts } from "../src/core";
 import { expectTypeRouteError } from "./expectTypeRouteError";
 import { TypeRouteError } from "../src/TypeRouteError";
 import { QueryStringArrayFormat } from "../src/types";
@@ -21,20 +21,20 @@ describe("createRouter", () => {
   });
 
   it("should work with memory router", () => {
-    const config: RouterConfig = {
+    const config: RouterOpts = {
       session: {
         type: "memory",
       },
     };
 
-    const { routes, listen, session } = createRouter(config, {
+    const { routes, session } = createRouter(config, {
       foo: defineRoute("/foo"),
       bar: defineRoute("/bar"),
     });
 
     let route = session.getInitialRoute();
 
-    listen((nextRoute) => (route = nextRoute));
+    session.listen((nextRoute) => (route = nextRoute));
 
     expect(route.href).toBe("/");
     routes.bar().push();
@@ -46,13 +46,13 @@ describe("createRouter", () => {
   });
 
   it("link should work", () => {
-    const config: RouterConfig = {
+    const config: RouterOpts = {
       session: {
         type: "memory",
       },
     };
 
-    const { routes, listen, session } = createRouter(config, {
+    const { routes, session } = createRouter(config, {
       foo: defineRoute("/foo"),
       bar: defineRoute("/bar"),
     });
@@ -60,7 +60,7 @@ describe("createRouter", () => {
     let route = session.getInitialRoute();
     let calledPreventDefault = false;
 
-    listen((nextRoute) => (route = nextRoute));
+    session.listen((nextRoute) => (route = nextRoute));
 
     expect(route.href).toBe("/");
     routes.bar().link.onClick({
@@ -118,7 +118,7 @@ describe("createRouter", () => {
   });
 
   it("should throw runtime error when creating router with incompatible options", () => {
-    const config: RouterConfig = {
+    const config: RouterOpts = {
       arrayFormat: {
         queryString: "multiKey",
       },
@@ -188,13 +188,13 @@ describe("createRouter", () => {
   });
 
   it("should be able to remove listener", () => {
-    const { routes, listen } = createRouter({
+    const { routes, session } = createRouter({
       foo: defineRoute("/foo"),
       bar: defineRoute("/bar"),
     });
 
     let calls = 0;
-    const removeListener = listen(() => {
+    const removeListener = session.listen(() => {
       calls++;
     });
 
@@ -207,21 +207,21 @@ describe("createRouter", () => {
   });
 
   it("should be able to attach multiple listeners", () => {
-    const { routes, listen } = createRouter({
+    const { routes, session } = createRouter({
       foo: defineRoute("/foo"),
       bar: defineRoute("/bar"),
     });
 
     let calls1 = 0;
     let calls2 = 0;
-    listen(() => {
+    session.listen(() => {
       calls1++;
     });
     routes.foo().push();
     expect(calls1).toBe(1);
     expect(calls2).toBe(0);
 
-    listen(() => {
+    session.listen(() => {
       calls2++;
     });
     routes.bar().push();
@@ -234,7 +234,7 @@ describe("createRouter", () => {
     (global as any).window.location = new URL(
       "http://localhost/foo?bar=a&bar=b"
     );
-    const config: RouterConfig = {
+    const config: RouterOpts = {
       arrayFormat: {
         queryString: "multiKeyWithBracket",
       },
@@ -260,7 +260,7 @@ describe("createRouter", () => {
       "http://localhost/foo?bar=a=d&bar=b"
     );
 
-    const config: RouterConfig = {
+    const config: RouterOpts = {
       arrayFormat: {
         queryString: "multiKeyWithBracket",
       },
@@ -288,14 +288,14 @@ describe("createRouter", () => {
   });
 
   it("should redirect to primary path", () => {
-    const { listen, session } = createRouter({
+    const { session } = createRouter({
       foo: defineRoute(["/foo", "/"]),
       bar: defineRoute(["/bar", "/bar-two"]),
     });
 
     let route = session.getInitialRoute();
 
-    listen((nextRoute) => (route = nextRoute));
+    session.listen((nextRoute) => (route = nextRoute));
 
     expect(route.href).toBe("/foo");
 
@@ -305,7 +305,7 @@ describe("createRouter", () => {
   });
 
   it("should properly retrieve state params when navigation isn't trigger via a route directly", () => {
-    const { routes, listen, session } = createRouter(
+    const { routes, session } = createRouter(
       { session: { type: "memory" } },
       {
         foo: defineRoute("/"),
@@ -320,7 +320,7 @@ describe("createRouter", () => {
 
     let route = session.getInitialRoute();
 
-    listen((nextRoute) => (route = nextRoute));
+    session.listen((nextRoute) => (route = nextRoute));
 
     routes.bar({ baz: "test" }).push();
     routes.foo().push();
@@ -333,7 +333,7 @@ describe("createRouter", () => {
   });
 
   it("should properly block navigation", () => {
-    const { listen, routes, session } = createRouter(
+    const { routes, session } = createRouter(
       { session: { type: "memory" } },
       {
         foo: defineRoute("/"),
@@ -344,7 +344,7 @@ describe("createRouter", () => {
     let route = session.getInitialRoute();
     let listenCalls = 0;
 
-    listen((nextRoute) => {
+    session.listen((nextRoute) => {
       route = nextRoute;
       listenCalls++;
     });
@@ -416,7 +416,7 @@ describe("createRouter", () => {
   });
 
   it("should work with boolean parameters", () => {
-    const { routes, session, listen } = createRouter(
+    const { routes, session } = createRouter(
       { session: { type: "memory", initialEntries: ["/foo?bar=true"] } },
       {
         foo: defineRoute(
@@ -430,7 +430,7 @@ describe("createRouter", () => {
 
     let route = session.getInitialRoute();
 
-    listen((nextRoute) => (route = nextRoute));
+    session.listen((nextRoute) => (route = nextRoute));
 
     expect(route.name).toBe("foo");
     expect(route.params).toEqual({ bar: true });
@@ -442,7 +442,7 @@ describe("createRouter", () => {
   });
 
   it("should work with number parameters", () => {
-    const { routes, session, listen } = createRouter(
+    const { routes, session } = createRouter(
       { session: { type: "memory", initialEntries: ["/foo?bar=1"] } },
       {
         foo: defineRoute(
@@ -456,7 +456,7 @@ describe("createRouter", () => {
 
     let route = session.getInitialRoute();
 
-    listen((nextRoute) => (route = nextRoute));
+    session.listen((nextRoute) => (route = nextRoute));
 
     expect(route.name).toBe("foo");
     expect(route.params).toEqual({ bar: 1 });
@@ -468,7 +468,7 @@ describe("createRouter", () => {
   });
 
   it("should work with json parameters", () => {
-    const { routes, session, listen } = createRouter(
+    const { routes, session } = createRouter(
       {
         session: {
           type: "memory",
@@ -487,7 +487,7 @@ describe("createRouter", () => {
 
     let route = session.getInitialRoute();
 
-    listen((nextRoute) => (route = nextRoute));
+    session.listen((nextRoute) => (route = nextRoute));
 
     expect(route.name).toBe("foo");
     expect(route.params).toEqual({ bar: { test: "hello" } });
@@ -508,7 +508,7 @@ describe("createRouter", () => {
   });
 
   it("should be able to do session.replace", () => {
-    const { routes, session, listen } = createRouter(
+    const { routes, session } = createRouter(
       {
         session: {
           type: "memory",
@@ -526,7 +526,7 @@ describe("createRouter", () => {
 
     let route = session.getInitialRoute();
 
-    listen((nextRoute) => (route = nextRoute));
+    session.listen((nextRoute) => (route = nextRoute));
 
     expect(route.href).toBe("/foo");
 
@@ -560,17 +560,17 @@ describe("createRouter", () => {
     delete (global as any).window.location;
     (global as any).window.location = new URL("http://localhost");
 
-    const config: RouterConfig = {
+    const config: RouterOpts = {
       session: { type: "hash" },
     };
 
-    const { routes, listen, session } = createRouter(config, {
+    const { routes, session } = createRouter(config, {
       foo: defineRoute("/foo"),
     });
 
     let route = session.getInitialRoute();
 
-    listen((nextRoute) => (route = nextRoute));
+    session.listen((nextRoute) => (route = nextRoute));
 
     expect(route.name).toBe(false);
     expect(route.href).toBe("/#/");
@@ -585,17 +585,17 @@ describe("createRouter", () => {
     delete (global as any).window.location;
     (global as any).window.location = new URL("http://localhost");
 
-    const config: RouterConfig = {
+    const config: RouterOpts = {
       baseUrl: "/hello",
     };
 
-    const { routes, listen, session } = createRouter(config, {
+    const { routes, session } = createRouter(config, {
       foo: defineRoute("/foo"),
     });
 
     let route = session.getInitialRoute();
 
-    listen((nextRoute) => (route = nextRoute));
+    session.listen((nextRoute) => (route = nextRoute));
 
     expect(route.name).toBe(false);
     expect(route.href).toBe("/");
@@ -610,18 +610,18 @@ describe("createRouter", () => {
     delete (global as any).window.location;
     (global as any).window.location = new URL("http://localhost");
 
-    const config: RouterConfig = {
+    const config: RouterOpts = {
       baseUrl: "/hello",
       session: { type: "hash" },
     };
 
-    const { routes, listen, session } = createRouter(config, {
+    const { routes, session } = createRouter(config, {
       foo: defineRoute("/foo"),
     });
 
     let route = session.getInitialRoute();
 
-    listen((nextRoute) => (route = nextRoute));
+    session.listen((nextRoute) => (route = nextRoute));
 
     expect(route.name).toBe(false);
     expect(route.href).toBe("/#/");
@@ -649,18 +649,18 @@ function arrayFormatTest(
   queryStringArrayFormat: QueryStringArrayFormat,
   href: string
 ) {
-  const config: RouterConfig = {
+  const config: RouterOpts = {
     arrayFormat: {
       queryString: queryStringArrayFormat,
     },
   };
 
-  const { routes, listen, session } = createRouter(config, {
+  const { routes, session } = createRouter(config, {
     foo: defineRoute({ bar: param.query.array.string }, () => "/foo"),
   });
 
   let route = session.getInitialRoute();
-  const remove = listen((nextRoute) => (route = nextRoute));
+  const remove = session.listen((nextRoute) => (route = nextRoute));
   routes.foo({ bar: ["a", "b"] }).push();
   expect(route.href).toBe(href);
   remove();

@@ -4,7 +4,7 @@ title: createRouter
 
 ```tsx
 createRouter(routeDefinitions: RouteDefinitionBuilderCollection): Router
-createRouter(routerConfig: RouterConfig, routeDefinitions: RouteDefinitionBuilderCollection): Router
+createRouter(routerOpts: RouterOpts, routeDefinitions: RouteDefinitionBuilderCollection): Router
 ```
 
 Initializes a router. By default the underlying session history instance which powers Type
@@ -16,7 +16,7 @@ cover other use cases (such as [server-side rendering](../../guides/server-side-
 #### Example
 
 ```tsx
-const { routes, listen, session } = createRouter({
+const { routes } = createRouter({
   home: defineRoute("/"),
   postList: defineRoute(
     {
@@ -33,4 +33,4 @@ const { routes, listen, session } = createRouter({
 });
 ```
 
-`createRouter` will create a `Router` object. Immediately destructuring this `Router` object into the properties your application needs is the recommended style.
+`createRouter` will create a `Router` object. Immediately destructuring this `Router` object into the properties your application needs is the recommended style. The exact properties available will differ depending on if you're using `type-route` or `type-route/core`. For details on what is returned by each checkout the [Type Route without React](../../guides/type-route-without-react.md) guide.

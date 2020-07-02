@@ -526,3 +526,13 @@ code .above-highlight {
   left: -17px;
   right: -17px;
 }
+
+.navGroups > .navGroup:nth-child(2) > ul > li.navListItem:nth-last-child(2)::before {
+  content: "";
+  height: 1px;
+  width: 100px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  background: #ddd;
+  display: block;
+}

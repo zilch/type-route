@@ -20,7 +20,7 @@ const user = defineRoute(
   p => `/user/${p.userId}`
 );
 
-const { routes, session } = createRouter({
+const { routes } = createRouter({
   home: defineRoute("/"),
   userSummary: user.extend("/"),
   userSettings: user.extend("/settings"),

@@ -2,102 +2,95 @@
 // @ts-ignore
 window.__DEV__ = true;
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import ReactDOM from "react-dom";
-import { createRouter, defineRoute, param, Route, createGroup } from "./index";
+import {
+  createRouter,
+  defineRoute,
+  param,
+  Route,
+  preventDefaultLinkClickBehavior,
+} from "./react";
 
-const account = defineRoute("/account");
-
-export const { routes, session, listen } = createRouter({
-  foo: defineRoute(
+export const { RouteProvider, useRoute, routes } = createRouter({
+  home: defineRoute("/"),
+  userList: defineRoute(
     {
-      bar: param.query.array.string,
+      page: param.query.optional.number,
     },
-    () => "/foo"
+    () => "/user"
   ),
-  home: defineRoute(["/dashboard", "/"]),
-  account: account.extend(["/overview", "/"]),
-
   user: defineRoute(
     {
       userId: param.path.string,
     },
-    (x) => [`/user/${x.userId}`, `/users/${x.userId}`]
+    (p) => `/user/${p.userId}`
   ),
 });
 
-export const groups = {
-  hi: createGroup([routes.home]),
-};
-
 function App() {
-  const [route, setRoute] = useState(session.getInitialRoute());
-  useEffect(() => listen(setRoute), []);
-
-  useEffect(() => {
-    if (route.action === "push") {
-      window.scroll(0, 0);
-    }
-  }, [route]);
-
-  useEffect(() => {
-    document.title = route.href;
-  }, [route]);
-
-  useEffect(() => {
-    if (route.name === "home") {
-      const unblock = session.block((update) => {
-        if (window.confirm("Are you sure?")) {
-          unblock();
-          update.retry();
-        }
-      });
-    }
-  }, [route]);
+  const route = useRoute();
 
   return (
     <>
       <Navigation />
-      {groups.hi.has(route) && <div>Hi</div>}
-      {route.name === "home" && <HomePage />}
-      {route.name === "user" && <UserPage route={route} />}
-      {route.name === "account" && <AccountPage />}
-      {route.name === false && <NotFoundPage />}
+      <div style={{ height: "1000px" }}>
+        {route.name === "home" && <HomePage />}
+        {route.name === "userList" && <UserListPage route={route} />}
+        {route.name === "user" && <UserPage route={route} />}
+        {route.name === false && <>Not Found</>}
+      </div>
       <Navigation />
     </>
   );
-}
-
-function NotFoundPage() {
-  return <div>Not Found</div>;
 }
 
 function HomePage() {
-  return <div style={{ height: "1000px" }}>Home Page</div>;
+  return <div>Home Page</div>;
 }
 
-function AccountPage() {
-  return <div style={{ height: "1000px" }}>Account Page</div>;
+type UserListProps = {
+  route: Route<typeof routes.userList>;
+};
+
+function UserListPage({ route }: UserListProps) {
+  return <div>UserList - Page: {route.params.page}</div>;
 }
 
-function UserPage({ route }: { route: Route<typeof routes.user> }) {
-  return (
-    <>
-      <div style={{ height: "2000px" }}>User {route.params.userId}</div>
-      <div>User {route.params.userId}</div>
-    </>
-  );
+type UserProps = {
+  route: Route<typeof routes.user>;
+};
+
+function UserPage({ route }: UserProps) {
+  return <div>User {route.params.userId}</div>;
 }
 
 function Navigation() {
   return (
     <nav>
-      <a {...routes.home().link}>Home</a>
+      <a {...replaceLink(routes.home())}>Home</a>
+      <a {...routes.userList({ page: 1 }).link}>User List</a>
       <a {...routes.user({ userId: "abc" }).link}>User "abc"</a>
     </nav>
   );
 }
 
+function replaceLink(to: Route<typeof routes>) {
+  return {
+    href: to.href,
+    onClick: (e: React.MouseEvent) => {
+      if (preventDefaultLinkClickBehavior(e)) {
+        to.replace();
+      }
+    },
+  };
+}
+
 const container = document.createElement("div");
 document.body.appendChild(container);
-ReactDOM.render(<App />, container);
+ReactDOM.render(
+  <RouteProvider>
+    <App />
+  </RouteProvider>,
+  container
+);

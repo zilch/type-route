@@ -26,16 +26,16 @@ console.log(
 There is some high level configuration that can be given to `createRouter` which will change the format of array values in the query string.
 
 ```tsx codesandbox-standard
-import { createRouter, defineRoute, param, RouterConfig } from "type-route";
+import { createRouter, defineRoute, param, RouterOpts } from "type-route";
 
-const config: RouterConfig = {
+const opts: RouterOpts = {
   arrayFormat: {
     separator: ",",
     queryString: "multiKeyWithBracket"
   }
 }
 
-const { routes } = createRouter(config, {
+const { routes } = createRouter(opts, {
   example: defineRoute(
     {
       arrayValue: param.query.array.string

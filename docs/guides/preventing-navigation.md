@@ -7,7 +7,7 @@ The `block` function on the `session` object will create a new navigation blocke
 - `route` - What the next route would have been had the navigation gone through.
 - `retry` - A function giving you the ability to retry this navigation attempt, for instance, after the blocker is removed.
 
-In practice preventing navigation may look something like the this:
+In practice, preventing navigation may look something like the this:
 
 ```tsx
 const unblock = session.block(update => {
@@ -24,4 +24,4 @@ Navigation between routes in your application can always be blocked. Navigation 
 - triggering an action that opens an external page
 - reloading the page your application is running in
 
-In these instances if a blocker is active a generic browser dialog will appear asking the user to confirm the navigation. Ultimately, you cannot prevent a user from leaving your application if they want to leave. This will only force them to confirm that this navigation is indeed what they want to do.
+In these instances, if a blocker is active, a generic browser dialog will appear asking the user to confirm the navigation. Ultimately, you cannot prevent a user from leaving your application if they want to leave. This will only force them to confirm that this navigation is indeed what they want to do.

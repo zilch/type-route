@@ -26,16 +26,14 @@ import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { createRouter, defineRoute } from "type-route";
 
-const { routes, listen, session } = createRouter({
+const { routes, useRoute, RouteProvider } = createRouter({
   home: defineRoute("/"),
   foo: defineRoute("/foo"),
   bar: defineRoute("/bar")
 });
 
 function App() {
-  const [route, setRoute] = useState(session.getInitialRoute());
-
-  useEffect(() => listen(setRoute), []);
+  const route = useRoute();
 
   return (
     <>
@@ -53,5 +51,5 @@ function App() {
   );
 }
 
-ReactDOM.render(<App />, document.querySelector("#root"));
+ReactDOM.render(<RouteProvider><App /></RouteProvider>, document.querySelector("#root"));
 ```

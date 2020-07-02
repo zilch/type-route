@@ -1,13 +1,10 @@
 {
   "docs": {
     "Introduction": [
-      "introduction/getting-started"
+      "introduction/getting-started",
+      "introduction/simple-react-example"
     ],
     "Guides": [
-      "guides/simple-react-example",
-      "guides/simple-vue-example",
-      "guides/simple-svelte-example",
-      "guides/simple-angular-example",
       "guides/code-splitting",
       "guides/complex-route-parameters",
       "guides/custom-link-behavior",
@@ -18,16 +15,16 @@
       "guides/page-layout",
       "guides/preventing-navigation",
       "guides/programmatic-navigation",
-      "guides/react-components",
       "guides/redirects",
       "guides/rendering-links",
       "guides/route-parameters",
       "guides/scroll-restoration",
       "guides/server-side-rendering",
       "guides/styling-active-route-link",
+      "guides/type-route-without-react",
       "guides/wildcard-routes",
-      "guides/guide-missing",
-      "guides/previous-release-docs"
+      "guides/previous-release-docs",
+      "guides/guide-missing"
     ],
     "API Reference": [
       {
@@ -71,7 +68,8 @@
         "label": "<Router>",
         "ids": [
           "api-reference/router/create-router",
-          "api-reference/router/listen",
+          "api-reference/router/use-route",
+          "api-reference/router/route-provider",
           "api-reference/router/routes",
           "api-reference/router/session"
         ]
@@ -83,8 +81,8 @@
           "api-reference/types/link",
           "api-reference/types/query-string-serializer",
           "api-reference/types/route",
-          "api-reference/types/router-config",
-          "api-reference/types/session-config",
+          "api-reference/types/router-opts",
+          "api-reference/types/session-opts",
           "api-reference/types/value-serializer"
         ]
       },

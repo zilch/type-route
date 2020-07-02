@@ -15,3 +15,4 @@
 /.github/actions/pr-environment/node_modules
 /.github/actions/release-info/node_modules
 *.log
+/.temp-dist

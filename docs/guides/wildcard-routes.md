@@ -7,7 +7,7 @@ Type Route supports defining "wildcard" routes. This is a common requirement in 
 ```tsx
 import { createRouter, defineRoute, param } from "type-route";
 
-const { routes, session, listen } = createRouter({
+const { routes } = createRouter({
   example: defineRoute(
     {
       slug: param.path.trailing.optional.string

@@ -22,34 +22,30 @@ A light abstraction on top of this may look something like the following:
 ```tsx
 type LinkProps = {
   to: Route<typeof routes>;
-  activeRoute?: Route<typeof routes>;
   children?: React.ReactNode;
 }
 
-function Link({ to, activeRoute, children }: Props) {
+function Link({ to, children }: Props) {
+  const route = useRoute();
+
   return <a
     {...to.link}
-    className={to.name === activeRoute?.name ? "active" : undefined}
+    className={to.name === route.name ? "active" : undefined}
   >
     {children}
   </a>;
 }
 
-type NavigationProps = {
-  route: Route<typeof routes>
-}
-
-function Navigation({ route }: NavigationProps) {
+function Navigation() {
   return <nav>
-    <Link to={routes.home()} activeRoute={route}>Home</Link>
-    <Link to={routes.other()} activeRoute={route}>Other</Link>
+    <Link to={routes.home()}>Home</Link>
+    <Link to={routes.other()}>Other</Link>
   </nav>
 }
 ```
 
 **Related pages:**
 
-- [React Components](./react-components.md)
 - [Rendering Links](./rendering-links.md)
 - [Custom Link Behavior](./custom-link-behavior.md)
 - [preventDefaultLinkClickBehavior](../api-reference/miscellaneous/prevent-default-link-click-behavior.md)
