@@ -1,5 +1,5 @@
 ---
-title: Route Provider
+title: RouteProvider
 ---
 
 ```tsx

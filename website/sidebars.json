@@ -1,10 +1,10 @@
 {
   "docs": {
     "Introduction": [
-      "introduction/getting-started"
+      "introduction/getting-started",
+      "introduction/simple-react-example"
     ],
     "Guides": [
-      "guides/simple-react-example",
       "guides/code-splitting",
       "guides/complex-route-parameters",
       "guides/custom-link-behavior",
@@ -23,8 +23,8 @@
       "guides/styling-active-route-link",
       "guides/type-route-without-react",
       "guides/wildcard-routes",
-      "guides/guide-missing",
-      "guides/previous-release-docs"
+      "guides/previous-release-docs",
+      "guides/guide-missing"
     ],
     "API Reference": [
       {
@@ -68,8 +68,8 @@
         "label": "<Router>",
         "ids": [
           "api-reference/router/create-router",
-          "api-reference/router/useRoute",
-          "api-reference/router/RouteProvider",
+          "api-reference/router/use-route",
+          "api-reference/router/route-provider",
           "api-reference/router/routes",
           "api-reference/router/session"
         ]
@@ -81,8 +81,8 @@
           "api-reference/types/link",
           "api-reference/types/query-string-serializer",
           "api-reference/types/route",
-          "api-reference/types/router-config",
-          "api-reference/types/session-config",
+          "api-reference/types/router-opts",
+          "api-reference/types/session-opts",
           "api-reference/types/value-serializer"
         ]
       },

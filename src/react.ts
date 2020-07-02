@@ -10,7 +10,7 @@ import { TypeRouteError } from "./TypeRouteError";
 import React from "react";
 import { attemptScrollToTop } from "./attemptScrollToTop";
 
-if (__DEV__) {
+if (typeof __DEV__ === "boolean" && __DEV__) {
   const [major, minor] = React.version
     .split(".")
     .map((value: string) => parseInt(value, 10));
@@ -37,7 +37,18 @@ export {
 type Router<
   TRouteDefCollection extends { [routeName: string]: any }
 > = CoreRouter<TRouteDefCollection> & {
+  /**
+   * React hook for retrieving the current route.
+   *
+   * @see https://typehero.org/type-route/docs/api-reference/router/use-route
+   */
   useRoute: () => RouteDefCollectionRoute<TRouteDefCollection>;
+
+  /**
+   * React component which connects React to Type Route and provides the current route to the rest of the application.
+   *
+   * @see https://typehero.org/type-route/docs/api-reference/router/route-provider
+   */
   RouteProvider: (props: { children?: any }) => any;
 };
 type UmbrellaRouter = Router<UmbrellaRouteDefCollection>;
@@ -73,7 +84,7 @@ export function createRouter(...args: any[]): UmbrellaRouter {
     return React.createElement(
       routeContext.Provider,
       { value: route },
-      ...props.children
+      props.children
     );
   }
 

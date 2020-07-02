@@ -7,7 +7,7 @@ sidebar_label: push
 push(): boolean
 ```
 
-The `push` function will push a new entry into history and if using the "browser" `historyType` will update the browser's url. Returns a `boolean` indicating whether or not the navigation completed successfully. The only instance where the navigation would not be successful would be if the handler function passed to `listen` returned false.
+The `push` function will push a new entry into history and if using the "browser" `historyType` will update the browser's url.
 
 #### Example
 
@@ -17,6 +17,6 @@ const { routes } = createRouter({
   post: defineRoute({ postId: param.path.string }, p => `/post/${p.postId}`)
 });
 
-routes.home().push(); // returns boolean
-routes.post({ postId: "abc" }).push(); // returns boolean
+routes.home().push();
+routes.post({ postId: "abc" }).push();
 ```

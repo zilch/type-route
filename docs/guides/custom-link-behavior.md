@@ -34,7 +34,7 @@ function link(to: Route<typeof routes>) {
 
 **Component**
 
-```tsx {2,6,15-20}
+```tsx
 import React from "react";
 import { Route, preventDefaultClickBehavior } from "type-route";
 import { routes } from "./router";

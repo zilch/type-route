@@ -17,7 +17,7 @@ type RouterSession = {
 };
 ```
 
-The `listen` function will create a new route change listener. Whenever the application route changes this function will be called with the next matching route. If the given url does not match any route in that router an object with a `false` value for the `name` property and an empty object for the `params` property will be returned.
+The `listen` function will create a new route change listener. Whenever the application route changes this function will be called with the next matching route. If the given url does not match any route in that router an object with a `false` value for the `name` property and an empty object for the `params` property will be provided.
 
 #### Example
 

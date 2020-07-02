@@ -60,7 +60,7 @@
         "title": "createRouter"
       },
       "api-reference/router/route-provider": {
-        "title": "Route Provider"
+        "title": "RouteProvider"
       },
       "api-reference/router/routes": {
         "title": "<Router>.routes",
@@ -85,8 +85,8 @@
       "api-reference/types/router-opts": {
         "title": "RouterOpts"
       },
-      "api-reference/types/session-config": {
-        "title": "SessionConfig"
+      "api-reference/types/session-opts": {
+        "title": "SessionOpts"
       },
       "api-reference/types/value-serializer": {
         "title": "ValueSerializer"
@@ -142,9 +142,6 @@
       "guides/server-side-rendering": {
         "title": "Server Side Rendering"
       },
-      "guides/simple-react-example": {
-        "title": "Simple React Example"
-      },
       "guides/styling-active-route-link": {
         "title": "Styling of Links for the Currently Active Route"
       },
@@ -156,12 +153,15 @@
       },
       "introduction/getting-started": {
         "title": "Getting Started"
+      },
+      "introduction/simple-react-example": {
+        "title": "Simple React Example"
       }
     },
     "links": {
       "Docs": "Docs",
       "GitHub": "GitHub",
-      "v0.4.0": "v0.4.0"
+      "v0.5.0": "v0.5.0"
     },
     "categories": {
       "Introduction": "Introduction",

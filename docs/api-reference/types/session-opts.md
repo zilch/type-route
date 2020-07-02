@@ -1,14 +1,14 @@
 ---
-title: SessionConfig
+title: SessionOpts
 ---
 
 ```tsx
-type SessionConfig =
-  | BrowserHistoryConfig
-  | MemoryHistoryConfig
-  | HashHistoryConfig
+type SessionOpts =
+  | BrowserHistoryOpts
+  | MemoryHistoryOpts
+  | HashHistoryOpts
 
-type MemoryHistorySessionConfig = {
+type MemoryHistorySessionOpts = {
   type: "memory";
 
   /**
@@ -25,7 +25,7 @@ type MemoryHistorySessionConfig = {
   initialIndex?: number;
 };
 
-type HashHistorySessionConfig = {
+type HashHistorySessionOpts = {
   type: "hash";
 
   /**
@@ -35,7 +35,7 @@ type HashHistorySessionConfig = {
   window?: Window;
 };
 
-type BrowserHistorySessionConfig = {
+type BrowserHistorySessionOpts = {
   type: "browser";
 
   /**

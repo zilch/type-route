@@ -34,10 +34,13 @@ function App() {
   return (
     <>
       <Navigation />
-      {route.name === "home" && <HomePage />}
-      {route.name === "userList" && <UserListPage route={route} />}
-      {route.name === "user" && <UserPage route={route} />}
-      {route.name === false && <>Not Found</>}
+      <div style={{ height: "1000px" }}>
+        {route.name === "home" && <HomePage />}
+        {route.name === "userList" && <UserListPage route={route} />}
+        {route.name === "user" && <UserPage route={route} />}
+        {route.name === false && <>Not Found</>}
+      </div>
+      <Navigation />
     </>
   );
 }

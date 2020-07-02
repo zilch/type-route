@@ -1,6 +1,4 @@
 const React = require("react");
-const CompLibrary = require("../../core/CompLibrary.js");
-const MarkdownBlock = CompLibrary.MarkdownBlock; /* Used to read markdown */
 
 const code = `import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
@@ -132,32 +130,32 @@ class Index extends React.Component {
         <div className="features">
           <div>
             <h4>Type Safe</h4>
-            <MarkdownBlock>
-              First and foremost Type Route strives for excellent TypeScript
-              support. An API designed for static analysis not only means the
-              compiler has your back but also enables your editor to provide
-              intelligent hints and warnings as you code.
-            </MarkdownBlock>
+            First and foremost Type Route strives for excellent TypeScript
+            support. An API designed for static analysis not only means the
+            compiler has your back but also enables your editor to provide
+            intelligent hints and warnings as you code.
           </div>
           <div>
             <h4>Flexible</h4>
-            <MarkdownBlock>
-              Type Route was designed with excellent React integration in mind
-              but isn't coupled to a specific UI framework. Use it with React,
-              Vue, Svelte, Angular or anything else. There's even support for
-              non-browser environments like React Native.
-            </MarkdownBlock>
+            Type Route was designed with excellent React integration in mind but
+            isn't coupled to a specific UI framework. Use it with Vue, Svelte,
+            Angular, Ember or{" "}
+            <a href="/type-route/docs/guides/type-route-without-react">
+              anything else
+            </a>
+            . There's even support for non-browser environments like React
+            Native.
           </div>
           <div>
             <h4>Solid Foundation</h4>
             <div>
-              <MarkdownBlock>
-                The same [core
-                library](https://github.com/ReactTraining/history) behind React
-                Router also powers Type Route. From this solid foundation Type
-                Route adds a simple and flexible API optimized for a developer
-                experience that is second to none.
-              </MarkdownBlock>
+              The same{" "}
+              <a href="https://github.com/ReactTraining/history">
+                core library
+              </a>{" "}
+              behind React Router also powers Type Route. From this solid
+              foundation Type Route adds a simple and flexible API optimized for
+              a developer experience that is second to none.
             </div>
           </div>
         </div>
