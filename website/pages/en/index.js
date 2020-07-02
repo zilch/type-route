@@ -1,6 +1,6 @@
 const React = require("react");
 
-const code = `import React, { useState, useEffect } from "react";
+const code = `import React from "react";
 import ReactDOM from "react-dom";
 import { createRouter, defineRoute, param, Route } from "type-route";
 
