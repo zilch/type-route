@@ -124,7 +124,7 @@ class Index extends React.Component {
             Get Started
           </a>
           <a
-            href={`${baseUrl}docs/guides/simple-react-example`}
+            href={`${baseUrl}docs/introduction/simple-react-example`}
             className="secondary-button"
           >
             See Examples <span style={{ marginLeft: "4px" }}>→</span>
@@ -184,7 +184,7 @@ class Index extends React.Component {
             Get Started
           </a>
           <a
-            href={`${baseUrl}docs/guides/simple-react-example`}
+            href={`${baseUrl}docs/introduction/simple-react-example`}
             className="secondary-button"
           >
             See Examples <span style={{ marginLeft: "4px" }}>→</span>
