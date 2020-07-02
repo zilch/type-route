@@ -4,7 +4,7 @@ const code = `import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { createRouter, defineRoute, param, Route } from "type-route";
 
-const { routes, listen, session } = createRouter({
+const { RouteProvider, useRoute, routes } = createRouter({
   home: defineRoute("/"),
   userList: defineRoute(
     {
@@ -21,9 +21,7 @@ const { routes, listen, session } = createRouter({
 });
 
 function App() {
-  const [route, setRoute] = useState(session.getInitialRoute());
-
-  useEffect(() => listen(nextRoute => setRoute(nextRoute)), []);
+  const route = useRoute();
 
   return (
     <>
@@ -81,7 +79,12 @@ function Navigation() {
   );
 }
 
-ReactDOM.render(<App />, document.querySelector("#root"));
+ReactDOM.render(
+  <RouteProvider>
+    <App />
+  </RouteProvider>,
+  document.querySelector("#root")
+);
 `;
 
 class Index extends React.Component {
