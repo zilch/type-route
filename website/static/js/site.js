@@ -61,7 +61,7 @@ window.onload = function () {
         "package.json": {
           content: {
             dependencies: {
-              "type-route": "latest",
+              "type-route": "=0.5.0",
             },
           },
         },
