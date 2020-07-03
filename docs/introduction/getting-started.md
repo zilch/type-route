@@ -143,7 +143,7 @@ export function Navigation() {
 }
 ```
 
-The [`link`](https://typehero.org/type-route/docs/api-reference/route/link) property is an object with an `href` attribute and an `onClick` function. You need both to [properly render](https://typehero.org/type-route/docs/guides/rendering-links) a link in a single page application. Immediately spreading the `link` object into the properties of an `<a>` tag makes usage simple. [Programmatic navigation](https://typehero.org/type-route/docs/guides/programmatic-navigation) is possible with the [`push`](https://typehero.org/type-route/docs/api-reference/route/push) and [`replace`](https://typehero.org/type-route/docs/api-reference/route/replace) functions of a specific route. Type Route also supports [extending the behavior of a link](https://type-route/docs/guides/custom-link-behavior) to cover more complex scenarios.
+The [`link`](https://typehero.org/type-route/docs/api-reference/route/link) property is an object with an `href` attribute and an `onClick` function. You need both to [properly render](https://typehero.org/type-route/docs/guides/rendering-links) a link in a single page application. Immediately spreading the `link` object into the properties of an `<a>` tag makes usage simple. [Programmatic navigation](https://typehero.org/type-route/docs/guides/programmatic-navigation) is possible with the [`push`](https://typehero.org/type-route/docs/api-reference/route/push) and [`replace`](https://typehero.org/type-route/docs/api-reference/route/replace) functions of a specific route. Type Route also supports [extending the behavior of a link](https://typehero.org/type-route/docs/guides/custom-link-behavior) to cover more complex scenarios.
 
 ## Next Steps
 
