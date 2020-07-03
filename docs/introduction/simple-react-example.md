@@ -9,7 +9,7 @@ import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { createRouter, defineRoute, Route, param } from "type-route";
 
-const { RouteProvider, userRoute, routes } = createRouter({
+const { RouteProvider, useRoute, routes } = createRouter({
   home: defineRoute("/"),
   userList: defineRoute(
     {
@@ -88,5 +88,5 @@ function UserPage(props: { route: Route<typeof routes.user> }) {
   );
 }
 
-ReactDOM.render(<App />, document.querySelector("#root"));
+ReactDOM.render(<RouteProvider><App /></RouteProvider>, document.querySelector("#root"));
 ```
