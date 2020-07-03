@@ -2,7 +2,7 @@
 title: Simple React Example
 ---
 
-Here's a basic example of how to use Type Route with React. Click the **Run** button to try it out on CodeSandbox. Other guides cover more complex use cases.
+Here's a basic example of how to use Type Route with React. Click the **Run** button to try it out on CodeSandbox. Other guides cover more complex use cases. See the [Type Route without React](../guides/type-route-without-react.md) guide for an example of how to use Type Route without React.
 
 ```tsx codesandbox-react
 import React from "react";
