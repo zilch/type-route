@@ -27,6 +27,7 @@ import { getRouteByHref } from "./getRouteByHref";
 import { createNavigationHandlerManager } from "./createNavigationHandlerManager";
 import { stringUtils } from "./stringUtils";
 import { attemptScrollToTop } from "./attemptScrollToTop";
+import { serializeStateParams } from "./serializeStateParams";
 
 const { startsWith, splitFirst } = stringUtils;
 
@@ -81,6 +82,7 @@ export function createRouter(...args: any[]): UmbrellaCoreRouter {
   let skipNextEnvironmentTriggeredNavigation = false;
   let skipHandlingNextApplicationTriggeredNavigation = false;
   let initialRoute: UmbrellaRoute | null = null;
+  let previousRoute: UmbrellaRoute | null = null;
   let blockerCollection: UmbrellaBlocker[] = [];
 
   applySessionOpts(opts.session);
@@ -255,6 +257,16 @@ export function createRouter(...args: any[]): UmbrellaCoreRouter {
       return;
     }
 
+    const state = serializeStateParams(route, routeDefs);
+
+    if (
+      previousRoute?.href === route.href &&
+      JSON.stringify(serializeStateParams(previousRoute, routeDefs)) ===
+        JSON.stringify(state)
+    ) {
+      return;
+    }
+
     if (skipHandlingNextApplicationTriggeredNavigation) {
       skipHandlingNextApplicationTriggeredNavigation = false;
     } else {
@@ -262,20 +274,6 @@ export function createRouter(...args: any[]): UmbrellaCoreRouter {
     }
 
     skipNextEnvironmentTriggeredNavigation = true;
-
-    const state: Record<string, string> = {};
-
-    if (route.name) {
-      for (const paramName in route.params) {
-        const paramDef =
-          routeDefs[route.name]["~internal"].params[paramName]["~internal"];
-
-        if (paramDef.kind === "state") {
-          const value = route.params[paramName];
-          state[paramName] = paramDef.valueSerializer.stringify(value);
-        }
-      }
-    }
 
     const [pathname, search] = splitFirst(route.href, "?");
 
@@ -300,6 +298,8 @@ export function createRouter(...args: any[]): UmbrellaCoreRouter {
     }
 
     attemptScrollToTop(route, opts.scrollToTop);
+
+    previousRoute = route;
   }
 
   function getRouterContext(): RouterContext {

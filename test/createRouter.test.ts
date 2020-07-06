@@ -230,10 +230,8 @@ describe("createRouter", () => {
   });
 
   it("should not error when parsing url", () => {
-    delete (global as any).window.location;
-    (global as any).window.location = new URL(
-      "http://localhost/foo?bar=a&bar=b"
-    );
+    setPath("/foo?bar=a&bar=b");
+
     const config: RouterOpts = {
       arrayFormat: {
         queryString: "multiKeyWithBracket",
@@ -255,10 +253,7 @@ describe("createRouter", () => {
   });
 
   it("ignore ambiguous query params", () => {
-    delete (global as any).window.location;
-    (global as any).window.location = new URL(
-      "http://localhost/foo?bar=a=d&bar=b"
-    );
+    setPath("/foo?bar=a=d&bar=b");
 
     const config: RouterOpts = {
       arrayFormat: {
@@ -557,9 +552,6 @@ describe("createRouter", () => {
   });
 
   it("should work with hash router", () => {
-    delete (global as any).window.location;
-    (global as any).window.location = new URL("http://localhost");
-
     const config: RouterOpts = {
       session: { type: "hash" },
     };
@@ -582,8 +574,7 @@ describe("createRouter", () => {
   });
 
   it("should work with base url", () => {
-    delete (global as any).window.location;
-    (global as any).window.location = new URL("http://localhost");
+    setPath("");
 
     const config: RouterOpts = {
       baseUrl: "/hello",
@@ -607,15 +598,12 @@ describe("createRouter", () => {
   });
 
   it("should work with hash router and base url", () => {
-    delete (global as any).window.location;
-    (global as any).window.location = new URL("http://localhost");
-
-    const config: RouterOpts = {
+    const opts: RouterOpts = {
       baseUrl: "/hello",
       session: { type: "hash" },
     };
 
-    const { routes, session } = createRouter(config, {
+    const { routes, session } = createRouter(opts, {
       foo: defineRoute("/foo"),
     });
 
@@ -643,6 +631,71 @@ describe("createRouter", () => {
       () => createRouter({ baseUrl: "/hello?there=5" }, {})
     );
   });
+
+  it("should not navigate twice using session", () => {
+    const { session } = createRouter({
+      foo: defineRoute("/foo"),
+      bar: defineRoute("/bar"),
+    });
+
+    const history: (string | false)[] = [session.getInitialRoute().name];
+
+    session.listen((route) => {
+      history.push(route.name);
+    });
+
+    expect(history).toEqual([false]);
+    session.push("/bar");
+    expect(history).toEqual([false, "bar"]);
+    session.push("/foo");
+    expect(history).toEqual([false, "bar", "foo"]);
+    session.push("/foo");
+    expect(history).toEqual([false, "bar", "foo"]);
+  });
+
+  it("should not navigate twice using routes", () => {
+    const { routes, session } = createRouter({
+      foo: defineRoute("/foo"),
+      bar: defineRoute("/bar"),
+    });
+
+    const history: (string | false)[] = [session.getInitialRoute().name];
+
+    session.listen((route) => {
+      history.push(route.name);
+    });
+
+    expect(history).toEqual([false]);
+    routes.bar().push();
+    expect(history).toEqual([false, "bar"]);
+    routes.foo().push();
+    expect(history).toEqual([false, "bar", "foo"]);
+    routes.foo().push();
+    expect(history).toEqual([false, "bar", "foo"]);
+  });
+
+  it("should not navigate twice using routes with state params", () => {
+    const { routes, session } = createRouter({
+      foo: defineRoute({ test: param.state.number }, () => "/foo"),
+      bar: defineRoute("/bar"),
+    });
+
+    const history: (string | false)[] = [session.getInitialRoute().name];
+
+    session.listen((route) => {
+      history.push(route.name);
+    });
+
+    expect(history).toEqual([false]);
+    routes.bar().push();
+    expect(history).toEqual([false, "bar"]);
+    routes.foo({ test: 1 }).push();
+    expect(history).toEqual([false, "bar", "foo"]);
+    routes.foo({ test: 2 }).push();
+    expect(history).toEqual([false, "bar", "foo", "foo"]);
+    routes.foo({ test: 2 }).push();
+    expect(history).toEqual([false, "bar", "foo", "foo"]);
+  });
 });
 
 function arrayFormatTest(
@@ -664,4 +717,9 @@ function arrayFormatTest(
   routes.foo({ bar: ["a", "b"] }).push();
   expect(route.href).toBe(href);
   remove();
+}
+
+function setPath(path: string) {
+  delete (global as any).window.location;
+  (global as any).window.location = new URL("http://localhost" + path);
 }
