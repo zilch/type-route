@@ -2,6 +2,7 @@ import { createRouter, defineRoute, param, RouterOpts } from "../src/core";
 import { expectTypeRouteError } from "./expectTypeRouteError";
 import { TypeRouteError } from "../src/TypeRouteError";
 import { QueryStringArrayFormat } from "../src/types";
+import { setPath } from "./setPath";
 
 describe("createRouter", () => {
   it("should push route with query string param properly", () => {
@@ -711,15 +712,10 @@ function arrayFormatTest(
   const { routes, session } = createRouter(config, {
     foo: defineRoute({ bar: param.query.array.string }, () => "/foo"),
   });
-
   let route = session.getInitialRoute();
+
   const remove = session.listen((nextRoute) => (route = nextRoute));
   routes.foo({ bar: ["a", "b"] }).push();
   expect(route.href).toBe(href);
   remove();
-}
-
-function setPath(path: string) {
-  delete (global as any).window.location;
-  (global as any).window.location = new URL("http://localhost" + path);
 }

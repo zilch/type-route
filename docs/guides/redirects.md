@@ -23,8 +23,8 @@ In the above example "/" will automatically redirect to "/dashboard" and the plu
 Certain redirect situations may require a non-uniform mapping of parameters between routes. In those cases a more involved approach is necessary. In the below example a transformation of the parameter is necessary to ensure it matches the new route. On every route change we check to see if the route we're on is the old one. If it is we redirect to the new route and display the text "Redirecting..." for the split second the old route is still active.
 
 ```tsx codesandbox-react
-import { createRouter, defineRoute, Route, param } from "type-route";
-import React, { useState, useEffect } from "react";
+import { createRouter, defineRoute, param } from "type-route";
+import React, { useEffect } from "react";
 import ReactDOM from "react-dom";
 
 const { routes, useRoute, RouteProvider } = createRouter({
@@ -47,9 +47,9 @@ function App() {
 
   useEffect(() => {
     if (route.name === "old") {
-      routes.new.replace({
+      routes.new({
         yearOfBirth: new Date().getFullYear() - route.params.ageInYears
-      });
+      }).replace();
     }
   }, [route]);
 

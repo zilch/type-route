@@ -2,7 +2,7 @@
 // @ts-ignore
 window.__DEV__ = true;
 
-import React from "react";
+import React, { useEffect } from "react";
 import ReactDOM from "react-dom";
 import {
   createRouter,
@@ -30,6 +30,12 @@ export const { RouteProvider, useRoute, routes } = createRouter({
 
 function App() {
   const route = useRoute();
+
+  useEffect(() => {
+    if (route.name === "home") {
+      routes.user({ userId: "abc" }).replace();
+    }
+  }, [route]);
 
   return (
     <>

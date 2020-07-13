@@ -75,7 +75,15 @@ export function createRouter(...args: any[]): UmbrellaRouter {
 
   function RouteProvider(props: { children?: any }) {
     const [route, setRoute] = React.useState(router.session.getInitialRoute());
-    React.useEffect(() => router.session.listen(setRoute), []);
+    const unlistenRef = React.useRef<(() => void) | null>(null);
+
+    if (unlistenRef.current === null) {
+      unlistenRef.current = router.session.listen(setRoute);
+    }
+
+    React.useEffect(() => {
+      return () => unlistenRef.current?.();
+    }, []);
 
     React.useEffect(() => {
       attemptScrollToTop(route, opts.scrollToTop);
