@@ -33,4 +33,24 @@ describe("defineRoute", () => {
       "b",
     ]);
   });
+
+  it("extending routes with params should merge path", () => {
+    const fooRoute = defineRoute(
+      { a: param.path.string },
+      (p) => `/foo/${p.a}`
+    );
+    const barRoute = fooRoute.extend(
+      { b: param.path.string },
+      (p) => `/bar/${p.b}`
+    );
+
+    expect(Object.keys(barRoute["~internal"].params).sort()).toEqual([
+      "a",
+      "b",
+    ]);
+
+    expect(barRoute["~internal"].path({ a: "aa", b: "bb" })).toEqual([
+      "/foo/aa/bar/bb",
+    ]);
+  });
 });

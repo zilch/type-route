@@ -51,7 +51,7 @@ export function defineRoute(...args: any[]): UmbrellaRouteDef {
         },
         (x) => {
           const parentPathArray = asArray(
-            parent.path(filter(extensionParamNames))
+            parent.path(filter(parentParamNames))
           );
           const childPathArray = asArray(path(filter(extensionParamNames)));
 
