@@ -38,7 +38,7 @@ window.onload = function () {
               "@types/react": "=16.8.18",
               "react-dom": "=16.8.6",
               "@types/react-dom": "=16.8.4",
-              "type-route": "=0.5.3",
+              "type-route": "=0.5.4",
               tslib: "2.0.0",
             },
           },
@@ -61,7 +61,7 @@ window.onload = function () {
         "package.json": {
           content: {
             dependencies: {
-              "type-route": "=0.5.3",
+              "type-route": "=0.5.4",
             },
           },
         },

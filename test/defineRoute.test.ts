@@ -2,6 +2,7 @@ import { defineRoute } from "../src/defineRoute";
 import { param } from "../src/param";
 import { expectTypeRouteError } from "./expectTypeRouteError";
 import { TypeRouteError } from "../src/TypeRouteError";
+import { createRouter } from "../src/core";
 
 describe("defineRoute", () => {
   it("should not allow duplicate parameter names", () => {
@@ -52,5 +53,14 @@ describe("defineRoute", () => {
     expect(barRoute["~internal"].path({ a: "aa", b: "bb" })).toEqual([
       "/foo/aa/bar/bb",
     ]);
+  });
+
+  it("should be able to extend a path that is just a slash", () => {
+    const home = defineRoute("/");
+    expect(() => {
+      createRouter({
+        test: home.extend("/hi"),
+      });
+    }).not.toThrow();
   });
 });
