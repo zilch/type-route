@@ -145,7 +145,7 @@ defineRoute(
 ### Default
 
 Any `optional` parameter may also provide a `default` modifier. The default modifier will ensure that even if a value was not provided for a particular parameter it will
-appear to the application that a value was provided. Paginated list pages could benefit from this modifier, for example, to guarantee that a query parameter specifying the `page` has the default value 1 if not other value is provided.
+appear to the application that a value was provided. Paginated list pages could benefit from this modifier, for example, to guarantee that a query parameter specifying the `page` has the default value 1 if no other value is provided.
 
 ```tsx
 defineRoute(
