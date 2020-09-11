@@ -84,6 +84,7 @@ import { useRoute } from "./router";
 import { HomePage } from "./HomePage";
 import { UserListPage } from "./UserListPage";
 import { UserPage } from "./UserPage";
+import { Route } from "type-route";
 
 export function Page() {
   const route = useRoute();
