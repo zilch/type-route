@@ -96,6 +96,21 @@ describe("createLocation", () => {
       state: undefined,
     });
   });
+
+  test.only("default param", () => {
+    expectLocation(
+      {
+        value: param.query.optional.string.default("bar"),
+      },
+      () => `/foo`,
+      {}
+    ).toEqual({
+      fullPath: "/foo",
+      path: "/foo",
+      query: "value=bar",
+      state: undefined,
+    });
+  });
 });
 
 function expectLocation(

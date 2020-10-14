@@ -35,14 +35,16 @@ export function createLocation({
     state: {} as ParamWithContextCollection,
   };
 
-  for (const paramName in paramCollection) {
-    const paramValue = paramCollection[paramName];
+  for (const paramName in paramDefCollection) {
+    const paramDef = paramDefCollection[paramName];
+    const paramValue =
+      paramCollection[paramName] === undefined
+        ? paramDef["~internal"].default
+        : paramCollection[paramName];
 
     if (paramValue === undefined) {
       continue;
     }
-
-    const paramDef = paramDefCollection[paramName];
 
     const urlEncodeDefault =
       paramDef["~internal"].kind !== "state" && !paramDef["~internal"].trailing;

@@ -2,7 +2,7 @@
 // @ts-ignore
 window.__DEV__ = true;
 
-import React, { useEffect } from "react";
+import React from "react";
 import ReactDOM from "react-dom";
 import {
   createRouter,
@@ -16,7 +16,7 @@ export const { RouteProvider, useRoute, routes } = createRouter({
   home: defineRoute("/"),
   userList: defineRoute(
     {
-      page: param.query.optional.number,
+      page: param.query.optional.number.default(1),
     },
     () => "/user"
   ),
@@ -30,12 +30,6 @@ export const { RouteProvider, useRoute, routes } = createRouter({
 
 function App() {
   const route = useRoute();
-
-  useEffect(() => {
-    if (route.name === "home") {
-      routes.user({ userId: "abc" }).replace();
-    }
-  }, [route]);
 
   return (
     <>
@@ -75,7 +69,7 @@ function Navigation() {
   return (
     <nav>
       <a {...replaceLink(routes.home())}>Home</a>
-      <a {...routes.userList({ page: 1 }).link}>User List</a>
+      <a {...routes.userList().link}>User List</a>
       <a {...routes.user({ userId: "abc" }).link}>User "abc"</a>
     </nav>
   );
