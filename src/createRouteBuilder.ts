@@ -62,8 +62,21 @@ export function createRouteBuilder(
 
     const { arraySeparator, queryStringSerializer, baseUrl } = routerContext;
 
+    const paramsWithDefault = { ...params };
+
+    Object.keys(routeDef["~internal"].params).forEach((paramName) => {
+      const paramDef = routeDef["~internal"].params[paramName];
+
+      if (
+        paramsWithDefault[paramName] === undefined &&
+        paramDef["~internal"].default !== undefined
+      ) {
+        paramsWithDefault[paramName] = paramDef["~internal"].default;
+      }
+    });
+
     const location = createLocation({
-      paramCollection: params,
+      paramCollection: paramsWithDefault,
       paramDefCollection: routeDef["~internal"].params,
       arraySeparator,
       queryStringSerializer,
@@ -73,7 +86,7 @@ export function createRouteBuilder(
 
     return buildRoute({
       routeName,
-      params,
+      params: paramsWithDefault,
       location,
       routerContext,
     }) as any;
