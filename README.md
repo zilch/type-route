@@ -92,11 +92,11 @@ Wrap your entire application in the `<RouteProvider>` component returned by [`cr
 
 ```tsx
 import React from "react";
-import { useRoute } from "./router";
+import { useRoute, routes } from "./router";
 import { HomePage } from "./HomePage";
 import { UserListPage } from "./UserListPage";
 import { UserPage } from "./UserPage";
-import { Route } from "type-route";
+import type { Route } from "type-route";
 
 export function Page() {
   const route = useRoute();
@@ -115,7 +115,7 @@ function HomePage() {
   return <div>Home Page</div>;
 }
 
-function UserListPage({ route }: { route: Route<typeof routes.user> }) {
+function UserListPage({ route }: { route: Route<typeof routes.userList> }) {
   return <div>UserList Page: {route.params.page}</div>
 }
 
