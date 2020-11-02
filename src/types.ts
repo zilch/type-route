@@ -150,10 +150,12 @@ type OptionalOutputParamsNames<TParamDefCollection> = Exclude<
   RequiredOutputParamsNames<TParamDefCollection>
 >;
 
-export type ParamValue<TParamDef> = TParamDef extends ParamDef<
-  any,
-  infer TValue
->
+export type ParamValue<TParamDef> = TParamDef extends {
+  "~internal": {
+    array: boolean;
+    valueSerializer: ValueSerializer<infer TValue>;
+  };
+}
   ? TParamDef["~internal"]["array"] extends true
     ? TValue[]
     : TValue

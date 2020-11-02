@@ -1,6 +1,6 @@
 import { createRouter, defineRoute, param } from "../src/core";
 import { Any } from "ts-toolbelt";
-import { Link, Action } from "../src/types";
+import { Link, Action, ParamValue } from "../src/types";
 
 function expectTypes<A, B>(_: Any.Equals<Any.Compute<A>, Any.Compute<B>>) {}
 
@@ -72,5 +72,10 @@ describe("types", () => {
         }
       >(toBeEqual);
     }
+  });
+
+  it("should have correct default array parameter type", () => {
+    const expression = param.query.optional.array.string.default([]);
+    expectTypes<ParamValue<typeof expression>, string[]>(toBeEqual);
   });
 });
