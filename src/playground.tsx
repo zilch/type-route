@@ -16,7 +16,7 @@ export const { RouteProvider, useRoute, routes } = createRouter({
   home: defineRoute("/"),
   userList: defineRoute(
     {
-      test: param.query.optional.array.string.default([]),
+      test: param.query.optional.array.string.default(["Hello"]),
       page: param.query.optional.number.default(1),
     },
     () => "/user"
@@ -55,8 +55,11 @@ type UserListProps = {
 };
 
 function UserListPage({ route }: UserListProps) {
-  console.log(route.params.test);
-  return <div>UserList - Page: {route.params.page}</div>;
+  return (
+    <div>
+      UserList - Page: {route.params.page} {JSON.stringify(route.params.test)}
+    </div>
+  );
 }
 
 type UserProps = {

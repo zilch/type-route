@@ -11,7 +11,7 @@ import { typeOf } from "./typeOf";
 
 type ParamWithContextCollection = Record<
   string,
-  { valueSerializerId?: string; array: boolean; value: string }
+  { valueSerializerId?: string; array: boolean; value: string | null }
 >;
 
 export function createLocation({
@@ -51,7 +51,7 @@ export function createLocation({
     const urlEncode =
       paramDef["~internal"].valueSerializer.urlEncode ?? urlEncodeDefault;
 
-    let value: string;
+    let value: string | null;
 
     if (paramDef["~internal"].array) {
       if (!Array.isArray(paramValue)) {
@@ -66,9 +66,12 @@ export function createLocation({
         }
       }
 
-      value = (paramValue as unknown[])
-        .map((part) => stringify(paramDef, part, urlEncode))
-        .join(arraySeparator);
+      value =
+        (paramValue as unknown[]).length === 0
+          ? null
+          : (paramValue as unknown[])
+              .map((part) => stringify(paramDef, part, urlEncode))
+              .join(arraySeparator);
     } else {
       value = stringify(paramDef, paramValue, urlEncode);
     }

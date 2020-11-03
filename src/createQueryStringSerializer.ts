@@ -23,16 +23,12 @@ export function createQueryStringSerializer(
 
   return {
     parse: (raw) => {
-      const queryParams: Record<string, string> = {};
+      const queryParams: Record<string, string | null> = {};
 
       for (const part of raw.split("&")) {
         const [rawParamName, rawParamValue, ...rest] = part.split("=");
 
-        if (
-          rawParamName === undefined ||
-          rawParamValue === undefined ||
-          rest.length > 0
-        ) {
+        if (rawParamName === undefined || rest.length > 0) {
           continue;
         }
 
@@ -42,7 +38,9 @@ export function createQueryStringSerializer(
             : rawParamName
         );
 
-        if (queryParams[key] && multiKey) {
+        if (rawParamValue === undefined) {
+          queryParams[key] = null;
+        } else if (queryParams[key] && multiKey) {
           queryParams[key] += `${arraySeparator}${rawParamValue}`;
         } else {
           queryParams[key] = rawParamValue;
@@ -60,6 +58,10 @@ export function createQueryStringSerializer(
             ? `${encodedName}${arrayKeySuffix}`
             : encodedName;
           const value = queryParams[name].value;
+
+          if (value === null) {
+            return key;
+          }
 
           if (queryParams[name].array && multiKey) {
             const valueParts = value.split(arraySeparator);

@@ -8,14 +8,18 @@ export function getQueryMatch(
   queryStringSerializer: QueryStringSerializer,
   arraySeparator: string
 ) {
-  let object = {};
+  let object: Record<string, string | null> = {};
 
   if (query) {
     object = queryStringSerializer.parse(query);
 
     if (__DEV__) {
       assert("[QueryStringSerializer].parse", [
-        assert.collectionOfType("string", "parsedQueryString", object),
+        assert.collectionOfType(
+          ["string", "null"],
+          "parsedQueryString",
+          object
+        ),
       ]);
     }
   }

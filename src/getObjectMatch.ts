@@ -7,7 +7,7 @@ export function getObjectMatch({
   urlEncodeDefault,
   arraySeparator,
 }: {
-  object: Record<string, string>;
+  object: Record<string, string | null>;
   paramDefs: UmbrellaParamDefCollection;
   urlEncodeDefault: boolean;
   arraySeparator: string;
@@ -34,7 +34,15 @@ export function getObjectMatch({
 
     let value;
 
-    if (paramDef["~internal"].array) {
+    if (raw === null) {
+      if (paramDef["~internal"].array) {
+        value = [];
+      } else if (paramDef["~internal"].optional) {
+        continue;
+      } else {
+        return false;
+      }
+    } else if (paramDef["~internal"].array) {
       value = raw.split(arraySeparator).map((part) => {
         return paramDef["~internal"].valueSerializer.parse(
           paramDef["~internal"].valueSerializer.urlEncode ?? urlEncodeDefault
