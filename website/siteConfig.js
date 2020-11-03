@@ -13,7 +13,7 @@ const siteConfig = {
     { search: true },
     { doc: "introduction/getting-started", label: "Docs" },
     { href: "https://github.com/typehero/type-route", label: "GitHub" },
-    { doc: "guides/previous-release-docs", label: "v0.5.6" },
+    { doc: "guides/previous-release-docs", label: "v0.6.0" },
     // {
     //   href: "https://typehero.org/ready-for-production-type-route-v1/01",
     //   label: "Read Introductory Blog Post",
