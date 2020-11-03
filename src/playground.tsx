@@ -74,7 +74,7 @@ function Navigation() {
   return (
     <nav>
       <a {...replaceLink(routes.home())}>Home</a>
-      <a {...routes.userList().link}>User List</a>
+      <a {...routes.userList({ test: [] }).link}>User List</a>
       <a {...routes.user({ userId: "abc" }).link}>User "abc"</a>
     </nav>
   );

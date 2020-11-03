@@ -107,7 +107,7 @@ describe("createLocation", () => {
     ).toEqual({
       fullPath: "/foo",
       path: "/foo",
-      query: "value=bar",
+      query: undefined,
       state: undefined,
     });
   });

@@ -76,7 +76,7 @@ export function createRouteBuilder(
     });
 
     const location = createLocation({
-      paramCollection: paramsWithDefault,
+      paramCollection: params,
       paramDefCollection: routeDef["~internal"].params,
       arraySeparator,
       queryStringSerializer,
