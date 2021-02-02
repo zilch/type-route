@@ -17,7 +17,7 @@ The `link` property is an object containing both an `href` property and an `onCl
 ```tsx
 const { routes } = createRouter({
   home: defineRoute("/"),
-  post: defineRoute({ postId: "path.param.string" }, p => `/post/${p.postId}`)
+  post: defineRoute({ postId: param.path.string }, p => `/post/${p.postId}`)
 });
 
 routes.home().link; // returns { href: "/", onClick: Function }
