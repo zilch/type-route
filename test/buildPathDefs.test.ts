@@ -150,10 +150,14 @@ describe("buildPathDef", () => {
         (p) => `/#hello${p.hi}%/there`
       );
     } catch (error) {
-      expect(error.message).toContain(
-        // eslint-disable-next-line no-template-curly-in-string
-        "The path segment `#hello${p.hi}%` has the following invalid characters: #, %"
-      );
+      if (error instanceof Error) {
+        expect(error.message).toContain(
+          // eslint-disable-next-line no-template-curly-in-string
+          "The path segment `#hello${p.hi}%` has the following invalid characters: #, %"
+        );
+      } else {
+        fail("expected error to be of type Error");
+      }
     }
   });
 

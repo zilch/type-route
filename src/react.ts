@@ -34,23 +34,22 @@ export {
   RouterOpts,
 } from "./types";
 
-type Router<
-  TRouteDefCollection extends { [routeName: string]: any }
-> = CoreRouter<TRouteDefCollection> & {
-  /**
-   * React hook for retrieving the current route.
-   *
-   * @see https://typehero.org/type-route/docs/api-reference/router/use-route
-   */
-  useRoute: () => RouteDefCollectionRoute<TRouteDefCollection>;
+type Router<TRouteDefCollection extends { [routeName: string]: any }> =
+  CoreRouter<TRouteDefCollection> & {
+    /**
+     * React hook for retrieving the current route.
+     *
+     * @see https://typehero.org/type-route/docs/api-reference/router/use-route
+     */
+    useRoute: () => RouteDefCollectionRoute<TRouteDefCollection>;
 
-  /**
-   * React component which connects React to Type Route and provides the current route to the rest of the application.
-   *
-   * @see https://typehero.org/type-route/docs/api-reference/router/route-provider
-   */
-  RouteProvider: (props: { children?: any }) => any;
-};
+    /**
+     * React component which connects React to Type Route and provides the current route to the rest of the application.
+     *
+     * @see https://typehero.org/type-route/docs/api-reference/router/route-provider
+     */
+    RouteProvider: (props: { children?: any }) => any;
+  };
 type UmbrellaRouter = Router<UmbrellaRouteDefCollection>;
 
 export function createRouter<
@@ -75,15 +74,8 @@ export function createRouter(...args: any[]): UmbrellaRouter {
 
   function RouteProvider(props: { children?: any }) {
     const [route, setRoute] = React.useState(router.session.getInitialRoute());
-    const unlistenRef = React.useRef<(() => void) | null>(null);
 
-    if (unlistenRef.current === null) {
-      unlistenRef.current = router.session.listen(setRoute);
-    }
-
-    React.useEffect(() => {
-      return () => unlistenRef.current?.();
-    }, []);
+    React.useLayoutEffect(() => router.session.listen(setRoute), []);
 
     React.useEffect(() => {
       attemptScrollToTop(route, opts.scrollToTop);

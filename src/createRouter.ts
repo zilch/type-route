@@ -5,7 +5,6 @@ import {
   UmbrellaRouteBuilder,
   UmbrellaCoreRouter,
   UmbrellaRoute,
-  LocationState,
   UmbrellaRouteDefCollection,
   RouterContext,
   UmbrellaBlocker,
@@ -42,7 +41,6 @@ export function createRouter<
 ): CoreRouter<TRouteDefCollection>;
 export function createRouter(...args: any[]): UmbrellaCoreRouter {
   const { routeDefs, opts } = parseArgs(args);
-  const routes = createRouteBuilderCollection(getRouterContext);
 
   const navigationHandlerManager = createNavigationHandlerManager({
     startListening: () => {
@@ -77,7 +75,7 @@ export function createRouter(...args: any[]): UmbrellaCoreRouter {
       arraySeparator,
     });
 
-  let history: History<LocationState>;
+  let history: History;
   let unlisten: (() => void) | undefined;
   let skipNextEnvironmentTriggeredNavigation = false;
   let skipHandlingNextApplicationTriggeredNavigation = false;
@@ -86,6 +84,8 @@ export function createRouter(...args: any[]): UmbrellaCoreRouter {
   let blockerCollection: UmbrellaBlocker[] = [];
 
   applySessionOpts(opts.session);
+
+  const routes = createRouteBuilderCollection(getRouterContext);
 
   const router: UmbrellaCoreRouter = {
     routes,
@@ -309,7 +309,7 @@ export function createRouter(...args: any[]): UmbrellaCoreRouter {
       navigate,
       history,
       routeDefs,
-      routes,
+      getRoutes: () => routes,
       baseUrl,
     };
   }

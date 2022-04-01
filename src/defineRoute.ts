@@ -102,9 +102,7 @@ function assertDefineRouteOrExtendArgs(functionName: string, args: any[]) {
   }
 }
 
-function parseArgs(
-  args: any[]
-): {
+function parseArgs(args: any[]): {
   params: UmbrellaParamDefCollection;
   path: PathFn<UmbrellaParamDefCollection>;
 } {

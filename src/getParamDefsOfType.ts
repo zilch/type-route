@@ -9,9 +9,8 @@ export function getParamDefsOfType<TParamType extends ParamDefKind>(
   Object.keys(paramDefCollection).forEach((name) => {
     const paramDef = paramDefCollection[name];
     if (paramDef["~internal"].kind === type) {
-      filteredParamDefCollection[name] = paramDef as ParamDefCollection<
-        TParamType
-      >[string];
+      filteredParamDefCollection[name] =
+        paramDef as ParamDefCollection<TParamType>[string];
     }
   });
 

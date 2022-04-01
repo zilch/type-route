@@ -5,7 +5,9 @@ export function getMatchingRoute(
   location: RouterLocation,
   routerContext: RouterContext
 ): { route: UmbrellaRoute; primaryPath: boolean } {
-  const { routes, queryStringSerializer, arraySeparator } = routerContext;
+  const { getRoutes, queryStringSerializer, arraySeparator } = routerContext;
+
+  const routes = getRoutes();
 
   let nonExactMatch: (Match & { routeName: string }) | false = false;
 

@@ -2,7 +2,7 @@
 
 # dependencies
 /node_modules
-/.cache
+/.parcel-cache
 /dist
 /coverage
 /parcel-dist

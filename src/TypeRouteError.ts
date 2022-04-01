@@ -130,10 +130,11 @@ export const TypeRouteError = buildErrorCollection({
     },
   },
 
-  Optional_or_trailing_path_parameters_may_only_appear_in_the_last_path_segment: {
-    errorCode: 1008,
-    getDetails: getBuildPathDefErrorMessage,
-  },
+  Optional_or_trailing_path_parameters_may_only_appear_in_the_last_path_segment:
+    {
+      errorCode: 1008,
+      getDetails: getBuildPathDefErrorMessage,
+    },
 
   All_path_parameters_must_be_used_in_path_construction: {
     errorCode: 1009,
@@ -147,26 +148,28 @@ export const TypeRouteError = buildErrorCollection({
     },
   },
 
-  Path_parameter_name_must_not_include_curly_brackets_dollar_signs_or_the_forward_slash_character: {
-    errorCode: 1010,
-    getDetails(routeName: string, paramName: string) {
-      return [
-        getBuildPathDefRouteNameMessage(routeName),
-        `The $ { } or / character was used in this parameter name: ${paramName}`,
-      ];
+  Path_parameter_name_must_not_include_curly_brackets_dollar_signs_or_the_forward_slash_character:
+    {
+      errorCode: 1010,
+      getDetails(routeName: string, paramName: string) {
+        return [
+          getBuildPathDefRouteNameMessage(routeName),
+          `The $ { } or / character was used in this parameter name: ${paramName}`,
+        ];
+      },
     },
-  },
 
-  Extension_route_definition_parameter_names_may_not_be_the_same_as_base_route_definition_parameter_names: {
-    errorCode: 1011,
-    getDetails(duplicateParameterNames: string[]) {
-      return [
-        `The following parameter names were used in both the base route definition and the extension: ${duplicateParameterNames.join(
-          ", "
-        )}`,
-      ];
+  Extension_route_definition_parameter_names_may_not_be_the_same_as_base_route_definition_parameter_names:
+    {
+      errorCode: 1011,
+      getDetails(duplicateParameterNames: string[]) {
+        return [
+          `The following parameter names were used in both the base route definition and the extension: ${duplicateParameterNames.join(
+            ", "
+          )}`,
+        ];
+      },
     },
-  },
 
   Expected_type_does_not_match_actual_type: {
     errorCode: 1012,
@@ -223,14 +226,15 @@ export const TypeRouteError = buildErrorCollection({
     },
   },
 
-  Query_string_array_format_and_custom_query_string_serializer_may_not_both_be_provided: {
-    errorCode: 1014,
-    getDetails() {
-      return [
-        "You may not provide both options.arrayFormat.queryString and options.queryStringSerializer. These options are not compatible.",
-      ];
+  Query_string_array_format_and_custom_query_string_serializer_may_not_both_be_provided:
+    {
+      errorCode: 1014,
+      getDetails() {
+        return [
+          "You may not provide both options.arrayFormat.queryString and options.queryStringSerializer. These options are not compatible.",
+        ];
+      },
     },
-  },
 
   Expected_length_of_array_does_match_actual_length: {
     errorCode: 1015,
