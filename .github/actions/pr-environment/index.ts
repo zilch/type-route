@@ -14,7 +14,7 @@ async function main() {
   const pullRequest = github.context.payload.pull_request;
 
   if (pullRequest === undefined) {
-    core.info("This doesn't appear to be a pull_request. Skipping.")
+    core.info("This doesn't appear to be a pull_request. Skipping.");
     return;
   }
 
@@ -55,13 +55,13 @@ async function main() {
               },
               dependencies: {
                 ...packageJson.dependencies,
-                "parcel-bundler": "^1.6.1",
-                react: "=16.8.6",
-                "@types/react": "=16.8.18",
-                "react-dom": "=16.8.6",
-                "@types/react-dom": "=16.8.4",
-                typescript: "=3.8.3",
-                "tslib": "2.0.0",
+                parcel: "^2.2.0",
+                react: "=18.0.0",
+                "@types/react": "=17.0.43",
+                "react-dom": "=18.0.0",
+                "@types/react-dom": "=17.0.14",
+                typescript: "=4.6.3",
+                tslib: "2.3.1",
               },
             },
           },

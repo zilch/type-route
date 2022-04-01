@@ -20,9 +20,6 @@
   ],
   "sideEffects": false,
   "homepage": "https://typehero.org/type-route",
-  "dependencies": {
-    "history": "^5.0.0"
-  },
   "authors": [
     "Braden Snell"
   ],
@@ -38,24 +35,27 @@
     "typescript"
   ],
   "scripts": {
-    "start": "parcel ./src/playground.html --out-dir parcel-dist",
+    "start": "parcel serve ./src/playground.html --dist-dir parcel-dist",
     "build": "./build.sh",
     "test": "tsdx test --coverage --collectCoverageFrom=src/**/*.ts --collectCoverageFrom=!src/global.d.ts",
     "lint": "eslint --ext ts,tsx ./src ./test --max-warnings=0"
   },
   "devDependencies": {
-    "@types/jest": "^25.2.1",
-    "@types/react": "16.8.8",
-    "@types/react-dom": "16.8.2",
-    "parcel-bundler": "^1.12.4",
-    "prettier": "^2.0.5",
-    "react": "^16.8.4",
-    "react-dom": "^16.8.4",
-    "rollup": "^2.8.2",
-    "rollup-plugin-dts": "^1.4.1",
-    "ts-toolbelt": "^6.3.11",
-    "tsdx": "^0.13.2",
-    "tslib": "^2.0.0",
-    "typescript": "^3.9.5"
+    "@types/jest": "^27.4.1",
+    "@types/react": "^17.0.43",
+    "@types/react-dom": "^17.0.14",
+    "parcel": "^2.2.0",
+    "prettier": "^2.6.1",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "rollup": "^2.70.1",
+    "rollup-plugin-dts": "^4.2.0",
+    "ts-toolbelt": "^9.6.0",
+    "tsdx": "^0.14.1",
+    "tslib": "^2.3.1",
+    "typescript": "^4.6.3"
+  },
+  "dependencies": {
+    "history": "^5.3.0"
   }
 }

@@ -1,14 +1,11 @@
-import { RouterLocation, LocationState } from "./types";
+import { RouterLocation } from "./types";
 import { Location as HistoryLocation } from "history";
 import { stringUtils } from "./stringUtils";
 
 const { startsWith } = stringUtils;
 
 export function convertToRouterLocationFromHistoryLocation(
-  rawLocation: Pick<
-    HistoryLocation<LocationState>,
-    "pathname" | "search" | "state"
-  >,
+  rawLocation: Pick<HistoryLocation, "pathname" | "search" | "state">,
   baseUrl: string
 ): RouterLocation {
   return {
@@ -23,6 +20,9 @@ export function convertToRouterLocationFromHistoryLocation(
         ? rawLocation.search.slice(1)
         : rawLocation.search
       : undefined,
-    state: rawLocation.state?.state || undefined,
+    state:
+      typeof rawLocation.state === "object" && rawLocation.state !== null
+        ? (rawLocation.state as { state?: Record<string, string> }).state
+        : undefined,
   };
 }

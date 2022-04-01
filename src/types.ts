@@ -90,7 +90,7 @@ export type RouterContext = {
   arraySeparator: string;
   history: History;
   routeDefs: UmbrellaRouteDefCollection;
-  routes: Record<string, UmbrellaRouteBuilder>;
+  getRoutes: () => Record<string, UmbrellaRouteBuilder>;
   baseUrl: string;
 };
 
@@ -298,22 +298,17 @@ export type ClickEvent = {
 
 export type Action = "push" | "replace" | "pop";
 
-export type LocationState = {
-  state?: Record<string, string>;
-} | null;
-
-export type RouteDefCollectionRoute<
-  TRouteDefCollection
-> = TRouteDefCollection extends Record<string, RouteDef<any>>
-  ?
-      | {
-          [TRouteName in keyof TRouteDefCollection]: Route<
-            TRouteName,
-            TRouteDefCollection[TRouteName]["~internal"]["params"]
-          >;
-        }[keyof TRouteDefCollection]
-      | NotFoundRoute
-  : never;
+export type RouteDefCollectionRoute<TRouteDefCollection> =
+  TRouteDefCollection extends Record<string, RouteDef<any>>
+    ?
+        | {
+            [TRouteName in keyof TRouteDefCollection]: Route<
+              TRouteName,
+              TRouteDefCollection[TRouteName]["~internal"]["params"]
+            >;
+          }[keyof TRouteDefCollection]
+        | NotFoundRoute
+    : never;
 
 export type NotFoundRoute = Route<false, {}>;
 
@@ -382,9 +377,8 @@ export type UmbrellaRoute = Route<string | false, Record<string, any>>;
 export type NavigationHandler<TRouteDefCollection> = (
   route: RouteDefCollectionRoute<TRouteDefCollection>
 ) => void;
-export type UmbrellaNavigationHandler = NavigationHandler<
-  UmbrellaRouteDefCollection
->;
+export type UmbrellaNavigationHandler =
+  NavigationHandler<UmbrellaRouteDefCollection>;
 
 type Unblock = () => void;
 

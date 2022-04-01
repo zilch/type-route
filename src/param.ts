@@ -138,26 +138,23 @@ function getParamDefKindSection<
     };
   }
 
-  type GetParamDefResult<
-    T extends ParamDef<TKind>
-  > = T["~internal"]["optional"] extends true
-    ? {
-        ["~internal"]: T["~internal"];
-        default(
-          value: ParamValue<T>
-        ): {
-          ["~internal"]: {
-            type: "ParamDef";
-            kind: T["~internal"]["kind"];
-            array: T["~internal"]["array"];
-            valueSerializer: T["~internal"]["valueSerializer"];
-            optional: T["~internal"]["optional"];
-            default: ParamValue<T>;
-            trailing: T["~internal"]["trailing"];
+  type GetParamDefResult<T extends ParamDef<TKind>> =
+    T["~internal"]["optional"] extends true
+      ? {
+          ["~internal"]: T["~internal"];
+          default(value: ParamValue<T>): {
+            ["~internal"]: {
+              type: "ParamDef";
+              kind: T["~internal"]["kind"];
+              array: T["~internal"]["array"];
+              valueSerializer: T["~internal"]["valueSerializer"];
+              optional: T["~internal"]["optional"];
+              default: ParamValue<T>;
+              trailing: T["~internal"]["trailing"];
+            };
           };
-        };
-      }
-    : T;
+        }
+      : T;
 
   function getParamDef<T extends ParamDef<TKind>>({
     "~internal": internal,

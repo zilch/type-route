@@ -3,7 +3,7 @@
 window.__DEV__ = true;
 
 import React from "react";
-import ReactDOM from "react-dom";
+import ReactDOM from "react-dom/client";
 import {
   createRouter,
   defineRoute,
@@ -93,9 +93,8 @@ function replaceLink(to: Route<typeof routes>) {
 
 const container = document.createElement("div");
 document.body.appendChild(container);
-ReactDOM.render(
+ReactDOM.createRoot(container).render(
   <RouteProvider>
     <App />
-  </RouteProvider>,
-  container
+  </RouteProvider>
 );
