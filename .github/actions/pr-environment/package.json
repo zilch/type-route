@@ -6,7 +6,7 @@
   "dependencies": {
     "@actions/core": "^1.2.6",
     "@actions/github": "^2.0.0",
-    "got": "^10.2.1",
-    "@zeit/ncc": "^0.20.5"
+    "@zeit/ncc": "^0.22.3",
+    "got": "^10.2.1"
   }
 }
