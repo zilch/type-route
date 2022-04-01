@@ -135,14 +135,12 @@ export function getPathMatch({
         }
       }
 
-      if (pathSegmentDef.namedParamDef["~internal"].trailing) {
-        if (pathSegmentDef.leading === "") {
-          value = `/${value}`;
-        }
-
-        if (pathHasTrailingSlash && pathSegmentDef.trailing === "") {
-          value = `${value}/`;
-        }
+      if (
+        pathSegmentDef.namedParamDef["~internal"].trailing &&
+        pathHasTrailingSlash &&
+        pathSegmentDef.trailing === ""
+      ) {
+        value = `${value}/`;
       }
 
       params[pathSegmentDef.namedParamDef.paramName] = value;

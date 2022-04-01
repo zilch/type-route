@@ -52,7 +52,7 @@ describe("getPathMatch", () => {
       "/docs/this/is/the/page"
     ).toEqual({
       params: {
-        docsPage: "/this/is/the/page",
+        docsPage: "this/is/the/page",
       },
       numExtraneousParams: 0,
       primaryPath: true,
@@ -196,7 +196,7 @@ describe("getPathMatch", () => {
       "/hello/there/"
     ).toEqual({
       params: {
-        hi: "/there/",
+        hi: "there/",
       },
       numExtraneousParams: 0,
       primaryPath: true,
