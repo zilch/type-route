@@ -13,7 +13,7 @@ const siteConfig = {
     { search: true },
     { doc: "introduction/getting-started", label: "Docs" },
     { href: "https://github.com/typehero/type-route", label: "GitHub" },
-    { doc: "guides/previous-release-docs", label: "v0.6.0" },
+    { doc: "guides/previous-release-docs", label: "v0.7.1" },
     // {
     //   href: "https://zilch.dev/ready-for-production-type-route-v1/01",
     //   label: "Read Introductory Blog Post",
