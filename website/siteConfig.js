@@ -1,12 +1,12 @@
 const siteConfig = {
   title: "Type Route", // Title for your website.
   tagline: "A flexible, type safe routing library.",
-  url: "https://typehero.org", // Your website URL
+  url: "https://zilch.dev", // Your website URL
   baseUrl: "/type-route/",
 
   // Used for publishing and more
   projectName: "type-route",
-  organizationName: "type-route",
+  organizationName: "zilch",
 
   // For no header links in the top nav bar -> headerLinks: [],
   headerLinks: [
@@ -57,7 +57,7 @@ const siteConfig = {
   gaTrackingId: "UA-170799500-1",
   gaGtag: true,
 
-  editUrl: "https://github.com/typehero/type-route/edit/master/docs/",
+  editUrl: "https://github.com/zilch/type-route/edit/master/docs/",
 };
 
 module.exports = siteConfig;

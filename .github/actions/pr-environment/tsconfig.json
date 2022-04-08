@@ -1,8 +1,0 @@
-{
-  "extends": "../../../tsconfig.json",
-  "include": ["index.ts"],
-  "compilerOptions": {
-    "declaration": false,
-    "resolveJsonModule": true
-  }
-}

@@ -51,10 +51,3 @@ jobs:
           fi;
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-  pr-environment:
-    name: Create PR Environment
-    if: github.event_name	== 'pull_request'
-    runs-on: ubuntu-18.04
-    steps:
-      - uses: actions/checkout@v2
-      - uses: ./.github/actions/pr-environment

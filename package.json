@@ -7,11 +7,11 @@
   "description": "A flexible, type safe routing library.",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/typehero/type-route.git"
+    "url": "git+https://github.com/zilch/type-route.git"
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/typehero/type-route/issues"
+    "url": "https://github.com/zilch/type-route/issues"
   },
   "files": [
     "dist",
