@@ -233,7 +233,7 @@ a:hover {
   }
 }
 
-.headerWrapper a[href="https://typehero.org/ready-for-production-type-route-v1/01"] {
+.headerWrapper a[href="https://zilch.dev/ready-for-production-type-route-v1/01"] {
   background: #484761 !important;
   border-radius: 3px;
   color: white !important;
@@ -244,7 +244,7 @@ a:hover {
   padding: 0px 15px !important;
 }
 
-.headerWrapper a[href="https://typehero.org/ready-for-production-type-route-v1/01"]::after {
+.headerWrapper a[href="https://zilch.dev/ready-for-production-type-route-v1/01"]::after {
   content: '→';
   margin-left: 8px;
 }

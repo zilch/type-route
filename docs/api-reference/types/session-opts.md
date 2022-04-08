@@ -15,7 +15,7 @@ type MemoryHistorySessionOpts = {
    * An array of urls representing the what items should
    * start in history when the router is created. This can be useful
    * in a variety of scenarios including server-side rendering
-   * (https://typehero.org/type-route/docs/guides/server-side-rendering).
+   * (https://zilch.dev/type-route/docs/guides/server-side-rendering).
    */
   initialEntries?: string[];
 

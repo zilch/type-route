@@ -6,7 +6,7 @@ Type Route is a flexible, type safe routing library built on top of the same [co
 
 > **Type Route was designed with excellent React integration in mind** but isn't coupled to a specific UI framework. Most code examples in the documentation use React, but the general principles covered apply regardless of framework.
 
-Continue reading this introduction for a quick overview of how to start using Type Route in your React project. Find a full <b>runnable</b> version of the below introduction on the [Simple React Example](https://typehero.org/type-route/docs/introduction/simple-react-example) page or see the [Type Route without React](https://typehero.org/type-route/docs/guides/type-route-without-react) guide to learn how to use Type Route without React.
+Continue reading this introduction for a quick overview of how to start using Type Route in your React project. Find a full <b>runnable</b> version of the below introduction on the [Simple React Example](https://zilch.dev/type-route/docs/introduction/simple-react-example) page or see the [Type Route without React](https://zilch.dev/type-route/docs/guides/type-route-without-react) guide to learn how to use Type Route without React.
 
 ## Install
 
@@ -42,7 +42,7 @@ export const { RouteProvider, useRoute, routes } = createRouter({
 });
 ```
 
-Best practice is to immediately destructure the result of [`createRouter`](https://typehero.org/type-route/docs/api-reference/router/create-router) into the properties you'll be using in your application. The [`createRouter`](https://typehero.org/type-route/docs/api-reference/router/create-router) function accepts an object with route names and route definitions created via [`defineRoute`](https://typehero.org/type-route/docs/api-reference/route-definition/define-route) and returns a new router.
+Best practice is to immediately destructure the result of [`createRouter`](https://zilch.dev/type-route/docs/api-reference/router/create-router) into the properties you'll be using in your application. The [`createRouter`](https://zilch.dev/type-route/docs/api-reference/router/create-router) function accepts an object with route names and route definitions created via [`defineRoute`](https://zilch.dev/type-route/docs/api-reference/route-definition/define-route) and returns a new router.
 
 ## Step 2: Connect Router to Application
 
@@ -72,7 +72,7 @@ ReactDOM.render(
 );
 ```
 
-Wrap your entire application in the `<RouteProvider>` component returned by [`createRouter`](https://typehero.org/type-route/docs/api-reference/router/create-router).
+Wrap your entire application in the `<RouteProvider>` component returned by [`createRouter`](https://zilch.dev/type-route/docs/api-reference/router/create-router).
 
 ## Step 3: Display Current Route
 
@@ -144,10 +144,10 @@ export function Navigation() {
 }
 ```
 
-The [`link`](https://typehero.org/type-route/docs/api-reference/route/link) property is an object with an `href` attribute and an `onClick` function. You need both to [properly render](https://typehero.org/type-route/docs/guides/rendering-links) a link in a single page application. Immediately spreading the `link` object into the properties of an `<a>` tag makes usage simple. [Programmatic navigation](https://typehero.org/type-route/docs/guides/programmatic-navigation) is possible with the [`push`](https://typehero.org/type-route/docs/api-reference/route/push) and [`replace`](https://typehero.org/type-route/docs/api-reference/route/replace) functions of a specific route. Type Route also supports [extending the behavior of a link](https://typehero.org/type-route/docs/guides/custom-link-behavior) to cover more complex scenarios.
+The [`link`](https://zilch.dev/type-route/docs/api-reference/route/link) property is an object with an `href` attribute and an `onClick` function. You need both to [properly render](https://zilch.dev/type-route/docs/guides/rendering-links) a link in a single page application. Immediately spreading the `link` object into the properties of an `<a>` tag makes usage simple. [Programmatic navigation](https://zilch.dev/type-route/docs/guides/programmatic-navigation) is possible with the [`push`](https://zilch.dev/type-route/docs/api-reference/route/push) and [`replace`](https://zilch.dev/type-route/docs/api-reference/route/replace) functions of a specific route. Type Route also supports [extending the behavior of a link](https://zilch.dev/type-route/docs/guides/custom-link-behavior) to cover more complex scenarios.
 
 ## Next Steps
 
 Hopefully that was enough to point you in the right direction!
 
-If you need more guidance there is a full runnable version of the above code on the [Simple React Example](https://typehero.org/type-route/docs/introduction/simple-react-example) page. The **Guides** section of the documentation has detailed overviews and examples for most use cases. Additionally, the **API Reference** section has descriptions and examples for each part of the API.
+If you need more guidance there is a full runnable version of the above code on the [Simple React Example](https://zilch.dev/type-route/docs/introduction/simple-react-example) page. The **Guides** section of the documentation has detailed overviews and examples for most use cases. Additionally, the **API Reference** section has descriptions and examples for each part of the API.
