@@ -9,6 +9,7 @@ The router `session` object has utilities used for interacting with the browser'
 type RouterSession = {
   push(href: string, state?: any): boolean;
   replace(href: string, state?: any): boolean;
+  block(blocker: Blocker): () => void;
   getInitialRoute(): Route;
   back(amount?: number): void;
   forward(amount?: number): void;
