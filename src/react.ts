@@ -7,7 +7,7 @@ import {
 } from "./types";
 import { createRouter as coreCreateRouter, parseArgs } from "./createRouter";
 import { TypeRouteError } from "./TypeRouteError";
-import React from "react";
+import * as React from "react";
 import { attemptScrollToTop } from "./attemptScrollToTop";
 
 if (typeof __DEV__ === "boolean" && __DEV__) {
