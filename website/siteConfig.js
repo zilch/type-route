@@ -10,7 +10,6 @@ const siteConfig = {
 
   // For no header links in the top nav bar -> headerLinks: [],
   headerLinks: [
-    { search: true },
     { doc: "introduction/getting-started", label: "Docs" },
     { href: "https://github.com/typehero/type-route", label: "GitHub" },
     { doc: "guides/previous-release-docs", label: "v0.7.1" },
