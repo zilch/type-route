@@ -4,7 +4,7 @@
     "build": "rm -rf ./dist && ncc build ./index.ts"
   },
   "dependencies": {
-    "@actions/core": "^1.2.6",
+    "@actions/core": "^1.9.1",
     "@actions/github": "^2.0.0",
     "@types/semver": "^7.1.0",
     "@zeit/ncc": "^0.20.5",
