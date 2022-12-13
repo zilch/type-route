@@ -12,7 +12,7 @@ const siteConfig = {
   headerLinks: [
     { doc: "introduction/getting-started", label: "Docs" },
     { href: "https://github.com/typehero/type-route", label: "GitHub" },
-    { doc: "guides/previous-release-docs", label: "v0.7.1" },
+    { doc: "guides/previous-release-docs", label: "v1.0.0" },
     // {
     //   href: "https://zilch.dev/ready-for-production-type-route-v1/01",
     //   label: "Read Introductory Blog Post",
