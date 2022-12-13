@@ -13,7 +13,7 @@
   },
   "devDependencies": {
     "codesandbox": "^2.1.6",
-    "docusaurus": "^1.10.0",
+    "docusaurus": "^1.14.7",
     "webpack": "^4.32.1",
     "webpack-cli": "^3.3.2"
   }
