@@ -6,7 +6,7 @@
   </a>
 </p>
 <br/>
-<h1 align="center">Type Route <sup>beta</sup></h1>
+<h1 align="center">Type Route</h1>
 <p align="center">
 <a href="#getting-started">Quick Start</a>&nbsp;&nbsp;·&nbsp;&nbsp;<a href="https://zilch.dev/type-route">Docs</a>
 </p>
@@ -14,15 +14,13 @@
 
 ## Getting Started
 
-Type Route is a flexible, type safe routing library built on top of the same [core library](https://github.com/ReactTraining/history) that powers React Router. 
+Type Route is a flexible, type safe routing library built on top of the same [core library](https://github.com/ReactTraining/history) that powers React Router.
 
 > **Type Route was designed with excellent React integration in mind** but isn't coupled to a specific UI framework. Most code examples in the documentation use React, but the general principles covered apply regardless of framework.
 
 Continue reading this introduction for a quick overview of how to start using Type Route in your React project. Find a full <b>runnable</b> version of the below introduction on the [Simple React Example](https://zilch.dev/type-route/docs/introduction/simple-react-example) page or see the [Type Route without React](https://zilch.dev/type-route/docs/guides/type-route-without-react) guide to learn how to use Type Route without React.
 
 ## Install
-
-> 🚨 **This is a beta release.** 🚨 The Type Route API has been vetted with production code but the library has not yet reached version **1.0**. More community feedback is needed to validate the project's maturity. Use the [issue tracker](https://github.com/typehero/type-route/issues) to communicate this feedback in the form of bugs, questions, or suggestions.
 
 Type Route's primary distribution channel is the [NPM registry](https://www.npmjs.com/package/type-route). React `16.8` (or any subsequent version of React) is a peer dependency of Type Route so you'll need to ensure that's installed as well.
 
@@ -41,16 +39,16 @@ export const { RouteProvider, useRoute, routes } = createRouter({
   home: defineRoute("/"),
   userList: defineRoute(
     {
-      page: param.query.optional.number
+      page: param.query.optional.number,
     },
     () => "/user"
   ),
   user: defineRoute(
     {
-      userId: param.path.string
+      userId: param.path.string,
     },
-    p => `/user/${p.userId}`
-  )
+    (p) => `/user/${p.userId}`
+  ),
 });
 ```
 
@@ -78,7 +76,7 @@ function App() {
 
 ReactDOM.render(
   <RouteProvider>
-    <App/>
+    <App />
   </RouteProvider>,
   document.querySelector("#root")
 );
@@ -103,9 +101,9 @@ export function Page() {
 
   return (
     <>
-      {route.name === "home" && <HomePage/>}
-      {route.name === "userList" && <UserListPage route={route}/>}
-      {route.name === "user" && <UserPage route={route}/>}
+      {route.name === "home" && <HomePage />}
+      {route.name === "userList" && <UserListPage route={route} />}
+      {route.name === "user" && <UserPage route={route} />}
       {route.name === false && "Not Found"}
     </>
   );
@@ -116,11 +114,11 @@ function HomePage() {
 }
 
 function UserListPage({ route }: { route: Route<typeof routes.userList> }) {
-  return <div>UserList Page: {route.params.page}</div>
+  return <div>UserList Page: {route.params.page}</div>;
 }
 
 function UserPage({ route }: { route: Route<typeof routes.user> }) {
-  return <div>User: {route.params.userId}</div>
+  return <div>User: {route.params.userId}</div>;
 }
 ```
 
@@ -139,18 +137,10 @@ import { routes } from "./router";
 export function Navigation() {
   return (
     <nav>
-      <a {...routes.home().link}>
-        Home
-      </a>
-      <a {...routes.userList().link}>
-        User List
-      </a>
-      <a {...routes.userList({ page: 2 }).link}>
-        User List Page 2
-      </a>
-      <a {...routes.user({ userId: "abc" }).link}>
-        User "abc"
-      </a>
+      <a {...routes.home().link}>Home</a>
+      <a {...routes.userList().link}>User List</a>
+      <a {...routes.userList({ page: 2 }).link}>User List Page 2</a>
+      <a {...routes.user({ userId: "abc" }).link}>User "abc"</a>
     </nav>
   );
 }

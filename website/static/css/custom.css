@@ -51,18 +51,6 @@ body > * {
   padding-bottom: 20px;
 }
 
-.splash .projectName:after {
-  content: "beta";
-  transform: translateY(-1px);
-  position: absolute;
-  font-size: 12px;
-  padding: 2px 8px;
-  border-radius: 10px;
-  background: #484761;
-  color: #fff;
-  font-weight: 500;
-}
-
 .splash .projectTagLine {
   font-size: 18px;
   color: white;
@@ -167,23 +155,6 @@ blockquote {
   margin-left: auto;
   margin-right: auto;
   padding-top: 20px;
-}
-
-.betaNotification {
-    padding: 40px;
-    color: #fff;
-    background: #484761;
-}
-
-.betaNotification a {
-    color: #fff !important;
-    border-bottom: 1px solid rgba(255,255,255,.8);
-}
-
-.betaNotification > div {
-  max-width: 1040px;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .headerWrapper header > a {
@@ -321,37 +292,6 @@ input#search_input_react:not(:focus):hover::placeholder {
 
 .features h4 {
   margin-top: 0px;
-}
-
-/* body:after {
-  content: "🚧 Under Construction - Check Back Later 🚧";
-  pointer-events: none;
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  left: 0;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 999999999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 30px;
-  font-weight: bold;
-} */
-
-.headerTitleWithLogo::after {
-  content: "beta";
-  margin-left: 10px;
-  font-weight: 500;
-  transform: translateY(-1px);
-  position: absolute;
-  font-size: 12px;
-  padding: 2px 8px;
-  border-radius: 10px;
-  background: #484761;
-  color: white;
 }
 
 .seeItInAction {
