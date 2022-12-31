@@ -4,7 +4,7 @@ layout: home
 hero:
   name: Type Route
   text: The flexible, type safe routing library.
-  tagline: No client-side router does TypeScript better than Type Route. Restore sanity to your URL handling.
+  tagline: Meet the TypeScript-first routing library optimized for a developer experience that is second to none.
   image:
     src: /logo.svg
     alt: Type Route
@@ -19,7 +19,7 @@ hero:
 
 features:
   - title: Type Safe
-    icon: 🏰
+    icon: 💯
     details: First and foremost Type Route strives for excellent TypeScript support. An API designed for static analysis not only means the compiler has your back but also enables your editor to provide intelligent hints and warnings as you code.
   - title: Flexible
     icon: 🚀

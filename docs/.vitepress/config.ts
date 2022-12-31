@@ -17,6 +17,7 @@ const apiReferenceSidebarItems = createSidebar(["docs", "api-reference"]);
 
 export default defineConfig({
   title: "Type Route",
+  titleTemplate: "The flexible, type safe routing library.",
   description: "The flexible, type safe routing library.",
   appearance: false,
   cleanUrls: "with-subfolders",
