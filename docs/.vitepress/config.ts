@@ -26,7 +26,7 @@ export default defineConfig({
     ["script", { src: "/type-route/index.js" }],
   ],
   themeConfig: {
-    logo: "./type-route-logo.svg",
+    logo: "./logo.svg",
     socialLinks: [
       { icon: "github", link: "https://github.com/zilch/type-route" },
     ],

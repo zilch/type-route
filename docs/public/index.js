@@ -85,17 +85,51 @@ ReactDOM.render(
 );
 `;
 
-ensureDeps();
+if (document.readyState === "complete") {
+  ensureDeps();
+} else {
+  window.addEventListener("load", ensureDeps);
+}
 
 function ensureDeps() {
   if (window.codesandbox !== undefined) {
-    init();
+    handleUrlChange();
+
+    window.addEventListener("popstate", handleUrlChange);
+
+    const oldPushState = window.history.pushState;
+    window.history.pushState = function () {
+      handleUrlChange();
+      return oldPushState.apply(this, arguments);
+    };
+
+    const oldReplaceState = window.history.replaceState;
+    window.history.replaceState = function () {
+      handleUrlChange();
+      return oldReplaceState.apply(this, arguments);
+    };
+
+    function handleUrlChange() {
+      addCodesandboxLinks();
+      requestAnimationFrame(() => {
+        addCodesandboxLinks();
+        setTimeout(() => {
+          addCodesandboxLinks();
+        }, 10);
+        setTimeout(() => {
+          addCodesandboxLinks();
+        }, 50);
+        setTimeout(() => {
+          addCodesandboxLinks();
+        }, 100);
+      });
+    }
   } else {
     setTimeout(ensureDeps, 100);
   }
 }
 
-function init() {
+function addCodesandboxLinks() {
   const TYPE_ROUTE_VERSION = "=1.0.0";
 
   const configFactoryCollection = {
@@ -148,25 +182,27 @@ function init() {
     }),
   };
 
-  const tryOnCodeSandboxButton = document.querySelector(
-    "a[href=\\/type-route\\/\\#try-on-codesandbox]"
-  );
+  document
+    .querySelectorAll("a[href=\\/type-route\\/\\#try-on-codesandbox]")
+    .forEach((tryOnCodeSandboxButton) => {
+      const config = configFactoryCollection.tsx(window.tryOnCodeSandboxCode);
+      const parameters = window.codesandbox.getParameters(config);
+      tryOnCodeSandboxButton.setAttribute("target", "_blank");
+      tryOnCodeSandboxButton.href =
+        "https://codesandbox.io/api/v1/sandboxes/define?parameters=" +
+        parameters;
+    });
 
-  if (tryOnCodeSandboxButton) {
-    const config = configFactoryCollection.tsx(window.tryOnCodeSandboxCode);
-    const parameters = window.codesandbox.getParameters(config);
-    tryOnCodeSandboxButton.setAttribute("target", "_blank");
-    tryOnCodeSandboxButton.href =
-      "https://codesandbox.io/api/v1/sandboxes/define?parameters=" + parameters;
-  }
+  document
+    .querySelectorAll(".vp-code-group:not(.codesandbox)")
+    .forEach((element) => {
+      const topLink = getSandboxLink(element);
 
-  document.querySelectorAll(".vp-code-group").forEach((element) => {
-    const topLink = getSandboxLink(element);
-
-    if (topLink !== null) {
-      element.appendChild(topLink);
-    }
-  });
+      if (topLink !== null) {
+        element.appendChild(topLink);
+        element.classList.add("codesandbox");
+      }
+    });
 
   function getSandboxLink(element) {
     let type = null;

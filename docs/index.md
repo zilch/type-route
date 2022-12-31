@@ -6,7 +6,7 @@ hero:
   text: The flexible, type safe routing library.
   tagline: No client-side router does TypeScript better than Type Route. Restore sanity to your URL handling.
   image:
-    src: /type-route-logo.svg
+    src: /logo.svg
     alt: Type Route
 
   actions:

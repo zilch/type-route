@@ -8,6 +8,7 @@
 /parcel-dist
 /lib
 /docs/.vitepress/cache
+/docs/.vitepress/dist
 .DS_Store
 /.github/actions/pr-environment/node_modules
 /.github/actions/release-info/node_modules
