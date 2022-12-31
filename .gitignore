@@ -7,11 +7,8 @@
 /coverage
 /parcel-dist
 /lib
-/website/node_modules
+/docs/.vitepress/cache
 .DS_Store
-/website/build
-/website/static/js/codesandbox.js
-/website/i18n
 /.github/actions/pr-environment/node_modules
 /.github/actions/release-info/node_modules
 *.log

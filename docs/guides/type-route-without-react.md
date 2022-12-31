@@ -2,27 +2,31 @@
 title: Type Route without React
 ---
 
-> Type Route was designed with excellent React integration in mind. The best API for React, however, doesn't include many React-specific components which makes it easy to use Type Route without React. 
+# {{ $frontmatter.title }}
+
+> Type Route was designed with excellent React integration in mind. The best API for React, however, doesn't include many React-specific components which makes it easy to use Type Route without React.
 
 Its possible to use Type Route without React and instead integrate it with your favorite JavaScript framework or use it without a framework at all. Here's an example of using Type Route without any of its React-specific components.
 
-```tsx {1,25-29} codesandbox-standard
+::: code-group
+
+```ts [index.ts] {1,25-29}
 import { createRouter, defineRoute, param, Route } from "type-route/core";
 
 const { routes, session } = createRouter({
   home: defineRoute("/"),
   userList: defineRoute(
     {
-      page: param.query.optional.number
+      page: param.query.optional.number,
     },
     () => "/users"
   ),
   user: defineRoute(
     {
-      userId: param.path.string
+      userId: param.path.string,
     },
-    p => `/users/${p.userId}`
-  )
+    (p) => `/users/${p.userId}`
+  ),
 });
 
 const nav = document.createElement("nav");
@@ -33,7 +37,7 @@ document.body.prepend(nav);
 
 renderPage(session.getInitialRoute());
 
-session.listen(nextRoute => {
+session.listen((nextRoute) => {
   renderPage(nextRoute);
 });
 
@@ -59,6 +63,8 @@ function link(label: string, to: Route<typeof routes>) {
   return element;
 }
 ```
+
+:::
 
 **Instead of importing Type Route from `type-route` import from `type-route/core`.** Almost everything is the same between these two versions of the library. The only thing that differs is the return value of `createRouter`. Where a call to `createRouter` from `type-route` returns `RouteProvider` and `useRoute` a call to `createRouter` from `type-route/core` does not. Users instead can integrate with `session.listen` for subscribing to route updates and use `session.getInitialRoute` to get the initial route.
 

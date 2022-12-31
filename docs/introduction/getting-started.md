@@ -2,6 +2,8 @@
 title: Getting Started
 ---
 
+# {{ $frontmatter.title }}
+
 Type Route is a flexible, type safe routing library built on top of the same [core library](https://github.com/ReactTraining/history) that powers React Router.
 
 > **Type Route was designed with excellent React integration in mind** but isn't coupled to a specific UI framework. Most code examples in the documentation use React, but the general principles covered apply regardless of framework.

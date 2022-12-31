@@ -2,6 +2,8 @@
 title: Route
 ---
 
+# {{ $frontmatter.title }}
+
 The `Route` type is part of the TypeScript specific API for Type Route. It is a helper type useful for getting the type of a particular route. Here's an example:
 
 ```tsx
@@ -9,25 +11,21 @@ import { createRouter, defineRoute, Route, param } from "type-route";
 
 const user = defineRoute(
   {
-    userId: param.path.string
+    userId: param.path.string,
   },
-  p => `/user/${p.userId}`
+  (p) => `/user/${p.userId}`
 );
 
 const { routes } = createRouter({
   home: defineRoute("/"),
   user,
   userSettings: user.extend("/settings"),
-  userActivity: user.extend("/activity")
+  userActivity: user.extend("/activity"),
 });
 
 const groups = {
-  user: createGroup([
-    routes.user,
-    routes.userSettings,
-    routes.userActivity
-  ])
-}
+  user: createGroup([routes.user, routes.userSettings, routes.userActivity]),
+};
 ```
 
 Given the above code the type `Route<typeof routes>` would evaluate to this type:

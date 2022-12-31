@@ -2,6 +2,8 @@
 title: QueryStringSerializer
 ---
 
+# {{ $frontmatter.title }}
+
 See [custom query string](../../guides/custom-query-string.md).
 
 ```tsx

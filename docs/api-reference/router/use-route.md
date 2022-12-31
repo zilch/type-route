@@ -2,6 +2,8 @@
 title: useRoute
 ---
 
+# {{ $frontmatter.title }}
+
 ```tsx
 const { RouteProvider, useRoute } = createRouter({ ... });
 

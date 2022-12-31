@@ -2,6 +2,8 @@
 title: Preventing Navigation
 ---
 
+# {{ $frontmatter.title }}
+
 The `block` function on the `session` object will create a new navigation blocker. Any time the application route changes this function will be called with the an `update` object containing information about the update which would have happened had the navigation not been blocked. This update object has two properties:
 
 - `route` - What the next route would have been had the navigation gone through.
@@ -10,7 +12,7 @@ The `block` function on the `session` object will create a new navigation blocke
 In practice, preventing navigation may look something like the this:
 
 ```tsx
-const unblock = session.block(update => {
+const unblock = session.block((update) => {
   if (confirm("Are you sure?")) {
     unblock();
     update.retry();

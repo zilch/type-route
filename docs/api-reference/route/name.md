@@ -1,10 +1,11 @@
 ---
 title: <Route>.name
-sidebar_label: name
 ---
 
+# {{ $frontmatter.title }}
+
 ```tsx
-name: string
+name: string;
 ```
 
 The `name` field is a constant value used for narrowing the type of a specific `Route`. This value will be `false` if a match to any of the routes you provided was unable to be made. As shown in the example this allows you to determine which route you're dealing with.
@@ -14,7 +15,7 @@ The `name` field is a constant value used for narrowing the type of a specific `
 ```tsx
 const { routes, session } = createRouter({
   home: defineRoute("/"),
-  post: defineRoute({ postId: param.path.string }, p => `/post/${p.postId}`)
+  post: defineRoute({ postId: param.path.string }, (p) => `/post/${p.postId}`),
 });
 
 const route = session.getInitialRoute();

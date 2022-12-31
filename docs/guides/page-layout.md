@@ -2,6 +2,8 @@
 title: Page Layout
 ---
 
+# {{ $frontmatter.title }}
+
 Most applications have a layout structure resembling something like the following:
 
 - Header
@@ -10,8 +12,7 @@ Most applications have a layout structure resembling something like the followin
 
 Type Route is flexible enough to let the above pattern be accomplished in a variety of ways. While flexibility is powerful it also helps to have some guidance when figuring out your approach.
 
-<details>
-<summary>Bad Example</summary>
+::: details Bad Example
 
 ```tsx
 import React, { useState, useEffect } from "react";
@@ -28,67 +29,78 @@ function App() {
 
   return (
     <>
-      {route.name === "home" && <HomePage/>}
-      {route.name === "foo" && <FooPage/>}
-      {route.name === "bar" && <BarPage/>}
-      {route.name === false && <NotFoundPage/>}
+      {route.name === "home" && <HomePage />}
+      {route.name === "foo" && <FooPage />}
+      {route.name === "bar" && <BarPage />}
+      {route.name === false && <NotFoundPage />}
     </>
   );
 }
 
 function Header() {
-  return <nav>
-    <a {...routes.home().link}>Home</a>
-    <a {...routes.foo().link}>Foo</a>
-    <a {...routes.bar().link}>Bar</a>
-  </nav>
+  return (
+    <nav>
+      <a {...routes.home().link}>Home</a>
+      <a {...routes.foo().link}>Foo</a>
+      <a {...routes.bar().link}>Bar</a>
+    </nav>
+  );
 }
 
 function Footer() {
-  return <footer>
-    <div>Footer</div>
-  </footer>
+  return (
+    <footer>
+      <div>Footer</div>
+    </footer>
+  );
 }
 
 function HomePage() {
-  return <>
-    <Header />
-    <div>Home Page</div>
-    <Footer />
-  </>
+  return (
+    <>
+      <Header />
+      <div>Home Page</div>
+      <Footer />
+    </>
+  );
 }
 
 function FooPage() {
-  return <>
-    <Header />
-    <div>Foo Page</div>
-    <Footer />
-  </>
+  return (
+    <>
+      <Header />
+      <div>Foo Page</div>
+      <Footer />
+    </>
+  );
 }
 
 function BarPage() {
-  return <>
-    <Header />
-    <div>Bar Page</div>
-    <Footer />
-  </>
+  return (
+    <>
+      <Header />
+      <div>Bar Page</div>
+      <Footer />
+    </>
+  );
 }
 
 function NotFoundPage() {
-  return <>
-    <Header />
-    <div>Bar Page</div>
-    <Footer />
-  </>
+  return (
+    <>
+      <Header />
+      <div>Bar Page</div>
+      <Footer />
+    </>
+  );
 }
 ```
 
-</details>
+:::
 
 The above example would work but, on every page change, the `Header` and `Footer` components would be unmounted and remounted unnecessarily. Consider the following approach instead:
 
-<details>
-<summary>Good Example</summary>
+::: details Good Example
 
 ```tsx
 import React, { useState, useEffect } from "react";
@@ -103,47 +115,53 @@ const { routes, useRoute } = createRouter({
 function App() {
   const route = useRoute();
 
-  return <>
-    <Header />
-    {route.name === "home" && <HomePage/>}
-    {route.name === "foo" && <FooPage/>}
-    {route.name === "bar" && <BarPage/>}
-    {route.name === false && <NotFoundPage/>}
-    <Footer />
-  </>;
+  return (
+    <>
+      <Header />
+      {route.name === "home" && <HomePage />}
+      {route.name === "foo" && <FooPage />}
+      {route.name === "bar" && <BarPage />}
+      {route.name === false && <NotFoundPage />}
+      <Footer />
+    </>
+  );
 }
 
 function Header() {
-  return <nav>
-    <a {...routes.home().link}>Home</a>
-    <a {...routes.foo().link}>Foo</a>
-    <a {...routes.bar().link}>Bar</a>
-  </nav>
+  return (
+    <nav>
+      <a {...routes.home().link}>Home</a>
+      <a {...routes.foo().link}>Foo</a>
+      <a {...routes.bar().link}>Bar</a>
+    </nav>
+  );
 }
 
 function Footer() {
-  return <footer>
-    <div>Footer</div>
-  </footer>
+  return (
+    <footer>
+      <div>Footer</div>
+    </footer>
+  );
 }
 
 function HomePage() {
-  return <div>Home Page</div>
+  return <div>Home Page</div>;
 }
 
 function FooPage() {
-  return <div>Foo Page</div>
+  return <div>Foo Page</div>;
 }
 
 function BarPage() {
-  return <div>Bar Page</div>
+  return <div>Bar Page</div>;
 }
 
 function NotFoundPage() {
-  return <div>Bar Page</div>
+  return <div>Bar Page</div>;
 }
 ```
 
-</details>
+:::
 
 This good example ensures that the `Header` and `Footer` components are not unmounted then remounted unnecessarily.

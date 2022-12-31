@@ -2,6 +2,8 @@
 title: Rendering Links
 ---
 
+# {{ $frontmatter.title }}
+
 Links in single page applications are unique for the fact that they do not trigger a page load. Typically all a link would require is an `href` property:
 
 ```tsx
@@ -13,7 +15,7 @@ This works as expected but causes the entire page to reload whenever the link is
 ```tsx
 <a
   href="/foo/bar"
-  onClick={event => {
+  onClick={(event) => {
     event.preventDefault();
     // Then trigger some state update so we know we're at "/foo/bar"
   }}
@@ -27,7 +29,7 @@ Using Type Route the above would look something like this:
 ```tsx
 <a
   href={routes.fooBar().href}
-  onClick={event => {
+  onClick={(event) => {
     event.preventDefault();
     routes.fooBar().push();
   }}
@@ -49,4 +51,3 @@ The `link` property is an object with `href` and `onClick` properties. Destructu
 - [Custom Link Behavior](./custom-link-behavior.md)
 - [Styling of Links for the Currently Active Route](./styling-active-route-link.md)
 - [preventDefaultLinkClickBehavior](../api-reference/miscellaneous/prevent-default-link-click-behavior.md)
-

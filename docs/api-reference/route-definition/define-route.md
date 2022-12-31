@@ -2,6 +2,8 @@
 title: defineRoute
 ---
 
+# {{ $frontmatter.title }}
+
 ```tsx
 defineRoute(path: string | string[]): RouteDefinition;
 defineRoute(
@@ -25,9 +27,9 @@ defineRoute(
   {
     userId: param.path.string,
     page: param.query.number,
-    search: param.query.optional.string
+    search: param.query.optional.string,
   },
-  p => `/user/${p.userId}/posts`
+  (p) => `/user/${p.userId}/posts`
 );
 ```
 
@@ -50,7 +52,7 @@ defineRoute(
   {
     userId: param.path.string,
   },
-  p => [`/user/${p.userId}`, `/users/${p.userId}`]
+  (p) => [`/user/${p.userId}`, `/users/${p.userId}`]
 );
 ```
 

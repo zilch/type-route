@@ -2,11 +2,10 @@
 title: SessionOpts
 ---
 
+# {{ $frontmatter.title }}
+
 ```tsx
-type SessionOpts =
-  | BrowserHistoryOpts
-  | MemoryHistoryOpts
-  | HashHistoryOpts
+type SessionOpts = BrowserHistoryOpts | MemoryHistoryOpts | HashHistoryOpts;
 
 type MemoryHistorySessionOpts = {
   type: "memory";

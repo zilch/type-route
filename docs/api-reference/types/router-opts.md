@@ -2,6 +2,8 @@
 title: RouterOpts
 ---
 
+# {{ $frontmatter.title }}
+
 ```tsx
 type RouterOpts = {
   /**
@@ -29,10 +31,10 @@ type RouterOpts = {
    * router this segment will come before the "#" symbol.
    */
   baseUrl?: string;
-}
+};
 
 type ArrayFormat = {
-    /**
+  /**
    * Separator to use for array parameter types. By default ","
    */
   separator?: string;
@@ -43,11 +45,11 @@ type ArrayFormat = {
    * @see https://zilch.dev/type-route/docs/guides/custom-query-string
    */
   queryString?: QueryStringArrayFormat;
-}
+};
 
 type QueryStringArrayFormat =
   | "singleKey"
   | "singleKeyWithBracket"
   | "multiKey"
-  | "multiKeyWithBracket"
+  | "multiKeyWithBracket";
 ```

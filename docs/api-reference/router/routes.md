@@ -1,7 +1,8 @@
 ---
 title: <Router>.routes
-sidebar_label: routes
 ---
+
+# {{ $frontmatter.title }}
 
 ```tsx
 <Router>.routes: { [routeName: string]: RouteBuilder }
@@ -15,10 +16,10 @@ The `routes` property of a `Router` object is a map of route names to a `RouteBu
 const { routes } = createRouter({
   user: defineRoute(
     {
-      userId: param.path.string
+      userId: param.path.string,
     },
-    p => `/user/${p.userId}`
-  )
+    (p) => `/user/${p.userId}`
+  ),
 });
 
 routes.user({ userId: "abc" }).name; // "user"

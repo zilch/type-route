@@ -2,6 +2,8 @@
 title: Programmatic Navigation
 ---
 
+# {{ $frontmatter.title }}
+
 It is possible to trigger navigation programmatically with the [`push`](../api-reference/route/push.md) and [`replace`](../api-reference/route/replace.md) functions on a route.
 
 - `push` will add a new entry to the application's navigation history

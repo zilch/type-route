@@ -2,6 +2,8 @@
 title: Custom Link Behavior
 ---
 
+# {{ $frontmatter.title }}
+
 The standard way to create links in Type Route looks something like this:
 
 ```tsx
@@ -23,8 +25,8 @@ function link(to: Route<typeof routes>) {
       if (preventDefaultClickBehavior(e)) {
         to.push();
       }
-    }
-  }
+    },
+  };
 }
 ```
 
@@ -40,9 +42,9 @@ import { Route, preventDefaultClickBehavior } from "type-route";
 import { routes } from "./router";
 
 type Props = {
-  to: Route<typeof routes>
+  to: Route<typeof routes>;
   children?: React.ReactNode;
-}
+};
 
 function Link(props: Props) {
   const { to, children } = props;
@@ -50,7 +52,7 @@ function Link(props: Props) {
   return (
     <a
       href={to.href}
-      onClick={event => {
+      onClick={(event) => {
         if (preventDefaultLinkClickBehavior(event)) {
           to.push();
         }
@@ -58,7 +60,7 @@ function Link(props: Props) {
     >
       {children}
     </a>
-  )
+  );
 }
 ```
 
@@ -75,4 +77,3 @@ From this starting point you could modify the code to do any number of things ta
 - [Rendering Links](./rendering-links.md)
 - [Styling of Links for the Currently Active Route](./styling-active-route-link.md)
 - [preventDefaultLinkClickBehavior](../api-reference/miscellaneous/prevent-default-link-click-behavior.md)
-

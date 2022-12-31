@@ -1,7 +1,8 @@
 ---
 title: <RouteGroup>.has
-sidebar_label: has
 ---
+
+# {{ $frontmatter.title }}
 
 ```tsx
 <RouteGroup>.has(route: Route): boolean
@@ -16,25 +17,21 @@ import { defineRoute, createRouter, createGroup, param } from "type-route";
 
 const user = defineRoute(
   {
-    userId: param.path.string
+    userId: param.path.string,
   },
-  p => `/user/${p.userId}`
+  (p) => `/user/${p.userId}`
 );
 
 const { routes } = createRouter({
   home: defineRoute("/"),
   user,
   userSettings: user.extend("/settings"),
-  userActivity: user.extend("/activity")
+  userActivity: user.extend("/activity"),
 });
 
 const groups = {
-  user: createGroup([
-    routes.user,
-    routes.userSettings,
-    routes.userActivity
-  ])
-}
+  user: createGroup([routes.user, routes.userSettings, routes.userActivity]),
+};
 
 if (groups.user.has(route)) {
   console.log(route.params.userId);

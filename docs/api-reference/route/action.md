@@ -1,10 +1,11 @@
 ---
 title: <Route>.action
-sidebar_label: action
 ---
 
+# {{ $frontmatter.title }}
+
 ```tsx
-action: "push" | "replace" | "pop" | null
+action: "push" | "replace" | "pop" | null;
 ```
 
 The action property of a route can be one of four values `"push"`, `"replace"`, `"pop"` or `null`.

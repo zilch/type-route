@@ -1,0 +1,111 @@
+import { defineConfig } from "vitepress";
+import fs from "fs";
+import path from "path";
+import { escapeRegExp, first, startCase, times } from "lodash";
+import fm from "front-matter";
+
+interface SidebarItem {
+  text: string;
+  items: SidebarItem[];
+  link?: string;
+  activeMatch?: string;
+}
+
+const introSidebarItems = createSidebar(["docs", "introduction"]);
+const guidesSidebarItems = createSidebar(["docs", "guides"]);
+const apiReferenceSidebarItems = createSidebar(["docs", "api-reference"]);
+
+export default defineConfig({
+  title: "Type Route",
+  description: "The flexible, type safe routing library.",
+  appearance: false,
+  cleanUrls: "with-subfolders",
+  base: "/type-route/",
+  head: [
+    ["script", { src: "/type-route/codesandbox.js" }],
+    ["script", { src: "/type-route/index.js" }],
+  ],
+  themeConfig: {
+    logo: "./type-route-logo.svg",
+    socialLinks: [
+      { icon: "github", link: "https://github.com/zilch/type-route" },
+    ],
+    footer: {
+      message: `Type Route is a Zilch project`,
+      copyright: "Copyright © 2022",
+    },
+    nav: [
+      {
+        text: "Documentation",
+        link: "/introduction/getting-started",
+        activeMatch: "^\\/.+",
+      },
+      {
+        text: "Playground ↗",
+        link: "/#try-on-codesandbox",
+      },
+      {
+        text: "v1.0.0",
+        link: "https://github.com/zilch/type-route/releases",
+      },
+    ],
+    sidebar: [
+      {
+        text: "Introduction",
+        items: introSidebarItems,
+      },
+      {
+        text: "Guides",
+        items: guidesSidebarItems,
+      },
+      {
+        text: "API Reference",
+        items: apiReferenceSidebarItems,
+      },
+    ],
+    editLink: {
+      pattern: "https://github.com/zilch/type-route/edit/main/docs/:path",
+      text: "Edit Page",
+    },
+  },
+});
+
+function createSidebar(pathSegments: string[]): SidebarItem[] {
+  const fullPath = path.resolve(...pathSegments);
+  const entries = fs.readdirSync(fullPath);
+
+  const items: SidebarItem[] = [];
+
+  for (const entry of entries) {
+    if (entry === "index.md" && pathSegments.length === 0) {
+      continue;
+    }
+
+    const entryPath = path.resolve(fullPath, entry);
+    const stat = fs.statSync(entryPath);
+
+    if (stat.isDirectory()) {
+      const subItems = createSidebar([...pathSegments, entry]);
+      if (subItems.length > 0) {
+        items.push({
+          text: startCase(entry),
+          items: subItems,
+        });
+      }
+    } else if (entry.endsWith(".md")) {
+      const title =
+        fm<{ title?: string }>(fs.readFileSync(entryPath).toString()).attributes
+          .title ?? startCase(entry.slice(0, -3));
+      const link =
+        "/" + [...pathSegments, entry.slice(0, -3)].slice(1).join("/");
+      items.push({
+        text: title,
+        items: [],
+        link,
+        activeMatch: "$" + escapeRegExp(link) + "^",
+      });
+    }
+  }
+
+  return items;
+}

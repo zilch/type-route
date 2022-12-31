@@ -2,6 +2,8 @@
 title: ValueSerializer
 ---
 
+# {{ $frontmatter.title }}
+
 See [complex route parameters](../../guides/complex-route-parameters.md).
 
 ```tsx
@@ -15,5 +17,5 @@ type ValueSerializer<TValue = unknown> = {
   urlEncode?: boolean;
   parse(raw: string): TValue | typeof noMatch;
   stringify(value: TValue): string;
-}
+};
 ```

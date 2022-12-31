@@ -2,6 +2,8 @@
 title: createGroup
 ---
 
+# {{ $frontmatter.title }}
+
 ```tsx
 createGroup(routes: (RouteBuilder | RouteGroup)[]): RouteGroup
 ```
@@ -10,7 +12,9 @@ The `createGroup` function takes an array of `RouteBuilder` and `RouteGroup` obj
 
 #### Example
 
-```tsx codesandbox-standard
+::: code-group
+
+```ts [index.ts]
 import { defineRoute, createRouter, createGroup, param } from "type-route";
 
 const user = defineRoute(
@@ -50,3 +54,5 @@ if (groups.user.has(route)) {
   console.log(route.name;) // "userSummary" | "userSettings" | "userPostList" | "userPost"
 }
 ```
+
+:::

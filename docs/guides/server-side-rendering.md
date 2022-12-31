@@ -2,6 +2,8 @@
 title: Server Side Rendering
 ---
 
+# {{ $frontmatter.title }}
+
 Type Route supports server side rendering. The key to making this support possible
 is the `router.session.reset` function. This function allows you to reconfigure
 the underlying history session instance that powers Type Route. By setting the type of the
@@ -22,10 +24,14 @@ const app = fastify();
 app.get("/*", (request, response) => {
   session.reset({
     type: "memory",
-    initialEntries: [request.req.url]
+    initialEntries: [request.req.url],
   });
 
-  const appHtml = ReactDOM.renderToString(<RouteProvider><App /></RouteProvider>);
+  const appHtml = ReactDOM.renderToString(
+    <RouteProvider>
+      <App />
+    </RouteProvider>
+  );
 
   response.type("text/html");
   response.send(
@@ -46,7 +52,7 @@ import { createRouter, defineRoute } from "type-route";
 export const { RouteProvider, useRoute, routes, session } = createRouter({
   home: defineRoute("/"),
   one: defineRoute("/one"),
-  two: defineRoute("/two")
+  two: defineRoute("/two"),
 });
 
 export function App() {
@@ -68,6 +74,11 @@ export function App() {
 }
 
 if (!process.env.SERVER) {
-  ReactDOM.hydrate(<RouteProvider><App /></RouteProvider>, document.querySelector("#app"));
+  ReactDOM.hydrate(
+    <RouteProvider>
+      <App />
+    </RouteProvider>,
+    document.querySelector("#app")
+  );
 }
 ```

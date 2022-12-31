@@ -2,6 +2,8 @@
 title: Wildcard Routes
 ---
 
+# {{ $frontmatter.title }}
+
 Type Route supports defining "wildcard" routes. This is a common requirement in applications needing to support paths created, for instance, by a marketing team optimizing the url for a search engine. Here's an example:
 
 ```tsx
@@ -10,10 +12,10 @@ import { createRouter, defineRoute, param } from "type-route";
 const { routes } = createRouter({
   example: defineRoute(
     {
-      slug: param.path.trailing.optional.string
+      slug: param.path.trailing.optional.string,
     },
-    p => `/static/${p.slug}`
-  )
+    (p) => `/static/${p.slug}`
+  ),
 });
 ```
 

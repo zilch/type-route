@@ -1,7 +1,8 @@
 ---
 title: <Route>.replace
-sidebar_label: replace
 ---
+
+# {{ $frontmatter.title }}
 
 ```tsx
 replace(): boolean
@@ -14,7 +15,7 @@ The `replace` function will replace the current entry in history and if using th
 ```tsx
 const { routes } = createRouter({
   home: defineRoute("/"),
-  post: defineRoute({ postId: param.path.string }, p => `/post/${p.postId}`)
+  post: defineRoute({ postId: param.path.string }, (p) => `/post/${p.postId}`),
 });
 
 routes.home().replace();

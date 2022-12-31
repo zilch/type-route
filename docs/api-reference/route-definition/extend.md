@@ -1,7 +1,8 @@
 ---
 title: <RouteDefinition>.extend
-sidebar_label: extend
 ---
+
+# {{ $frontmatter.title }}
 
 ```tsx
 <RouteDefinition>.extend(path: string | string[]): RouteDefinition;
@@ -18,9 +19,9 @@ The `extend` function has the exact same signature as `defineRoute`. Both return
 ```tsx
 const user = defineRoute(
   {
-    userId: param.path.string
+    userId: param.path.string,
   },
-  p => `/user/${p.userId}`
+  (p) => `/user/${p.userId}`
 );
 
 const { routes, listen } = createRouter({
@@ -30,9 +31,9 @@ const { routes, listen } = createRouter({
   userPostList: user.extend("/post"),
   userPost: user.extend(
     {
-      postId: param.path.string
+      postId: param.path.string,
     },
-    p => `/post/${p.postId}`
-  )
+    (p) => `/post/${p.postId}`
+  ),
 });
 ```

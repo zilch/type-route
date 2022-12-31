@@ -1,7 +1,8 @@
 ---
 title: <RouteDefinition>.session
-sidebar_label: session
 ---
+
+# {{ $frontmatter.title }}
 
 The router `session` object has utilities used for interacting with the browser's history.
 
@@ -14,7 +15,12 @@ type RouterSession = {
   back(amount?: number): void;
   forward(amount?: number): void;
   reset(options: SessionConfig): void;
-  listen(navigationHandler: (nextRoute: Route, previousRoute: Route | null) => false | void): () => void
+  listen(
+    navigationHandler: (
+      nextRoute: Route,
+      previousRoute: Route | null
+    ) => false | void
+  ): () => void;
 };
 ```
 
@@ -25,11 +31,11 @@ The `listen` function will create a new route change listener. Whenever the appl
 ```tsx
 const { session } = createRouter({
   home: defineRoute("/"),
-  post: defineRoute({ postId: param.path.string }, p => `/post/${p.postId}`)
+  post: defineRoute({ postId: param.path.string }, (p) => `/post/${p.postId}`),
 });
 
 // Creates a new listener
-const removeListener = session.listen(nextRoute => {
+const removeListener = session.listen((nextRoute) => {
   console.log(nextRoute);
   // logs:
   // { name: false, params: {} }

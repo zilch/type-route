@@ -2,6 +2,8 @@
 title: createRouter
 ---
 
+# {{ $frontmatter.title }}
+
 ```tsx
 createRouter(routeDefinitions: RouteDefinitionBuilderCollection): Router
 createRouter(routerOpts: RouterOpts, routeDefinitions: RouteDefinitionBuilderCollection): Router
@@ -20,16 +22,16 @@ const { routes } = createRouter({
   home: defineRoute("/"),
   postList: defineRoute(
     {
-      page: param.query.optional.number
+      page: param.query.optional.number,
     },
-    p => `/post`
+    (p) => `/post`
   ),
   post: defineRoute(
     {
-      postId: param.path.string
+      postId: param.path.string,
     },
-    p => `/post/${p.postId}`
-  )
+    (p) => `/post/${p.postId}`
+  ),
 });
 ```
 

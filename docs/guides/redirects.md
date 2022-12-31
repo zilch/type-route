@@ -2,6 +2,8 @@
 title: Redirects
 ---
 
+# {{ $frontmatter.title }}
+
 Simple redirects mapping one path to another with the same parameters is built into the `defineRoute` function. Instead of providing a single string you may provide an array of strings. The first item in the array is the primary path for that route. Any route properties handling location will use that primary path. If a secondary path is matched it will be immediately replaced by the primary path.
 
 ```tsx
@@ -11,10 +13,10 @@ createRouter({
   dashboard: defineRoute(["/dashboard", "/"]),
   user: defineRoute(
     {
-      userId: param.path.string
+      userId: param.path.string,
     },
-    p => [`/user/${p.userId}`, `/users/${p.userId}`]
-  )
+    (p) => [`/user/${p.userId}`, `/users/${p.userId}`]
+  ),
 });
 ```
 
@@ -22,7 +24,9 @@ In the above example "/" will automatically redirect to "/dashboard" and the plu
 
 Certain redirect situations may require a non-uniform mapping of parameters between routes. In those cases a more involved approach is necessary. In the below example a transformation of the parameter is necessary to ensure it matches the new route. On every route change we check to see if the route we're on is the old one. If it is we redirect to the new route and display the text "Redirecting..." for the split second the old route is still active.
 
-```tsx codesandbox-react
+::: code-group
+
+```tsx [index.tsx]
 import { createRouter, defineRoute, param } from "type-route";
 import React, { useEffect } from "react";
 import ReactDOM from "react-dom";
@@ -30,16 +34,16 @@ import ReactDOM from "react-dom";
 const { routes, useRoute, RouteProvider } = createRouter({
   new: defineRoute(
     {
-      yearOfBirth: param.query.number
+      yearOfBirth: param.query.number,
     },
-    p => "/new"
+    (p) => "/new"
   ),
   old: defineRoute(
     {
-      ageInYears: param.query.number
+      ageInYears: param.query.number,
     },
-    p => "/old"
-  )
+    (p) => "/old"
+  ),
 });
 
 function App() {
@@ -47,9 +51,11 @@ function App() {
 
   useEffect(() => {
     if (route.name === "old") {
-      routes.new({
-        yearOfBirth: new Date().getFullYear() - route.params.ageInYears
-      }).replace();
+      routes
+        .new({
+          yearOfBirth: new Date().getFullYear() - route.params.ageInYears,
+        })
+        .replace();
     }
   }, [route]);
 
@@ -64,5 +70,12 @@ function App() {
   return <div>Not Found</div>;
 }
 
-ReactDOM.render(<RouteProvider><App /></RouteProvider>, document.querySelector("#root"));
+ReactDOM.render(
+  <RouteProvider>
+    <App />
+  </RouteProvider>,
+  document.querySelector("#root")
+);
 ```
+
+:::
