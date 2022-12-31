@@ -4,7 +4,7 @@ layout: home
 hero:
   name: Type Route
   text: The flexible, type safe routing library.
-  tagline: Meet the TypeScript-first routing library optimized for a developer experience that is second to none.
+  tagline: Meet the TypeScript-first router optimized for a developer experience that is second to none.
   image:
     src: /logo.svg
     alt: Type Route

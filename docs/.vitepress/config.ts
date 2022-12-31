@@ -45,10 +45,6 @@ export default defineConfig({
         text: "Playground ↗",
         link: "/#try-on-codesandbox",
       },
-      {
-        text: "v1.0.0",
-        link: "https://github.com/zilch/type-route/releases",
-      },
     ],
     sidebar: [
       {

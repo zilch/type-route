@@ -40,3 +40,15 @@
   right: 8px;
   top: 8px;
 }
+
+.version {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 0px 5px;
+  background: var(--vp-c-gray-light-5);
+  border: 1px solid var(--vp-c-gray-light-3);
+  opacity: .8;
+  line-height: 14px;
+  margin-left: 10px;
+  border-radius: 7px;
+}

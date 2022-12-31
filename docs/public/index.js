@@ -130,7 +130,7 @@ function ensureDeps() {
 }
 
 function addCodesandboxLinks() {
-  const TYPE_ROUTE_VERSION = "=1.0.0";
+  const TYPE_ROUTE_VERSION = "1.0.0";
 
   const configFactoryCollection = {
     tsx: (code) => ({
@@ -152,7 +152,7 @@ function addCodesandboxLinks() {
               "@types/react": "=16.8.18",
               "react-dom": "=16.8.6",
               "@types/react-dom": "=16.8.4",
-              "type-route": TYPE_ROUTE_VERSION,
+              "type-route": "=" + TYPE_ROUTE_VERSION,
               tslib: "2.0.0",
             },
           },
@@ -174,13 +174,31 @@ function addCodesandboxLinks() {
         "package.json": {
           content: {
             dependencies: {
-              "type-route": TYPE_ROUTE_VERSION,
+              "type-route": "=" + TYPE_ROUTE_VERSION,
             },
           },
         },
       },
     }),
   };
+
+  document
+    .querySelectorAll(
+      ".VPNavBarTitle:not(.has-sidebar) > .title.done > .version"
+    )
+    .forEach((element) => {
+      element.parentElement.classList.remove("done");
+      element.remove();
+    });
+  document
+    .querySelectorAll(".VPNavBarTitle.has-sidebar > .title:not(.done)")
+    .forEach((element) => {
+      const version = document.createElement("div");
+      version.innerText = "v" + TYPE_ROUTE_VERSION;
+      version.className = "version";
+      element.appendChild(version);
+      element.classList.add("done");
+    });
 
   document
     .querySelectorAll("a[href=\\/type-route\\/\\#try-on-codesandbox]")
