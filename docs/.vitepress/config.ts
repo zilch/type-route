@@ -22,10 +22,9 @@ export default defineConfig({
   description: "The flexible, type safe routing library.",
   appearance: false,
   cleanUrls: "with-subfolders",
-  base: "/type-route/",
   head: [
-    ["script", { src: "/type-route/codesandbox.js" }],
-    ["script", { src: "/type-route/index.js" }],
+    ["script", { src: "/codesandbox.js" }],
+    ["script", { src: "/index.js" }],
   ],
   themeConfig: {
     logo: "./logo.svg",
