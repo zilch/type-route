@@ -21,7 +21,6 @@ export default defineConfig({
   titleTemplate: "The flexible, type safe routing library.",
   description: "The flexible, type safe routing library.",
   appearance: false,
-  cleanUrls: "with-subfolders",
   head: [
     ["script", { defer: "defer", src: "/codesandbox.js" }],
     ["script", { defer: "defer", src: "/index.js" }],
