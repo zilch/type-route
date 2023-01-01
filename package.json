@@ -4,7 +4,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "module": "dist/type-route.esm.js",
-  "description": "A flexible, type safe routing library.",
+  "description": "The flexible, type safe routing library.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/zilch/type-route.git"
