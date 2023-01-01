@@ -1,5 +1,6 @@
 ---
 layout: home
+titleTemplate: The flexible, type safe routing library.
 
 hero:
   name: Type Route

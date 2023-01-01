@@ -1,7 +1,7 @@
 import { defineConfig } from "vitepress";
 import fs from "fs";
 import path from "path";
-import { escapeRegExp, first, startCase, times } from "lodash";
+import { escapeRegExp, startCase } from "lodash";
 import fm from "front-matter";
 
 interface SidebarItem {
@@ -18,7 +18,7 @@ const apiReferenceSidebarItems = createSidebar(["docs", "api-reference"]);
 export default defineConfig({
   lang: "en-US",
   title: "Type Route",
-  titleTemplate: "The flexible, type safe routing library.",
+  titleTemplate: "Type Route | The flexible, type safe routing library.",
   description: "The flexible, type safe routing library.",
   appearance: false,
   head: [["script", { src: "/codesandbox.js" }]],
