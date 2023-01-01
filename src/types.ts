@@ -29,7 +29,7 @@ export type BuildPathDefErrorContext = {
  * Object for configuring a custom query string serializer. You likely
  * do not need this level of customization for your application.
  *
- * @see https://zilch.dev/type-route/docs/api-reference/types/query-string-serializer
+ * @see https://type-route.zilch.dev/api-reference/types/query-string-serializer
  */
 export type QueryStringSerializer = {
   /**
@@ -38,7 +38,7 @@ export type QueryStringSerializer = {
    * Individual parameter value serializer take care of the parsing
    * parameter values. A null value indicates an empty array.
    *
-   * @see https://zilch.dev/type-route/docs/api-reference/types/query-string-serializer
+   * @see https://type-route.zilch.dev/api-reference/types/query-string-serializer
    */
   parse: (raw: string) => Record<string, string | null>;
 
@@ -47,7 +47,7 @@ export type QueryStringSerializer = {
    * a stringified version of the object. A null value indicates an
    * empty array.
    *
-   * @see https://zilch.dev/type-route/docs/api-reference/types/query-string-serializer
+   * @see https://type-route.zilch.dev/api-reference/types/query-string-serializer
    */
   stringify: (
     queryParams: Record<
@@ -62,7 +62,7 @@ export type ParamDefKind = "path" | "query" | "state";
 /**
  * Object for configuring a custom parameter value serializer.
  *
- * @see https://zilch.dev/type-route/docs/api-reference/types/value-serializer
+ * @see https://type-route.zilch.dev/api-reference/types/value-serializer
  */
 export type ValueSerializer<TValue = unknown> = {
   id?: string;
@@ -218,7 +218,7 @@ export type RouteDef<TParamDefCollection> = {
   /**
    * Create a new route definition by extending the current one.
    *
-   * @see https://zilch.dev/type-route/docs/api-reference/route-definition/extend
+   * @see https://type-route.zilch.dev/api-reference/route-definition/extend
    */
   extend<TExtensionParamDefCollection>(
     params: TExtensionParamDefCollection,
@@ -228,7 +228,7 @@ export type RouteDef<TParamDefCollection> = {
   /**
    * Create a new route definition by extending the current one.
    *
-   * @see https://zilch.dev/type-route/docs/api-reference/route-definition/extend
+   * @see https://type-route.zilch.dev/api-reference/route-definition/extend
    */
   extend(path: string | string[]): RouteDef<TParamDefCollection>;
 };
@@ -338,7 +338,7 @@ export type Route<TName, TParamDefCollection> = {
   /**
    * Helper for constructing links
    *
-   * @see https://zilch.dev/type-route/docs/guides/rendering-links
+   * @see https://type-route.zilch.dev/guides/rendering-links
    */
   link: Link;
 
@@ -364,7 +364,7 @@ export type Route<TName, TParamDefCollection> = {
 /**
  * Helper to retrieve a Route type.
  *
- * @see https://zilch.dev/type-route/docs/api-reference/types/route
+ * @see https://type-route.zilch.dev/api-reference/types/route
  */
 export type GetRoute<T> = T extends { ["~internal"]: { Route: any } }
   ? T["~internal"]["Route"]
@@ -430,7 +430,7 @@ export type RouterSession<TRouteDefCollection> = {
    * Reconfigures the underlying history instance. Can be useful
    * when using server-side rendering.
    *
-   * @see https://zilch.dev/type-route/docs/guides/server-side-rendering
+   * @see https://type-route.zilch.dev/guides/server-side-rendering
    */
   reset(options: SessionOpts): void;
 
@@ -438,7 +438,7 @@ export type RouterSession<TRouteDefCollection> = {
    * Blocks navigation and registers a listener that is called when
    * navigation is blocked. Returns a function to unblock navigation.
    *
-   * @see https://zilch.dev/type-route/docs/guides/preventing-navigation
+   * @see https://type-route.zilch.dev/guides/preventing-navigation
    */
   block(blocker: Blocker<TRouteDefCollection>): Unblock;
 
@@ -457,7 +457,7 @@ export type MemoryHistorySessionOpts = {
    * An array of urls representing the what items should
    * start in history when the router is created. This can be useful
    * in a variety of scenarios including server-side rendering
-   * (https://zilch.dev/type-route/docs/guides/server-side-rendering).
+   * (https://type-route.zilch.dev/guides/server-side-rendering).
    */
   initialEntries?: string[];
 
@@ -507,7 +507,7 @@ export type ArrayFormat = {
   /**
    * Query string serialization method.
    *
-   * @see https://zilch.dev/type-route/docs/guides/custom-query-string
+   * @see https://type-route.zilch.dev/guides/custom-query-string
    */
   queryString?: QueryStringArrayFormat;
 };
@@ -524,7 +524,7 @@ export type RouterOpts = {
    * A custom serializer/deserializer for the query string. This is an
    * advanced feature your application likely does not need.
    *
-   * @see https://zilch.dev/type-route/docs/guides/custom-query-string
+   * @see https://type-route.zilch.dev/guides/custom-query-string
    */
   queryStringSerializer?: QueryStringSerializer;
 
@@ -584,7 +584,7 @@ export type RouteGroup<T extends any[] = any[]> = {
    * Accepts a route and returns whether or not it is part
    * of this group.
    *
-   * @see https://zilch.dev/type-route/docs/api-reference/route-group/has
+   * @see https://type-route.zilch.dev/api-reference/route-group/has
    */
   has(route: Route<any, any>): route is T[number]["~internal"]["Route"];
 };

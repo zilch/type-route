@@ -82,7 +82,7 @@ These are organized first by parameter position ([path](#path), [query](#query),
 
 ### Path
 
-Path parameters are found in the path of the url. Given this url `https://zilch.dev/type-route/example/abc?page=1` the path would be this section `/type-route/example/abc`. A `param.path.string` parameter could be used to parameterize the `abc` part of this path. There may be at most one path parameter per path segment (a path segment being the value between forward slashes). Within these path segments the parameter may have leading or trailing text. If more than a single path parameter is needed within a single path segment the [`ofType`](#oftype) parameter type gives you the flexibility to accommodate that scenario.
+Path parameters are found in the path of the url. Given this url `https://type-route.zilch.dev/example/abc?page=1` the path would be this section `/type-route/example/abc`. A `param.path.string` parameter could be used to parameterize the `abc` part of this path. There may be at most one path parameter per path segment (a path segment being the value between forward slashes). Within these path segments the parameter may have leading or trailing text. If more than a single path parameter is needed within a single path segment the [`ofType`](#oftype) parameter type gives you the flexibility to accommodate that scenario.
 
 ```tsx
 // WORKS
@@ -114,7 +114,7 @@ defineRoute(
 
 ### Query
 
-Query parameters are found in the query string of the url. Given this url `https://zilch.dev/type-route/example/abc?page=1` the query string would be this segment `?page=1`. A `param.query.number` parameter could be used to parameterize the `page=1` part of this query string.
+Query parameters are found in the query string of the url. Given this url `https://type-route.zilch.dev/example/abc?page=1` the query string would be this segment `?page=1`. A `param.query.number` parameter could be used to parameterize the `page=1` part of this query string.
 
 ```tsx
 defineRoute(

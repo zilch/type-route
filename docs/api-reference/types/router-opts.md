@@ -17,7 +17,7 @@ type RouterOpts = {
    * A custom serializer/deserializer for the query string. This is an
    * advanced feature your application likely does not need.
    *
-   * @see https://zilch.dev/type-route/docs/guides/custom-query-string
+   * @see https://type-route.zilch.dev/guides/custom-query-string
    */
   queryStringSerializer?: QueryStringSerializer;
 
@@ -42,7 +42,7 @@ type ArrayFormat = {
   /**
    * Query string serialization method.
    *
-   * @see https://zilch.dev/type-route/docs/guides/custom-query-string
+   * @see https://type-route.zilch.dev/guides/custom-query-string
    */
   queryString?: QueryStringArrayFormat;
 };

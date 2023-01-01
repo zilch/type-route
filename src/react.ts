@@ -39,14 +39,14 @@ type Router<TRouteDefCollection extends { [routeName: string]: any }> =
     /**
      * React hook for retrieving the current route.
      *
-     * @see https://zilch.dev/type-route/docs/api-reference/router/use-route
+     * @see https://type-route.zilch.dev/api-reference/router/use-route
      */
     useRoute: () => RouteDefCollectionRoute<TRouteDefCollection>;
 
     /**
      * React component which connects React to Type Route and provides the current route to the rest of the application.
      *
-     * @see https://zilch.dev/type-route/docs/api-reference/router/route-provider
+     * @see https://type-route.zilch.dev/api-reference/router/route-provider
      */
     RouteProvider: (props: { children?: any }) => any;
   };
