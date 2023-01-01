@@ -108,7 +108,7 @@ function addCodesandboxLinks() {
   // @ts-expect-error
   const codesandbox = window.codesandbox;
 
-  const TYPE_ROUTE_VERSION = "1.0.0";
+  const TYPE_ROUTE_VERSION = "1.0.1";
 
   const configFactoryCollection = {
     tsx: (code) => ({
