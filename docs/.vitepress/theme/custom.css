@@ -16,7 +16,7 @@
         rgba(100,100,100,.2) 10%,
         rgba(0,0,0,.2)
     );
-    --vp-home-hero-image-filter: blur(50px);
+    --vp-home-hero-image-filter: blur(48px);
 }
 
 .vp-code-group {
