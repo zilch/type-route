@@ -1,4 +1,9 @@
-window.tryOnCodeSandboxCode = `import React from "react";
+// .vitepress/theme/index.js
+import { h } from "vue";
+import DefaultTheme from "vitepress/theme";
+import "./custom.css";
+
+const tryOnCodeSandboxCode = `import React from "react";
 import ReactDOM from "react-dom";
 import { createRouter, defineRoute, param, Route } from "type-route";
 
@@ -85,55 +90,24 @@ ReactDOM.render(
 );
 `;
 
-ensureDeps();
-
-function ensureDeps() {
-  // hacks to get around hydration issues and stuff - really
-  // should look into how to do this with vitepress components
-  if (
-    window.codesandbox === undefined ||
-    document
-      .querySelector("head")
-      .innerHTML.trim()
-      .endsWith(`<script defer="defer" src="/index.js"></script>`)
-  ) {
-    requestAnimationFrame(ensureDeps);
-    return;
-  }
-
-  handleUrlChange();
-  window.addEventListener("popstate", handleUrlChange);
-
-  const oldPushState = window.history.pushState;
-  window.history.pushState = function () {
-    handleUrlChange();
-    return oldPushState.apply(this, arguments);
-  };
-
-  const oldReplaceState = window.history.replaceState;
-  window.history.replaceState = function () {
-    handleUrlChange();
-    return oldReplaceState.apply(this, arguments);
-  };
-
-  function handleUrlChange() {
-    addCodesandboxLinks();
-    requestAnimationFrame(() => {
-      addCodesandboxLinks();
-      setTimeout(() => {
-        addCodesandboxLinks();
-      }, 10);
-      setTimeout(() => {
-        addCodesandboxLinks();
-      }, 50);
-      setTimeout(() => {
-        addCodesandboxLinks();
-      }, 100);
+export default {
+  ...DefaultTheme,
+  Layout() {
+    return h(DefaultTheme.Layout, null, {
+      "layout-bottom": () =>
+        h({
+          mounted() {
+            addCodesandboxLinks();
+          },
+        }),
     });
-  }
-}
+  },
+};
 
 function addCodesandboxLinks() {
+  // @ts-expect-error
+  const codesandbox = window.codesandbox;
+
   const TYPE_ROUTE_VERSION = "1.0.0";
 
   const configFactoryCollection = {
@@ -191,7 +165,7 @@ function addCodesandboxLinks() {
       ".VPNavBarTitle:not(.has-sidebar) > .title.done > .version"
     )
     .forEach((element) => {
-      element.parentElement.classList.remove("done");
+      element.parentElement?.classList.remove("done");
       element.remove();
     });
   document
@@ -207,10 +181,10 @@ function addCodesandboxLinks() {
   document
     .querySelectorAll("a[href=\\/\\#try-on-codesandbox]")
     .forEach((tryOnCodeSandboxButton) => {
-      const config = configFactoryCollection.tsx(window.tryOnCodeSandboxCode);
-      const parameters = window.codesandbox.getParameters(config);
+      const config = configFactoryCollection.tsx(tryOnCodeSandboxCode);
+      const parameters = codesandbox.getParameters(config);
       tryOnCodeSandboxButton.setAttribute("target", "_blank");
-      tryOnCodeSandboxButton.href =
+      (tryOnCodeSandboxButton as HTMLAnchorElement).href =
         "https://codesandbox.io/api/v1/sandboxes/define?parameters=" +
         parameters;
     });
@@ -227,22 +201,20 @@ function addCodesandboxLinks() {
     });
 
   function getSandboxLink(element) {
-    let type = null;
+    let type: keyof typeof configFactoryCollection;
 
     if (!!element.querySelector(".language-tsx")) {
       type = "tsx";
     } else if (!!element.querySelector(".language-ts")) {
       type = "ts";
+    } else {
+      return null;
     }
 
     const createConfig = configFactoryCollection[type];
 
-    if (createConfig === undefined) {
-      return null;
-    }
-
     const config = createConfig(element.querySelector("code").textContent);
-    const parameters = window.codesandbox.getParameters(config);
+    const parameters = codesandbox.getParameters(config);
 
     const sandboxLink = document.createElement("a");
     sandboxLink.className = "codesandbox-link";

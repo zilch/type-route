@@ -41,6 +41,10 @@
   top: 8px;
 }
 
+.VPNavBarTitle {
+  min-width: 200px;
+}
+
 .version {
   font-size: 10px;
   font-weight: 700;
