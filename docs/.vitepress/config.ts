@@ -23,8 +23,8 @@ export default defineConfig({
   appearance: false,
   cleanUrls: "with-subfolders",
   head: [
-    ["script", { src: "/codesandbox.js" }],
-    ["script", { src: "/index.js" }],
+    ["script", { defer: "defer", src: "/codesandbox.js" }],
+    ["script", { defer: "defer", src: "/index.js" }],
   ],
   themeConfig: {
     logo: "./logo.svg",

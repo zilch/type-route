@@ -85,47 +85,51 @@ ReactDOM.render(
 );
 `;
 
-if (document.readyState === "complete") {
-  ensureDeps();
-} else {
-  window.addEventListener("load", ensureDeps);
-}
+ensureDeps();
 
 function ensureDeps() {
-  if (window.codesandbox !== undefined) {
+  // hacks to get around hydration issues and stuff - really
+  // should look into how to do this with vitepress components
+  if (
+    window.codesandbox === undefined ||
+    document
+      .querySelector("head")
+      .innerHTML.trim()
+      .endsWith(`<script defer="defer" src="/index.js"></script>`)
+  ) {
+    requestAnimationFrame(ensureDeps);
+    return;
+  }
+
+  handleUrlChange();
+  window.addEventListener("popstate", handleUrlChange);
+
+  const oldPushState = window.history.pushState;
+  window.history.pushState = function () {
     handleUrlChange();
+    return oldPushState.apply(this, arguments);
+  };
 
-    window.addEventListener("popstate", handleUrlChange);
+  const oldReplaceState = window.history.replaceState;
+  window.history.replaceState = function () {
+    handleUrlChange();
+    return oldReplaceState.apply(this, arguments);
+  };
 
-    const oldPushState = window.history.pushState;
-    window.history.pushState = function () {
-      handleUrlChange();
-      return oldPushState.apply(this, arguments);
-    };
-
-    const oldReplaceState = window.history.replaceState;
-    window.history.replaceState = function () {
-      handleUrlChange();
-      return oldReplaceState.apply(this, arguments);
-    };
-
-    function handleUrlChange() {
+  function handleUrlChange() {
+    addCodesandboxLinks();
+    requestAnimationFrame(() => {
       addCodesandboxLinks();
-      requestAnimationFrame(() => {
+      setTimeout(() => {
         addCodesandboxLinks();
-        setTimeout(() => {
-          addCodesandboxLinks();
-        }, 10);
-        setTimeout(() => {
-          addCodesandboxLinks();
-        }, 50);
-        setTimeout(() => {
-          addCodesandboxLinks();
-        }, 100);
-      });
-    }
-  } else {
-    setTimeout(ensureDeps, 100);
+      }, 10);
+      setTimeout(() => {
+        addCodesandboxLinks();
+      }, 50);
+      setTimeout(() => {
+        addCodesandboxLinks();
+      }, 100);
+    });
   }
 }
 
@@ -201,7 +205,7 @@ function addCodesandboxLinks() {
     });
 
   document
-    .querySelectorAll("a[href=\\/type-route\\/\\#try-on-codesandbox]")
+    .querySelectorAll("a[href=\\/\\#try-on-codesandbox]")
     .forEach((tryOnCodeSandboxButton) => {
       const config = configFactoryCollection.tsx(window.tryOnCodeSandboxCode);
       const parameters = window.codesandbox.getParameters(config);
