@@ -77,12 +77,13 @@ import {
   createRouter,
   defineRoute,
   param,
-  RouterConfig,
+  RouterOpts,
   QueryStringSerializer,
 } from "type-route";
 
 const arrayKeySuffix = "[]";
 const arraySeparator = ",";
+const multiKey = false;
 
 const queryStringSerializer: QueryStringSerializer = {
   parse: (raw) => {
@@ -135,7 +136,7 @@ const queryStringSerializer: QueryStringSerializer = {
   },
 };
 
-const config: RouterConfig = { queryStringSerializer };
+const config: RouterOpts = { queryStringSerializer };
 
 const { routes } = createRouter(config, {
   example: defineRoute(

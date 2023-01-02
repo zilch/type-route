@@ -97,12 +97,22 @@ export default {
       "layout-bottom": () =>
         h({
           mounted() {
-            addCodesandboxLinks();
+            ensureDeps();
           },
         }),
     });
   },
 };
+
+function ensureDeps() {
+  // @ts-expect-error
+  if (window.codesandbox === undefined) {
+    requestAnimationFrame(ensureDeps);
+    return;
+  }
+
+  addCodesandboxLinks();
+}
 
 function addCodesandboxLinks() {
   // @ts-expect-error
@@ -153,6 +163,7 @@ function addCodesandboxLinks() {
           content: {
             dependencies: {
               "type-route": "=" + TYPE_ROUTE_VERSION,
+              react: "=16.8.6",
             },
           },
         },
