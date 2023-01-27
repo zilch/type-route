@@ -31,6 +31,11 @@ export default defineConfig({
       message: `Type Route is a Zilch project`,
       copyright: "Copyright © 2022",
     },
+    algolia: {
+      apiKey: "a42155102fd5cfb8b4332adfe166ef53",
+      appId: "EQ47DMUV6G",
+      indexName: "type-route-zilch",
+    },
     nav: [
       {
         text: "Documentation",
