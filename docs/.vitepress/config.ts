@@ -33,7 +33,6 @@ export default defineConfig({
     },
     algolia: {
       apiKey: "f7bcb288f46e22fce03a6047c790c8ea",
-      // apiKey: "a42155102fd5cfb8b4332adfe166ef53",
       appId: "EQ47DMUV6G",
       indexName: "type-route-zilch",
     },
