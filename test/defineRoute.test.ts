@@ -1,3 +1,5 @@
+import { describe, it, expect } from "vitest";
+
 import { defineRoute } from "../src/defineRoute";
 import { param } from "../src/param";
 import { expectTypeRouteError } from "./expectTypeRouteError";

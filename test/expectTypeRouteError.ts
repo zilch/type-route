@@ -1,3 +1,5 @@
+import { expect } from "vitest";
+
 import { TypeRouteError } from "../src/TypeRouteError";
 
 export function expectTypeRouteError(

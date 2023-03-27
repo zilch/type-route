@@ -1,3 +1,5 @@
+import { describe, it } from "vitest";
+
 import { createRouter, defineRoute, param } from "../src/core";
 import { Any } from "ts-toolbelt";
 import { Link, Action, ParamValue } from "../src/types";
