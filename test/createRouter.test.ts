@@ -120,8 +120,7 @@ describe("createRouter", () => {
     );
   });
 
-  // TODO looks like tsdx/jest has some source maps issue which causes this test to fail incorrectly
-  it.skip("should throw runtime error when creating router with incompatible options", () => {
+  it("should throw runtime error when creating router with incompatible options", () => {
     const config: RouterOpts = {
       arrayFormat: {
         queryString: "multiKey",
@@ -624,8 +623,7 @@ describe("createRouter", () => {
     expect(route.href).toBe("/hello/#/foo");
   });
 
-  // TODO looks like tsdx/jest has some source maps issue which causes this test to fail incorrectly
-  it.skip("should error is base url is not valid", () => {
+  it("should error is base url is not valid", () => {
     expectTypeRouteError(
       TypeRouteError.Base_url_must_start_with_a_forward_slash,
       () => createRouter({ baseUrl: "hi" }, {})
