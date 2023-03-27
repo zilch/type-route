@@ -99,7 +99,7 @@ describe("createLocation", () => {
     });
   });
 
-  it.only("default param", () => {
+  it("default param", () => {
     expectLocation(
       {
         value: param.query.optional.string.default("bar"),
