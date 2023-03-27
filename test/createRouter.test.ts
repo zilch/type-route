@@ -1,3 +1,5 @@
+import { describe, it, expect } from "vitest";
+
 import { createRouter, defineRoute, param, RouterOpts } from "../src/core";
 import { expectTypeRouteError } from "./expectTypeRouteError";
 import { TypeRouteError } from "../src/TypeRouteError";

@@ -1,3 +1,5 @@
+import { describe, it, expect, vi } from "vitest";
+
 import React, { useEffect } from "react";
 import { createRouter, defineRoute } from "../src/react";
 import { renderIntoDocument, act } from "react-dom/test-utils";
@@ -14,7 +16,7 @@ describe("react", () => {
       return <>{route.name}</>;
     }
 
-    const errorSpy = jest.spyOn(console, "error");
+    const errorSpy = vi.spyOn(console, "error");
     errorSpy.mockImplementation(() => {});
 
     expectTypeRouteError(
@@ -22,7 +24,7 @@ describe("react", () => {
       () => renderIntoDocument(<Test />)
     );
 
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it("should work when in a route provider", () => {

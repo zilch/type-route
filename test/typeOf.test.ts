@@ -1,3 +1,5 @@
+import { describe, it, expect } from "vitest";
+
 import { typeOf } from "../src/typeOf";
 
 describe("typeOf", () => {

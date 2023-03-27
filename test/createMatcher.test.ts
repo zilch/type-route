@@ -1,3 +1,5 @@
+import { describe, it, expect } from "vitest";
+
 import { createMatcher } from "../src/createMatcher";
 import { defineRoute } from "../src/defineRoute";
 import { param } from "../src/param";

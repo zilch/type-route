@@ -1,3 +1,5 @@
+import { describe, it, expect } from "vitest";
+
 import { buildPathDefs } from "../src/buildPathDefs";
 import { getPathMatch } from "../src/getPathMatch";
 import { param } from "../src/param";

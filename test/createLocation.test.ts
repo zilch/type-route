@@ -1,3 +1,5 @@
+import { describe, it, expect } from "vitest";
+
 import { createLocation } from "../src/createLocation";
 import { defineRoute } from "../src/defineRoute";
 import { buildPathDefs } from "../src/buildPathDefs";
@@ -7,7 +9,7 @@ import { param } from "../src/param";
 import { UmbrellaParamDefCollection, GetRawPath } from "../src/types";
 
 describe("createLocation", () => {
-  test("exclude optional path param", () => {
+  it("exclude optional path param", () => {
     expectLocation(
       {
         name: param.path.string,
@@ -25,7 +27,7 @@ describe("createLocation", () => {
     });
   });
 
-  test("include optional query param", () => {
+  it("include optional query param", () => {
     expectLocation(
       {
         name: param.path.string,
@@ -44,7 +46,7 @@ describe("createLocation", () => {
     });
   });
 
-  test("include optional path param", () => {
+  it("include optional path param", () => {
     expectLocation(
       {
         name: param.path.string,
@@ -63,7 +65,7 @@ describe("createLocation", () => {
     });
   });
 
-  test("state param", () => {
+  it("state param", () => {
     expectLocation(
       {
         name: param.state.string,
@@ -80,7 +82,7 @@ describe("createLocation", () => {
     });
   });
 
-  test("array param", () => {
+  it("array param", () => {
     expectLocation(
       {
         name: param.query.array.string,
@@ -97,7 +99,7 @@ describe("createLocation", () => {
     });
   });
 
-  test.only("default param", () => {
+  it.only("default param", () => {
     expectLocation(
       {
         value: param.query.optional.string.default("bar"),

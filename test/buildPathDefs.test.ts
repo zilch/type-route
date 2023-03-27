@@ -1,3 +1,5 @@
+import { describe, it, expect } from "vitest";
+
 import { param } from "../src/param";
 import { buildPathDefs } from "../src/buildPathDefs";
 import { TypeRouteError } from "../src/TypeRouteError";
@@ -156,7 +158,7 @@ describe("buildPathDef", () => {
           "The path segment `#hello${p.hi}%` has the following invalid characters: #, %"
         );
       } else {
-        fail("expected error to be of type Error");
+        throw new Error("expected error to be of type Error");
       }
     }
   });
