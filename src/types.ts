@@ -1,6 +1,10 @@
 import { noMatch } from "./noMatch";
 import { History } from "history";
 
+export type NavigateOptions = {
+  skipRender?: boolean;
+};
+
 export type Compute<A extends any> = A extends Function
   ? A
   : {
@@ -236,7 +240,8 @@ export type UmbrellaRouteDef = RouteDef<UmbrellaParamDefCollection>;
 
 export type NavigateFunction = (
   route: UmbrellaRoute,
-  primaryPath: boolean
+  primaryPath: boolean,
+  options?: NavigateOptions
 ) => void;
 
 export type OnClickHandler = (event?: any) => void;
@@ -353,12 +358,12 @@ export type Route<TName, TParamDefCollection> = {
    * If there were any entries in the stack after the current one, they are
    * lost.
    */
-  push: () => void;
+  push: (options?: NavigateOptions) => void;
 
   /**
    * Replaces the current route in the history stack with this one.
    */
-  replace: () => void;
+  replace: (options?: NavigateOptions) => void;
 };
 
 /**
@@ -404,12 +409,12 @@ export type RouterSession<TRouteDefCollection> = {
   /**
    * Manually add a new item to the history stack.
    */
-  push(href: string, state?: any): void;
+  push(href: string, state?: any, options?: NavigateOptions): void;
 
   /**
    * Replace the currently active item in the history stack.
    */
-  replace(href: string, state?: any): void;
+  replace(href: string, state?: any, options?: NavigateOptions): void;
 
   /**
    * Get the initial route. Useful for bootstrapping your application.
