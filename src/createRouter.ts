@@ -144,6 +144,9 @@ export function createRouter(...args: any[]): UmbrellaCoreRouter {
 
         history.go(amount);
       },
+      skipNextRender() {
+        skipHandlingNextApplicationTriggeredNavigation = true;
+      },
       getInitialRoute() {
         if (__DEV__) {
           assert("[RouterSessionHistory].getInitialRoute", [

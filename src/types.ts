@@ -435,6 +435,13 @@ export type RouterSession<TRouteDefCollection> = {
   reset(options: SessionOpts): void;
 
   /**
+   * Skips next render (but allows history change)
+   *  - push()/replace() after calling this function will skip render
+   *  - going back/forward won't skip render
+   */
+  skipNextRender(): void;
+
+  /**
    * Blocks navigation and registers a listener that is called when
    * navigation is blocked. Returns a function to unblock navigation.
    *
