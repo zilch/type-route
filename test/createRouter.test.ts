@@ -537,7 +537,6 @@ describe("createRouter", () => {
     expect(route.href).toBe("/bar?page=2");
   });
 
-
   it("should not include default query params in href", () => {
     const { routes, session } = createRouter(
       {
@@ -566,7 +565,6 @@ describe("createRouter", () => {
 
     routes.bar({ page: 2 }).push();
     expect(route.href).toBe("/bar?page=2");
-
   });
 
   it("should handle redirect for initial route", () => {
