@@ -48,29 +48,45 @@ export function createLocation({
     const urlEncode =
       paramDef["~internal"].valueSerializer.urlEncode ?? urlEncodeDefault;
 
-    let value: string | null;
+    const getValue = (paramValue: unknown) => {
 
-    if (paramDef["~internal"].array) {
-      if (!Array.isArray(paramValue)) {
-        if (__DEV__) {
-          throw TypeRouteError.Expected_type_does_not_match_actual_type.create({
-            context: "routes[routeName](...)",
-            actualType: typeOf(paramValue),
-            expectedType: "array",
-            value: paramValue,
-            valueName: paramName,
-          });
+      let value: string | null;
+
+      if (paramDef["~internal"].array) {
+        if (!Array.isArray(paramValue)) {
+          if (__DEV__) {
+            throw TypeRouteError.Expected_type_does_not_match_actual_type.create({
+              context: "routes[routeName](...)",
+              actualType: typeOf(paramValue),
+              expectedType: "array",
+              value: paramValue,
+              valueName: paramName,
+            });
+          }
         }
-      }
 
-      value =
-        (paramValue as unknown[]).length === 0
-          ? null
-          : (paramValue as unknown[])
+        value =
+          (paramValue as unknown[]).length === 0
+            ? null
+            : (paramValue as unknown[])
               .map((part) => stringify(paramDef, part, urlEncode))
               .join(arraySeparator);
-    } else {
-      value = stringify(paramDef, paramValue, urlEncode);
+      } else {
+        value = stringify(paramDef, paramValue, urlEncode);
+      }
+
+      return value;
+
+    };
+
+    const value = getValue(paramValue);
+
+    if (
+      paramDef["~internal"].kind === "query" &&
+      paramDef["~internal"].default !== undefined &&
+      getValue(paramDef["~internal"].default) === value
+    ) {
+      continue;
     }
 
     params[paramDef["~internal"].kind][paramName] = {

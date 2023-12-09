@@ -528,13 +528,45 @@ describe("createRouter", () => {
     expect(route.href).toBe("/foo");
 
     routes.bar({ page: 1 }).push();
-    expect(route.href).toBe("/bar?page=1");
+    expect(route.href).toBe("/bar");
     session.replace("/bar?page=2");
     expect(route.href).toBe("/bar?page=2");
     session.back();
     expect(route.href).toBe("/foo");
     session.forward();
     expect(route.href).toBe("/bar?page=2");
+  });
+
+
+  it("should not include default query params in href", () => {
+    const { routes, session } = createRouter(
+      {
+        session: {
+          type: "memory",
+          initialEntries: ["/foo"],
+        },
+      },
+      {
+        foo: defineRoute("/foo"),
+        bar: defineRoute(
+          { page: param.query.optional.number.default(1) },
+          () => "/bar"
+        ),
+      }
+    );
+
+    let route = session.getInitialRoute();
+
+    session.listen((nextRoute) => (route = nextRoute));
+
+    expect(route.href).toBe("/foo");
+
+    routes.bar({ page: 1 }).push();
+    expect(route.href).toBe("/bar");
+
+    routes.bar({ page: 2 }).push();
+    expect(route.href).toBe("/bar?page=2");
+
   });
 
   it("should handle redirect for initial route", () => {
