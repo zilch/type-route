@@ -1,6 +1,6 @@
 import { createRouter, defineRoute, param } from "../src/core";
 import { Any } from "ts-toolbelt";
-import { Link, Action, ParamValue } from "../src/types";
+import { Link, Action, ParamValue, NavigateOptions } from "../src/types";
 
 function expectTypes<A, B>(_: Any.Equals<Any.Compute<A>, Any.Compute<B>>) {}
 
@@ -27,8 +27,8 @@ describe("types", () => {
           params: {};
           link: Link;
           href: string;
-          push: () => void;
-          replace: () => void;
+          push: (options?: NavigateOptions) => void;
+          replace: (options?: NavigateOptions) => void;
           action: Action | null;
         }
       >(toBeEqual);
@@ -66,8 +66,8 @@ describe("types", () => {
           params: {};
           link: Link;
           href: string;
-          push: () => void;
-          replace: () => void;
+          push: (options?: NavigateOptions) => void;
+          replace: (options?: NavigateOptions) => void;
           action: Action | null;
         }
       >(toBeEqual);

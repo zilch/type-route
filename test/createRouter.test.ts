@@ -46,6 +46,35 @@ describe("createRouter", () => {
     expect(route.href).toBe("/");
   });
 
+  it("should respect 'skipRender' option", () => {
+    const config: RouterOpts = {
+      session: {
+        type: "memory",
+      },
+    };
+
+    const { routes, session } = createRouter(config, {
+      foo: defineRoute("/foo"),
+      bar: defineRoute("/bar"),
+      bar2: defineRoute("/bar2"),
+    });
+
+    let route = session.getInitialRoute();
+
+    session.listen((nextRoute) => (route = nextRoute));
+
+    expect(route.href).toBe("/");
+    routes.bar().push({ skipRender: true });
+    expect(route.href).toBe("/");
+    routes.bar().push();
+    expect(route.href).toBe("/bar");
+    routes.bar2().push({ skipRender: true });
+    routes.foo().push();
+    session.back();
+    // going back should ignore skipRender
+    expect(route.href).toBe("/bar2");
+  });
+
   it("link should work", () => {
     const config: RouterOpts = {
       session: {

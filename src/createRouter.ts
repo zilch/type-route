@@ -9,6 +9,7 @@ import {
   RouterContext,
   UmbrellaBlocker,
   RouterOpts,
+  NavigateOptions,
 } from "./types";
 import { createRouteBuilder } from "./createRouteBuilder";
 import {
@@ -90,7 +91,7 @@ export function createRouter(...args: any[]): UmbrellaCoreRouter {
   const router: UmbrellaCoreRouter = {
     routes,
     session: {
-      push(href, state) {
+      push(href, state, options: NavigateOptions) {
         if (__DEV__) {
           assert("[RouterSessionHistory].push", [
             assert.numArgs([].slice.call(arguments), 1, 2),
@@ -105,9 +106,9 @@ export function createRouter(...args: any[]): UmbrellaCoreRouter {
           getRouterContext()
         );
 
-        return navigate({ ...route, action: "push" }, primaryPath);
+        return navigate({ ...route, action: "push" }, primaryPath, options);
       },
-      replace(href, state) {
+      replace(href, state, options: NavigateOptions) {
         if (__DEV__) {
           assert("[RouterSessionHistory].replace", [
             assert.numArgs([].slice.call(arguments), 1, 2),
@@ -122,7 +123,7 @@ export function createRouter(...args: any[]): UmbrellaCoreRouter {
           getRouterContext()
         );
 
-        return navigate({ ...route, action: "replace" }, primaryPath);
+        return navigate({ ...route, action: "replace" }, primaryPath, options);
       },
       back(amount = 1) {
         if (__DEV__) {
@@ -243,13 +244,18 @@ export function createRouter(...args: any[]): UmbrellaCoreRouter {
     }
   }
 
-  function navigate(route: UmbrellaRoute, primaryPath: boolean) {
+  function navigate(
+    route: UmbrellaRoute,
+    primaryPath: boolean,
+    options?: NavigateOptions
+  ) {
+    debugger;
     if (blockerCollection.length > 0) {
       blockerCollection.forEach((blocker) => {
         blocker({
           route,
           retry: () => {
-            route[route.action === "push" ? "push" : "replace"]();
+            route[route.action === "push" ? "push" : "replace"](options);
           },
         });
       });
@@ -269,6 +275,8 @@ export function createRouter(...args: any[]): UmbrellaCoreRouter {
 
     if (skipHandlingNextApplicationTriggeredNavigation) {
       skipHandlingNextApplicationTriggeredNavigation = false;
+    } else if (options?.skipRender) {
+      // do nothing
     } else {
       handleNavigation(route, primaryPath);
     }

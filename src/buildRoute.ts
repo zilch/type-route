@@ -1,4 +1,9 @@
-import { UmbrellaRoute, RouterLocation, RouterContext } from "./types";
+import {
+  UmbrellaRoute,
+  RouterLocation,
+  RouterContext,
+  NavigateOptions,
+} from "./types";
 import { preventDefaultLinkClickBehavior } from "./preventDefaultLinkClickBehavior";
 import { stringUtils } from "./stringUtils";
 
@@ -43,8 +48,10 @@ export function buildRoute({
       },
     },
     action: null,
-    push: () => navigate({ ...route, action: "push" }, true),
-    replace: () => navigate({ ...route, action: "replace" }, true),
+    push: (options?: NavigateOptions) =>
+      navigate({ ...route, action: "push" }, true, options),
+    replace: (options?: NavigateOptions) =>
+      navigate({ ...route, action: "replace" }, true, options),
   };
 
   return route;
