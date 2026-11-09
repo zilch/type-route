@@ -21,7 +21,7 @@ export function getObjectMatch({
   const extraneousParams = { ...object };
 
   for (const paramDef of namedParamDefs) {
-    let raw = object[paramDef.name];
+    const raw = object[paramDef.name];
     delete extraneousParams[paramDef.name];
 
     if (raw === undefined) {

@@ -1,9 +1,15 @@
-import React, { useEffect } from "react";
+import React, { act, useEffect } from "react";
+import { createRoot } from "react-dom/client";
 import { createRouter, defineRoute } from "../src/react";
-import { renderIntoDocument, act } from "react-dom/test-utils";
 import { expectTypeRouteError } from "./expectTypeRouteError";
 import { TypeRouteError } from "../src/TypeRouteError";
 import { setPath } from "./setPath";
+
+(globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+
+function render(element: React.ReactNode) {
+  createRoot(document.createElement("div")).render(element);
+}
 
 describe("react", () => {
   it("should error if useRoute is used without wrapping in RouteProvider", () => {
@@ -19,7 +25,7 @@ describe("react", () => {
 
     expectTypeRouteError(
       TypeRouteError.App_should_be_wrapped_in_a_RouteProvider_component,
-      () => renderIntoDocument(<Test />)
+      () => { act(() => render(<Test />)); }
     );
 
     jest.clearAllMocks();
@@ -39,7 +45,7 @@ describe("react", () => {
     }
 
     act(() => {
-      renderIntoDocument(
+      render(
         <RouteProvider>
           <Test />
         </RouteProvider>
@@ -77,7 +83,7 @@ describe("react", () => {
     }
 
     act(() => {
-      renderIntoDocument(
+      render(
         <RouteProvider>
           <Test />
         </RouteProvider>

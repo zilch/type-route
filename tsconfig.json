@@ -1,6 +1,7 @@
 {
   "include": ["src", "test"],
   "compilerOptions": {
+    "target": "es2018",
     "module": "esnext",
     "lib": ["dom", "esnext"],
     "importHelpers": true,
@@ -10,9 +11,10 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "jsx": "react",
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "types": ["jest"]
   }
 }

@@ -1,5 +1,4 @@
-/* eslint-disable import/first */
-// @ts-ignore
+// @ts-expect-error -- playground sets the development global before imports
 window.__DEV__ = true;
 
 import React from "react";
