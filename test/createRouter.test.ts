@@ -5,6 +5,7 @@ import { QueryStringArrayFormat } from "../src/types";
 import { setPath } from "./setPath";
 
 describe("createRouter", () => {
+  beforeEach(() => setPath(""));
   it("should push route with query string param properly", () => {
     const { routes } = createRouter({
       home: defineRoute("/"),

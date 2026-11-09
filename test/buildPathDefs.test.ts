@@ -109,7 +109,6 @@ describe("buildPathDef", () => {
   });
 
   it("should error if the $ or { or } or / character is used in a parameter name", () => {
-    // eslint-disable-next-line no-template-curly-in-string
     ["${hello/there}", "$hello", "{hello", "hello/there", "there}"].forEach(
       (paramName) => {
         expectTypeRouteError(
@@ -152,8 +151,7 @@ describe("buildPathDef", () => {
     } catch (error) {
       if (error instanceof Error) {
         expect(error.message).toContain(
-          // eslint-disable-next-line no-template-curly-in-string
-          "The path segment `#hello${p.hi}%` has the following invalid characters: #, %"
+                "The path segment `#hello${p.hi}%` has the following invalid characters: #, %"
         );
       } else {
         fail("expected error to be of type Error");

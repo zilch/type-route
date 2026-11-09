@@ -1,7 +1,9 @@
 import { defineConfig } from "vitepress";
 import fs from "fs";
 import path from "path";
-import { escapeRegExp, startCase } from "lodash";
+import lodash from "lodash";
+
+const { escapeRegExp, startCase } = lodash;
 import fm from "front-matter";
 
 interface SidebarItem {

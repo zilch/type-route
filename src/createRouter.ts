@@ -81,7 +81,7 @@ export function createRouter(...args: any[]): UmbrellaCoreRouter {
   let skipHandlingNextApplicationTriggeredNavigation = false;
   let initialRoute: UmbrellaRoute | null = null;
   let previousRoute: UmbrellaRoute | null = null;
-  let blockerCollection: UmbrellaBlocker[] = [];
+  const blockerCollection: UmbrellaBlocker[] = [];
 
   applySessionOpts(opts.session);
 
